@@ -6454,7 +6454,7 @@
       },
       "notForRelease": false,
       "isLawful": true,
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -6551,7 +6551,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -6648,7 +6648,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -6745,7 +6745,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -6842,7 +6842,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -6939,7 +6939,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -7036,7 +7036,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -7060,11 +7060,11 @@
         }
       ],
       "minStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "maxStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "repPoints": 0,
@@ -7095,8 +7095,8 @@
       },
       "notForRelease": false,
       "isLawful": true,
-      "repScopeKey": "ReputationScope_Delivery",
-      "repCareerLabel": "Standing"
+      "repScopeKey": "ReputationScope_Hauling",
+      "repCareerLabel": "Hauling"
     },
     {
       "id": "416b5ed7-5e08-47e4-afa7-da00eef0a5fe",
@@ -7119,11 +7119,11 @@
         }
       ],
       "minStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "maxStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "repPoints": 0,
@@ -7154,8 +7154,8 @@
       },
       "notForRelease": false,
       "isLawful": true,
-      "repScopeKey": "ReputationScope_Delivery",
-      "repCareerLabel": "Standing"
+      "repScopeKey": "ReputationScope_Hauling",
+      "repCareerLabel": "Hauling"
     },
     {
       "id": "0b400963-0b00-456a-bbc9-c036063cb6d8",
@@ -7178,11 +7178,11 @@
         }
       ],
       "minStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "maxStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "repPoints": 0,
@@ -7213,8 +7213,8 @@
       },
       "notForRelease": false,
       "isLawful": true,
-      "repScopeKey": "ReputationScope_Delivery",
-      "repCareerLabel": "Standing"
+      "repScopeKey": "ReputationScope_Hauling",
+      "repCareerLabel": "Hauling"
     },
     {
       "id": "64609b77-29e3-44d0-99df-c78a093851e1",
@@ -7237,11 +7237,11 @@
         }
       ],
       "minStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "maxStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "repPoints": 0,
@@ -7272,8 +7272,8 @@
       },
       "notForRelease": false,
       "isLawful": true,
-      "repScopeKey": "ReputationScope_Delivery",
-      "repCareerLabel": "Standing"
+      "repScopeKey": "ReputationScope_Hauling",
+      "repCareerLabel": "Hauling"
     },
     {
       "id": "4b91c6f3-360f-4fe6-b704-6c664a950d75",
@@ -7296,11 +7296,11 @@
         }
       ],
       "minStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "maxStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "repPoints": 0,
@@ -7331,8 +7331,8 @@
       },
       "notForRelease": false,
       "isLawful": true,
-      "repScopeKey": "ReputationScope_Delivery",
-      "repCareerLabel": "Standing"
+      "repScopeKey": "ReputationScope_Hauling",
+      "repCareerLabel": "Hauling"
     },
     {
       "id": "7f658b85-c9dc-4877-b81b-b1341c7de428",
@@ -7355,11 +7355,11 @@
         }
       ],
       "minStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "maxStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "repPoints": 0,
@@ -7390,8 +7390,8 @@
       },
       "notForRelease": false,
       "isLawful": true,
-      "repScopeKey": "ReputationScope_Delivery",
-      "repCareerLabel": "Standing"
+      "repScopeKey": "ReputationScope_Hauling",
+      "repCareerLabel": "Hauling"
     },
     {
       "id": "5d268648-079b-4673-8c25-fa9286f5493f",
@@ -7414,11 +7414,11 @@
         }
       ],
       "minStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "maxStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "repPoints": 0,
@@ -7449,8 +7449,8 @@
       },
       "notForRelease": false,
       "isLawful": true,
-      "repScopeKey": "ReputationScope_Delivery",
-      "repCareerLabel": "Standing"
+      "repScopeKey": "ReputationScope_Hauling",
+      "repCareerLabel": "Hauling"
     },
     {
       "id": "61967331-20e5-409b-9a75-f7aa0253c4fe",
@@ -7473,11 +7473,11 @@
         }
       ],
       "minStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "maxStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "repPoints": 0,
@@ -7508,8 +7508,8 @@
       },
       "notForRelease": false,
       "isLawful": true,
-      "repScopeKey": "ReputationScope_Delivery",
-      "repCareerLabel": "Standing"
+      "repScopeKey": "ReputationScope_Hauling",
+      "repCareerLabel": "Hauling"
     },
     {
       "id": "4292f5a2-bc07-4df4-b3f7-cf3a43acbdd5",
@@ -7532,11 +7532,11 @@
         }
       ],
       "minStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "maxStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "repPoints": 0,
@@ -7568,8 +7568,8 @@
       },
       "notForRelease": false,
       "isLawful": true,
-      "repScopeKey": "ReputationScope_Delivery",
-      "repCareerLabel": "Standing"
+      "repScopeKey": "ReputationScope_Hauling",
+      "repCareerLabel": "Hauling"
     },
     {
       "id": "69a17b80-b5cd-4644-8598-f6bdea857fe3",
@@ -7592,11 +7592,11 @@
         }
       ],
       "minStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "maxStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "repPoints": 0,
@@ -7627,8 +7627,8 @@
       },
       "notForRelease": false,
       "isLawful": true,
-      "repScopeKey": "ReputationScope_Delivery",
-      "repCareerLabel": "Standing"
+      "repScopeKey": "ReputationScope_Hauling",
+      "repCareerLabel": "Hauling"
     },
     {
       "id": "b398f60a-f591-4462-a2c2-5f22df911639",
@@ -7651,11 +7651,11 @@
         }
       ],
       "minStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "maxStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "repPoints": 0,
@@ -7686,8 +7686,8 @@
       },
       "notForRelease": false,
       "isLawful": true,
-      "repScopeKey": "ReputationScope_Delivery",
-      "repCareerLabel": "Standing"
+      "repScopeKey": "ReputationScope_Hauling",
+      "repCareerLabel": "Hauling"
     },
     {
       "id": "0461cdb8-aa0a-4354-a903-9f57668d6add",
@@ -7710,11 +7710,11 @@
         }
       ],
       "minStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "maxStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "repPoints": 0,
@@ -7745,8 +7745,8 @@
       },
       "notForRelease": false,
       "isLawful": true,
-      "repScopeKey": "ReputationScope_Delivery",
-      "repCareerLabel": "Standing"
+      "repScopeKey": "ReputationScope_Hauling",
+      "repCareerLabel": "Hauling"
     },
     {
       "id": "2701ce42-2812-4ee2-b170-250a73d3c82a",
@@ -7769,11 +7769,11 @@
         }
       ],
       "minStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "maxStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "repPoints": 0,
@@ -7804,8 +7804,8 @@
       },
       "notForRelease": false,
       "isLawful": true,
-      "repScopeKey": "ReputationScope_Delivery",
-      "repCareerLabel": "Standing"
+      "repScopeKey": "ReputationScope_Hauling",
+      "repCareerLabel": "Hauling"
     },
     {
       "id": "d437b432-f18b-4cd8-b932-c9e3e72b1d34",
@@ -7828,11 +7828,11 @@
         }
       ],
       "minStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "maxStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "repPoints": 0,
@@ -7863,8 +7863,8 @@
       },
       "notForRelease": false,
       "isLawful": true,
-      "repScopeKey": "ReputationScope_Delivery",
-      "repCareerLabel": "Standing"
+      "repScopeKey": "ReputationScope_Hauling",
+      "repCareerLabel": "Hauling"
     },
     {
       "id": "c4de1ea8-9853-4caf-9e49-a6f35e0a6c72",
@@ -7887,11 +7887,11 @@
         }
       ],
       "minStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "maxStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "repPoints": 0,
@@ -7922,8 +7922,8 @@
       },
       "notForRelease": false,
       "isLawful": true,
-      "repScopeKey": "ReputationScope_Delivery",
-      "repCareerLabel": "Standing"
+      "repScopeKey": "ReputationScope_Hauling",
+      "repCareerLabel": "Hauling"
     },
     {
       "id": "c10d9de6-bb8e-4cce-9fa0-ad0ed691a94e",
@@ -7946,11 +7946,11 @@
         }
       ],
       "minStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "maxStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "repPoints": 0,
@@ -7981,8 +7981,8 @@
       },
       "notForRelease": false,
       "isLawful": true,
-      "repScopeKey": "ReputationScope_Delivery",
-      "repCareerLabel": "Standing"
+      "repScopeKey": "ReputationScope_Hauling",
+      "repCareerLabel": "Hauling"
     },
     {
       "id": "8419c7de-5b76-4e15-af19-6e1e54f13989",
@@ -11615,11 +11615,11 @@
         }
       ],
       "minStanding": {
-        "name": "Neutral",
+        "name": "Trainee",
         "minReputation": 0
       },
       "maxStanding": {
-        "name": "Neutral",
+        "name": "Trainee",
         "minReputation": 0
       },
       "repPoints": 100,
@@ -11656,8 +11656,8 @@
       },
       "notForRelease": false,
       "isLawful": true,
-      "repScopeKey": "ReputationScope_Delivery",
-      "repCareerLabel": "Standing"
+      "repScopeKey": "ReputationScope_Hauling",
+      "repCareerLabel": "Hauling"
     },
     {
       "id": "f7cb7b85-10ca-4e4d-b874-082611618939",
@@ -11680,11 +11680,11 @@
         }
       ],
       "minStanding": {
-        "name": "Neutral",
+        "name": "Trainee",
         "minReputation": 0
       },
       "maxStanding": {
-        "name": "Neutral",
+        "name": "Trainee",
         "minReputation": 0
       },
       "repPoints": 100,
@@ -11721,8 +11721,8 @@
       },
       "notForRelease": false,
       "isLawful": true,
-      "repScopeKey": "ReputationScope_Delivery",
-      "repCareerLabel": "Standing"
+      "repScopeKey": "ReputationScope_Hauling",
+      "repCareerLabel": "Hauling"
     },
     {
       "id": "9d219d18-aeda-494c-bad6-30fb8d092949",
@@ -11745,11 +11745,11 @@
         }
       ],
       "minStanding": {
-        "name": "Neutral",
+        "name": "Trainee",
         "minReputation": 0
       },
       "maxStanding": {
-        "name": "Neutral",
+        "name": "Trainee",
         "minReputation": 0
       },
       "repPoints": 100,
@@ -11786,8 +11786,8 @@
       },
       "notForRelease": false,
       "isLawful": true,
-      "repScopeKey": "ReputationScope_Delivery",
-      "repCareerLabel": "Standing"
+      "repScopeKey": "ReputationScope_Hauling",
+      "repCareerLabel": "Hauling"
     },
     {
       "id": "45df5785-3b88-409f-80d8-e029c23b35d4",
@@ -11810,11 +11810,11 @@
         }
       ],
       "minStanding": {
-        "name": "Neutral",
+        "name": "Rookie",
         "minReputation": 50
       },
       "maxStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "repPoints": 100,
@@ -11895,8 +11895,8 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "ReputationScope_Delivery",
-      "repCareerLabel": "Standing"
+      "repScopeKey": "ReputationScope_Hauling",
+      "repCareerLabel": "Hauling"
     },
     {
       "id": "8f29a2e2-4f34-4a9e-8335-e0b7e4d32f4c",
@@ -11919,11 +11919,11 @@
         }
       ],
       "minStanding": {
-        "name": "Neutral",
+        "name": "Rookie",
         "minReputation": 50
       },
       "maxStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "repPoints": 100,
@@ -12004,8 +12004,8 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "ReputationScope_Delivery",
-      "repCareerLabel": "Standing"
+      "repScopeKey": "ReputationScope_Hauling",
+      "repCareerLabel": "Hauling"
     },
     {
       "id": "34ba1fc9-c6fd-4505-8dfe-bc7d67509776",
@@ -12028,11 +12028,11 @@
         }
       ],
       "minStanding": {
-        "name": "Neutral",
+        "name": "Rookie",
         "minReputation": 50
       },
       "maxStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "repPoints": 100,
@@ -12113,8 +12113,8 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "ReputationScope_Delivery",
-      "repCareerLabel": "Standing"
+      "repScopeKey": "ReputationScope_Hauling",
+      "repCareerLabel": "Hauling"
     },
     {
       "id": "44e71db6-73d6-4ca6-83b3-b83496306b63",
@@ -12137,11 +12137,11 @@
         }
       ],
       "minStanding": {
-        "name": "Neutral",
+        "name": "Rookie",
         "minReputation": 50
       },
       "maxStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "repPoints": 100,
@@ -12222,8 +12222,8 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "ReputationScope_Delivery",
-      "repCareerLabel": "Standing"
+      "repScopeKey": "ReputationScope_Hauling",
+      "repCareerLabel": "Hauling"
     },
     {
       "id": "b0d4d762-5186-40e1-9869-130ce90109d2",
@@ -12712,8 +12712,8 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "ReputationScope_Bounty",
-      "repCareerLabel": "Bounty Hunting"
+      "repScopeKey": "ReputationScope_Bounty_BountyHuntersGuild",
+      "repCareerLabel": null
     },
     {
       "id": "f0ff85a8-ee91-4ffb-8f9c-bcaf9d97acdb",
@@ -12857,8 +12857,8 @@
           "totalEmitters": 4
         }
       ],
-      "repScopeKey": "ReputationScope_Bounty",
-      "repCareerLabel": "Bounty Hunting"
+      "repScopeKey": "ReputationScope_Bounty_BountyHuntersGuild",
+      "repCareerLabel": null
     },
     {
       "id": "ccd48707-050e-4f79-ac7f-e6008e1e91ed",
@@ -13002,8 +13002,8 @@
           "totalEmitters": 4
         }
       ],
-      "repScopeKey": "ReputationScope_Bounty",
-      "repCareerLabel": "Bounty Hunting"
+      "repScopeKey": "ReputationScope_Bounty_BountyHuntersGuild",
+      "repCareerLabel": null
     },
     {
       "id": "98b24f3b-4e52-4214-9d1d-0eb9fa1b03e1",
@@ -13067,8 +13067,8 @@
       },
       "notForRelease": true,
       "isLawful": true,
-      "repScopeKey": "ReputationScope_Bounty",
-      "repCareerLabel": "Bounty Hunting"
+      "repScopeKey": "ReputationScope_Bounty_BountyHuntersGuild",
+      "repCareerLabel": null
     },
     {
       "id": "b7e2fdb1-cb2b-4608-ac51-f396d7b62814",
@@ -13176,8 +13176,8 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "ReputationScope_Bounty",
-      "repCareerLabel": "Bounty Hunting"
+      "repScopeKey": "ReputationScope_Bounty_BountyHuntersGuild",
+      "repCareerLabel": null
     },
     {
       "id": "8794972a-d90e-4549-8dfb-aaf80592231a",
@@ -13285,8 +13285,8 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "ReputationScope_Bounty",
-      "repCareerLabel": "Bounty Hunting"
+      "repScopeKey": "ReputationScope_Bounty_BountyHuntersGuild",
+      "repCareerLabel": null
     },
     {
       "id": "27804bcd-eadd-4b75-ad00-ce4fd5450ec8",
@@ -13436,8 +13436,8 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "ReputationScope_Bounty",
-      "repCareerLabel": "Bounty Hunting"
+      "repScopeKey": "ReputationScope_Bounty_BountyHuntersGuild",
+      "repCareerLabel": null
     },
     {
       "id": "d925834f-cacf-4445-bf91-cc5fc08cf6f8",
@@ -13629,8 +13629,8 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "ReputationScope_Bounty",
-      "repCareerLabel": "Bounty Hunting"
+      "repScopeKey": "ReputationScope_Bounty_BountyHuntersGuild",
+      "repCareerLabel": null
     },
     {
       "id": "539de750-ba46-4986-b4f4-9780c45f6f07",
@@ -13900,8 +13900,8 @@
           "totalEmitters": 4
         }
       ],
-      "repScopeKey": "ReputationScope_Bounty",
-      "repCareerLabel": "Bounty Hunting"
+      "repScopeKey": "ReputationScope_Bounty_BountyHuntersGuild",
+      "repCareerLabel": null
     },
     {
       "id": "44616d84-c549-4c9f-b967-573b035c3c3e",
@@ -14249,8 +14249,8 @@
           "totalEmitters": 4
         }
       ],
-      "repScopeKey": "ReputationScope_Bounty",
-      "repCareerLabel": "Bounty Hunting"
+      "repScopeKey": "ReputationScope_Bounty_BountyHuntersGuild",
+      "repCareerLabel": null
     },
     {
       "id": "44d85e9e-b93a-4488-9273-61c3445ab4aa",
@@ -14676,8 +14676,8 @@
           "totalEmitters": 4
         }
       ],
-      "repScopeKey": "ReputationScope_Bounty",
-      "repCareerLabel": "Bounty Hunting"
+      "repScopeKey": "ReputationScope_Bounty_BountyHuntersGuild",
+      "repCareerLabel": null
     },
     {
       "id": "cc66e468-7ab9-4a89-8888-3c3aa75ab36f",
@@ -16004,11 +16004,11 @@
         }
       ],
       "minStanding": {
-        "name": "Neutral",
+        "name": "Applicant",
         "minReputation": 0
       },
       "maxStanding": {
-        "name": "Neutral",
+        "name": "Applicant",
         "minReputation": 0
       },
       "repPoints": 75,
@@ -16045,8 +16045,8 @@
       },
       "notForRelease": false,
       "isLawful": true,
-      "repScopeKey": "FactionReputationScope",
-      "repCareerLabel": "Standing"
+      "repScopeKey": "ReputationScope_Security",
+      "repCareerLabel": "Security"
     },
     {
       "id": "6dd3942c-b1c7-4466-8bd4-709261178add",
@@ -16264,11 +16264,11 @@
         }
       ],
       "minStanding": {
-        "name": "Neutral",
+        "name": "Applicant",
         "minReputation": 0
       },
       "maxStanding": {
-        "name": "Neutral",
+        "name": "Applicant",
         "minReputation": 0
       },
       "repPoints": 75,
@@ -16305,8 +16305,8 @@
       },
       "notForRelease": false,
       "isLawful": true,
-      "repScopeKey": "FactionReputationScope",
-      "repCareerLabel": "Standing"
+      "repScopeKey": "ReputationScope_Security",
+      "repCareerLabel": "Security"
     },
     {
       "id": "8bcab8a3-6237-4ad6-bd25-004a34b540ed",
@@ -16524,11 +16524,11 @@
         }
       ],
       "minStanding": {
-        "name": "Neutral",
+        "name": "Applicant",
         "minReputation": 0
       },
       "maxStanding": {
-        "name": "Neutral",
+        "name": "Applicant",
         "minReputation": 0
       },
       "repPoints": 75,
@@ -16565,8 +16565,8 @@
       },
       "notForRelease": false,
       "isLawful": true,
-      "repScopeKey": "FactionReputationScope",
-      "repCareerLabel": "Standing"
+      "repScopeKey": "ReputationScope_Security",
+      "repCareerLabel": "Security"
     },
     {
       "id": "5bff9fb5-f386-4e93-924c-9a99b4eb20a7",
@@ -16784,11 +16784,11 @@
         }
       ],
       "minStanding": {
-        "name": "Neutral",
+        "name": "Applicant",
         "minReputation": 0
       },
       "maxStanding": {
-        "name": "Neutral",
+        "name": "Applicant",
         "minReputation": 0
       },
       "repPoints": 75,
@@ -16825,8 +16825,8 @@
       },
       "notForRelease": false,
       "isLawful": true,
-      "repScopeKey": "FactionReputationScope",
-      "repCareerLabel": "Standing"
+      "repScopeKey": "ReputationScope_Security",
+      "repCareerLabel": "Security"
     },
     {
       "id": "fb339a08-14cb-4de5-b8c0-3a9a731105a1",
@@ -18401,11 +18401,11 @@
         }
       ],
       "minStanding": {
-        "name": "Neutral",
+        "name": "Applicant",
         "minReputation": 0
       },
       "maxStanding": {
-        "name": "Neutral",
+        "name": "Applicant",
         "minReputation": 0
       },
       "repPoints": 75,
@@ -18442,8 +18442,8 @@
       },
       "notForRelease": false,
       "isLawful": true,
-      "repScopeKey": "FactionReputationScope",
-      "repCareerLabel": "Standing"
+      "repScopeKey": "ReputationScope_Security",
+      "repCareerLabel": "Security"
     },
     {
       "id": "cbb0aa67-fb76-47d4-8a54-6864a241e70d",
@@ -22065,11 +22065,11 @@
         }
       ],
       "minStanding": {
-        "name": "Elite Contractor",
+        "name": "Sr. Security Contractor",
         "minReputation": 120000
       },
       "maxStanding": {
-        "name": "Elite Contractor",
+        "name": "Elite Security Contractor",
         "minReputation": 1600000
       },
       "repPoints": 500,
@@ -22106,8 +22106,8 @@
       },
       "notForRelease": false,
       "isLawful": true,
-      "repScopeKey": "ReputationScope_Security",
-      "repCareerLabel": "Standing"
+      "repScopeKey": "ReputationScope_HiredMuscle",
+      "repCareerLabel": "Security"
     },
     {
       "id": "0b4c6e81-838a-4e0a-8ecd-7f2893095a8d",
@@ -22130,11 +22130,11 @@
         }
       ],
       "minStanding": {
-        "name": "Contractor",
+        "name": "Jr. Security Contractor",
         "minReputation": 5000
       },
       "maxStanding": {
-        "name": "Elite Contractor",
+        "name": "Elite Security Contractor",
         "minReputation": 1600000
       },
       "repPoints": 500,
@@ -22171,8 +22171,8 @@
       },
       "notForRelease": false,
       "isLawful": true,
-      "repScopeKey": "ReputationScope_Security",
-      "repCareerLabel": "Standing"
+      "repScopeKey": "ReputationScope_HiredMuscle",
+      "repCareerLabel": "Security"
     },
     {
       "id": "63c605db-220f-40f1-b203-ab7852a070a1",
@@ -22195,11 +22195,11 @@
         }
       ],
       "minStanding": {
-        "name": "Veteran Contractor",
+        "name": "Security Contractor",
         "minReputation": 30000
       },
       "maxStanding": {
-        "name": "Elite Contractor",
+        "name": "Elite Security Contractor",
         "minReputation": 1600000
       },
       "repPoints": 500,
@@ -22236,8 +22236,8 @@
       },
       "notForRelease": false,
       "isLawful": true,
-      "repScopeKey": "ReputationScope_Security",
-      "repCareerLabel": "Standing"
+      "repScopeKey": "ReputationScope_HiredMuscle",
+      "repCareerLabel": "Security"
     },
     {
       "id": "920fe294-7e9d-435b-a475-1a5651eac16c",
@@ -22260,11 +22260,11 @@
         }
       ],
       "minStanding": {
-        "name": "Elite Contractor",
+        "name": "Sr. Security Contractor",
         "minReputation": 120000
       },
       "maxStanding": {
-        "name": "Elite Contractor",
+        "name": "Elite Security Contractor",
         "minReputation": 1600000
       },
       "repPoints": 500,
@@ -22301,8 +22301,8 @@
       },
       "notForRelease": false,
       "isLawful": true,
-      "repScopeKey": "ReputationScope_Security",
-      "repCareerLabel": "Standing"
+      "repScopeKey": "ReputationScope_HiredMuscle",
+      "repCareerLabel": "Security"
     },
     {
       "id": "e25f601a-6734-4703-944c-69991778367d",
@@ -24285,7 +24285,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -24394,7 +24394,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -24503,7 +24503,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -24612,7 +24612,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -24721,7 +24721,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -24830,7 +24830,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -24939,7 +24939,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -25048,7 +25048,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -25157,7 +25157,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -25266,7 +25266,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -25375,7 +25375,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -25484,7 +25484,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -25593,7 +25593,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -25702,7 +25702,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -25811,7 +25811,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -25920,7 +25920,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -26029,7 +26029,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -26138,7 +26138,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -26247,7 +26247,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -26312,7 +26312,7 @@
       },
       "notForRelease": false,
       "isLawful": true,
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -26377,7 +26377,7 @@
       },
       "notForRelease": false,
       "isLawful": true,
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -26442,7 +26442,7 @@
       },
       "notForRelease": false,
       "isLawful": true,
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -26507,7 +26507,7 @@
       },
       "notForRelease": false,
       "isLawful": true,
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -26572,7 +26572,7 @@
       },
       "notForRelease": false,
       "isLawful": true,
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -26637,7 +26637,7 @@
       },
       "notForRelease": true,
       "isLawful": true,
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -26702,7 +26702,7 @@
       },
       "notForRelease": true,
       "isLawful": true,
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -26767,7 +26767,7 @@
       },
       "notForRelease": true,
       "isLawful": true,
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -26826,7 +26826,7 @@
       },
       "notForRelease": false,
       "isLawful": true,
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -26885,7 +26885,7 @@
       },
       "notForRelease": false,
       "isLawful": true,
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -26950,7 +26950,7 @@
       },
       "notForRelease": false,
       "isLawful": true,
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -27013,7 +27013,7 @@
       },
       "notForRelease": true,
       "isLawful": true,
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -27266,7 +27266,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -27375,7 +27375,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -27484,7 +27484,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -27593,7 +27593,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -27702,7 +27702,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -27853,7 +27853,7 @@
           "totalEmitters": 2
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -28046,7 +28046,7 @@
           "totalEmitters": 2
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -28281,7 +28281,7 @@
           "totalEmitters": 2
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -28558,7 +28558,7 @@
           "totalEmitters": 2
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -28877,7 +28877,7 @@
           "totalEmitters": 2
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -28986,7 +28986,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -29137,7 +29137,7 @@
           "totalEmitters": 2
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -29330,7 +29330,7 @@
           "totalEmitters": 2
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -29565,7 +29565,7 @@
           "totalEmitters": 2
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -29842,7 +29842,7 @@
           "totalEmitters": 2
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -30161,7 +30161,7 @@
           "totalEmitters": 2
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -30270,7 +30270,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -30379,7 +30379,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -30488,7 +30488,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -30597,7 +30597,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -30706,7 +30706,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -30815,7 +30815,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -30924,7 +30924,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -31111,7 +31111,7 @@
           "totalEmitters": 4
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -31298,7 +31298,7 @@
           "totalEmitters": 4
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -31485,7 +31485,7 @@
           "totalEmitters": 4
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -31672,7 +31672,7 @@
           "totalEmitters": 4
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -31859,7 +31859,7 @@
           "totalEmitters": 4
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -31968,7 +31968,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -32155,7 +32155,7 @@
           "totalEmitters": 4
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -32342,7 +32342,7 @@
           "totalEmitters": 4
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -32529,7 +32529,7 @@
           "totalEmitters": 4
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -32716,7 +32716,7 @@
           "totalEmitters": 4
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -32903,7 +32903,7 @@
           "totalEmitters": 4
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -33006,7 +33006,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -33109,7 +33109,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -33212,7 +33212,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -33315,7 +33315,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -33418,7 +33418,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -33521,7 +33521,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -33630,7 +33630,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -33739,7 +33739,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -33848,7 +33848,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -33957,7 +33957,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -34066,7 +34066,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -34175,7 +34175,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -34284,7 +34284,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -34393,7 +34393,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -34502,7 +34502,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -34611,7 +34611,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -34725,7 +34725,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -34839,7 +34839,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -34953,7 +34953,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -35062,7 +35062,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -35165,7 +35165,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -35274,7 +35274,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -35383,7 +35383,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -35497,7 +35497,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -35611,7 +35611,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -35725,7 +35725,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -35834,7 +35834,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -35943,7 +35943,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -36052,7 +36052,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -36161,7 +36161,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -36275,7 +36275,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -36389,7 +36389,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -36503,7 +36503,7 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Security",
       "repCareerLabel": "Security"
     },
     {
@@ -40508,7 +40508,7 @@
         "minReputation": 0
       },
       "maxStanding": {
-        "name": "Master Tracker",
+        "name": "Elite Security Contractor",
         "minReputation": 1600000
       },
       "repPoints": 4000,
@@ -40583,8 +40583,8 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": "ReputationScope_Bounty",
-      "repCareerLabel": "Bounty Hunting"
+      "repScopeKey": "ReputationScope_Security",
+      "repCareerLabel": "Security"
     },
     {
       "id": "57333cdf-fae8-439b-9701-cc4dd1978412",
@@ -40616,7 +40616,7 @@
         "minReputation": 0
       },
       "maxStanding": {
-        "name": "Master Tracker",
+        "name": "Elite Security Contractor",
         "minReputation": 1600000
       },
       "repPoints": 8000,
@@ -40727,8 +40727,8 @@
           "totalEmitters": 4
         }
       ],
-      "repScopeKey": "ReputationScope_Bounty",
-      "repCareerLabel": "Bounty Hunting"
+      "repScopeKey": "ReputationScope_Security",
+      "repCareerLabel": "Security"
     },
     {
       "id": "b6aa9e70-a7cd-45b6-be8a-2e8bee8e0ecf",
@@ -40999,7 +40999,7 @@
         }
       ],
       "repScopeKey": "MissionProviderReputationScope_Battaglia",
-      "repCareerLabel": "Standing"
+      "repCareerLabel": null
     },
     {
       "id": "67cf0b4c-c894-4bb1-8409-4a14334abcd4",
@@ -41113,7 +41113,7 @@
         }
       ],
       "repScopeKey": "MissionProviderReputationScope_Battaglia",
-      "repCareerLabel": "Standing"
+      "repCareerLabel": null
     },
     {
       "id": "4173543e-eaa7-4efd-ada3-41549f84448a",
@@ -41326,8 +41326,8 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": null,
-      "repCareerLabel": "Standing"
+      "repScopeKey": "MissionProviderReputationScope_Battaglia",
+      "repCareerLabel": null
     },
     {
       "id": "ee2b9d1a-09ff-429b-a28f-195431011ad0",
@@ -41435,8 +41435,8 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": null,
-      "repCareerLabel": "Standing"
+      "repScopeKey": "MissionProviderReputationScope_Battaglia",
+      "repCareerLabel": null
     },
     {
       "id": "297465df-5f08-41ff-bced-e5ccb017ff87",
@@ -41544,8 +41544,8 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": null,
-      "repCareerLabel": "Standing"
+      "repScopeKey": "MissionProviderReputationScope_Battaglia",
+      "repCareerLabel": null
     },
     {
       "id": "86289d0e-f0f5-482a-b20d-0d3364cbfe3a",
@@ -41653,8 +41653,8 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": null,
-      "repCareerLabel": "Standing"
+      "repScopeKey": "MissionProviderReputationScope_Battaglia",
+      "repCareerLabel": null
     },
     {
       "id": "80751516-7556-46af-bd77-b6839fa3f876",
@@ -41762,8 +41762,8 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": null,
-      "repCareerLabel": "Standing"
+      "repScopeKey": "MissionProviderReputationScope_Battaglia",
+      "repCareerLabel": null
     },
     {
       "id": "6eceb64c-44fc-4846-8666-8471e346bd8f",
@@ -41871,8 +41871,8 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": null,
-      "repCareerLabel": "Standing"
+      "repScopeKey": "MissionProviderReputationScope_Battaglia",
+      "repCareerLabel": null
     },
     {
       "id": "57f5021a-167a-466a-bee3-8c068c12d146",
@@ -42085,8 +42085,8 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": null,
-      "repCareerLabel": "Standing"
+      "repScopeKey": "MissionProviderReputationScope_Battaglia",
+      "repCareerLabel": null
     },
     {
       "id": "f85b4b24-d344-4892-827c-0e47aa9996a7",
@@ -42194,8 +42194,8 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": null,
-      "repCareerLabel": "Standing"
+      "repScopeKey": "MissionProviderReputationScope_Battaglia",
+      "repCareerLabel": null
     },
     {
       "id": "bab81477-8da9-4dc8-8949-2978fc77d998",
@@ -42303,8 +42303,8 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": null,
-      "repCareerLabel": "Standing"
+      "repScopeKey": "MissionProviderReputationScope_Battaglia",
+      "repCareerLabel": null
     },
     {
       "id": "0a37727f-50b3-4a65-a5a7-4efbed9324db",
@@ -42412,8 +42412,8 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": null,
-      "repCareerLabel": "Standing"
+      "repScopeKey": "MissionProviderReputationScope_Battaglia",
+      "repCareerLabel": null
     },
     {
       "id": "e4095b72-7b57-43b7-ba22-9ffe7b60c34b",
@@ -42521,8 +42521,8 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": null,
-      "repCareerLabel": "Standing"
+      "repScopeKey": "MissionProviderReputationScope_Battaglia",
+      "repCareerLabel": null
     },
     {
       "id": "5db8502c-da59-4652-ac74-e99d3b758600",
@@ -42630,8 +42630,8 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": null,
-      "repCareerLabel": "Standing"
+      "repScopeKey": "MissionProviderReputationScope_Battaglia",
+      "repCareerLabel": null
     },
     {
       "id": "abf87b9c-b778-4283-a544-10ddc2fd95b8",
@@ -42844,8 +42844,8 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": null,
-      "repCareerLabel": "Standing"
+      "repScopeKey": "MissionProviderReputationScope_Battaglia",
+      "repCareerLabel": null
     },
     {
       "id": "984bf4cb-84c1-4e6c-a09c-6d1bb1f10ee2",
@@ -42953,8 +42953,8 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": null,
-      "repCareerLabel": "Standing"
+      "repScopeKey": "MissionProviderReputationScope_Battaglia",
+      "repCareerLabel": null
     },
     {
       "id": "628de0bc-020c-403e-bc1f-66b8afcd51a8",
@@ -43062,8 +43062,8 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": null,
-      "repCareerLabel": "Standing"
+      "repScopeKey": "MissionProviderReputationScope_Battaglia",
+      "repCareerLabel": null
     },
     {
       "id": "671ab679-e102-43f2-9908-cf4a02a7a71f",
@@ -43171,8 +43171,8 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": null,
-      "repCareerLabel": "Standing"
+      "repScopeKey": "MissionProviderReputationScope_Battaglia",
+      "repCareerLabel": null
     },
     {
       "id": "c9d5a3e6-e703-4419-aab0-36a0362697fa",
@@ -43281,7 +43281,7 @@
         }
       ],
       "repScopeKey": "MissionProviderReputationScope_Battaglia",
-      "repCareerLabel": "Standing"
+      "repCareerLabel": null
     },
     {
       "id": "93a0e3ff-2121-4906-b721-5ad2cd82bca8",
@@ -43389,8 +43389,8 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": null,
-      "repCareerLabel": "Standing"
+      "repScopeKey": "MissionProviderReputationScope_Battaglia",
+      "repCareerLabel": null
     },
     {
       "id": "d8332707-f74a-4b35-a363-0452aeed9fd0",
@@ -43498,8 +43498,8 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": null,
-      "repCareerLabel": "Standing"
+      "repScopeKey": "MissionProviderReputationScope_Battaglia",
+      "repCareerLabel": null
     },
     {
       "id": "953f4c07-d7cc-429c-8b85-d52513ee5a66",
@@ -43607,8 +43607,8 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": null,
-      "repCareerLabel": "Standing"
+      "repScopeKey": "MissionProviderReputationScope_Battaglia",
+      "repCareerLabel": null
     },
     {
       "id": "f76726b6-a26d-4f21-bc84-558c6a1304a0",
@@ -43716,8 +43716,8 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": null,
-      "repCareerLabel": "Standing"
+      "repScopeKey": "MissionProviderReputationScope_Battaglia",
+      "repCareerLabel": null
     },
     {
       "id": "a249020e-9c94-44dd-9d9a-ddb11cc74533",
@@ -43825,8 +43825,8 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": null,
-      "repCareerLabel": "Standing"
+      "repScopeKey": "MissionProviderReputationScope_Battaglia",
+      "repCareerLabel": null
     },
     {
       "id": "b74ed677-1f03-4e8e-abed-8896d3bc0e2d",
@@ -43935,7 +43935,7 @@
         }
       ],
       "repScopeKey": "MissionProviderReputationScope_Battaglia",
-      "repCareerLabel": "Standing"
+      "repCareerLabel": null
     },
     {
       "id": "b3a1bf21-e0be-4e8b-9888-f478b586fa07",
@@ -44043,8 +44043,8 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": null,
-      "repCareerLabel": "Standing"
+      "repScopeKey": "MissionProviderReputationScope_Battaglia",
+      "repCareerLabel": null
     },
     {
       "id": "2b926255-e2cf-4f36-996b-f7b5505d3635",
@@ -44152,8 +44152,8 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": null,
-      "repCareerLabel": "Standing"
+      "repScopeKey": "MissionProviderReputationScope_Battaglia",
+      "repCareerLabel": null
     },
     {
       "id": "d98b633a-0c32-4ddd-b33c-791cccf61666",
@@ -44266,8 +44266,8 @@
           "totalEmitters": 1
         }
       ],
-      "repScopeKey": null,
-      "repCareerLabel": "Standing"
+      "repScopeKey": "MissionProviderReputationScope_Battaglia",
+      "repCareerLabel": null
     },
     {
       "id": "9a92d449-f8d1-4766-bae1-462e1a2cab71",
@@ -70711,7 +70711,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -70820,7 +70820,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -70929,7 +70929,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -71038,7 +71038,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -71147,7 +71147,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -71250,7 +71250,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -71359,7 +71359,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -71468,7 +71468,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -71577,7 +71577,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -71686,7 +71686,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -71795,7 +71795,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -71904,7 +71904,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -72013,7 +72013,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -72122,7 +72122,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -72231,7 +72231,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -72340,7 +72340,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -72449,7 +72449,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -72558,7 +72558,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -72667,7 +72667,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -72776,7 +72776,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -72885,7 +72885,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -72994,7 +72994,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -73103,7 +73103,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -73212,7 +73212,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -73321,7 +73321,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -73430,7 +73430,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -73539,7 +73539,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -73648,7 +73648,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -73757,7 +73757,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -73866,7 +73866,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -73975,7 +73975,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -74084,7 +74084,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -74193,7 +74193,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -74302,7 +74302,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -74411,7 +74411,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -74520,7 +74520,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -74629,7 +74629,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -74738,7 +74738,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -74847,7 +74847,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -74956,7 +74956,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -75065,7 +75065,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -75174,7 +75174,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -75283,7 +75283,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -75392,7 +75392,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -75501,7 +75501,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -75610,7 +75610,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -75719,7 +75719,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -75828,7 +75828,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -75937,7 +75937,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -76046,7 +76046,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -76155,7 +76155,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -76264,7 +76264,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -76373,7 +76373,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -76482,7 +76482,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -76591,7 +76591,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -76700,7 +76700,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -76809,7 +76809,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -76918,7 +76918,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -77027,7 +77027,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -77136,7 +77136,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -77245,7 +77245,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -77354,7 +77354,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -77463,7 +77463,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -77572,7 +77572,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -77681,7 +77681,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -77790,7 +77790,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -77899,7 +77899,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -78008,7 +78008,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -78117,7 +78117,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -78226,7 +78226,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -78335,7 +78335,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -78444,7 +78444,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -78553,7 +78553,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -78662,7 +78662,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -78771,7 +78771,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -78880,7 +78880,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -78989,7 +78989,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -79098,7 +79098,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -79207,7 +79207,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -79316,7 +79316,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -79425,7 +79425,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -79534,7 +79534,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -79643,7 +79643,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -79752,7 +79752,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -79861,7 +79861,7 @@
           "totalEmitters": 3
         }
       ],
-      "repScopeKey": "FactionReputationScope",
+      "repScopeKey": "ReputationScope_Affinity",
       "repCareerLabel": "Affinity"
     },
     {
@@ -80152,11 +80152,11 @@
         }
       ],
       "minStanding": {
-        "name": "Neutral",
+        "name": "Rookie",
         "minReputation": 50
       },
       "maxStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "repPoints": 200,
@@ -80169,9 +80169,10 @@
       ],
       "isLawful": true,
       "source": "orphanPoolBridge",
-      "repCareerLabel": "Standing",
+      "repCareerLabel": "Hauling",
       "description": "RED WIND LINEHAUL\n'YOUR GOODS IN GOOD HANDS'\n----------------------------   \n\nOne of the folks over at <EM4>~mission(Location|Address)</EM4> just hit me up about a pile of cargo, <EM4>~mission(MissionMaxSCUSize)</EM4> or smaller, that needs to be hauled out to a few different spots.   \n\nDROP OFF LOCATIONS (ANY ORDER)  \n~mission(SingleToMultiToken)  \n\nI'm trusting you to set your own route here, so don't mess it up. And try to stay away from anywhere too dangerous. And don't forget to pack a <EM4>handheld tractor beam</EM4> to bring along.",
-      "descriptionKey": "@RedWind_HaulCargo_SingleToMulti_desc_01"
+      "descriptionKey": "@RedWind_HaulCargo_SingleToMulti_desc_01",
+      "repScopeKey": "ReputationScope_Hauling"
     },
     {
       "id": "bridged_redwind_recovercargo",
@@ -80192,11 +80193,11 @@
         }
       ],
       "minStanding": {
-        "name": "Neutral",
+        "name": "Trainee",
         "minReputation": 0
       },
       "maxStanding": {
-        "name": "Elite Contractor",
+        "name": "Master",
         "minReputation": 237750
       },
       "repPoints": 100,
@@ -80209,9 +80210,10 @@
       ],
       "isLawful": true,
       "source": "orphanPoolBridge",
-      "repCareerLabel": "Standing",
+      "repCareerLabel": "Hauling",
       "description": "RED WIND LINEHAUL\n'YOUR GOODS IN GOOD HANDS'\n----------------------------\n\nOne of our haulers ran into some engine trouble whilst transporting some cargo for us and was forced to abandon their ship. Looking for a contractor who can recover the cargo and complete the delivery. You’ll need to bring your own <EM4>heavy-duty tractor beam</EM4> to transport the cargo to your ship. Details below.\n\nRECOVERY LOCATION\n     · <EM4>~mission(Location|Address)</EM4>\n\nDROP OFF LOCATION\n     · Freight elevator at <EM4>~mission(Destination|Address)</EM4>\n\nBe advised, the recovery location hasn’t been verified as safe. You might find an opportunistic outlaw trying to take the cargo for themselves, so be on alert.\n\nTAKE PRIDE IN YOUR WORK – Even as a contractor you are representing Red Wind Linehaul. Do not intentionally do anything to harm the company’s reputation.",
-      "descriptionKey": "@RedWind_RecoverCargo_Easy_Description"
+      "descriptionKey": "@RedWind_RecoverCargo_Easy_Description",
+      "repScopeKey": "ReputationScope_Hauling"
     },
     {
       "id": "bridged_redwind_recoveritem",
@@ -80251,7 +80253,8 @@
       "source": "orphanPoolBridge",
       "repCareerLabel": "Standing",
       "description": "RED WIND LINEHAUL\n'YOUR GOODS IN GOOD HANDS'\n----------------------------\n\nA contractor of ours has run into some trouble and abandoned their ship over at <EM4>~mission(Location|Address)</EM4>. We need someone to head to their ship, pick up the package they left there, and finish the job.\n\nPACKAGES TO RECOVER\n     · <EM4>1x ~mission(Item1)</EM4>\n\nDROP OFF LOCATION\n     · Deliver to <EM4>~mission(Destination|Target|Address)</EM4>\n\nWe’re currently uncertain as to why they failed to complete the contract, so be cautious when approaching the ship.\n\nTAKE PRIDE IN YOUR WORK – Even as a contractor you are representing Red Wind Linehaul. Do not intentionally do anything to harm the company’s reputation.",
-      "descriptionKey": "@RedWind_RecoverItem_VE_Desc_001"
+      "descriptionKey": "@RedWind_RecoverItem_VE_Desc_001",
+      "repScopeKey": "FactionReputationScope"
     }
   ],
   "missionsByPool": {
@@ -80284,7 +80287,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -80330,8 +80333,8 @@
             "amount": 150
           }
         ],
-        "repCareerLabel": "Bounty Hunting",
-        "repScopeKey": "ReputationScope_Bounty",
+        "repCareerLabel": null,
+        "repScopeKey": "ReputationScope_Bounty_BountyHuntersGuild",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -80377,8 +80380,8 @@
             "amount": 150
           }
         ],
-        "repCareerLabel": "Bounty Hunting",
-        "repScopeKey": "ReputationScope_Bounty",
+        "repCareerLabel": null,
+        "repScopeKey": "ReputationScope_Bounty_BountyHuntersGuild",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -80424,8 +80427,8 @@
             "amount": 150
           }
         ],
-        "repCareerLabel": "Bounty Hunting",
-        "repScopeKey": "ReputationScope_Bounty",
+        "repCareerLabel": null,
+        "repScopeKey": "ReputationScope_Bounty_BountyHuntersGuild",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -80471,8 +80474,8 @@
             "amount": 500
           }
         ],
-        "repCareerLabel": "Bounty Hunting",
-        "repScopeKey": "ReputationScope_Bounty",
+        "repCareerLabel": null,
+        "repScopeKey": "ReputationScope_Bounty_BountyHuntersGuild",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -80518,8 +80521,8 @@
             "amount": 500
           }
         ],
-        "repCareerLabel": "Bounty Hunting",
-        "repScopeKey": "ReputationScope_Bounty",
+        "repCareerLabel": null,
+        "repScopeKey": "ReputationScope_Bounty_BountyHuntersGuild",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -80565,8 +80568,8 @@
             "amount": 1000
           }
         ],
-        "repCareerLabel": "Bounty Hunting",
-        "repScopeKey": "ReputationScope_Bounty",
+        "repCareerLabel": null,
+        "repScopeKey": "ReputationScope_Bounty_BountyHuntersGuild",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -80612,8 +80615,8 @@
             "amount": 2000
           }
         ],
-        "repCareerLabel": "Bounty Hunting",
-        "repScopeKey": "ReputationScope_Bounty",
+        "repCareerLabel": null,
+        "repScopeKey": "ReputationScope_Bounty_BountyHuntersGuild",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -80659,8 +80662,8 @@
             "amount": 2000
           }
         ],
-        "repCareerLabel": "Bounty Hunting",
-        "repScopeKey": "ReputationScope_Bounty",
+        "repCareerLabel": null,
+        "repScopeKey": "ReputationScope_Bounty_BountyHuntersGuild",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -80706,8 +80709,8 @@
             "amount": 8000
           }
         ],
-        "repCareerLabel": "Bounty Hunting",
-        "repScopeKey": "ReputationScope_Bounty",
+        "repCareerLabel": null,
+        "repScopeKey": "ReputationScope_Bounty_BountyHuntersGuild",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -80753,8 +80756,8 @@
             "amount": 16000
           }
         ],
-        "repCareerLabel": "Bounty Hunting",
-        "repScopeKey": "ReputationScope_Bounty",
+        "repCareerLabel": null,
+        "repScopeKey": "ReputationScope_Bounty_BountyHuntersGuild",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -81837,7 +81840,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -81884,7 +81887,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -81931,7 +81934,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -81978,7 +81981,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -82027,7 +82030,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -82062,7 +82065,6 @@
         "repPoints": 0,
         "repEffects": [],
         "repCareerLabel": "Bounty Hunting",
-        "repScopeKey": null,
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": -1,
@@ -82111,7 +82113,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -82144,17 +82146,17 @@
         "region": null,
         "category": "Hauling Interstellar",
         "minStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "maxStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": "Standing",
-        "repScopeKey": "ReputationScope_Delivery",
+        "repCareerLabel": "Hauling",
+        "repScopeKey": "ReputationScope_Hauling",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -82185,17 +82187,17 @@
         "region": null,
         "category": "Hauling Interstellar",
         "minStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "maxStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": "Standing",
-        "repScopeKey": "ReputationScope_Delivery",
+        "repCareerLabel": "Hauling",
+        "repScopeKey": "ReputationScope_Hauling",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -82226,17 +82228,17 @@
         "region": null,
         "category": "Hauling Interstellar",
         "minStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "maxStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": "Standing",
-        "repScopeKey": "ReputationScope_Delivery",
+        "repCareerLabel": "Hauling",
+        "repScopeKey": "ReputationScope_Hauling",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -82267,17 +82269,17 @@
         "region": null,
         "category": "Hauling Interstellar",
         "minStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "maxStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": "Standing",
-        "repScopeKey": "ReputationScope_Delivery",
+        "repCareerLabel": "Hauling",
+        "repScopeKey": "ReputationScope_Hauling",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -82308,17 +82310,17 @@
         "region": null,
         "category": "Hauling Interstellar",
         "minStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "maxStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": "Standing",
-        "repScopeKey": "ReputationScope_Delivery",
+        "repCareerLabel": "Hauling",
+        "repScopeKey": "ReputationScope_Hauling",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -82349,17 +82351,17 @@
         "region": null,
         "category": "Hauling Interstellar",
         "minStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "maxStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": "Standing",
-        "repScopeKey": "ReputationScope_Delivery",
+        "repCareerLabel": "Hauling",
+        "repScopeKey": "ReputationScope_Hauling",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -82390,17 +82392,17 @@
         "region": null,
         "category": "Hauling Interstellar",
         "minStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "maxStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": "Standing",
-        "repScopeKey": "ReputationScope_Delivery",
+        "repCareerLabel": "Hauling",
+        "repScopeKey": "ReputationScope_Hauling",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -82431,17 +82433,17 @@
         "region": null,
         "category": "Hauling Interstellar",
         "minStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "maxStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": "Standing",
-        "repScopeKey": "ReputationScope_Delivery",
+        "repCareerLabel": "Hauling",
+        "repScopeKey": "ReputationScope_Hauling",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -82472,17 +82474,17 @@
         "region": null,
         "category": "Hauling Interstellar",
         "minStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "maxStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": "Standing",
-        "repScopeKey": "ReputationScope_Delivery",
+        "repCareerLabel": "Hauling",
+        "repScopeKey": "ReputationScope_Hauling",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -82513,17 +82515,17 @@
         "region": null,
         "category": "Hauling Interstellar",
         "minStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "maxStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": "Standing",
-        "repScopeKey": "ReputationScope_Delivery",
+        "repCareerLabel": "Hauling",
+        "repScopeKey": "ReputationScope_Hauling",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -82554,17 +82556,17 @@
         "region": null,
         "category": "Hauling Interstellar",
         "minStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "maxStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": "Standing",
-        "repScopeKey": "ReputationScope_Delivery",
+        "repCareerLabel": "Hauling",
+        "repScopeKey": "ReputationScope_Hauling",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -82595,17 +82597,17 @@
         "region": null,
         "category": "Hauling Interstellar",
         "minStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "maxStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": "Standing",
-        "repScopeKey": "ReputationScope_Delivery",
+        "repCareerLabel": "Hauling",
+        "repScopeKey": "ReputationScope_Hauling",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -82636,17 +82638,17 @@
         "region": null,
         "category": "Hauling Interstellar",
         "minStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "maxStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": "Standing",
-        "repScopeKey": "ReputationScope_Delivery",
+        "repCareerLabel": "Hauling",
+        "repScopeKey": "ReputationScope_Hauling",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -82677,17 +82679,17 @@
         "region": null,
         "category": "Hauling Interstellar",
         "minStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "maxStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": "Standing",
-        "repScopeKey": "ReputationScope_Delivery",
+        "repCareerLabel": "Hauling",
+        "repScopeKey": "ReputationScope_Hauling",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -82718,17 +82720,17 @@
         "region": null,
         "category": "Hauling Interstellar",
         "minStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "maxStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": "Standing",
-        "repScopeKey": "ReputationScope_Delivery",
+        "repCareerLabel": "Hauling",
+        "repScopeKey": "ReputationScope_Hauling",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -82759,17 +82761,17 @@
         "region": null,
         "category": "Hauling Interstellar",
         "minStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "maxStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": "Standing",
-        "repScopeKey": "ReputationScope_Delivery",
+        "repCareerLabel": "Hauling",
+        "repScopeKey": "ReputationScope_Hauling",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -84026,11 +84028,11 @@
         "region": null,
         "category": "Hauling",
         "minStanding": {
-          "name": "Neutral",
+          "name": "Trainee",
           "minReputation": 0
         },
         "maxStanding": {
-          "name": "Neutral",
+          "name": "Trainee",
           "minReputation": 0
         },
         "repPoints": 100,
@@ -84041,8 +84043,8 @@
             "amount": 100
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": "ReputationScope_Delivery",
+        "repCareerLabel": "Hauling",
+        "repScopeKey": "ReputationScope_Hauling",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -84073,11 +84075,11 @@
         "region": null,
         "category": "Hauling",
         "minStanding": {
-          "name": "Neutral",
+          "name": "Trainee",
           "minReputation": 0
         },
         "maxStanding": {
-          "name": "Neutral",
+          "name": "Trainee",
           "minReputation": 0
         },
         "repPoints": 100,
@@ -84088,8 +84090,8 @@
             "amount": 100
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": "ReputationScope_Delivery",
+        "repCareerLabel": "Hauling",
+        "repScopeKey": "ReputationScope_Hauling",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -84120,11 +84122,11 @@
         "region": null,
         "category": "Hauling",
         "minStanding": {
-          "name": "Neutral",
+          "name": "Trainee",
           "minReputation": 0
         },
         "maxStanding": {
-          "name": "Neutral",
+          "name": "Trainee",
           "minReputation": 0
         },
         "repPoints": 100,
@@ -84135,8 +84137,8 @@
             "amount": 100
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": "ReputationScope_Delivery",
+        "repCareerLabel": "Hauling",
+        "repScopeKey": "ReputationScope_Hauling",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -84167,11 +84169,11 @@
         "region": null,
         "category": "Hauling Interstellar",
         "minStanding": {
-          "name": "Neutral",
+          "name": "Rookie",
           "minReputation": 50
         },
         "maxStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "repPoints": 100,
@@ -84182,8 +84184,8 @@
             "amount": 100
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": "ReputationScope_Delivery",
+        "repCareerLabel": "Hauling",
+        "repScopeKey": "ReputationScope_Hauling",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -84214,11 +84216,11 @@
         "region": null,
         "category": "Hauling Interstellar",
         "minStanding": {
-          "name": "Neutral",
+          "name": "Rookie",
           "minReputation": 50
         },
         "maxStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "repPoints": 100,
@@ -84229,8 +84231,8 @@
             "amount": 100
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": "ReputationScope_Delivery",
+        "repCareerLabel": "Hauling",
+        "repScopeKey": "ReputationScope_Hauling",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -84261,11 +84263,11 @@
         "region": null,
         "category": "Hauling Interstellar",
         "minStanding": {
-          "name": "Neutral",
+          "name": "Rookie",
           "minReputation": 50
         },
         "maxStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "repPoints": 100,
@@ -84276,8 +84278,8 @@
             "amount": 100
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": "ReputationScope_Delivery",
+        "repCareerLabel": "Hauling",
+        "repScopeKey": "ReputationScope_Hauling",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -84308,11 +84310,11 @@
         "region": null,
         "category": "Hauling Interstellar",
         "minStanding": {
-          "name": "Neutral",
+          "name": "Rookie",
           "minReputation": 50
         },
         "maxStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "repPoints": 100,
@@ -84323,8 +84325,8 @@
             "amount": 100
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": "ReputationScope_Delivery",
+        "repCareerLabel": "Hauling",
+        "repScopeKey": "ReputationScope_Hauling",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -84367,7 +84369,6 @@
           }
         ],
         "repCareerLabel": "Bounty Hunting",
-        "repScopeKey": null,
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": -1,
@@ -84410,7 +84411,6 @@
           }
         ],
         "repCareerLabel": "Bounty Hunting",
-        "repScopeKey": null,
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": -1,
@@ -84458,8 +84458,8 @@
             "amount": 250
           }
         ],
-        "repCareerLabel": "Bounty Hunting",
-        "repScopeKey": "ReputationScope_Bounty",
+        "repCareerLabel": null,
+        "repScopeKey": "ReputationScope_Bounty_BountyHuntersGuild",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -84774,11 +84774,11 @@
         "region": "A",
         "category": "Mercenary",
         "minStanding": {
-          "name": "Neutral",
+          "name": "Applicant",
           "minReputation": 0
         },
         "maxStanding": {
-          "name": "Neutral",
+          "name": "Applicant",
           "minReputation": 0
         },
         "repPoints": 75,
@@ -84789,8 +84789,8 @@
             "amount": 75
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": "FactionReputationScope",
+        "repCareerLabel": "Security",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": -1,
@@ -84962,11 +84962,11 @@
         "region": "B",
         "category": "Mercenary",
         "minStanding": {
-          "name": "Neutral",
+          "name": "Applicant",
           "minReputation": 0
         },
         "maxStanding": {
-          "name": "Neutral",
+          "name": "Applicant",
           "minReputation": 0
         },
         "repPoints": 75,
@@ -84977,8 +84977,8 @@
             "amount": 75
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": "FactionReputationScope",
+        "repCareerLabel": "Security",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": -1,
@@ -85763,11 +85763,11 @@
         "region": "C",
         "category": "Mercenary",
         "minStanding": {
-          "name": "Neutral",
+          "name": "Applicant",
           "minReputation": 0
         },
         "maxStanding": {
-          "name": "Neutral",
+          "name": "Applicant",
           "minReputation": 0
         },
         "repPoints": 75,
@@ -85778,8 +85778,8 @@
             "amount": 75
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": "FactionReputationScope",
+        "repCareerLabel": "Security",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": -1,
@@ -85951,11 +85951,11 @@
         "region": "D",
         "category": "Mercenary",
         "minStanding": {
-          "name": "Neutral",
+          "name": "Applicant",
           "minReputation": 0
         },
         "maxStanding": {
-          "name": "Neutral",
+          "name": "Applicant",
           "minReputation": 0
         },
         "repPoints": 75,
@@ -85966,8 +85966,8 @@
             "amount": 75
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": "FactionReputationScope",
+        "repCareerLabel": "Security",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": -1,
@@ -86895,11 +86895,11 @@
         "region": "C",
         "category": "Mercenary",
         "minStanding": {
-          "name": "Neutral",
+          "name": "Applicant",
           "minReputation": 0
         },
         "maxStanding": {
-          "name": "Neutral",
+          "name": "Applicant",
           "minReputation": 0
         },
         "repPoints": 75,
@@ -86910,8 +86910,8 @@
             "amount": 75
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": "FactionReputationScope",
+        "repCareerLabel": "Security",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": -1,
@@ -88556,11 +88556,11 @@
         "region": null,
         "category": "Mercenary",
         "minStanding": {
-          "name": "Elite Contractor",
+          "name": "Sr. Security Contractor",
           "minReputation": 120000
         },
         "maxStanding": {
-          "name": "Elite Contractor",
+          "name": "Elite Security Contractor",
           "minReputation": 1600000
         },
         "repPoints": 500,
@@ -88571,8 +88571,8 @@
             "amount": 500
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": "ReputationScope_Security",
+        "repCareerLabel": "Security",
+        "repScopeKey": "ReputationScope_HiredMuscle",
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": 1,
@@ -88603,11 +88603,11 @@
         "region": null,
         "category": "Mercenary",
         "minStanding": {
-          "name": "Contractor",
+          "name": "Jr. Security Contractor",
           "minReputation": 5000
         },
         "maxStanding": {
-          "name": "Elite Contractor",
+          "name": "Elite Security Contractor",
           "minReputation": 1600000
         },
         "repPoints": 500,
@@ -88618,8 +88618,8 @@
             "amount": 500
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": "ReputationScope_Security",
+        "repCareerLabel": "Security",
+        "repScopeKey": "ReputationScope_HiredMuscle",
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": 1,
@@ -88650,11 +88650,11 @@
         "region": null,
         "category": "Mercenary",
         "minStanding": {
-          "name": "Veteran Contractor",
+          "name": "Security Contractor",
           "minReputation": 30000
         },
         "maxStanding": {
-          "name": "Elite Contractor",
+          "name": "Elite Security Contractor",
           "minReputation": 1600000
         },
         "repPoints": 500,
@@ -88665,8 +88665,8 @@
             "amount": 500
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": "ReputationScope_Security",
+        "repCareerLabel": "Security",
+        "repScopeKey": "ReputationScope_HiredMuscle",
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": 1,
@@ -88697,11 +88697,11 @@
         "region": null,
         "category": "Mercenary",
         "minStanding": {
-          "name": "Elite Contractor",
+          "name": "Sr. Security Contractor",
           "minReputation": 120000
         },
         "maxStanding": {
-          "name": "Elite Contractor",
+          "name": "Elite Security Contractor",
           "minReputation": 1600000
         },
         "repPoints": 500,
@@ -88712,8 +88712,8 @@
             "amount": 500
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": "ReputationScope_Security",
+        "repCareerLabel": "Security",
+        "repScopeKey": "ReputationScope_HiredMuscle",
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": 1,
@@ -90037,7 +90037,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": 1,
@@ -90084,7 +90084,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": 1,
@@ -90131,7 +90131,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": 1,
@@ -90178,7 +90178,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": 1,
@@ -90225,7 +90225,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": 1,
@@ -90272,7 +90272,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": 1,
@@ -90319,7 +90319,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": 1,
@@ -90366,7 +90366,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": 1,
@@ -90413,7 +90413,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": 1,
@@ -90460,7 +90460,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": 1,
@@ -90507,7 +90507,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": 1,
@@ -90554,7 +90554,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": 1,
@@ -90601,7 +90601,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -90648,7 +90648,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -90695,7 +90695,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -90742,7 +90742,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -90789,7 +90789,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -90836,7 +90836,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -90883,7 +90883,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 4,
           "maxInstancesPerPlayer": 1,
@@ -90930,7 +90930,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 4,
           "maxInstancesPerPlayer": 1,
@@ -90977,7 +90977,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": 1,
@@ -91024,7 +91024,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 3,
@@ -91071,7 +91071,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 3,
           "maxInstancesPerPlayer": 1,
@@ -91118,7 +91118,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 2,
           "maxInstancesPerPlayer": 1,
@@ -91165,7 +91165,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 4,
           "maxInstancesPerPlayer": 1,
@@ -91212,7 +91212,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 3,
           "maxInstancesPerPlayer": 1,
@@ -91259,7 +91259,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 3,
           "maxInstancesPerPlayer": 1,
@@ -91306,7 +91306,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": -1,
@@ -91353,7 +91353,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": -1,
@@ -91400,7 +91400,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -91447,7 +91447,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -91481,8 +91481,6 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": null,
-        "repScopeKey": null,
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": -1,
@@ -91516,8 +91514,6 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": null,
-        "repScopeKey": null,
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": -1,
@@ -91551,8 +91547,6 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": null,
-        "repScopeKey": null,
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": -1,
@@ -91601,7 +91595,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -91648,7 +91642,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -91695,7 +91689,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -91742,7 +91736,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -91789,7 +91783,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -91836,7 +91830,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -91883,7 +91877,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -91930,7 +91924,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -91977,7 +91971,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -92024,7 +92018,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -92073,7 +92067,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 3,
           "maxInstancesPerPlayer": 1,
@@ -92120,7 +92114,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 3,
           "maxInstancesPerPlayer": 1,
@@ -92167,7 +92161,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 3,
           "maxInstancesPerPlayer": 1,
@@ -92214,7 +92208,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 3,
           "maxInstancesPerPlayer": 1,
@@ -92261,7 +92255,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 3,
           "maxInstancesPerPlayer": 1,
@@ -92308,7 +92302,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": 1,
@@ -92355,7 +92349,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 3,
           "maxInstancesPerPlayer": 1,
@@ -92402,7 +92396,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 3,
           "maxInstancesPerPlayer": 1,
@@ -92449,7 +92443,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 3,
           "maxInstancesPerPlayer": 1,
@@ -92496,7 +92490,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 3,
           "maxInstancesPerPlayer": 1,
@@ -92543,7 +92537,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 3,
           "maxInstancesPerPlayer": 1,
@@ -92590,7 +92584,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": 1,
@@ -92639,7 +92633,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -92686,7 +92680,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -92733,7 +92727,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -92780,7 +92774,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -92827,7 +92821,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -92874,7 +92868,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -92921,7 +92915,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -92968,7 +92962,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -93015,7 +93009,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -93062,7 +93056,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -93109,7 +93103,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -93156,7 +93150,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -93205,7 +93199,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 4,
           "maxInstancesPerPlayer": 1,
@@ -93252,7 +93246,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 4,
           "maxInstancesPerPlayer": 1,
@@ -93299,7 +93293,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 4,
           "maxInstancesPerPlayer": 1,
@@ -93346,7 +93340,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 4,
           "maxInstancesPerPlayer": 1,
@@ -93393,7 +93387,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 4,
           "maxInstancesPerPlayer": 1,
@@ -93440,7 +93434,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 4,
           "maxInstancesPerPlayer": 1,
@@ -93487,7 +93481,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 4,
           "maxInstancesPerPlayer": 1,
@@ -93534,7 +93528,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 4,
           "maxInstancesPerPlayer": 1,
@@ -93581,7 +93575,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 4,
           "maxInstancesPerPlayer": 1,
@@ -93628,7 +93622,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 4,
           "maxInstancesPerPlayer": 1,
@@ -93675,7 +93669,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 4,
           "maxInstancesPerPlayer": 1,
@@ -93722,7 +93716,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": 4,
           "maxInstancesPerPlayer": 1,
@@ -93771,7 +93765,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -93818,7 +93812,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -93865,7 +93859,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -93912,7 +93906,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -93959,7 +93953,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -94006,7 +94000,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -94053,7 +94047,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -94102,7 +94096,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -94149,7 +94143,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -94196,7 +94190,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -94245,7 +94239,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -94286,7 +94280,7 @@
         "repPoints": 0,
         "repEffects": [],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -94333,7 +94327,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -94380,7 +94374,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -94427,7 +94421,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -94474,7 +94468,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -94521,7 +94515,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -94570,7 +94564,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -94617,7 +94611,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -94664,7 +94658,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -94713,7 +94707,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -94760,7 +94754,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -94807,7 +94801,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -94854,7 +94848,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -94901,7 +94895,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -94948,7 +94942,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -94995,7 +94989,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -95044,7 +95038,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -95091,7 +95085,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -95138,7 +95132,7 @@
           }
         ],
         "repCareerLabel": "Security",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -95175,7 +95169,6 @@
         "repPoints": 0,
         "repEffects": [],
         "repCareerLabel": "Standing",
-        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -95212,7 +95205,6 @@
         "repPoints": 0,
         "repEffects": [],
         "repCareerLabel": "Standing",
-        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -95249,7 +95241,6 @@
         "repPoints": 0,
         "repEffects": [],
         "repCareerLabel": "Standing",
-        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -95286,7 +95277,6 @@
         "repPoints": 0,
         "repEffects": [],
         "repCareerLabel": "Standing",
-        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -95323,7 +95313,6 @@
         "repPoints": 0,
         "repEffects": [],
         "repCareerLabel": "Standing",
-        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -95360,7 +95349,6 @@
         "repPoints": 0,
         "repEffects": [],
         "repCareerLabel": "Standing",
-        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -95969,7 +95957,6 @@
         "repPoints": 0,
         "repEffects": [],
         "repCareerLabel": "Standing",
-        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -96004,7 +95991,6 @@
         "repPoints": 0,
         "repEffects": [],
         "repCareerLabel": "Standing",
-        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -96335,7 +96321,7 @@
           "minReputation": 0
         },
         "maxStanding": {
-          "name": "Master Tracker",
+          "name": "Elite Security Contractor",
           "minReputation": 1600000
         },
         "repPoints": 4000,
@@ -96346,8 +96332,8 @@
             "amount": 4000
           }
         ],
-        "repCareerLabel": "Bounty Hunting",
-        "repScopeKey": "ReputationScope_Bounty",
+        "repCareerLabel": "Security",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -96382,7 +96368,7 @@
           "minReputation": 0
         },
         "maxStanding": {
-          "name": "Master Tracker",
+          "name": "Elite Security Contractor",
           "minReputation": 1600000
         },
         "repPoints": 8000,
@@ -96393,8 +96379,8 @@
             "amount": 8000
           }
         ],
-        "repCareerLabel": "Bounty Hunting",
-        "repScopeKey": "ReputationScope_Bounty",
+        "repCareerLabel": "Security",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -96431,7 +96417,7 @@
           "minReputation": 0
         },
         "maxStanding": {
-          "name": "Master Tracker",
+          "name": "Elite Security Contractor",
           "minReputation": 1600000
         },
         "repPoints": 4000,
@@ -96442,8 +96428,8 @@
             "amount": 4000
           }
         ],
-        "repCareerLabel": "Bounty Hunting",
-        "repScopeKey": "ReputationScope_Bounty",
+        "repCareerLabel": "Security",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -96478,7 +96464,7 @@
           "minReputation": 0
         },
         "maxStanding": {
-          "name": "Master Tracker",
+          "name": "Elite Security Contractor",
           "minReputation": 1600000
         },
         "repPoints": 8000,
@@ -96489,8 +96475,8 @@
             "amount": 8000
           }
         ],
-        "repCareerLabel": "Bounty Hunting",
-        "repScopeKey": "ReputationScope_Bounty",
+        "repCareerLabel": "Security",
+        "repScopeKey": "ReputationScope_Security",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -96526,8 +96512,6 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": null,
-        "repScopeKey": null,
         "frequency": {
           "maxInstances": 0,
           "maxInstancesPerPlayer": 0,
@@ -96561,8 +96545,6 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": null,
-        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -96605,7 +96587,6 @@
           }
         ],
         "repCareerLabel": "Standing",
-        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -96653,7 +96634,7 @@
             "amount": 800
           }
         ],
-        "repCareerLabel": "Standing",
+        "repCareerLabel": null,
         "repScopeKey": "MissionProviderReputationScope_Battaglia",
         "frequency": {
           "maxInstances": -1,
@@ -96702,7 +96683,7 @@
             "amount": 800
           }
         ],
-        "repCareerLabel": "Standing",
+        "repCareerLabel": null,
         "repScopeKey": "MissionProviderReputationScope_Battaglia",
         "frequency": {
           "maxInstances": -1,
@@ -96751,7 +96732,7 @@
             "amount": 800
           }
         ],
-        "repCareerLabel": "Standing",
+        "repCareerLabel": null,
         "repScopeKey": "MissionProviderReputationScope_Battaglia",
         "frequency": {
           "maxInstances": -1,
@@ -96800,7 +96781,7 @@
             "amount": 800
           }
         ],
-        "repCareerLabel": "Standing",
+        "repCareerLabel": null,
         "repScopeKey": "MissionProviderReputationScope_Battaglia",
         "frequency": {
           "maxInstances": -1,
@@ -96844,7 +96825,6 @@
           }
         ],
         "repCareerLabel": "Standing",
-        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -96890,8 +96870,8 @@
             "amount": 200
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": null,
+        "repCareerLabel": null,
+        "repScopeKey": "MissionProviderReputationScope_Battaglia",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -96937,8 +96917,8 @@
             "amount": 220
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": null,
+        "repCareerLabel": null,
+        "repScopeKey": "MissionProviderReputationScope_Battaglia",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -96979,7 +96959,6 @@
           }
         ],
         "repCareerLabel": "Standing",
-        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -97025,8 +97004,8 @@
             "amount": 200
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": null,
+        "repCareerLabel": null,
+        "repScopeKey": "MissionProviderReputationScope_Battaglia",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -97072,8 +97051,8 @@
             "amount": 220
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": null,
+        "repCareerLabel": null,
+        "repScopeKey": "MissionProviderReputationScope_Battaglia",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -97114,7 +97093,6 @@
           }
         ],
         "repCareerLabel": "Standing",
-        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -97160,8 +97138,8 @@
             "amount": 300
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": null,
+        "repCareerLabel": null,
+        "repScopeKey": "MissionProviderReputationScope_Battaglia",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -97209,8 +97187,8 @@
             "amount": 260
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": null,
+        "repCareerLabel": null,
+        "repScopeKey": "MissionProviderReputationScope_Battaglia",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -97256,8 +97234,8 @@
             "amount": 300
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": null,
+        "repCareerLabel": null,
+        "repScopeKey": "MissionProviderReputationScope_Battaglia",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -97303,8 +97281,8 @@
             "amount": 260
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": null,
+        "repCareerLabel": null,
+        "repScopeKey": "MissionProviderReputationScope_Battaglia",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -97350,8 +97328,8 @@
             "amount": 380
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": null,
+        "repCareerLabel": null,
+        "repScopeKey": "MissionProviderReputationScope_Battaglia",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -97397,8 +97375,8 @@
             "amount": 160
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": null,
+        "repCareerLabel": null,
+        "repScopeKey": "MissionProviderReputationScope_Battaglia",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -97444,8 +97422,8 @@
             "amount": 200
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": null,
+        "repCareerLabel": null,
+        "repScopeKey": "MissionProviderReputationScope_Battaglia",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -97491,7 +97469,7 @@
             "amount": 200
           }
         ],
-        "repCareerLabel": "Standing",
+        "repCareerLabel": null,
         "repScopeKey": "MissionProviderReputationScope_Battaglia",
         "frequency": {
           "maxInstances": -1,
@@ -97538,8 +97516,8 @@
             "amount": 200
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": null,
+        "repCareerLabel": null,
+        "repScopeKey": "MissionProviderReputationScope_Battaglia",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -97587,8 +97565,8 @@
             "amount": 400
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": null,
+        "repCareerLabel": null,
+        "repScopeKey": "MissionProviderReputationScope_Battaglia",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -97634,8 +97612,8 @@
             "amount": 600
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": null,
+        "repCareerLabel": null,
+        "repScopeKey": "MissionProviderReputationScope_Battaglia",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -97681,8 +97659,8 @@
             "amount": 400
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": null,
+        "repCareerLabel": null,
+        "repScopeKey": "MissionProviderReputationScope_Battaglia",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -97728,8 +97706,8 @@
             "amount": 600
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": null,
+        "repCareerLabel": null,
+        "repScopeKey": "MissionProviderReputationScope_Battaglia",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -97775,8 +97753,8 @@
             "amount": 240
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": null,
+        "repCareerLabel": null,
+        "repScopeKey": "MissionProviderReputationScope_Battaglia",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -97822,8 +97800,8 @@
             "amount": 300
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": null,
+        "repCareerLabel": null,
+        "repScopeKey": "MissionProviderReputationScope_Battaglia",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -97869,8 +97847,8 @@
             "amount": 200
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": null,
+        "repCareerLabel": null,
+        "repScopeKey": "MissionProviderReputationScope_Battaglia",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -97916,8 +97894,8 @@
             "amount": 400
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": null,
+        "repCareerLabel": null,
+        "repScopeKey": "MissionProviderReputationScope_Battaglia",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -97963,8 +97941,8 @@
             "amount": 600
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": null,
+        "repCareerLabel": null,
+        "repScopeKey": "MissionProviderReputationScope_Battaglia",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -98010,7 +97988,7 @@
             "amount": 240
           }
         ],
-        "repCareerLabel": "Standing",
+        "repCareerLabel": null,
         "repScopeKey": "MissionProviderReputationScope_Battaglia",
         "frequency": {
           "maxInstances": -1,
@@ -98057,8 +98035,8 @@
             "amount": 240
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": null,
+        "repCareerLabel": null,
+        "repScopeKey": "MissionProviderReputationScope_Battaglia",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -98104,8 +98082,8 @@
             "amount": 260
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": null,
+        "repCareerLabel": null,
+        "repScopeKey": "MissionProviderReputationScope_Battaglia",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -98151,8 +98129,8 @@
             "amount": 360
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": null,
+        "repCareerLabel": null,
+        "repScopeKey": "MissionProviderReputationScope_Battaglia",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -98200,8 +98178,8 @@
             "amount": 360
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": null,
+        "repCareerLabel": null,
+        "repScopeKey": "MissionProviderReputationScope_Battaglia",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -98237,8 +98215,6 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": null,
-        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -98281,7 +98257,6 @@
           }
         ],
         "repCareerLabel": "Barter & Trade",
-        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -98324,7 +98299,6 @@
           }
         ],
         "repCareerLabel": "Barter & Trade",
-        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -98367,7 +98341,6 @@
           }
         ],
         "repCareerLabel": "Barter & Trade",
-        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -98410,7 +98383,6 @@
           }
         ],
         "repCareerLabel": "Barter & Trade",
-        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -98453,7 +98425,6 @@
           }
         ],
         "repCareerLabel": "Barter & Trade",
-        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -98496,7 +98467,6 @@
           }
         ],
         "repCareerLabel": "Barter & Trade",
-        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -98539,7 +98509,6 @@
           }
         ],
         "repCareerLabel": "Barter & Trade",
-        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -98582,7 +98551,6 @@
           }
         ],
         "repCareerLabel": "Barter & Trade",
-        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -98625,7 +98593,6 @@
           }
         ],
         "repCareerLabel": "Barter & Trade",
-        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -98668,7 +98635,6 @@
           }
         ],
         "repCareerLabel": "Barter & Trade",
-        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -98711,7 +98677,6 @@
           }
         ],
         "repCareerLabel": "Barter & Trade",
-        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -98754,7 +98719,6 @@
           }
         ],
         "repCareerLabel": "Barter & Trade",
-        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -98797,7 +98761,6 @@
           }
         ],
         "repCareerLabel": "Barter & Trade",
-        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -98834,7 +98797,6 @@
         "repPoints": 0,
         "repEffects": [],
         "repCareerLabel": "Barter & Trade",
-        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -98871,7 +98833,6 @@
         "repPoints": 0,
         "repEffects": [],
         "repCareerLabel": "Barter & Trade",
-        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -124939,7 +124900,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -124986,7 +124947,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 3,
@@ -125033,7 +124994,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -125080,7 +125041,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 2,
@@ -125127,7 +125088,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -125174,7 +125135,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -125221,7 +125182,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": 20,
           "maxInstancesPerPlayer": 1,
@@ -125268,7 +125229,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -125315,7 +125276,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 3,
@@ -125362,7 +125323,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -125409,7 +125370,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 3,
@@ -125456,7 +125417,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 2,
@@ -125503,7 +125464,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 2,
@@ -125550,7 +125511,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -125597,7 +125558,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -125644,7 +125605,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": 20,
           "maxInstancesPerPlayer": 6,
@@ -125691,7 +125652,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -125738,7 +125699,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 3,
@@ -125785,7 +125746,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 2,
@@ -125832,7 +125793,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 2,
@@ -125879,7 +125840,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -125926,7 +125887,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -125973,7 +125934,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": 10,
           "maxInstancesPerPlayer": 1,
@@ -126020,7 +125981,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -126067,7 +126028,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -126114,7 +126075,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -126161,7 +126122,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": 20,
           "maxInstancesPerPlayer": 1,
@@ -126208,7 +126169,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -126255,7 +126216,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -126302,7 +126263,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -126349,7 +126310,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -126396,7 +126357,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -126443,7 +126404,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -126490,7 +126451,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -126537,7 +126498,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -126584,7 +126545,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -126631,7 +126592,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -126678,7 +126639,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -126725,7 +126686,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -126772,7 +126733,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -126819,7 +126780,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -126866,7 +126827,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -126913,7 +126874,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -126960,7 +126921,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -127007,7 +126968,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -127054,7 +127015,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -127101,7 +127062,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -127148,7 +127109,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": 20,
           "maxInstancesPerPlayer": 1,
@@ -127195,7 +127156,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -127242,7 +127203,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -127289,7 +127250,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -127336,7 +127297,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -127383,7 +127344,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -127430,7 +127391,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -127477,7 +127438,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -127524,7 +127485,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -127571,7 +127532,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -127618,7 +127579,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -127665,7 +127626,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -127712,7 +127673,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -127759,7 +127720,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -127806,7 +127767,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -127853,7 +127814,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -127900,7 +127861,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -127947,7 +127908,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": 2,
           "maxInstancesPerPlayer": 1,
@@ -127994,7 +127955,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -128041,7 +128002,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -128088,7 +128049,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -128135,7 +128096,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": 20,
           "maxInstancesPerPlayer": 1,
@@ -128182,7 +128143,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -128229,7 +128190,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -128276,7 +128237,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -128323,7 +128284,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -128370,7 +128331,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -128417,7 +128378,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -128464,7 +128425,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -128511,7 +128472,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -128558,7 +128519,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -128605,7 +128566,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -128652,7 +128613,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -128699,7 +128660,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -128746,7 +128707,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -128793,7 +128754,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -128840,7 +128801,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -128887,7 +128848,7 @@
           }
         ],
         "repCareerLabel": "Affinity",
-        "repScopeKey": "FactionReputationScope",
+        "repScopeKey": "ReputationScope_Affinity",
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 6,
@@ -128923,8 +128884,6 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": null,
-        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -128944,8 +128903,6 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": null,
-        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -128965,8 +128922,6 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": null,
-        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -128986,8 +128941,6 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": null,
-        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129007,8 +128960,6 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": null,
-        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129028,8 +128979,6 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": null,
-        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129049,8 +128998,6 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": null,
-        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129070,8 +129017,6 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": null,
-        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129091,8 +129036,6 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": null,
-        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129112,8 +129055,6 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": null,
-        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129133,8 +129074,6 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": null,
-        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129154,8 +129093,6 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": null,
-        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129175,8 +129112,6 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": null,
-        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129196,8 +129131,6 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": null,
-        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129217,8 +129150,6 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": null,
-        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129238,8 +129169,6 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": null,
-        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129259,8 +129188,6 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": null,
-        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129280,8 +129207,6 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": null,
-        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129301,8 +129226,6 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": null,
-        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129322,8 +129245,6 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": null,
-        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129343,8 +129264,6 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": null,
-        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129364,8 +129283,6 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": null,
-        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129385,8 +129302,6 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": null,
-        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129406,8 +129321,6 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": null,
-        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129427,8 +129340,6 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": null,
-        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129445,11 +129356,11 @@
         "region": null,
         "category": "Hauling Interstellar",
         "minStanding": {
-          "name": "Neutral",
+          "name": "Rookie",
           "minReputation": 50
         },
         "maxStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "repPoints": 200,
@@ -129460,8 +129371,8 @@
             "amount": 200
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": null,
+        "repCareerLabel": "Hauling",
+        "repScopeKey": "ReputationScope_Hauling",
         "frequency": null
       },
       {
@@ -129476,11 +129387,11 @@
         "region": null,
         "category": "Hauling",
         "minStanding": {
-          "name": "Neutral",
+          "name": "Trainee",
           "minReputation": 0
         },
         "maxStanding": {
-          "name": "Elite Contractor",
+          "name": "Master",
           "minReputation": 237750
         },
         "repPoints": 100,
@@ -129491,8 +129402,8 @@
             "amount": 100
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": null,
+        "repCareerLabel": "Hauling",
+        "repScopeKey": "ReputationScope_Hauling",
         "frequency": null
       },
       {
@@ -129523,7 +129434,7 @@
           }
         ],
         "repCareerLabel": "Standing",
-        "repScopeKey": null,
+        "repScopeKey": "FactionReputationScope",
         "frequency": null
       }
     ]

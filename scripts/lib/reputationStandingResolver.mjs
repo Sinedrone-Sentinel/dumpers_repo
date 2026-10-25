@@ -21,7 +21,7 @@ const STANDING_PATH_CATEGORY_TO_SCOPE = {
   handyman: 'ReputationScope_Handyman',
   smuggling: 'ReputationScope_Smuggling',
   theft: 'ReputationScope_Theft',
-  delivery: 'ReputationScope_Delivery',
+  delivery: 'ReputationScope_Hauling',
   emergency: 'ReputationScope_Emergency',
   maintenance: 'ReputationScope_Maintenance',
 }
@@ -243,34 +243,94 @@ export function enrichContractStandingFields(contract, reputationSystem, localiz
     : null
 
   const repScopeKey = minStanding?.scopeKey ?? maxStanding?.scopeKey ?? null
-  const repCareerLabel = minStanding?.scopeLabel ?? maxStanding?.scopeLabel ?? null
   const aligned = alignContractStandings(
     minStanding ? { name: minStanding.name, minReputation: minStanding.minReputation } : null,
     maxStanding ? { name: maxStanding.name, minReputation: maxStanding.minReputation } : null,
     lookupFactionStanding(contract.factionKey, reputationSystem?.factionStandings),
-    { category: contract.category, repCareerLabel },
+    { category: contract.category, repScopeKey },
   )
 
   return {
     minStanding: aligned.minStanding,
     maxStanding: aligned.maxStanding,
-    repScopeKey,
+    repScopeKey: aligned.repScopeKey ?? repScopeKey,
     repCareerLabel: aligned.repCareerLabel,
   }
 }
 
 /**
- * mobiGlas labels the rank grid "Standing". That grid is FactionReputationScope
- * when the faction's reputation context includes it (Red Wind shows
- * Neutral → Elite Contractor, not the Hauling track's Master).
- * Other scopes in the same context are not titles on that screen.
- * Factions without that scope show the careers listed in their context.
+ * A faction can have several job lines (Hauling, Courier, Standing, …).
+ * Keep every line that already has a real display name. The Standing line
+ * stays the default on the faction card. Missions pick a line from mission type.
  */
 export function playerFacingCareers(careers) {
-  const entries = Object.entries(careers || {})
-  const factionScope = entries.filter(([, career]) => career?.scopeKey === 'FactionReputationScope')
-  if (factionScope.length > 0) return Object.fromEntries(factionScope)
   return careers || {}
+}
+
+const MISSION_TYPE_CAREERS = [
+  { type: /hauling/i, careers: [/hauling/i] },
+  { type: /courier/i, careers: [/courier/i] },
+  { type: /salvag/i, careers: [/salvag/i] },
+  { type: /bounty/i, careers: [/bounty/i] },
+  { type: /mercenary|security/i, careers: [/security/i, /hired muscle/i] },
+  { type: /assassin/i, careers: [/assassin/i] },
+  { type: /racing/i, careers: [/spaceship/i, /racing/i] },
+  { type: /wikelo|barter/i, careers: [/barter/i] },
+]
+
+function sortedRanks(career) {
+  return usableRanks(career?.standings, career?.name || null)
+    .sort((a, b) => a.minReputation - b.minReputation)
+}
+
+function careerMatchesName(career, pattern) {
+  return pattern.test(career?.name || '') || pattern.test(career?.scopeKey || '')
+}
+
+/** Job line for this mission. Mission type wins when that faction has the line. */
+export function careerForMissionType(careers, { category, repScopeKey } = {}) {
+  const list = careers || []
+  const cat = String(category || '')
+  for (const row of MISSION_TYPE_CAREERS) {
+    if (!row.type.test(cat)) continue
+    for (const pattern of row.careers) {
+      const hit = list.find((career) => careerMatchesName(career, pattern))
+      if (hit) return hit
+    }
+  }
+  const scope = String(repScopeKey || '')
+  if (/hauling|delivery/i.test(scope)) {
+    const hauling = list.find((career) => careerMatchesName(career, /hauling/i))
+    if (hauling) return hauling
+  }
+  if (scope && !/factionreputation/i.test(scope)) {
+    const hit = list.find((career) => career.scopeKey === scope)
+    if (hit) return hit
+  }
+  return null
+}
+
+function placeOnCareer(standing, target, careers) {
+  if (!standing) return null
+  const targetRanks = sortedRanks(target)
+  const exactTarget = targetRanks.find((rank) => rank.minReputation === standing.minReputation)
+  if (exactTarget) {
+    return { name: exactTarget.displayName, minReputation: exactTarget.minReputation }
+  }
+
+  // This amount is a real rank on a different job line. Do not relabel it.
+  for (const career of careers) {
+    if (career === target) continue
+    if (sortedRanks(career).some((rank) => rank.minReputation === standing.minReputation)) return null
+  }
+
+  let best = null
+  for (const rank of targetRanks) {
+    if (rank.minReputation > standing.minReputation) continue
+    if (!best || rank.minReputation > best.minReputation) best = rank
+  }
+  if (!best) return { name: standing.name, minReputation: standing.minReputation }
+  return { name: best.displayName, minReputation: standing.minReputation }
 }
 
 export function lookupFactionStanding(factionKey, factionStandings) {
@@ -296,67 +356,92 @@ function usableRanks(standings, careerName) {
   return ranks
 }
 
-function preferCareerName(careers, category) {
-  const cat = String(category || '')
-  if (/bounty/i.test(cat)) {
-    const bounty = careers.find((career) => /bounty/i.test(career.name || ''))
-    if (bounty?.name) return bounty.name
-  }
-  const security = careers.find((career) => career.name === 'Security')
-  if (security?.name) return security.name
-  if (careers.length === 1) return careers[0].name || null
-  return null
-}
-
 function ladderCareersForFaction(factionRow) {
   if (!factionRow) return []
   const facing = playerFacingCareers(factionRow.careers)
   const careers = Object.values(facing)
   if (careers.length > 0) return careers
   if (!factionRow.standings?.length) return []
-  const name = factionRow.scopeName === 'ReputationScope_Affinity' ? 'Affinity' : null
-  return [{ name, standings: factionRow.standings }]
+  const name = factionRow.scopeName === 'ReputationScope_Affinity'
+    ? 'Affinity'
+    : (factionRow.scopeName === 'FactionReputationScope' ? 'Standing' : null)
+  return [{
+    name,
+    scopeKey: factionRow.scopeName || null,
+    standings: factionRow.standings,
+  }]
 }
 
-function alignOneStanding(standing, ranks, preferredCareer) {
-  if (!standing?.name || ranks.length === 0) return standing ? { ...standing, careerName: null } : null
-  const named = ranks.filter((rank) => rank.displayName === standing.name)
-  if (named.length > 0) {
-    const preferred = preferredCareer
-      ? named.find((rank) => rank.careerName === preferredCareer)
-      : null
-    return { name: standing.name, minReputation: standing.minReputation, careerName: (preferred || named[0]).careerName }
-  }
-
+function careerOwningAmounts(careers, amounts) {
+  const numbers = amounts.filter((amount) => typeof amount === 'number')
+  const meaningful = numbers.filter((amount) => amount !== 0)
+  const pool = meaningful.length ? meaningful : numbers
   let best = null
-  for (const rank of ranks) {
-    if (rank.minReputation > standing.minReputation) continue
-    if (!best || rank.minReputation > best.minReputation) best = rank
+  let bestScore = 0
+  for (const career of careers) {
+    const ranks = sortedRanks(career)
+    const score = pool.filter((amount) => ranks.some((rank) => rank.minReputation === amount)).length
+    const standingTie = score === bestScore && score > 0 && career.scopeKey === 'FactionReputationScope'
+    if (score > bestScore || standingTie) {
+      best = career
+      bestScore = score
+    }
   }
-  const tied = ranks.filter((rank) => best && rank.minReputation === best.minReputation && rank.minReputation <= standing.minReputation)
-  const chosen = (preferredCareer && tied.find((rank) => rank.careerName === preferredCareer)) || tied[0] || best
-  if (!chosen) return { name: standing.name, minReputation: standing.minReputation, careerName: null }
-  return { name: chosen.displayName, minReputation: standing.minReputation, careerName: chosen.careerName }
+  return best
 }
 
-/** Replace a standing title that is not on this faction's mobiGlas ladder. The rep gate stays. */
-export function alignContractStandings(minStanding, maxStanding, factionRow, { category, repCareerLabel } = {}) {
+/** Put a contract on the job line that matches its mission type. */
+export function alignContractStandings(minStanding, maxStanding, factionRow, { category, repScopeKey } = {}) {
   const careers = ladderCareersForFaction(factionRow)
-  const ranks = careers.flatMap((career) => usableRanks(career.standings, career.name || null))
-  const preferredCareer = preferCareerName(careers, category)
-  const alignedMin = alignOneStanding(minStanding, ranks, preferredCareer)
-  const alignedMax = alignOneStanding(maxStanding, ranks, preferredCareer)
+  const missionCareer = careerForMissionType(careers, { category, repScopeKey })
 
-  const facingLabels = new Set(careers.map((career) => career.name).filter(Boolean))
-  let careerLabel = repCareerLabel || null
-  if (!careerLabel || (facingLabels.size > 0 && !facingLabels.has(careerLabel))) {
-    careerLabel = alignedMin?.careerName || alignedMax?.careerName || (careers.length === 1 ? careers[0].name : careerLabel) || null
+  if (missionCareer) {
+    const placedMin = minStanding ? placeOnCareer(minStanding, missionCareer, careers) : null
+    const placedMax = maxStanding ? placeOnCareer(maxStanding, missionCareer, careers) : null
+    if ((!minStanding || placedMin) && (!maxStanding || placedMax)) {
+      return {
+        minStanding: placedMin,
+        maxStanding: placedMax,
+        repScopeKey: missionCareer.scopeKey || repScopeKey || null,
+        repCareerLabel: missionCareer.name || null,
+      }
+    }
+  }
+
+  const owner = careerOwningAmounts(careers, [minStanding?.minReputation, maxStanding?.minReputation])
+    || careers.find((career) => career.scopeKey === 'FactionReputationScope')
+    || (careers.length === 1 ? careers[0] : null)
+
+  if (!owner) {
+    return {
+      minStanding: minStanding ? { name: minStanding.name, minReputation: minStanding.minReputation } : null,
+      maxStanding: maxStanding ? { name: maxStanding.name, minReputation: maxStanding.minReputation } : null,
+      repScopeKey: repScopeKey || null,
+      repCareerLabel: null,
+    }
+  }
+
+  const ranks = sortedRanks(owner)
+  const snap = (standing) => {
+    if (!standing) return null
+    const exact = ranks.find((rank) => rank.minReputation === standing.minReputation)
+    if (exact) return { name: exact.displayName, minReputation: exact.minReputation }
+    let best = null
+    for (const rank of ranks) {
+      if (rank.minReputation > standing.minReputation) continue
+      if (!best || rank.minReputation > best.minReputation) best = rank
+    }
+    return {
+      name: best?.displayName || standing.name,
+      minReputation: standing.minReputation,
+    }
   }
 
   return {
-    minStanding: alignedMin ? { name: alignedMin.name, minReputation: alignedMin.minReputation } : null,
-    maxStanding: alignedMax ? { name: alignedMax.name, minReputation: alignedMax.minReputation } : null,
-    repCareerLabel: careerLabel,
+    minStanding: snap(minStanding),
+    maxStanding: snap(maxStanding),
+    repScopeKey: owner.scopeKey || repScopeKey || null,
+    repCareerLabel: owner.name || null,
   }
 }
 
