@@ -577,8 +577,8 @@ export function formatStatValue(value: number, property?: string | null): string
     return formatMitigationPercent(value)
   }
   if (isRecoilFactorStat(property)) {
-    const factor = isNegatedPercentStat(property) ? 2 - value : value
-    return `${(factor * 100).toFixed(1)}%`
+    const change = Math.round(displayPercentChange((value - 1) * 100, property) * 10) / 10 || 0
+    return `${change > 0 ? '+' : ''}${change.toFixed(1)}%`
   }
   const rounded = Math.round(value * 100) / 100
   return rounded.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })
