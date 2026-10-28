@@ -153123,7 +153123,8 @@
         }
       ],
       "vehicleBaseStats": {
-        "Health_Maxhealth": 5000
+        "Health_Maxhealth": 5000,
+        "Cargo_Capacity_Scu": 16
       },
       "isReward": false,
       "rewardMissions": []
@@ -153162,7 +153163,8 @@
         }
       ],
       "vehicleBaseStats": {
-        "Health_Maxhealth": 5000
+        "Health_Maxhealth": 5000,
+        "Cargo_Capacity_Scu": 20
       },
       "isReward": true,
       "rewardMissions": [
@@ -153224,7 +153226,8 @@
         }
       ],
       "vehicleBaseStats": {
-        "Health_Maxhealth": 3500
+        "Health_Maxhealth": 3500,
+        "Cargo_Capacity_Scu": 12
       },
       "isReward": false,
       "rewardMissions": []
@@ -153263,7 +153266,8 @@
         }
       ],
       "vehicleBaseStats": {
-        "Health_Maxhealth": 3500
+        "Health_Maxhealth": 3500,
+        "Cargo_Capacity_Scu": 15
       },
       "isReward": true,
       "rewardMissions": [
@@ -153325,7 +153329,8 @@
         }
       ],
       "vehicleBaseStats": {
-        "Health_Maxhealth": 5000
+        "Health_Maxhealth": 5000,
+        "Cargo_Capacity_Scu": 8
       },
       "isReward": false,
       "rewardMissions": []
@@ -204272,7 +204277,9 @@
         }
       ],
       "vehicleBaseStats": {
-        "Health_Maxhealth": 7140
+        "Health_Maxhealth": 7140,
+        "Fuel_Hydrogenflow": 0.73,
+        "Fuel_Quantumflow": 0.4
       },
       "isReward": true,
       "rewardMissions": [
@@ -204789,7 +204796,9 @@
         }
       ],
       "vehicleBaseStats": {
-        "Health_Maxhealth": 9818
+        "Health_Maxhealth": 9818,
+        "Fuel_Hydrogenflow": 0.52,
+        "Fuel_Quantumflow": 0.29
       },
       "isReward": true,
       "rewardMissions": [
@@ -205325,7 +205334,9 @@
         }
       ],
       "vehicleBaseStats": {
-        "Health_Maxhealth": 6300
+        "Health_Maxhealth": 6300,
+        "Fuel_Hydrogenflow": 1,
+        "Fuel_Quantumflow": 0.55
       },
       "isReward": true,
       "rewardMissions": [
@@ -205842,7 +205853,9 @@
         }
       ],
       "vehicleBaseStats": {
-        "Health_Maxhealth": 12390
+        "Health_Maxhealth": 12390,
+        "Fuel_Hydrogenflow": 0.52,
+        "Fuel_Quantumflow": 0.29
       },
       "isReward": true,
       "rewardMissions": [
@@ -206359,7 +206372,9 @@
         }
       ],
       "vehicleBaseStats": {
-        "Health_Maxhealth": 9000
+        "Health_Maxhealth": 9000,
+        "Fuel_Hydrogenflow": 0.83,
+        "Fuel_Quantumflow": 0.45
       },
       "isReward": true,
       "rewardMissions": [
@@ -206895,7 +206910,9 @@
         }
       ],
       "vehicleBaseStats": {
-        "Health_Maxhealth": 8640
+        "Health_Maxhealth": 8640,
+        "Fuel_Hydrogenflow": 1.27,
+        "Fuel_Quantumflow": 0.7
       },
       "isReward": true,
       "rewardMissions": [
@@ -207277,7 +207294,9 @@
         }
       ],
       "vehicleBaseStats": {
-        "Health_Maxhealth": 16992
+        "Health_Maxhealth": 16992,
+        "Fuel_Hydrogenflow": 1.07,
+        "Fuel_Quantumflow": 0.59
       },
       "isReward": true,
       "rewardMissions": [
@@ -207659,7 +207678,9 @@
         }
       ],
       "vehicleBaseStats": {
-        "Health_Maxhealth": 10800
+        "Health_Maxhealth": 10800,
+        "Fuel_Hydrogenflow": 1.09,
+        "Fuel_Quantumflow": 0.61
       },
       "isReward": true,
       "rewardMissions": [
@@ -220795,7 +220816,7 @@
       },
       "slots": [
         {
-          "slotDisplayName": "<= PLACEHOLDER =>",
+          "slotDisplayName": "Frame",
           "slotDebugName": "FRAME",
           "requiredCount": 1,
           "options": [
@@ -220922,7 +220943,7 @@
       },
       "slots": [
         {
-          "slotDisplayName": "<= PLACEHOLDER =>",
+          "slotDisplayName": "Frame",
           "slotDebugName": "FRAME",
           "requiredCount": 1,
           "options": [
@@ -221049,7 +221070,7 @@
       },
       "slots": [
         {
-          "slotDisplayName": "<= PLACEHOLDER =>",
+          "slotDisplayName": "Frame",
           "slotDebugName": "FRAME",
           "requiredCount": 1,
           "options": [
@@ -221176,7 +221197,7 @@
       },
       "slots": [
         {
-          "slotDisplayName": "<= PLACEHOLDER =>",
+          "slotDisplayName": "Frame",
           "slotDebugName": "FRAME",
           "requiredCount": 1,
           "options": [
@@ -221303,7 +221324,7 @@
       },
       "slots": [
         {
-          "slotDisplayName": "<= PLACEHOLDER =>",
+          "slotDisplayName": "Frame",
           "slotDebugName": "FRAME",
           "requiredCount": 1,
           "options": [
@@ -221491,7 +221512,7 @@
       },
       "slots": [
         {
-          "slotDisplayName": "<= PLACEHOLDER =>",
+          "slotDisplayName": "Frame",
           "slotDebugName": "FRAME",
           "requiredCount": 1,
           "options": [
@@ -221618,7 +221639,7 @@
       },
       "slots": [
         {
-          "slotDisplayName": "<= PLACEHOLDER =>",
+          "slotDisplayName": "Frame",
           "slotDebugName": "FRAME",
           "requiredCount": 1,
           "options": [
@@ -221745,7 +221766,7 @@
       },
       "slots": [
         {
-          "slotDisplayName": "<= PLACEHOLDER =>",
+          "slotDisplayName": "Frame",
           "slotDebugName": "FRAME",
           "requiredCount": 1,
           "options": [
@@ -221933,7 +221954,7 @@
       },
       "slots": [
         {
-          "slotDisplayName": "<= PLACEHOLDER =>",
+          "slotDisplayName": "Frame",
           "slotDebugName": "FRAME",
           "requiredCount": 1,
           "options": [
@@ -222060,7 +222081,7 @@
       },
       "slots": [
         {
-          "slotDisplayName": "<= PLACEHOLDER =>",
+          "slotDisplayName": "Frame",
           "slotDebugName": "FRAME",
           "requiredCount": 1,
           "options": [
@@ -222187,7 +222208,7 @@
       },
       "slots": [
         {
-          "slotDisplayName": "<= PLACEHOLDER =>",
+          "slotDisplayName": "Frame",
           "slotDebugName": "FRAME",
           "requiredCount": 1,
           "options": [
@@ -222375,7 +222396,7 @@
       },
       "slots": [
         {
-          "slotDisplayName": "<= PLACEHOLDER =>",
+          "slotDisplayName": "Frame",
           "slotDebugName": "FRAME",
           "requiredCount": 1,
           "options": [

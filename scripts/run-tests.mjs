@@ -30,6 +30,7 @@ run('Smart hauler', 'scripts/tests/smart-hauler-check.mjs')
 run('Nav route', 'scripts/tests/nav-route-check.mjs')
 run('Executive hangar', 'scripts/tests/executive-hangar-check.mjs')
 run('Blueprint SEO display', 'scripts/audit-blueprint-seo-display.mjs')
+run('Placeholder text', 'scripts/audit-placeholder-text.mjs')
 run('Mining math', 'scripts/verify-mining-math.mjs')
 
 console.log('\n=== Dumper spawn-confirm ===\n')

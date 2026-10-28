@@ -203,6 +203,9 @@ const PROPERTY_LABELS: Record<string, string> = {
   'Weapon_Tractor_Maxdist': 'Tractor Max Distance',
   'Weapon_Tractor_Force': 'Tractor Force',
   'Weapon_Tractor_Maxvolume': 'Tractor Max Volume',
+  'Cargo_Capacity_Scu': 'Capacity (SCU)',
+  'Fuel_Hydrogenflow': 'Hydrogen Flow (SCU/s)',
+  'Fuel_Quantumflow': 'Quantum Fuel Flow (SCU/s)',
 }
 
 /**

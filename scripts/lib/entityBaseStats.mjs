@@ -310,6 +310,37 @@ function extractItemResourceStats(components) {
   return stats
 }
 
+/**
+ * Industrial items whose job is a number the crafting modifiers never touch:
+ * ore pod hold (ResourceContainer SCU) and fuel nozzle flow (SCU per second).
+ */
+function extractIndustrialStats(components, attachType) {
+  const stats = {}
+  const isNozzle = (components ?? []).some((c) => c?._Type_ === 'SCItemFuelNozzleParams')
+  const holdsCargo = /^(Container|Cargo|MiningPod|ResourceContainer)/i.test(attachType)
+
+  for (const comp of components ?? []) {
+    if (holdsCargo && comp?._Type_ === 'ResourceContainer') {
+      const scu = comp.capacity?.standardCargoUnits
+      if (typeof scu === 'number' && scu > 0) stats.Cargo_Capacity_Scu = scu
+    }
+
+    if (isNozzle && comp?._Type_ === 'ItemResourceComponentParams') {
+      for (const state of comp.states ?? []) {
+        for (const delta of state.deltas ?? []) {
+          if (delta._Type_ !== 'ItemResourceDeltaConsumption') continue
+          const rate = delta.consumption?.resourceAmountPerSecond?.standardResourceUnits
+          if (typeof rate !== 'number' || rate <= 0) continue
+          if (delta.consumption.resource === 'Fuel') stats.Fuel_Hydrogenflow = rate
+          if (delta.consumption.resource === 'QuantumFuel') stats.Fuel_Quantumflow = rate
+        }
+      }
+    }
+  }
+
+  return stats
+}
+
 function getAttachType(components) {
   const attach = (components ?? []).find((c) => c?._Type_ === 'SAttachableComponentParams')
   return attach?.AttachDef?.Type || ''
@@ -493,6 +524,7 @@ export function extractEntityBaseStats(
   }
 
   Object.assign(stats, extractItemResourceStats(components))
+  Object.assign(stats, extractIndustrialStats(components, attachType))
   Object.assign(
     stats,
     extractTractorAndSalvageStats(recordValue, {
