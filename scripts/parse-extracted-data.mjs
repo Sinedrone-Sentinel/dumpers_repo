@@ -269,6 +269,34 @@ function isUnresolvedDisplayName(name) {
   )
 }
 
+/**
+ * Crafting slot label. CIG ships some slots as `@LOC_PLACEHOLDER` ("<= PLACEHOLDER =>");
+ * those fall back to the game's own `crafting_ui_slotname_<debugName>` key, then a
+ * title-cased debug name (FRAME -> Frame).
+ */
+function resolveSlotDisplayName(displayKey, debugName, localization) {
+  const raw = String(displayKey || '').trim()
+  const fromKey = raw.startsWith('@') ? localization[raw.slice(1)] : raw
+  if (!isUnresolvedDisplayName(fromKey)) return fromKey.trim()
+  const debug = String(debugName || '').trim()
+  const slug = debug.toLowerCase().replace(/[^a-z0-9]/g, '')
+  const fromSlug = slug ? localization[`crafting_ui_slotname_${slug}`] : null
+  if (!isUnresolvedDisplayName(fromSlug)) return fromSlug.trim()
+  if (!debug || isUnresolvedDisplayName(debug)) return 'Input'
+  return debug.toLowerCase().replace(/\b[a-z]/g, (c) => c.toUpperCase())
+}
+
+/** Localized item name, or the record name title-cased when CIG left a placeholder. */
+function itemDisplayName(rawDisplayName, recordName, localization) {
+  const resolved = resolveLocalization(rawDisplayName, localization) || rawDisplayName
+  if (!isUnresolvedDisplayName(resolved)) return resolved
+  return String(recordName || '')
+    .replace('EntityClassDefinition.', '')
+    .replace(/_/g, ' ')
+    .replace(/\b[a-z]/g, (c) => c.toUpperCase())
+    .trim()
+}
+
 function isUnresolvedFactionKey(factionKey) {
   const key = String(factionKey || '').trim().toLowerCase()
   return !key || key === 'unknown'
@@ -1187,7 +1215,7 @@ function parseFpsWeapons(localization = {}) {
     weapons.push({
       id: json._RecordId_,
       name: recordName.replace('EntityClassDefinition.', ''),
-      displayName: resolveLocalization(rawDisplayName, localization) || rawDisplayName,
+      displayName: itemDisplayName(rawDisplayName, recordName, localization),
       type: def.SubType || 'Unknown',
       size: def.Size || 0,
       fireRate: fireRateMatch ? parseInt(fireRateMatch[1]) : 0,
@@ -1253,7 +1281,7 @@ function parseSalvageModules(localization = {}) {
     modules.push({
       id: json._RecordId_,
       name: recordName.replace('EntityClassDefinition.', ''),
-      displayName: resolveLocalization(rawDisplayName, localization) || rawDisplayName,
+      displayName: itemDisplayName(rawDisplayName, recordName, localization),
       size: def.Size || 0,
       salvageEfficiency: efficiencyMatch ? parseFloat(efficiencyMatch[1]) : 0,
       salvageRadius: radiusMatch ? parseFloat(radiusMatch[1]) : 0,
@@ -2992,13 +3020,8 @@ function parseBlueprintDefinitions(localization = {}) {
     if (bp.tiers?.[0]?.recipe?.costs?.mandatoryCost?.options) {
       for (const option of bp.tiers[0].recipe.costs.mandatoryCost.options) {
         if (option.options) {
-          let slotDisplayName = option.nameInfo?.displayName || option.nameInfo?.debugName || 'Unknown'
           const slotDebugName = option.nameInfo?.debugName || 'Unknown'
-          // Resolve localization key for slot name
-          if (slotDisplayName.startsWith('@')) {
-            const locKey = slotDisplayName.slice(1)
-            slotDisplayName = localization[locKey] || slotDebugName
-          }
+          const slotDisplayName = resolveSlotDisplayName(option.nameInfo?.displayName, slotDebugName, localization)
           
           // Extract modifiers from slot context
           const slotModifiers = []
@@ -4477,7 +4500,7 @@ function parseShipComponents(localization = {}) {
         id: json._RecordId_,
         name: recordName.replace('EntityClassDefinition.', ''),
         type: compType,
-        displayName: resolveLocalization(rawDisplayName, localization) || rawDisplayName,
+        displayName: itemDisplayName(rawDisplayName, recordName, localization),
         size: def.Size || 0,
         grade: def.Grade || 0,
         manufacturerCode: mfr.code,
@@ -5410,6 +5433,14 @@ async function main() {
     stdio: 'inherit',
   })
   if (tagAudit.status !== 0) {
+    process.exitCode = 1
+  }
+
+  const placeholderAudit = spawnSync(process.execPath, [join(__dirname, 'audit-placeholder-text.mjs')], {
+    cwd: PROJECT_ROOT,
+    stdio: 'inherit',
+  })
+  if (placeholderAudit.status !== 0) {
     process.exitCode = 1
   }
 

@@ -2670,4 +2670,29 @@ check(
   'ship shop: removing every cooler pip shows 999 percent because coolant is shut off',
 )
 
+const placeholderText = await import(pathToFileURL(path.join(root, 'scripts/lib/placeholderText.mjs')).href)
+const placeholderLeaks = placeholderText.findPlaceholderLeaks({
+  blueprints: [
+    {
+      internalName: 'grin_tractorbeam_s1',
+      slots: [{ slotDebugName: 'FRAME', slotDisplayName: '<= PLACEHOLDER =>' }, { slotDisplayName: 'Frame' }],
+    },
+  ],
+  weapons: [{ name: 'placeholder_weapon', displayNameKey: '@LOC_PLACEHOLDER', displayName: '@LOC_PLACEHOLDER' }],
+})
+check(
+  placeholderLeaks.length === 2 &&
+    placeholderLeaks.some((leak) => leak.path === 'blueprints[0].slots[0].slotDisplayName') &&
+    placeholderLeaks.some((leak) => leak.path === 'weapons[0].displayName') &&
+    placeholderText.isPlaceholderText('Criminal Easy Title Placeholder text') &&
+    !placeholderText.isPlaceholderText('Frame'),
+  'placeholder audit: catches <= PLACEHOLDER => names but skips internal keys and real names',
+)
+check(
+  quality.getPropertyLabel('Cargo_Capacity_Scu') === 'Capacity (SCU)' &&
+    quality.getPropertyLabel('Fuel_Hydrogenflow') === 'Hydrogen Flow (SCU/s)' &&
+    quality.getPropertyLabel('Fuel_Quantumflow') === 'Quantum Fuel Flow (SCU/s)',
+  'industrial stats: ore pod capacity and fuel nozzle flow have member labels',
+)
+
 console.log(`Unit tests: ${pass} passed`)
