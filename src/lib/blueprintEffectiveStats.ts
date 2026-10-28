@@ -3,6 +3,7 @@ import type { BlueprintWithSlots } from './blueprintResources'
 import {
   aggregateModifiers,
   calculateSlotModifiers,
+  displayPercentChange,
   dropUnbackedArmorModifiers,
   formatPercentChange,
   formatStatValue,
@@ -124,7 +125,7 @@ function formatStoredStatChange(stat: StoredEffectiveStat): string {
     const val = stat.additiveChange ?? 0
     return val >= 0 ? `+${val}` : `${val}`
   }
-  return formatPercentChange(stat.percentChange)
+  return formatPercentChange(displayPercentChange(stat.percentChange, stat.propertyLabel))
 }
 
 export function formatStoredStatLine(stat: StoredEffectiveStat): string {

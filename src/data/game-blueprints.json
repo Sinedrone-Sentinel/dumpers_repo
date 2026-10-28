@@ -121060,7 +121060,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 18.5,
-        "Weapon_Firerate": 1000
+        "Weapon_Firerate": 1000,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -121145,7 +121148,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 18.5,
-        "Weapon_Firerate": 1000
+        "Weapon_Firerate": 1000,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
       "rewardMissions": [
@@ -121742,8 +121748,8 @@
         "Weapon_Damage": 14.5,
         "Weapon_Firerate": 650,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.75,
-        "Weapon_Recoil_Kick": 0.8
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
       "rewardMissions": [
@@ -122181,8 +122187,8 @@
         "Weapon_Damage": 14.5,
         "Weapon_Firerate": 650,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.75,
-        "Weapon_Recoil_Kick": 0.8
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -122312,8 +122318,8 @@
         "Weapon_Damage": 14.5,
         "Weapon_Firerate": 650,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.75,
-        "Weapon_Recoil_Kick": 0.8
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -122443,8 +122449,8 @@
         "Weapon_Damage": 14.5,
         "Weapon_Firerate": 650,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.75,
-        "Weapon_Recoil_Kick": 0.8
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -122574,8 +122580,8 @@
         "Weapon_Damage": 10,
         "Weapon_Firerate": 1200,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.75,
-        "Weapon_Recoil_Kick": 0.8
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
       "rewardMissions": [
@@ -122728,8 +122734,8 @@
         "Weapon_Damage": 10,
         "Weapon_Firerate": 1200,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.75,
-        "Weapon_Recoil_Kick": 0.8
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -122859,8 +122865,8 @@
         "Weapon_Damage": 10,
         "Weapon_Firerate": 1200,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.75,
-        "Weapon_Recoil_Kick": 0.8
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -122990,8 +122996,8 @@
         "Weapon_Damage": 10,
         "Weapon_Firerate": 1200,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.75,
-        "Weapon_Recoil_Kick": 0.8
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
       "rewardMissions": [
@@ -123144,8 +123150,8 @@
         "Weapon_Damage": 10,
         "Weapon_Firerate": 1200,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.75,
-        "Weapon_Recoil_Kick": 0.8
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -123257,7 +123263,7 @@
         "Weapon_Damage": 11.5,
         "Weapon_Firerate": 800,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.75,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
@@ -123370,7 +123376,7 @@
         "Weapon_Damage": 11.5,
         "Weapon_Firerate": 800,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.75,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
@@ -123524,7 +123530,7 @@
         "Weapon_Damage": 27,
         "Weapon_Firerate": 355,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.3,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
@@ -123678,8 +123684,8 @@
       "weaponBaseStats": {
         "Weapon_Damage": 54,
         "Weapon_Firerate": 550,
-        "Weapon_Recoil_Smoothness": 0.6,
-        "Weapon_Recoil_Handling": 0.3,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
@@ -123814,8 +123820,8 @@
       "weaponBaseStats": {
         "Weapon_Damage": 54,
         "Weapon_Firerate": 550,
-        "Weapon_Recoil_Smoothness": 0.6,
-        "Weapon_Recoil_Handling": 0.3,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
@@ -123950,8 +123956,8 @@
       "weaponBaseStats": {
         "Weapon_Damage": 54,
         "Weapon_Firerate": 550,
-        "Weapon_Recoil_Smoothness": 0.6,
-        "Weapon_Recoil_Handling": 0.3,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
@@ -124086,8 +124092,8 @@
       "weaponBaseStats": {
         "Weapon_Damage": 54,
         "Weapon_Firerate": 550,
-        "Weapon_Recoil_Smoothness": 0.6,
-        "Weapon_Recoil_Handling": 0.3,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
@@ -124239,7 +124245,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 22.5,
-        "Weapon_Firerate": 450
+        "Weapon_Firerate": 450,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isDefault": true,
       "rewardMissions": [],
@@ -124368,7 +124377,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 22.5,
-        "Weapon_Firerate": 450
+        "Weapon_Firerate": 450,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -124496,7 +124508,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 22.5,
-        "Weapon_Firerate": 450
+        "Weapon_Firerate": 450,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -124624,7 +124639,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 13,
-        "Weapon_Firerate": 950
+        "Weapon_Firerate": 950,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
       "rewardMissions": [
@@ -124775,7 +124793,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 13,
-        "Weapon_Firerate": 950
+        "Weapon_Firerate": 950,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -124903,7 +124924,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 13,
-        "Weapon_Firerate": 950
+        "Weapon_Firerate": 950,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -125031,7 +125055,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 13,
-        "Weapon_Firerate": 950
+        "Weapon_Firerate": 950,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -125159,7 +125186,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 13,
-        "Weapon_Firerate": 950
+        "Weapon_Firerate": 950,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -125287,7 +125317,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 13,
-        "Weapon_Firerate": 950
+        "Weapon_Firerate": 950,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -125415,7 +125448,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 13,
-        "Weapon_Firerate": 950
+        "Weapon_Firerate": 950,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -125543,7 +125579,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 13,
-        "Weapon_Firerate": 950
+        "Weapon_Firerate": 950,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -125671,7 +125710,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 13,
-        "Weapon_Firerate": 950
+        "Weapon_Firerate": 950,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -125799,7 +125841,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 13,
-        "Weapon_Firerate": 950
+        "Weapon_Firerate": 950,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -125927,7 +125972,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 45,
-        "Weapon_Firerate": 550
+        "Weapon_Firerate": 550,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -126055,7 +126103,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 45,
-        "Weapon_Firerate": 550
+        "Weapon_Firerate": 550,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -126165,7 +126216,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 90,
-        "Weapon_Firerate": 700
+        "Weapon_Firerate": 700,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
       "rewardMissions": [
@@ -126450,7 +126504,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 90,
-        "Weapon_Firerate": 700
+        "Weapon_Firerate": 700,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
       "rewardMissions": [
@@ -126659,7 +126716,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 90,
-        "Weapon_Firerate": 700
+        "Weapon_Firerate": 700,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
       "rewardMissions": [
@@ -126926,7 +126986,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 90,
-        "Weapon_Firerate": 700
+        "Weapon_Firerate": 700,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
       "rewardMissions": [
@@ -127135,7 +127198,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 90,
-        "Weapon_Firerate": 700
+        "Weapon_Firerate": 700,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -127245,7 +127311,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 90,
-        "Weapon_Firerate": 700
+        "Weapon_Firerate": 700,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
       "rewardMissions": [
@@ -127512,7 +127581,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 90,
-        "Weapon_Firerate": 700
+        "Weapon_Firerate": 700,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
       "rewardMissions": [
@@ -127721,7 +127793,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 90,
-        "Weapon_Firerate": 700
+        "Weapon_Firerate": 700,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
       "rewardMissions": [
@@ -128024,7 +128099,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 60,
-        "Weapon_Firerate": 180
+        "Weapon_Firerate": 180,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
       "rewardMissions": [
@@ -128422,7 +128500,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 60,
-        "Weapon_Firerate": 180
+        "Weapon_Firerate": 180,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
       "rewardMissions": [
@@ -128820,7 +128901,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 60,
-        "Weapon_Firerate": 180
+        "Weapon_Firerate": 180,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -128948,7 +129032,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 60,
-        "Weapon_Firerate": 180
+        "Weapon_Firerate": 180,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -129076,7 +129163,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 60,
-        "Weapon_Firerate": 180
+        "Weapon_Firerate": 180,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
       "rewardMissions": [
@@ -129456,7 +129546,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 32.5,
-        "Weapon_Firerate": 350
+        "Weapon_Firerate": 350,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
       "rewardMissions": [
@@ -129779,7 +129872,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 32.5,
-        "Weapon_Firerate": 350
+        "Weapon_Firerate": 350,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -129889,7 +129985,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 32.5,
-        "Weapon_Firerate": 350
+        "Weapon_Firerate": 350,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
       "rewardMissions": [
@@ -130212,7 +130311,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 32.5,
-        "Weapon_Firerate": 350
+        "Weapon_Firerate": 350,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
       "rewardMissions": [
@@ -131424,7 +131526,7 @@
         "Weapon_Damage": 12,
         "Weapon_Firerate": 810,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.3,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isDefault": true,
@@ -131556,7 +131658,7 @@
         "Weapon_Damage": 12,
         "Weapon_Firerate": 810,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.3,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
@@ -131687,7 +131789,7 @@
         "Weapon_Damage": 12,
         "Weapon_Firerate": 810,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.3,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
@@ -131818,7 +131920,7 @@
         "Weapon_Damage": 12,
         "Weapon_Firerate": 810,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.3,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
@@ -131949,7 +132051,7 @@
         "Weapon_Damage": 12,
         "Weapon_Firerate": 810,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.3,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
@@ -132080,7 +132182,7 @@
         "Weapon_Damage": 12,
         "Weapon_Firerate": 810,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.3,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
@@ -132538,7 +132640,7 @@
         "Weapon_Damage": 21.5,
         "Weapon_Firerate": 500,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.3,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
@@ -132768,7 +132870,7 @@
         "Weapon_Damage": 21.5,
         "Weapon_Firerate": 500,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.3,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
@@ -132899,7 +133001,7 @@
         "Weapon_Damage": 21.5,
         "Weapon_Firerate": 500,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.3,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
@@ -133030,7 +133132,7 @@
         "Weapon_Damage": 21.5,
         "Weapon_Firerate": 500,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.3,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
@@ -133166,7 +133268,7 @@
         "Weapon_Damage": 21,
         "Weapon_Firerate": 900,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.6,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
@@ -133587,7 +133689,7 @@
         "Weapon_Damage": 21,
         "Weapon_Firerate": 900,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.6,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
@@ -133700,7 +133802,7 @@
         "Weapon_Damage": 21,
         "Weapon_Firerate": 900,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.6,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
@@ -133813,7 +133915,7 @@
         "Weapon_Damage": 21,
         "Weapon_Firerate": 900,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.6,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
@@ -133926,7 +134028,7 @@
         "Weapon_Damage": 21,
         "Weapon_Firerate": 900,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.6,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
@@ -134039,7 +134141,7 @@
         "Weapon_Damage": 21,
         "Weapon_Firerate": 900,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.6,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
@@ -134152,7 +134254,7 @@
         "Weapon_Damage": 21,
         "Weapon_Firerate": 900,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.6,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
@@ -134265,7 +134367,7 @@
         "Weapon_Damage": 21,
         "Weapon_Firerate": 900,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.6,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
@@ -134378,7 +134480,7 @@
         "Weapon_Damage": 105,
         "Weapon_Firerate": 600,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.3,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
@@ -134647,7 +134749,7 @@
         "Weapon_Damage": 105,
         "Weapon_Firerate": 600,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.3,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
@@ -134878,7 +134980,7 @@
         "Weapon_Damage": 105,
         "Weapon_Firerate": 600,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.3,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
@@ -135033,7 +135135,7 @@
         "Weapon_Damage": 105,
         "Weapon_Firerate": 600,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.3,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
@@ -135264,7 +135366,7 @@
         "Weapon_Damage": 105,
         "Weapon_Firerate": 600,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.3,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
@@ -135495,7 +135597,7 @@
         "Weapon_Damage": 105,
         "Weapon_Firerate": 600,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.3,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
@@ -135626,7 +135728,7 @@
         "Weapon_Damage": 22,
         "Weapon_Firerate": 600,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.6,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
@@ -135799,7 +135901,7 @@
         "Weapon_Damage": 22,
         "Weapon_Firerate": 600,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.6,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
@@ -135935,7 +136037,7 @@
         "Weapon_Damage": 210,
         "Weapon_Firerate": 600,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.6,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
@@ -136242,7 +136344,7 @@
         "Weapon_Damage": 210,
         "Weapon_Firerate": 600,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.6,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
@@ -136479,7 +136581,7 @@
         "Weapon_Damage": 210,
         "Weapon_Firerate": 600,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.6,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
@@ -136734,7 +136836,7 @@
         "Weapon_Damage": 210,
         "Weapon_Firerate": 600,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.6,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
@@ -137025,7 +137127,7 @@
         "Weapon_Damage": 11,
         "Weapon_Firerate": 90,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.6,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
@@ -137464,7 +137566,7 @@
         "Weapon_Damage": 11,
         "Weapon_Firerate": 90,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.6,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
@@ -137595,7 +137697,7 @@
         "Weapon_Damage": 11,
         "Weapon_Firerate": 90,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.6,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
@@ -137747,7 +137849,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 4,
-        "Weapon_Firerate": 455
+        "Weapon_Firerate": 455,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
       "rewardMissions": [
@@ -138450,7 +138555,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 4,
-        "Weapon_Firerate": 455
+        "Weapon_Firerate": 455,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
       "rewardMissions": [
@@ -138620,7 +138728,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 4,
-        "Weapon_Firerate": 455
+        "Weapon_Firerate": 455,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
       "rewardMissions": [
@@ -138828,7 +138939,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 4,
-        "Weapon_Firerate": 455
+        "Weapon_Firerate": 455,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
       "rewardMissions": [
@@ -139038,7 +139152,7 @@
         "Weapon_Damage": 6.5,
         "Weapon_Firerate": 800,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.6,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
@@ -139192,7 +139306,7 @@
         "Weapon_Damage": 6.5,
         "Weapon_Firerate": 800,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.6,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
@@ -139303,7 +139417,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 12.5,
-        "Weapon_Firerate": 60
+        "Weapon_Firerate": 60,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
       "rewardMissions": [
@@ -139550,7 +139667,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 12.5,
-        "Weapon_Firerate": 60
+        "Weapon_Firerate": 60,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
       "rewardMissions": [
@@ -139797,7 +139917,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 12.5,
-        "Weapon_Firerate": 60
+        "Weapon_Firerate": 60,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -139907,7 +140030,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 12.5,
-        "Weapon_Firerate": 60
+        "Weapon_Firerate": 60,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -140017,7 +140143,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 12.5,
-        "Weapon_Firerate": 60
+        "Weapon_Firerate": 60,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -140127,7 +140256,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 12.5,
-        "Weapon_Firerate": 60
+        "Weapon_Firerate": 60,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -140237,7 +140369,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 12.5,
-        "Weapon_Firerate": 60
+        "Weapon_Firerate": 60,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
       "rewardMissions": [
@@ -140484,7 +140619,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 12.5,
-        "Weapon_Firerate": 60
+        "Weapon_Firerate": 60,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -140594,7 +140732,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 12.5,
-        "Weapon_Firerate": 60
+        "Weapon_Firerate": 60,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -140704,7 +140845,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 12.5,
-        "Weapon_Firerate": 60
+        "Weapon_Firerate": 60,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -140834,7 +140978,7 @@
         "Weapon_Damage": 9,
         "Weapon_Firerate": 50,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.6,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
@@ -140989,7 +141133,7 @@
         "Weapon_Damage": 5.75,
         "Weapon_Firerate": 385,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.6,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
@@ -141125,7 +141269,7 @@
         "Weapon_Damage": 5.75,
         "Weapon_Firerate": 385,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.6,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
@@ -141261,7 +141405,7 @@
         "Weapon_Damage": 5.75,
         "Weapon_Firerate": 385,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.6,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
@@ -141397,7 +141541,7 @@
         "Weapon_Damage": 5.75,
         "Weapon_Firerate": 385,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.6,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
@@ -141551,8 +141695,8 @@
         "Weapon_Damage": 13.75,
         "Weapon_Firerate": 850,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.3,
-        "Weapon_Recoil_Kick": 0.5
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
       "rewardMissions": [
@@ -141781,8 +141925,8 @@
         "Weapon_Damage": 13.75,
         "Weapon_Firerate": 850,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.3,
-        "Weapon_Recoil_Kick": 0.5
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -141912,8 +142056,8 @@
         "Weapon_Damage": 13.75,
         "Weapon_Firerate": 850,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.3,
-        "Weapon_Recoil_Kick": 0.5
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -142043,8 +142187,8 @@
         "Weapon_Damage": 13.75,
         "Weapon_Firerate": 850,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.3,
-        "Weapon_Recoil_Kick": 0.5
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -142174,8 +142318,8 @@
         "Weapon_Damage": 13.75,
         "Weapon_Firerate": 850,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.3,
-        "Weapon_Recoil_Kick": 0.5
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -142305,8 +142449,8 @@
         "Weapon_Damage": 13.75,
         "Weapon_Firerate": 850,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.3,
-        "Weapon_Recoil_Kick": 0.5
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -142436,8 +142580,8 @@
         "Weapon_Damage": 13.75,
         "Weapon_Firerate": 850,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.3,
-        "Weapon_Recoil_Kick": 0.5
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -142567,8 +142711,8 @@
         "Weapon_Damage": 13.75,
         "Weapon_Firerate": 850,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.3,
-        "Weapon_Recoil_Kick": 0.5
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -142698,7 +142842,7 @@
         "Weapon_Damage": 11.5,
         "Weapon_Firerate": 925,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.3,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
@@ -142928,7 +143072,7 @@
         "Weapon_Damage": 11.5,
         "Weapon_Firerate": 925,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.3,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
@@ -143059,7 +143203,7 @@
         "Weapon_Damage": 11.5,
         "Weapon_Firerate": 925,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.3,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
@@ -143190,7 +143334,7 @@
         "Weapon_Damage": 11.5,
         "Weapon_Firerate": 925,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.3,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
@@ -143303,7 +143447,7 @@
         "Weapon_Damage": 21,
         "Weapon_Firerate": 700,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.6,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
@@ -143580,7 +143724,7 @@
         "Weapon_Damage": 21,
         "Weapon_Firerate": 700,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.6,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
@@ -143693,7 +143837,7 @@
         "Weapon_Damage": 21,
         "Weapon_Firerate": 700,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.6,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
@@ -145004,7 +145148,7 @@
       "weaponBaseStats": {
         "Weapon_Damage": 165,
         "Weapon_Recoil_Smoothness": 1,
-        "Weapon_Recoil_Handling": 0.6,
+        "Weapon_Recoil_Handling": 1,
         "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
@@ -146060,7 +146204,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 100,
-        "Weapon_Firerate": 55
+        "Weapon_Firerate": 55,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
       "rewardMissions": [
@@ -146381,7 +146528,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 100,
-        "Weapon_Firerate": 55
+        "Weapon_Firerate": 55,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -146527,7 +146677,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 100,
-        "Weapon_Firerate": 55
+        "Weapon_Firerate": 55,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -146673,7 +146826,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 100,
-        "Weapon_Firerate": 55
+        "Weapon_Firerate": 55,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -146819,7 +146975,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 42.5,
-        "Weapon_Firerate": 225
+        "Weapon_Firerate": 225,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
       "rewardMissions": [
@@ -147140,7 +147299,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 42.5,
-        "Weapon_Firerate": 225
+        "Weapon_Firerate": 225,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -147286,7 +147448,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 42.5,
-        "Weapon_Firerate": 225
+        "Weapon_Firerate": 225,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -147432,7 +147597,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 42.5,
-        "Weapon_Firerate": 225
+        "Weapon_Firerate": 225,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -147578,7 +147746,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 42.5,
-        "Weapon_Firerate": 225
+        "Weapon_Firerate": 225,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -147713,7 +147884,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 75,
-        "Weapon_Firerate": 70
+        "Weapon_Firerate": 70,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
       "rewardMissions": [
@@ -147992,7 +148166,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 75,
-        "Weapon_Firerate": 70
+        "Weapon_Firerate": 70,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -148127,7 +148304,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 75,
-        "Weapon_Firerate": 70
+        "Weapon_Firerate": 70,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -148262,7 +148442,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 75,
-        "Weapon_Firerate": 70
+        "Weapon_Firerate": 70,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -148397,7 +148580,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 75,
-        "Weapon_Firerate": 70
+        "Weapon_Firerate": 70,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -148532,7 +148718,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 75,
-        "Weapon_Firerate": 70
+        "Weapon_Firerate": 70,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -148667,7 +148856,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 75,
-        "Weapon_Firerate": 70
+        "Weapon_Firerate": 70,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -148802,7 +148994,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 75,
-        "Weapon_Firerate": 70
+        "Weapon_Firerate": 70,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -148937,7 +149132,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 75,
-        "Weapon_Firerate": 70
+        "Weapon_Firerate": 70,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -149072,7 +149270,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 75,
-        "Weapon_Firerate": 70
+        "Weapon_Firerate": 70,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -149218,7 +149419,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 45,
-        "Weapon_Firerate": 600
+        "Weapon_Firerate": 600,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
       "rewardMissions": [
@@ -149634,7 +149838,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 45,
-        "Weapon_Firerate": 600
+        "Weapon_Firerate": 600,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -149769,7 +149976,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 120,
-        "Weapon_Firerate": 30
+        "Weapon_Firerate": 30,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
       "rewardMissions": [
@@ -150478,7 +150688,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 120,
-        "Weapon_Firerate": 30
+        "Weapon_Firerate": 30,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []
@@ -150613,7 +150826,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 120,
-        "Weapon_Firerate": 30
+        "Weapon_Firerate": 30,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
       "rewardMissions": [
@@ -151322,7 +151538,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 120,
-        "Weapon_Firerate": 30
+        "Weapon_Firerate": 30,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": true,
       "rewardMissions": [
@@ -152031,7 +152250,10 @@
       ],
       "weaponBaseStats": {
         "Weapon_Damage": 120,
-        "Weapon_Firerate": 30
+        "Weapon_Firerate": 30,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 1,
+        "Weapon_Recoil_Kick": 1
       },
       "isReward": false,
       "rewardMissions": []

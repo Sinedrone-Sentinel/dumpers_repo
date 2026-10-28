@@ -188,45 +188,12 @@ function extractFpsWeaponStats(recordValue, entityJson, entityFile, recordIndex,
     stats.Weapon_Firerate = fireRate
   }
 
-  let recoilConfigRef = null
-  walkObjectTree(recordValue, (node) => {
-    if (node._Type_ === 'SCItemWeaponComponentParams' && node.actorProceduralRecoilConfig) {
-      recoilConfigRef = node.actorProceduralRecoilConfig
-    }
-  })
-
-  if (recoilConfigRef) {
-    const configPath = resolveRecordRef(recoilConfigRef, entityFile, recordIndex, extractedDataRoot)
-    const configJson = configPath ? readJson(configPath) : null
-    const setups = configJson?._RecordValue_?.actorProceduralRecoilSetup
-    const modifiersRef =
-      Array.isArray(setups) && setups.length > 0
-        ? setups[0].actorProceduralRecoilModifiers
-        : null
-
-    if (modifiersRef) {
-      const modPath = resolveRecordRef(modifiersRef, configPath, recordIndex, extractedDataRoot)
-      const modVal = modPath ? readJson(modPath)?._RecordValue_ : null
-      const hands = modVal?.actorProceduralHandsRecoilModifiers
-      const aim = modVal?.actorProceduralAimRecoilModifiers
-
-      if (aim?.curveRecoil?.recoilSmoothTimeModifier != null) {
-        stats.Weapon_Recoil_Smoothness = aim.curveRecoil.recoilSmoothTimeModifier
-      } else if (aim?.recoil_time != null) {
-        stats.Weapon_Recoil_Smoothness = aim.recoil_time
-      }
-
-      if (aim?.decay != null) {
-        stats.Weapon_Recoil_Handling = aim.decay
-      }
-
-      if (hands?.fireRecoilStrengthFirst != null) {
-        stats.Weapon_Recoil_Kick = hands.fireRecoilStrengthFirst
-      } else if (hands?.fireRecoilStrength != null) {
-        stats.Weapon_Recoil_Kick = hands.fireRecoilStrength
-      }
-    }
-  }
+  // gpp_weapon_recoil_* are factors on the weapon's own recoil (CIG shows them as a
+  // percent change), so every gun starts from 1. Pistols, snipers and shotguns have
+  // no actor recoil config at all and would otherwise get no baseline.
+  stats.Weapon_Recoil_Smoothness = 1
+  stats.Weapon_Recoil_Handling = 1
+  stats.Weapon_Recoil_Kick = 1
 
   return stats
 }

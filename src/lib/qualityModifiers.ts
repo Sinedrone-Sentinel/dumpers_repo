@@ -223,7 +223,9 @@ const LOWER_IS_BETTER_STATS = new Set([
   'armor_signalir',
   'armor_signalcs',
   'power_segments',
-  'armor_temperaturemin', // More negative = can survive colder
+  'weapon_recoil_handling',
+  'weapon_recoil_smoothness',
+  'armor_temperaturemin',
 ])
 
 /**
@@ -231,7 +233,35 @@ const LOWER_IS_BETTER_STATS = new Set([
  */
 export function isLowerBetter(property: string | null | undefined): boolean {
   if (!property) return false
-  return LOWER_IS_BETTER_STATS.has(property.toLowerCase())
+  return LOWER_IS_BETTER_STATS.has(statKeyFromPropertyOrLabel(property))
+}
+
+/**
+ * Recoil stats are a factor on the gun's own recoil (base 1). CIG shows Kick as the
+ * percent change and Handling / Smoothness as the negated percent change, so a
+ * 0.8 factor reads -20% Kick but +20% Handling in game.
+ */
+const RECOIL_FACTOR_STATS = new Set(['weapon_recoil_kick', 'weapon_recoil_handling', 'weapon_recoil_smoothness'])
+const NEGATED_PERCENT_STATS = new Set(['weapon_recoil_handling', 'weapon_recoil_smoothness'])
+
+/** Accepts a stat key or its member label (saved order snapshots only keep the label). */
+function statKeyFromPropertyOrLabel(property: string): string {
+  const lower = property.trim().toLowerCase()
+  const byLabel = Object.entries(PROPERTY_LABELS).find(([, label]) => label.toLowerCase() === lower)
+  return (byLabel ? byLabel[0] : property).trim().toLowerCase()
+}
+
+export function isRecoilFactorStat(property?: string | null): boolean {
+  return !!property && RECOIL_FACTOR_STATS.has(statKeyFromPropertyOrLabel(property))
+}
+
+function isNegatedPercentStat(property?: string | null): boolean {
+  return !!property && NEGATED_PERCENT_STATS.has(statKeyFromPropertyOrLabel(property))
+}
+
+/** Percent change as the game shows it (negated for Recoil Handling / Smoothness). */
+export function displayPercentChange(percentChange: number, property?: string | null): number {
+  return isNegatedPercentStat(property) ? -percentChange : percentChange
 }
 
 /** Catalog stats use `Weapon_Damage`. Craft files store `weapon_damage`. */
@@ -326,14 +356,14 @@ export function formatSlotModifierDisplay(result: SlotModifierResult): string {
   if (result.isIntegerAdditive) {
     return formatAdditiveModifier(result.additiveAmount ?? 0)
   }
-  return formatPercentChange(result.percentChange)
+  return formatPercentChange(displayPercentChange(result.percentChange, result.property))
 }
 
 export function formatAggregatedModifierDisplay(mod: AggregatedModifier): string {
   if (mod.isIntegerAdditive) {
     return formatAdditiveModifier(mod.additiveChange ?? 0)
   }
-  return formatPercentChange(mod.percentChange)
+  return formatPercentChange(displayPercentChange(mod.percentChange, mod.property))
 }
 
 /**
@@ -368,6 +398,11 @@ export function getSlotModifierColorClass(result: SlotModifierResult): string {
 export function getAggregatedModifierColorClass(mod: AggregatedModifier): string {
   if (mod.isIntegerAdditive) {
     return getAdditiveColorClass(mod.additiveChange ?? 0)
+  }
+  // Min Temperature reads red when the limit drops and green when it rises. Most limits
+  // are below zero, so a larger factor drops it; a limit above zero rises instead.
+  if (mod.property.toLowerCase() === 'armor_temperaturemin' && (mod.baseValue ?? 0) > 0) {
+    return getModifierColorClass(2 - mod.combinedModifier, mod.property)
   }
   return getModifierColorClass(mod.combinedModifier, mod.property)
 }
@@ -540,6 +575,10 @@ export function applyArmorMitigationBonus(takenMultiplier: number, percentChange
 export function formatStatValue(value: number, property?: string | null): string {
   if (isArmorDamageTakenStat(property)) {
     return formatMitigationPercent(value)
+  }
+  if (isRecoilFactorStat(property)) {
+    const factor = isNegatedPercentStat(property) ? 2 - value : value
+    return `${(factor * 100).toFixed(1)}%`
   }
   const rounded = Math.round(value * 100) / 100
   return rounded.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })

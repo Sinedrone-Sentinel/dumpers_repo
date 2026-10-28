@@ -1717,12 +1717,67 @@ check(
   quality.dropUnbackedArmorModifiers(backpackMods, { Armor_Damagemitigation: 0.7 }).length === 2,
   'armour modifier is kept when the item has that stat',
 )
-check(!quality.isLowerBetter('Weapon_Recoil_Handling'), 'recoil handling is better when the number goes up')
-check(!quality.isLowerBetter('Weapon_Recoil_Smoothness'), 'recoil smoothness is better when the number goes up')
-check(quality.isLowerBetter('Weapon_Recoil_Kick'), 'recoil kick is better when the number goes down')
-check(quality.getModifierColorClass(0.7, 'Weapon_Recoil_Handling') === 'text-red-400', 'a drop in recoil handling is red')
-check(quality.getModifierColorClass(1.2, 'Weapon_Recoil_Smoothness') === 'text-green-400', 'a rise in recoil smoothness is green')
-check(quality.getModifierColorClass(0.7, 'Weapon_Recoil_Kick') === 'text-green-400', 'a drop in recoil kick stays green')
+// CIG: recoil factors fall 1.2 -> 0.8 with quality. Kick shows the percent change,
+// Handling / Smoothness the negated percent change (0.8 factor = +20% handling).
+const handlingQ1000 = quality.calculateSlotModifiers(1000, [
+  { property: 'weapon_recoil_handling', baseAmount: 1.2, perQuality: -0.0004 },
+])[0]
+check(
+  quality.formatSlotModifierDisplay(handlingQ1000) === '+20.000%' &&
+    quality.getSlotModifierColorClass(handlingQ1000) === 'text-green-400',
+  'Q1000 recoil handling reads +20% in green, as in game',
+)
+const kickQ1000 = quality.calculateSlotModifiers(1000, [
+  { property: 'weapon_recoil_kick', baseAmount: 1.2, perQuality: -0.0004 },
+])[0]
+check(
+  quality.formatSlotModifierDisplay(kickQ1000) === '-20.000%' &&
+    quality.getSlotModifierColorClass(kickQ1000) === 'text-green-400',
+  'Q1000 recoil kick reads -20% in green, as in game',
+)
+check(quality.getModifierColorClass(1.2, 'Weapon_Recoil_Smoothness') === 'text-red-400', 'low quality smoothness (factor 1.2) is red')
+check(
+  quality.formatStatValue(0.8, 'Weapon_Recoil_Handling') === '120.0%' &&
+    quality.formatStatValue(0.8, 'Recoil Kick') === '80.0%' &&
+    quality.formatStatValue(1, 'Weapon_Recoil_Smoothness') === '100.0%',
+  'recoil base and final read as a percent of the gun’s own recoil',
+)
+const coldArmor = quality.aggregateModifiers(
+  [quality.calculateSlotModifiers(1000, [{ property: 'armor_temperaturemin', baseAmount: 0.8, perQuality: 0.0004 }])],
+  { Armor_Temperaturemin: -70 },
+)[0]
+check(
+  coldArmor.finalValue === -84 && quality.getAggregatedModifierColorClass(coldArmor) === 'text-red-400',
+  'a min temperature that drops reads red',
+)
+const warmFloorArmor = quality.aggregateModifiers(
+  [quality.calculateSlotModifiers(1000, [{ property: 'armor_temperaturemin', baseAmount: 0.8, perQuality: 0.0004 }])],
+  { Armor_Temperaturemin: 3 },
+)[0]
+check(
+  quality.getAggregatedModifierColorClass(warmFloorArmor) === 'text-green-400',
+  'a min temperature above zero that rises reads green',
+)
+// Beam weapons fire continuously, so a fire-rate modifier has no RPM to scale.
+const BEAMS_WITHOUT_FIRERATE = new Set(['none_smg_energy_01'])
+const statPipeGaps = []
+const unlabeledStats = new Set()
+for (const bp of JSON.parse(readFileSync(path.join(root, 'src/data/game-blueprints.json'), 'utf8')).blueprints) {
+  if (!bp.entityClass) continue
+  const base = Object.fromEntries(
+    Object.entries(effectiveStats.mergeBlueprintBaseStats(bp)).map(([k, v]) => [k.toLowerCase(), v]),
+  )
+  const props = new Set()
+  for (const slot of bp.slots || []) for (const opt of slot.options || []) for (const mod of opt.modifiers || []) props.add(mod.property.toLowerCase())
+  for (const prop of props) {
+    if (quality.canonicalStatKey(prop) === prop) unlabeledStats.add(prop)
+    if (prop.startsWith('armor_')) continue
+    if (prop === 'weapon_firerate' && BEAMS_WITHOUT_FIRERATE.has(bp.entityClass)) continue
+    if (base[prop] == null) statPipeGaps.push(`${bp.blueprintName}: ${prop}`)
+  }
+}
+check(unlabeledStats.size === 0, `every crafting stat has a member label (${[...unlabeledStats].join(', ')})`)
+check(statPipeGaps.length === 0, `every crafting stat has a base so FINAL shows (${statPipeGaps.slice(0, 3).join(', ')})`)
 
 const blueprintData = JSON.parse(readFileSync(path.join(root, 'src/data/game-blueprints.json'), 'utf8'))
 const allBlueprints = blueprintData.blueprints || Object.values(blueprintData)
