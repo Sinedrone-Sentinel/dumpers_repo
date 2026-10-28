@@ -1,4 +1,7 @@
 import React from 'react'
+import SiteTooltip from '../SiteTooltip'
+import type { HaulSideAvailability } from '../../lib/smartHauler'
+import { uexStockLine, useUexCommodityStock, type UexStockState } from '../../lib/uexStockStatus'
 import {
   terminalPath,
   terminalPlace,
@@ -43,16 +46,52 @@ function groupBySystem(locations: TradeLocation[]): { system: string; items: Tra
     .map(([system, items]) => ({ system, items }))
 }
 
+const STOCK_TOOLTIP = {
+  buy: 'UEX stock at this terminal, 1 (out of stock) to 7 (max), with the SCU on hand and the date a player last reported it. Only reports from the last 7 days count.',
+  sell: 'UEX inventory at this terminal, 1 (empty, wants more) to 7 (full, will not buy), with the SCU it can take and the date a player last reported it. Only reports from the last 7 days count.',
+}
+
+function stockToneClass(status: number | undefined, side: 'buy' | 'sell'): string {
+  if (status == null) return 'text-slate-400'
+  const bad = side === 'buy' ? status <= 1 : status >= 7
+  const low = side === 'buy' ? status <= 3 : status >= 5
+  if (bad) return 'text-red-400'
+  if (low) return 'text-amber-300'
+  return 'text-emerald-300'
+}
+
+function StockLine({ stock, report, side }: { stock: UexStockState; report: HaulSideAvailability | null | undefined; side: 'buy' | 'sell' }) {
+  if (stock.state === 'idle') return null
+  let text: string
+  let tone = 'text-slate-500'
+  if (stock.state === 'loading') text = 'Checking UEX…'
+  else if (stock.state === 'unavailable') text = 'UEX stock could not be checked'
+  else if (!report) text = 'No UEX report in the last 7 days'
+  else {
+    text = uexStockLine(report, side)
+    tone = stockToneClass(report.status, side)
+  }
+  return (
+    <SiteTooltip side="top" content={STOCK_TOOLTIP[side]}>
+      <p className={`mt-0.5 text-[11px] font-medium ${tone}`}>{text}</p>
+    </SiteTooltip>
+  )
+}
+
 function LocationRow({
   loc,
   pricePerScu,
   priceClassName,
   actions,
+  stock,
+  side,
 }: {
   loc: TradeLocation
   pricePerScu: number | null
   priceClassName: string
   actions?: React.ReactNode
+  stock: UexStockState
+  side: 'buy' | 'sell'
 }) {
   const { terminal, boxSizes } = loc
   const priceLabel = loc.unit === 'each'
@@ -64,6 +103,11 @@ function LocationRow({
         <div className="min-w-0">
           <p className="text-base font-bold text-white truncate">{loc.label || terminalPlace(terminal)}</p>
           <p className="text-[11px] text-slate-500 truncate">{loc.pathLabel || terminalPath(terminal)}</p>
+          <StockLine
+            stock={stock}
+            report={stock.state === 'ready' ? stock.byTerminal.get(terminal.id)?.[side] : undefined}
+            side={side}
+          />
         </div>
         <div className="flex flex-col items-end gap-1 shrink-0">
           {priceLabel && (
@@ -104,6 +148,7 @@ function SystemGroup({
   priceField,
   priceClassName,
   renderActions,
+  stock,
 }: {
   system: string
   items: TradeLocation[]
@@ -112,6 +157,7 @@ function SystemGroup({
   priceField: 'sellPricePerScu' | 'buyPricePerScu'
   priceClassName: string
   renderActions?: (loc: TradeLocation) => React.ReactNode
+  stock: UexStockState
 }) {
   const [expanded, setExpanded] = React.useState(forceExpanded)
 
@@ -151,6 +197,8 @@ function SystemGroup({
               pricePerScu={loc[priceField]}
               priceClassName={priceClassName}
               actions={renderActions?.(loc)}
+              stock={stock}
+              side={priceField === 'sellPricePerScu' ? 'sell' : 'buy'}
             />
           ))}
         </ul>
@@ -211,6 +259,7 @@ function TradeColumn({
   emptyLabel,
   systemFilter,
   renderActions,
+  stock,
 }: {
   title: string
   hint: string
@@ -219,6 +268,7 @@ function TradeColumn({
   emptyLabel: string
   systemFilter: string | null
   renderActions?: (loc: TradeLocation) => React.ReactNode
+  stock: UexStockState
 }) {
   const filteredLocations = React.useMemo(
     () =>
@@ -258,6 +308,7 @@ function TradeColumn({
                 priceField={priceField}
                 priceClassName={priceClassName}
                 renderActions={renderActions}
+                stock={stock}
               />
             ))}
           </div>
@@ -272,6 +323,7 @@ export default function CommodityTradePanels({
   emphasis = 'sell',
   systemFilter = null,
   renderBuyActions,
+  stockCommodityId = null,
 }: {
   result: CommodityTradeResult
   /** Which side to render first (contextual emphasis). Defaults to sell. */
@@ -279,7 +331,10 @@ export default function CommodityTradePanels({
   /** Limit locations to one star system (null = all). */
   systemFilter?: string | null
   renderBuyActions?: (loc: TradeLocation) => React.ReactNode
+  /** UEX commodity id. Set only for commodity terminals, whose ids match the live UEX check. */
+  stockCommodityId?: number | null
 }) {
+  const stock = useUexCommodityStock(stockCommodityId)
   const pricedEach = result.buyAt.some((loc) => loc.unit === 'each') || result.sellAt.some((loc) => loc.unit === 'each')
   const sellCol = result.sellAt.length > 0 ? (
     <TradeColumn
@@ -290,6 +345,7 @@ export default function CommodityTradePanels({
       locations={result.sellAt}
       emptyLabel={systemFilter ? `No sell locations in ${systemFilter}.` : 'No known sell locations.'}
       systemFilter={systemFilter}
+      stock={stock}
     />
   ) : null
   const buyCol = (
@@ -302,6 +358,7 @@ export default function CommodityTradePanels({
       emptyLabel={systemFilter ? `No buy locations in ${systemFilter}.` : 'No known buy locations.'}
       systemFilter={systemFilter}
       renderActions={renderBuyActions}
+      stock={stock}
     />
   )
   const columns = emphasis === 'buy' ? [buyCol, sellCol] : [sellCol, buyCol]

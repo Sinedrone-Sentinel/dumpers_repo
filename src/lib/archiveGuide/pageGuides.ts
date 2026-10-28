@@ -252,6 +252,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Search or filter by Guns, Ammo, Components, Armor, Ships, Commodities, Food, or Drinks. Mining lasers and modules that are sold in a shop are under Components',
       '**Buy from** lists every shop that sells the item, with the UEX price. Commodities also have **Sell to** for terminals that buy them from you, plus SCU box sizes',
       'Locations are grouped by star system and show the shop and the place',
+      'Commodity rows also show the live **UEX status** from 1 to 7, what it means, the SCU, and the date a player last reported it. On **Buy from** it is the stock (1 is out of stock). On **Sell to** it is how full the terminal is (7 is full and will not buy). Only reports from the last 7 days are shown. You do not need to sign in to see it',
       'On each **Buy from** row, the cart mark adds that shop and its price',
       'A blueprint card shows **$$$** and the cart mark when that item is sold in a shop',
       'Prices are crowdsourced by **UEX**; in-game prices can differ from UEX averages',

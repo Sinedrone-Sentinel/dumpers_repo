@@ -190,6 +190,7 @@ Find every shop that sells a gun, ammo, armor piece, ship, commodity, food, or d
 - Search or filter by Guns, Ammo, Armor, Ships, Commodities, Food, or Drinks
 - The cart mark on each **Buy from** row adds that shop and its price to [Shopping Cart](#shopping-cart-shop-cart)
 - A blueprint card shows **$$$** and the cart mark when the item is sold in a shop
+- Commodity rows show the live UEX status (1–7 with its meaning), SCU, and report date from the `smart-hauler-availability` Edge Function, for guests and members. Only reports from the last 7 days are shown; if the check fails the row says so and the baked prices stay
 - Commodity terminals, per-SCU prices, and box sizes are baked by `npm run fetch-shop-data`. Guns, armor, food, and drinks are baked by `npm run fetch-shop-item-index`. Ships and ship weapons come from the ship-shop bake
 - The same lookup is available as a **UEX** chip popup on Mining Tracker (ore cards, ore detail, ledger rows) and Resource Tracker (cards + list). The chip stays hidden when the name is not a commodity
 

@@ -1,8 +1,10 @@
-// Smart Hauler live stock check. Answers only whether a commodity can be bought or sold
-// at a terminal right now, and how much. Prices and terminal lists stay baked in the site.
+// Live UEX stock check for Smart Hauler and the UEX Lookup commodity rows. Answers only
+// whether a commodity can be bought or sold at a terminal right now, how much, the UEX
+// status and the report date. Prices and terminal lists stay baked in the site.
+// Open to guests: it returns public UEX data, and the 10-minute cache keeps UEX at one
+// fetch per instance however many visitors call it.
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -82,23 +84,9 @@ serve(async (req) => {
     return new Response('ok', { headers: corsHeaders })
   }
 
+  if (req.method !== 'POST') return json(405, { error: 'Use POST.' })
+
   try {
-    const authHeader = req.headers.get('Authorization')
-    if (!authHeader) return json(401, { error: 'Sign in to use Smart Hauler.' })
-
-    const userClient = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_ANON_KEY')!, {
-      global: { headers: { Authorization: authHeader } },
-    })
-    const {
-      data: { user },
-      error: userError,
-    } = await userClient.auth.getUser()
-    if (userError || !user) return json(401, { error: 'Sign in to use Smart Hauler.' })
-
-    const { data: profile } = await userClient.from('profiles').select('role').eq('id', user.id).maybeSingle()
-    const role = (profile as { role?: string } | null)?.role
-    if (!role || role === 'pending') return json(403, { error: 'Smart Hauler is for approved members.' })
-
     const body = (await req.json().catch(() => ({}))) as { commodityIds?: unknown }
     const wanted = Array.isArray(body.commodityIds)
       ? new Set(
