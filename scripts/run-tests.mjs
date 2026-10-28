@@ -1,5 +1,6 @@
 /**
  * Automated test entrypoint for CI and local `npm test`.
+ * 0) Every tracked src/data JSON parses in full (catches files cut off on disk)
  * 1) Unit helpers (scripts/tests/unit-suite.mjs)
  * 2) Blueprint SEO display audit
  * 3) Mining math verification
@@ -23,6 +24,7 @@ function run(label, scriptRel) {
   }
 }
 
+run('Data JSON integrity', 'scripts/tests/data-json-integrity-check.mjs')
 run('Unit suite', 'scripts/tests/unit-suite.mjs')
 run('Reputation standings', 'scripts/tests/reputation-standing-check.mjs')
 run('Ship shop catalog', 'scripts/tests/ship-shop-check.mjs')
