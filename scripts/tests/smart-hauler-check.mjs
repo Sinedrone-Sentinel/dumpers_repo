@@ -387,4 +387,31 @@ assert.equal(
 assert.equal(hangar.hangarCap(false), 10)
 assert.equal(hangar.hangarCap(true), 20)
 
+const stockFile = path.join('node_modules', '.cache', 'uex-stock-status.mjs')
+await esbuild.build({
+  entryPoints: [path.join('src', 'lib', 'uexStockStatus.ts')],
+  bundle: true,
+  platform: 'node',
+  format: 'esm',
+  outfile: stockFile,
+  packages: 'external',
+  define: {
+    'import.meta.env.VITE_SUPABASE_URL': '"http://127.0.0.1"',
+    'import.meta.env.VITE_SUPABASE_ANON_KEY': '"test-anon-key"',
+  },
+})
+const stockStatus = await import(`${pathToFileURL(path.resolve(stockFile)).href}?t=${Date.now()}`)
+const reported = Date.UTC(2026, 9, 26, 12)
+assert.equal(
+  stockStatus.uexStockLine({ available: true, scu: 1200, status: 4, verifiedAt: reported }, 'buy'),
+  'Status 4 · Medium stock · 1,200 SCU · Oct 26, 2026',
+)
+assert.equal(
+  stockStatus.uexStockLine({ available: false, scu: null, status: 7, verifiedAt: reported }, 'sell'),
+  'Status 7 · Full, no demand · Oct 26, 2026',
+)
+assert.equal(stockStatus.uexStatusLabel(1, 'buy'), 'Out of stock')
+assert.equal(stockStatus.uexStatusLabel(1, 'sell'), 'Very high demand')
+assert.equal(stockStatus.uexStatusLabel(9, 'buy'), null)
+
 console.log('smart hauler ok')

@@ -70,7 +70,12 @@ export default function CommodityLookupModal({
       {result ? (
         <>
           <ShopSystemFilter result={result} value={systemFilter} onChange={setSystemFilter} />
-          <CommodityTradePanels result={result} emphasis={emphasis} systemFilter={systemFilter} />
+          <CommodityTradePanels
+            result={result}
+            emphasis={emphasis}
+            systemFilter={systemFilter}
+            stockCommodityId={result.commodity.id}
+          />
         </>
       ) : (
         <div className="text-center py-10">

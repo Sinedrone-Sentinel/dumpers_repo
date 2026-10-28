@@ -152,6 +152,11 @@ export default function CommodityLookupRoute() {
   )
 }
 
+function commodityIdOf(item: UexCatalogItem): number | null {
+  const match = /^commodity:(\d+)$/.exec(item.id)
+  return match ? Number(match[1]) : null
+}
+
 function ItemDetail({ item }: { item: UexCatalogItem }) {
   const result = React.useMemo(() => tradeResultFor(item), [item])
   return (
@@ -175,6 +180,7 @@ function ItemDetail({ item }: { item: UexCatalogItem }) {
         result={result}
         emphasis="buy"
         renderBuyActions={(loc) => <UexItemActions item={item} place={loc} showWhere={false} />}
+        stockCommodityId={commodityIdOf(item)}
       />
     </div>
   )
