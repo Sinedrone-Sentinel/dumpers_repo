@@ -1747,8 +1747,16 @@ const coldArmor = quality.aggregateModifiers(
   { Armor_Temperaturemin: -70 },
 )[0]
 check(
-  coldArmor.finalValue === -84 && quality.getAggregatedModifierColorClass(coldArmor) === 'text-green-400',
-  'a colder min temperature from higher quality is green',
+  coldArmor.finalValue === -84 && quality.getAggregatedModifierColorClass(coldArmor) === 'text-red-400',
+  'a min temperature that drops reads red',
+)
+const warmFloorArmor = quality.aggregateModifiers(
+  [quality.calculateSlotModifiers(1000, [{ property: 'armor_temperaturemin', baseAmount: 0.8, perQuality: 0.0004 }])],
+  { Armor_Temperaturemin: 3 },
+)[0]
+check(
+  quality.getAggregatedModifierColorClass(warmFloorArmor) === 'text-green-400',
+  'a min temperature above zero that rises reads green',
 )
 // Beam weapons fire continuously, so a fire-rate modifier has no RPM to scale.
 const BEAMS_WITHOUT_FIRERATE = new Set(['none_smg_energy_01'])

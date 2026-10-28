@@ -225,6 +225,7 @@ const LOWER_IS_BETTER_STATS = new Set([
   'power_segments',
   'weapon_recoil_handling',
   'weapon_recoil_smoothness',
+  'armor_temperaturemin',
 ])
 
 /**
@@ -398,8 +399,8 @@ export function getAggregatedModifierColorClass(mod: AggregatedModifier): string
   if (mod.isIntegerAdditive) {
     return getAdditiveColorClass(mod.additiveChange ?? 0)
   }
-  // Min Temperature is a multiplier on a (usually negative) limit: a larger factor is
-  // colder and better, unless the item's own limit is above zero.
+  // Min Temperature reads red when the limit drops and green when it rises. Most limits
+  // are below zero, so a larger factor drops it; a limit above zero rises instead.
   if (mod.property.toLowerCase() === 'armor_temperaturemin' && (mod.baseValue ?? 0) > 0) {
     return getModifierColorClass(2 - mod.combinedModifier, mod.property)
   }
