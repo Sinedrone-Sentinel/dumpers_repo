@@ -1737,10 +1737,11 @@ check(
 )
 check(quality.getModifierColorClass(1.2, 'Weapon_Recoil_Smoothness') === 'text-red-400', 'low quality smoothness (factor 1.2) is red')
 check(
-  quality.formatStatValue(0.8, 'Weapon_Recoil_Handling') === '120.0%' &&
-    quality.formatStatValue(0.8, 'Recoil Kick') === '80.0%' &&
-    quality.formatStatValue(1, 'Weapon_Recoil_Smoothness') === '100.0%',
-  'recoil base and final read as a percent of the gun’s own recoil',
+  quality.formatStatValue(0.8, 'Weapon_Recoil_Handling') === '+20.0%' &&
+    quality.formatStatValue(0.8, 'Recoil Kick') === '-20.0%' &&
+    quality.formatStatValue(1, 'Weapon_Recoil_Smoothness') === '0.0%' &&
+    quality.formatStatValue(1, 'Weapon_Recoil_Kick') === '0.0%',
+  'recoil base reads 0% and final reads the change, as in game',
 )
 const coldArmor = quality.aggregateModifiers(
   [quality.calculateSlotModifiers(1000, [{ property: 'armor_temperaturemin', baseAmount: 0.8, perQuality: 0.0004 }])],
