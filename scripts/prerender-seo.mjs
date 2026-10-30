@@ -105,11 +105,11 @@ async function prerenderPath(browser, baseUrl, urlPath) {
   const target = `${baseUrl}${urlPath === '/' ? '/' : urlPath}`
   await page.goto(target, { waitUntil: 'networkidle', timeout: 120_000 })
 
+  // Mining Tracker has no intro paragraph, so it uses the generic body-text wait below.
   const toolIntroPaths = new Set([
     '/wikelo',
     '/targets',
     '/resources',
-    '/mining-tracker',
     '/commodity-lookup',
     '/shop-cart',
     '/ship-shop',
