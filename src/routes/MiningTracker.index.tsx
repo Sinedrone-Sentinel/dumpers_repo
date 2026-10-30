@@ -458,13 +458,12 @@ export default function MiningTrackerRoute() {
     <FeaturePageLayout
       title="Mining Tracker"
       subtitle={
-        viewMode === 'tracker'
-          ? 'Cluster RS reference with spawn-weighted chance % for ores you are hunting.'
-          : viewMode === 'guide'
-            ? 'Browse all ores by rarity or find ores at specific locations.'
-            : 'Track mining crew shares, payouts, and paid status for your runs.'
+        viewMode === 'guide'
+          ? 'Browse all ores by rarity or find ores at specific locations.'
+          : viewMode === 'ledger'
+            ? 'Track mining crew shares, payouts, and paid status for your runs.'
+            : undefined
       }
-      seoIntro="Star Citizen mining tracker: ore properties and locations, cluster RS reference with spawn-weighted chances. RS Tracker and Mining Guide work in this browser."
       badge={isGuestPreview ? 'Local only' : undefined}
       meta={
         viewMode === 'tracker' ? (
@@ -472,11 +471,7 @@ export default function MiningTrackerRoute() {
             <span className="text-amber-400/90">
               Tracked ores save in this browser only. Sign in for acquired blueprint tracking and more.
             </span>
-          ) : (
-            <span>
-              Base RS plus cluster rows with Chance % from game spawn data. Cluster RS = node count × base RS.
-            </span>
-          )
+          ) : undefined
         ) : (
           <span>
             Use the Track button to add ores to your tracker. Only ores with mining signatures can be tracked.
