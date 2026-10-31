@@ -952,7 +952,9 @@ export function parseShipShop({ extractedRoot, localization }) {
         : resolveName(locKey, localization)
     const displayName = usableName(resolvedName) ? resolvedName : humanizeEntity(entityClass)
     if (!displayName) continue
-    if (kind === 'weapon' && (/slayer cannon/i.test(displayName) || /^(?:bengal_turret_ballisticcannon|hrst_nova_ballisticcannon)/.test(entityClass))) continue
+    // The Bengal carrier is not flyable. Its guns reuse live names (Tarantula, Revenant),
+    // so a name match would list them as those guns in the shop.
+    if (kind === 'weapon' && (/slayer cannon/i.test(displayName) || /^(?:bengal_|hrst_nova_ballisticcannon)/.test(entityClass))) continue
     const stats = extractShipItemStats(json, {
       readRef: (ref) => readRef(ref, filePath),
     })

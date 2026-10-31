@@ -540,6 +540,11 @@ assert.ok(warlockWithEmp.coolantDemand > warlockNoEmp.coolantDemand, 'Warlock EM
 
 assert.equal(items.some((item) => item.displayName === 'Slayer Cannon'), false)
 assert.equal(size5Guns.some((item) => item.displayName === 'Slayer Cannon'), false)
+assert.equal(items.some((item) => /^bengal_/.test(item.entityClass) && /weaponMountUsable/.test(item.tags || '')), false)
+assert.equal(
+  Object.keys(JSON.parse(readFileSync('src/data/ship-shop-shops.json', 'utf8')).items).some((key) => key.startsWith('bengal_')),
+  false,
+)
 
 const hornetCenter = shop.getShip('anvl_hornet_f7cm_mk2').ports.find((port) => port.id === 'hardpoint_weapon_center')
 assert.equal(hornetCenter?.kind, 'weaponMount')
