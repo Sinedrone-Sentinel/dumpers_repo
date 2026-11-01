@@ -23,6 +23,15 @@ export function notifyGeminiSavedKeyChanged(): void {
   window.dispatchEvent(new Event(GEMINI_SAVED_KEY_EVENT))
 }
 
+/**
+ * A password manager can fill these boxes without updating React state.
+ * On a click, the input's own value is the one the member sees.
+ */
+export function liveSecretValue(input: HTMLInputElement | null, state: string): string {
+  const typed = input?.value.trim() ?? ''
+  return typed.length > 0 ? typed : state.trim()
+}
+
 export async function hasSavedGeminiKey(): Promise<boolean> {
   const { data, error } = await supabase.rpc('mining_advisor_has_saved_key')
   if (error) return false

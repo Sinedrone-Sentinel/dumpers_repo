@@ -6,6 +6,7 @@ import {
   GEMINI_SAVED_KEY_EVENT,
   GEMINI_STUDIO_KEY_URL,
   hasSavedGeminiKey,
+  liveSecretValue,
   saveGeminiKey,
   unlockGeminiKey,
 } from '../../lib/geminiKeyVault'
@@ -36,6 +37,9 @@ function readThread(): AdvisorChatMessage[] {
 
 export default function SiteHelpModal({ onClose }: { onClose: () => void }) {
   const listRef = useRef<HTMLDivElement | null>(null)
+  const apiKeyRef = useRef<HTMLInputElement | null>(null)
+  const lockPhraseRef = useRef<HTMLInputElement | null>(null)
+  const savedCheck = useRef(0)
   const currentPath = useRouterState({ select: (state) => state.location.pathname })
 
   const [apiKey, setApiKey] = useState('')
@@ -62,7 +66,9 @@ export default function SiteHelpModal({ onClose }: { onClose: () => void }) {
   // made there or in Settings while this is open.
   useEffect(() => {
     const sync = () => {
+      const ticket = ++savedCheck.current
       void hasSavedGeminiKey().then((saved) => {
+        if (ticket !== savedCheck.current) return
         setHasSavedKey(saved)
         if (!saved) setSessionKey('')
       })
@@ -107,15 +113,48 @@ export default function SiteHelpModal({ onClose }: { onClose: () => void }) {
   const removeSavedKey = () => {
     setKeyBusy(true)
     setError(null)
+    savedCheck.current += 1
     void deleteSavedGeminiKey().then((result) => {
-      setKeyBusy(false)
       if (!result.ok) {
         setError(result.error)
         return
       }
       setHasSavedKey(false)
       setSessionKey('')
-    })
+      setApiKey('')
+      setLockPhrase('')
+      if (apiKeyRef.current) apiKeyRef.current.value = ''
+      if (lockPhraseRef.current) lockPhraseRef.current.value = ''
+    }).finally(() => setKeyBusy(false))
+  }
+
+  const savePastedKey = () => {
+    const pasted = liveSecretValue(apiKeyRef.current, apiKey)
+    const phrase = liveSecretValue(lockPhraseRef.current, lockPhrase)
+    if (pasted.length < 20) {
+      setError('Paste your Gemini API key in the first box.')
+      return
+    }
+    if (phrase.length < 10) {
+      setError('Choose a lock phrase of at least 10 characters.')
+      return
+    }
+    setApiKey(pasted)
+    setLockPhrase(phrase)
+    setKeyBusy(true)
+    setError(null)
+    void saveGeminiKey(pasted, phrase).then((result) => {
+      if (!result.ok) {
+        setError(result.error)
+        return
+      }
+      setSessionKey(pasted)
+      setApiKey('')
+      setLockPhrase('')
+      if (apiKeyRef.current) apiKeyRef.current.value = ''
+      if (lockPhraseRef.current) lockPhraseRef.current.value = ''
+      setHasSavedKey(true)
+    }).finally(() => setKeyBusy(false))
   }
 
   return (
@@ -195,10 +234,12 @@ export default function SiteHelpModal({ onClose }: { onClose: () => void }) {
                 <LockPhraseHelpMark />
               </span>
               <input
+                ref={lockPhraseRef}
                 type="password"
-                autoComplete="off"
-                value={lockPhrase}
+                name="gemini-lock-phrase"
+                autoComplete="new-password"
                 onChange={(event) => setLockPhrase(event.target.value)}
+                onInput={(event) => setLockPhrase(event.currentTarget.value)}
                 className="site-input w-full px-2 py-1.5 text-xs"
                 placeholder="Phrase you chose when you saved"
               />
@@ -207,19 +248,24 @@ export default function SiteHelpModal({ onClose }: { onClose: () => void }) {
               <button
                 type="button"
                 className="site-btn-secondary !px-2 !py-1 text-[11px] disabled:opacity-40"
-                disabled={lockPhrase.trim().length < 10 || keyBusy}
+                disabled={keyBusy}
                 onClick={() => {
+                  const phrase = liveSecretValue(lockPhraseRef.current, lockPhrase)
+                  if (phrase.length < 10) {
+                    setError('Enter the lock phrase you chose when you saved.')
+                    return
+                  }
                   setKeyBusy(true)
                   setError(null)
-                  void unlockGeminiKey(lockPhrase).then((result) => {
-                    setKeyBusy(false)
+                  void unlockGeminiKey(phrase).then((result) => {
                     if (!result.ok) {
                       setError(result.error)
                       return
                     }
                     setSessionKey(result.advice)
                     setLockPhrase('')
-                  })
+                    if (lockPhraseRef.current) lockPhraseRef.current.value = ''
+                  }).finally(() => setKeyBusy(false))
                 }}
               >
                 Unlock
@@ -242,9 +288,10 @@ export default function SiteHelpModal({ onClose }: { onClose: () => void }) {
             <label className="block space-y-1">
               <span className="site-label">Gemini API key</span>
               <input
+                ref={apiKeyRef}
                 type="password"
-                autoComplete="off"
-                value={apiKey}
+                name="gemini-api-key"
+                autoComplete="new-password"
                 onChange={(event) => setApiKey(event.target.value)}
                 onInput={(event) => setApiKey(event.currentTarget.value)}
                 className="site-input w-full px-2 py-1.5 text-xs"
@@ -257,9 +304,10 @@ export default function SiteHelpModal({ onClose }: { onClose: () => void }) {
                 <LockPhraseHelpMark />
               </span>
               <input
+                ref={lockPhraseRef}
                 type="password"
-                autoComplete="off"
-                value={lockPhrase}
+                name="gemini-lock-phrase"
+                autoComplete="new-password"
                 onChange={(event) => setLockPhrase(event.target.value)}
                 onInput={(event) => setLockPhrase(event.currentTarget.value)}
                 className="site-input w-full px-2 py-1.5 text-xs"
@@ -270,23 +318,8 @@ export default function SiteHelpModal({ onClose }: { onClose: () => void }) {
               <button
                 type="button"
                 className="site-btn-secondary !px-2 !py-1 text-[11px] disabled:opacity-40"
-                disabled={apiKey.trim().length < 20 || lockPhrase.trim().length < 10 || keyBusy}
-                onClick={() => {
-                  const pasted = apiKey.trim()
-                  setKeyBusy(true)
-                  setError(null)
-                  void saveGeminiKey(pasted, lockPhrase).then((result) => {
-                    setKeyBusy(false)
-                    if (!result.ok) {
-                      setError(result.error)
-                      return
-                    }
-                    setSessionKey(pasted)
-                    setApiKey('')
-                    setLockPhrase('')
-                    setHasSavedKey(true)
-                  })
-                }}
+                disabled={keyBusy}
+                onClick={savePastedKey}
               >
                 Save to my profile
               </button>
