@@ -221,19 +221,32 @@ const withIds = {
     { commodity: 'Cheap', pointId: 'c', place: 'C', price: 15, boxSizes: [1], commodityId: 1, terminalId: 12 },
   ],
 }
-const verifiedAt = Date.UTC(2026, 9, 23)
+const now = Date.UTC(2026, 9, 23, 12)
+const verifiedAt = now
+assert.equal(hauler.buyableStockScu(4, now, now), 3)
+assert.equal(hauler.buyableStockScu(1, now, now), 0)
+assert.equal(hauler.buyableStockScu(15, now - hauler.HAUL_STOCK_FRESH_MS / 2, now), 7)
+assert.equal(hauler.buyableStockScu(100, now - hauler.HAUL_STOCK_FRESH_MS, now), 0)
 const live = hauler.applyHaulAvailability(withIds, [
   { commodityId: 1, terminalId: 10, buy: { available: true, scu: 4, status: 4, verifiedAt }, sell: null },
   { commodityId: 1, terminalId: 11, buy: { available: false, scu: null, status: 1, verifiedAt }, sell: { available: false, scu: null, status: 7, verifiedAt } },
   { commodityId: 1, terminalId: 12, buy: null, sell: { available: true, scu: 7, status: 3, verifiedAt } },
-])
+], now)
 assert.deepEqual(live.buys.map((row) => row.terminalId), [10])
-assert.equal(live.buys[0].stockScu, 4)
+assert.equal(live.buys[0].stockScu, 3)
 assert.equal(live.buys[0].uexStatus, 4)
 assert.equal(live.buys[0].uexVerifiedAt, verifiedAt)
 assert.deepEqual(live.sells.map((row) => row.terminalId), [12])
 assert.equal(live.sells[0].stockScu, 7)
 assert.equal(live.sells[0].uexStatus, 3)
+const lastScu = hauler.applyHaulAvailability(withIds, [
+  { commodityId: 1, terminalId: 10, buy: { available: true, scu: 1, status: 2, verifiedAt }, sell: null },
+], now)
+assert.deepEqual(lastScu.buys, [])
+const weekOld = hauler.applyHaulAvailability(withIds, [
+  { commodityId: 1, terminalId: 10, buy: { available: true, scu: 80, status: 5, verifiedAt: now - hauler.HAUL_STOCK_FRESH_MS }, sell: null },
+], now)
+assert.deepEqual(weekOld.buys, [])
 const dropped = hauler.applyHaulAvailability(withIds, [])
 assert.deepEqual(dropped.buys, [])
 assert.deepEqual(dropped.sells, [])

@@ -181,6 +181,23 @@ export function sharedBoxSizes(buyBoxes: number[], sellBoxes: number[]): number[
 /** Share of the hold the cash can buy. A thinner live stock report is not a stop. */
 const HOLD_FILL = 0.4
 
+/** A route only trusts a UEX stock report from the last 7 days. */
+export const HAUL_STOCK_FRESH_MS = 7 * 24 * 60 * 60 * 1000
+
+/**
+ * SCU a player can buy from a verified UEX stock report.
+ * The game will not sell the last 1 SCU. A report from the same moment is
+ * trusted for the rest. Trust falls to nothing as the report reaches 7 days old.
+ */
+export function buyableStockScu(reportedScu: number, verifiedAt: number, now = Date.now()): number {
+  const reported = Math.round(reportedScu)
+  if (!Number.isFinite(reported) || reported <= 1) return 0
+  if (!Number.isFinite(verifiedAt) || !Number.isFinite(now)) return 0
+  const age = Math.min(HAUL_STOCK_FRESH_MS, Math.max(0, now - verifiedAt))
+  const remaining = HAUL_STOCK_FRESH_MS - age
+  return Math.floor(((reported - 1) * remaining) / HAUL_STOCK_FRESH_MS)
+}
+
 function affordableScu(price: number, cargoScu: number, cash: number): number {
   if (price <= 0 || cash <= 0 || cargoScu <= 0) return 0
   return Math.min(cargoScu, Math.floor(cash / price))
@@ -229,6 +246,7 @@ export function tradeLoad(
 export function applyHaulAvailability(
   offers: { buys: HaulOffer[]; sells: HaulOffer[] },
   rows: HaulAvailabilityRow[],
+  now = Date.now(),
 ): { buys: HaulOffer[]; sells: HaulOffer[] } {
   const byKey = new Map(rows.map((row) => [`${row.commodityId}:${row.terminalId}`, row]))
   const apply = (list: HaulOffer[], side: 'buy' | 'sell') => list.flatMap((offer) => {
@@ -236,7 +254,13 @@ export function applyHaulAvailability(
     const report = byKey.get(`${offer.commodityId}:${offer.terminalId}`)?.[side]
     if (!report?.available) return []
     const next: HaulOffer = { ...offer }
-    if (report.scu != null && report.scu > 0) next.stockScu = report.scu
+    if (side === 'buy' && report.scu != null && report.scu > 0) {
+      const buyable = buyableStockScu(report.scu, report.verifiedAt ?? Number.NaN, now)
+      if (buyable <= 0) return []
+      next.stockScu = buyable
+    } else if (report.scu != null && report.scu > 0) {
+      next.stockScu = report.scu
+    }
     if (report.status != null) next.uexStatus = report.status
     if (report.verifiedAt != null) next.uexVerifiedAt = report.verifiedAt
     return [next]
