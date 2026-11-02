@@ -30,11 +30,14 @@ export interface RockBreakabilityTarget {
   /** Valuable composition rows with % and Q band — used for grind-worth-it advice. */
   materials?: RockMaterialScan[] | null
   /**
-   * Gadget names the miner has placed on the rock. Their modifiers are already
-   * folded into `resistancePercent`/`instability` (gadgets modify rock BASE stats);
-   * kept here so advice tools can avoid re-recommending an equipped gadget.
+   * The one gadget the miner has placed on the rock. Its modifiers are already
+   * folded into `resistancePercent`/`instability` (gadgets modify rock BASE stats).
    */
-  selectedGadgetNames?: string[] | null
+  selectedGadgetName?: string | null
+  /** Scanner resistance before the gadget. A swap is judged against this, not the adjusted value. */
+  baseResistancePercent?: number | null
+  /** Scanner instability before the gadget. */
+  baseInstability?: number | null
 }
 
 export interface LaserBreakabilityRow {

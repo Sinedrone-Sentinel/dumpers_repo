@@ -57,9 +57,9 @@ import { buildWindowBarModel } from '../../lib/miningWindowDisplay'
 import WindowSizeBar from './WindowSizeBar'
 import { formatRequiredPower } from '../../lib/miningBreakability'
 import {
-  applyGadgetsToRockStats,
+  applyGadgetToRockStats,
   formatGadgetModifierPercent,
-  getMiningGadgetsByNames,
+  getMiningGadgetByName,
   listMiningGadgets,
 } from '../../lib/miningGadgets'
 import type { RockBreakabilityTarget } from '../../lib/miningLoadoutCompare'
@@ -129,8 +129,7 @@ export default function RockCalculator({
   const [resistanceInput, setResistanceInput] = useState('')
   const [percentBySlot, setPercentBySlot] = useState<Record<string, string>>({})
   const [qualityBySlot, setQualityBySlot] = useState<Record<string, string>>({})
-  const [gadgetSlot1, setGadgetSlot1] = useState('')
-  const [gadgetSlot2, setGadgetSlot2] = useState('')
+  const [gadgetName, setGadgetName] = useState('')
 
   const [ledgers, setLedgers] = useState<MiningLedgerListItem[]>([])
   const [selectedLedgerId, setSelectedLedgerId] = useState('')
@@ -181,24 +180,24 @@ export default function RockCalculator({
   const scannerInstability = parseRockPropertyInput(instabilityInput)
 
   const gadgetOptions = useMemo(() => listMiningGadgets(), [])
-  const selectedGadgets = useMemo(
-    () => getMiningGadgetsByNames([gadgetSlot1, gadgetSlot2]),
-    [gadgetSlot1, gadgetSlot2]
+  const selectedGadget = useMemo(
+    () => (gadgetName ? getMiningGadgetByName(gadgetName) ?? null : null),
+    [gadgetName]
   )
-  // Gadgets modify the rock's BASE stats before any head/module math applies.
+  // A gadget modifies the rock's BASE stats before any head/module math applies.
   const gadgetAdjusted = useMemo(
     () =>
-      applyGadgetsToRockStats(
+      applyGadgetToRockStats(
         { resistancePercent: scannerResistance, instability: scannerInstability },
-        selectedGadgets
+        selectedGadget
       ),
-    [scannerResistance, scannerInstability, selectedGadgets]
+    [scannerResistance, scannerInstability, selectedGadget]
   )
   const adjustedResistance = gadgetAdjusted.resistancePercent
   const adjustedInstability = gadgetAdjusted.instability
 
   const gadgetSummary = useMemo(() => {
-    if (!selectedGadgets.length) return null
+    if (!selectedGadget) return null
     const parts: string[] = []
     if (
       scannerResistance != null &&
@@ -215,7 +214,7 @@ export default function RockCalculator({
       parts.push(`Inst ${Math.round(scannerInstability)}→${Math.round(adjustedInstability)}`)
     }
     return parts.length ? parts.join(' · ') : null
-  }, [selectedGadgets, scannerResistance, adjustedResistance, scannerInstability, adjustedInstability])
+  }, [selectedGadget, scannerResistance, adjustedResistance, scannerInstability, adjustedInstability])
 
   const requiredPowerLabel = formatRequiredPower(scannerMass, adjustedResistance, adjustedInstability)
   const windowBarModel = useMemo(() => (oreName ? buildWindowBarModel(oreName) : null), [oreName])
@@ -350,18 +349,20 @@ export default function RockCalculator({
       oreName: oreName || null,
       totalScu,
       materials: valuableMaterials.length ? valuableMaterials : null,
-      selectedGadgetNames: selectedGadgets.length
-        ? selectedGadgets.map((gadget) => gadget.name)
-        : null,
+      selectedGadgetName: selectedGadget?.name ?? null,
+      baseResistancePercent: scannerResistance,
+      baseInstability: scannerInstability,
     })
   }, [
     scannerMass,
     adjustedResistance,
     adjustedInstability,
+    scannerResistance,
+    scannerInstability,
     oreName,
     totalScu,
     materialRows,
-    selectedGadgets,
+    selectedGadget,
     onRockTargetChange,
   ])
 
@@ -677,7 +678,9 @@ export default function RockCalculator({
                 </label>
                 <div className="mb-2">
                   <div className="flex items-center justify-between gap-2 mb-0.5">
-                    <span className="text-[10px] text-slate-400">Gadgets in use</span>
+                    <SiteTooltip content="Only one gadget can be on a rock at a time.">
+                      <span className="text-[10px] text-slate-400">Gadget in use</span>
+                    </SiteTooltip>
                     {gadgetSummary ? (
                       <SiteTooltip content="Rock base stats after gadgets"><span
                         className="text-[9px] text-cyan-300/90 tabular-nums truncate"
@@ -686,22 +689,12 @@ export default function RockCalculator({
                       </span></SiteTooltip>
                     ) : null}
                   </div>
-                  <div className="flex gap-1.5">
-                    <GadgetSelect
-                      value={gadgetSlot1}
-                      otherValue={gadgetSlot2}
-                      options={gadgetOptions}
-                      onChange={setGadgetSlot1}
-                      ariaLabel="First mining gadget"
-                    />
-                    <GadgetSelect
-                      value={gadgetSlot2}
-                      otherValue={gadgetSlot1}
-                      options={gadgetOptions}
-                      onChange={setGadgetSlot2}
-                      ariaLabel="Second mining gadget"
-                    />
-                  </div>
+                  <GadgetSelect
+                    value={gadgetName}
+                    options={gadgetOptions}
+                    onChange={setGadgetName}
+                    ariaLabel="Mining gadget on this rock"
+                  />
                 </div>
                 <span className="block text-[10px] text-slate-400 mb-0.5">Mass</span>
                 <input
@@ -972,28 +965,23 @@ function formatGadgetEffect(gadget: {
 
 interface GadgetSelectProps {
   value: string
-  otherValue: string
   options: ReturnType<typeof listMiningGadgets>
   onChange: (value: string) => void
   ariaLabel: string
 }
 
-function GadgetSelect({ value, otherValue, options, onChange, ariaLabel }: GadgetSelectProps) {
+function GadgetSelect({ value, options, onChange, ariaLabel }: GadgetSelectProps) {
   const selected = options.find((gadget) => gadget.name === value)
   return (
     <SiteTooltip content={selected ? `${selected.displayName}: ${formatGadgetEffect(selected)}` : 'No gadget'} className="block w-full"><select
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="site-input flex-1 min-w-0 px-1.5 py-1.5 text-xs truncate"
+      className="site-input w-full min-w-0 px-1.5 py-1.5 text-xs truncate"
       aria-label={ariaLabel}
     >
       <option value="">None</option>
       {options.map((gadget) => (
-        <option
-          key={gadget.name}
-          value={gadget.name}
-          disabled={gadget.name === otherValue && otherValue !== ''}
-        >
+        <option key={gadget.name} value={gadget.name}>
           {gadget.displayName}
         </option>
       ))}

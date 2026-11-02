@@ -73,15 +73,10 @@ export function describeAdvisorLoadout(slots: MiningLaserSlotConfig[]): AdvisorH
   })
 }
 
-export function gadgetDisplayNames(names: readonly (string | null | undefined)[] | null | undefined): string[] {
-  if (!names?.length) return []
-  const out: string[] = []
-  for (const name of names) {
-    if (!name) continue
-    const gadget = getMiningGadgetByName(name)
-    if (gadget?.displayName) out.push(gadget.displayName)
-  }
-  return out
+export function gadgetDisplayNames(name: string | null | undefined): string[] {
+  if (!name) return []
+  const gadget = getMiningGadgetByName(name)
+  return gadget?.displayName ? [gadget.displayName] : []
 }
 
 export function vesselAdvisorLabel(vesselId: MiningVesselId): string {
