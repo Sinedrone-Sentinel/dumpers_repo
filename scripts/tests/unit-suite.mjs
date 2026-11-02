@@ -1020,8 +1020,13 @@ check(
   'advisor prompt requires a real change answer',
 )
 check(
-  advisorPromptText.includes('Copying the gadgets already on the rock is not an answer'),
+  advisorPromptText.includes('Copying the gadget already on the rock is not an answer'),
   'advisor prompt rejects a gadget echo as the answer',
+)
+check(
+  advisorPromptText.includes('Only one gadget can be on a rock at a time') &&
+    !advisorPromptText.includes('At most two gadgets'),
+  'advisor prompt allows one gadget per rock',
 )
 check(
   advisorPromptText.includes('If the member describes this rock in the question'),

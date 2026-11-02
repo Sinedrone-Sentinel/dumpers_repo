@@ -222,7 +222,7 @@ function parseLoadout(raw: unknown, catalog: Catalog): HeadSession[] {
 
 function parseGadgets(raw: unknown): string[] {
   if (!Array.isArray(raw)) return []
-  return raw.map((name) => clip(name, 80)).filter(Boolean).slice(0, 2)
+  return raw.map((name) => clip(name, 80)).filter(Boolean).slice(0, 1)
 }
 
 function parseScan(raw: unknown): ScanSession | null {

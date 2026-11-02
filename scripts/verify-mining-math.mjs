@@ -586,6 +586,21 @@ assertApprox(gadgets.applyRockMultiplicativePercent(74, -30), 51.8, 0.1, '74% ×
 assertApprox(gadgets.applyRockMultiplicativePercent(50, 15), 57.5, 0.1, '50% × (1 + 15%/100) = 57.5%')
 assertApprox(gadgets.applyRockMultiplicativePercent(500, -20), 400, 0.1, '500 instability × (1 − 20%) = 400')
 
+// 7.2 One gadget per rock
+console.log('\n7.2 applyGadgetToRockStats (one gadget per rock)')
+assert(gadgets.MAX_GADGETS_PER_ROCK === 1, 'Game allows one gadget on a rock')
+const rockBase = { resistancePercent: 60, instability: 500 }
+const unchanged = gadgets.applyGadgetToRockStats(rockBase, null)
+assert(unchanged.resistancePercent === 60 && unchanged.instability === 500, 'No gadget leaves rock stats alone')
+const sampleGadget = gadgets.listMiningGadgets().find((g) => g.resistanceModifier !== 0)
+const withGadget = gadgets.applyGadgetToRockStats(rockBase, sampleGadget)
+assertApprox(
+  withGadget.resistancePercent,
+  60 * (1 + sampleGadget.resistanceModifier / 100),
+  0.01,
+  `${sampleGadget.displayName} applies once to resistance`
+)
+
 // ============================================================================
 // 9. INTEGRATION TESTS
 // ============================================================================
@@ -628,6 +643,58 @@ const prospectorSmartCracker = gadgetRecs.buildSmartCracker(
   prospectorComparison
 )
 assert(prospectorSmartCracker.moleStrategy === null, 'Prospector should not have mole strategy')
+
+// 9.3b A gadget is already on the rock: only one fits, so every suggestion is a swap.
+console.log('\n9.3b Smart Cracker - gadget already on the rock')
+const resistanceGadgets = gadgets
+  .listMiningGadgets()
+  .filter((g) => g.resistanceModifier < 0)
+  .sort((a, b) => b.resistanceModifier - a.resistanceModifier)
+const weakestResistGadget = resistanceGadgets[0]
+const toughBase = { scannerMass: 10000, resistancePercent: 70, instability: 150 }
+const toughAdjusted = gadgets.applyGadgetToRockStats(toughBase, weakestResistGadget)
+const equippedTarget = {
+  scannerMass: toughBase.scannerMass,
+  resistancePercent: toughAdjusted.resistancePercent,
+  instability: toughAdjusted.instability,
+  selectedGadgetName: weakestResistGadget.name,
+  baseResistancePercent: toughBase.resistancePercent,
+  baseInstability: toughBase.instability,
+}
+const equippedResult = gadgetRecs.buildSmartCracker(
+  'prospector',
+  prospectorLasers,
+  equippedTarget,
+  loadoutCompare.compareLoadoutToRock(prospectorLasers, equippedTarget)
+)
+assert(equippedResult.gadgetSuggestions.length > 0, 'A stronger gadget is offered as a swap')
+assert(
+  equippedResult.gadgetSuggestions.every((s) => s.gadget.name !== weakestResistGadget.name),
+  'Equipped gadget is never suggested again'
+)
+assert(
+  equippedResult.gadgetSuggestions.every((s) => s.reason.startsWith(`Swap ${weakestResistGadget.displayName} for `)),
+  'With a gadget on the rock, suggestions are swaps, not a second gadget',
+  equippedResult.gadgetSuggestions.map((s) => s.reason)
+)
+assert(
+  equippedResult.gadgetSuggestions
+    .filter((s) => s.role === 'resistance')
+    .every((s) => s.gadget.resistanceModifier < weakestResistGadget.resistanceModifier),
+  'Resistance swaps beat the equipped gadget'
+)
+const bareResult = gadgetRecs.buildSmartCracker(
+  'prospector',
+  prospectorLasers,
+  toughBase,
+  loadoutCompare.compareLoadoutToRock(prospectorLasers, toughBase)
+)
+assert(
+  bareResult.gadgetSuggestions.length > 0 &&
+    bareResult.gadgetSuggestions.every((s) => !s.reason.startsWith('Swap ')),
+  'With no gadget on the rock, suggestions are not swaps'
+)
+console.log(`  → Swap suggestions: ${equippedResult.gadgetSuggestions.length}, bare-rock suggestions: ${bareResult.gadgetSuggestions.length}`)
 
 // 9.4 End-to-end: Helix II + 2× Focus III + Rieger on 74%/515 rock.
 // The game shows IMPOSSIBLE because it only checks the seat's BASE laser vs mass+resistance

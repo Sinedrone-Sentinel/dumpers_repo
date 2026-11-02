@@ -125,8 +125,8 @@ function SmartCrackerPanel({
         >
           <p className="text-[10px] uppercase tracking-wide text-slate-500">Gadget options</p>
           <p className="text-[11px] text-slate-600 leading-snug">
-            Only one gadget per rock — benefits do not stack. Pick the job you need most, or use an
-            alternate if you do not have the recommended one.
+            Only one gadget fits on a rock. Pick the job you need most, or use an alternate if you
+            do not have the recommended one.
           </p>
 
           {recommendedGadget ? (
@@ -577,7 +577,7 @@ export default function MiningLoadoutPanel({
           oreName={rockTarget?.oreName ?? null}
           vesselDisplayName={vesselAdvisorLabel(vesselId)}
           loadout={describeAdvisorLoadout(draftLasers)}
-          gadgetsInUse={gadgetDisplayNames(rockTarget?.selectedGadgetNames)}
+          gadgetsInUse={gadgetDisplayNames(rockTarget?.selectedGadgetName)}
           scan={
             comparison && isRockBreakabilityTargetReady(rockTarget)
               ? {

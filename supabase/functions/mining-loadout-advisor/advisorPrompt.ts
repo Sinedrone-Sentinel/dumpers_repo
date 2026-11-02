@@ -73,7 +73,7 @@ export function advisorNeedsChangeAdvice(question: string): boolean {
 
 /** Appended to the member's question so a change ask cannot end on the current kit. */
 export const ADVISOR_CHANGE_NUDGE =
-  'Answer the change. Do not stop after listing the current kit. Before the sign-off, write 1 to 3 short [INFO] or [WARNING] lines. Each line must say keep, swap, add, or drop, and name resistance, instability, or the charge window. Copying the gadgets already on the rock is not an answer.'
+  'Answer the change. Do not stop after listing the current kit. Before the sign-off, write 1 to 3 short [INFO] or [WARNING] lines. Each line must say keep, swap, add, or drop, and name resistance, instability, or the charge window. Copying the gadget already on the rock is not an answer. Only one gadget fits on a rock, so never add a second one.'
 
 export function buildSystemPrompt(input: {
   catalog: AdvisorPromptCatalog
@@ -107,7 +107,7 @@ export function buildSystemPrompt(input: {
     '- If every hardpoint uses the same head and modules, write it once: [FIT] 3x Helix II — Rieger-C3, Focus III, Focus III',
     '- Never list Laser 1 / Laser 2 / Laser 3 when those kits match. Distinct kits only get their own line (center vs sides).',
     '- Never put two different heads on the same [FIT] line.',
-    '- Gadgets: one line, at most two names. On a change question that line must say keep, add, or drop. Copying the gadgets already on the rock is not an answer.',
+    '- Gadget: one line, exactly one name. On a change question that line must say keep, swap, add, or drop. Copying the gadget already on the rock is not an answer.',
     '- Buy answers may list shops from the BUY LOCATIONS block; still no why essay.',
     `- After the kit, buy, or change lines, put one blank line, then the last line exactly: [SHUBIN] ${closer}`,
     '- Do not invent a different intro or sign-off. Do not skip the blank line. Do not add extra flavor after the sign-off.',
@@ -117,7 +117,7 @@ export function buildSystemPrompt(input: {
     '- Each laser "slots" value is the exact module-port count. Recommend at most that many modules for that head. A 1-port head gets 0 or 1 module, never 2 or 3.',
     '- Only recommend heads whose size matches the ship laserSize. Do not add more heads than laserHardpoints.',
     '- Golem may only use Pitman Mining Laser. ROC and ROC-DS are size 0 only.',
-    '- At most two gadgets on the rock.',
+    '- Only one gadget can be on a rock at a time. Never recommend two gadgets or stacking gadgets. If a gadget is already on the rock, the only change is to keep it, swap it for another, or drop it.',
     '- If you name modules, the count must fit that head\'s slots.',
     '',
     'Module ports by head (authoritative):',
@@ -137,7 +137,7 @@ export function buildSystemPrompt(input: {
     '',
     'Current ship: ' + (input.vesselDisplayName || 'unknown'),
     'Current heads (slots = ports on that equipped head): ' + JSON.stringify(input.loadout),
-    'Gadgets already on the rock: ' + (input.gadgetsInUse.join(', ') || 'none'),
+    'Gadget already on the rock: ' + (input.gadgetsInUse[0] || 'none'),
     '',
     'Where-to-buy rules — never violate:',
     '- You may answer "where can I buy this" for mining heads, modules and gadgets only.',

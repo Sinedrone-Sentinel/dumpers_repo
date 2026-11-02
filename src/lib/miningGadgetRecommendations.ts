@@ -9,6 +9,7 @@ import type { MiningVesselId } from './miningVessels'
 import { findBestMoleLoadoutStrategy, type MoleLoadoutStrategy } from './moleLoadoutStrategy'
 import {
   formatGadgetModifierPercent,
+  getMiningGadgetByName,
   listMiningGadgets,
   rockInstabilityWithGadget,
   rockResistanceWithGadget,
@@ -64,6 +65,11 @@ interface GadgetSuggestionContext {
   instability: number | null
   lasers: MiningLaserSlotConfig[]
   target: RockBreakabilityTarget
+  /** The rock without its gadget. Candidates replace the equipped gadget, so they apply to this. */
+  baseTarget: RockBreakabilityTarget
+  baseInstability: number | null
+  /** The gadget already on the rock. Only one fits, so any suggestion is a swap. */
+  equipped: MiningGadget | null
   comparison: LoadoutBreakabilityComparison
   moleStrategy: MoleLoadoutStrategy | null
   soloMining: boolean
@@ -145,19 +151,23 @@ function formatWindowGadgetReason(
   return `${gadget.displayName} widens the fracture charge window (${parts.join(', ')}) — easier to land a clean crack${highInstability}.`
 }
 
-/** Gadgets already placed on the rock (their effect is folded into target stats). */
-function equippedGadgetNames(ctx: GadgetSuggestionContext): ReadonlySet<string> {
-  return new Set(ctx.target.selectedGadgetNames ?? [])
+function windowScoreOf(gadget: MiningGadget): number {
+  return gadget.optimalWindowModifier + gadget.optimalWindowRateModifier * 0.5
+}
+
+function withSwapPrefix(ctx: GadgetSuggestionContext, gadget: MiningGadget, reason: string): string {
+  if (!ctx.equipped) return reason
+  return `Swap ${ctx.equipped.displayName} for ${gadget.displayName}. ${reason}`
 }
 
 function findResistanceGadgetCandidates(ctx: GadgetSuggestionContext): GadgetCandidate[] {
   const candidates: GadgetCandidate[] = []
-  const { lasers, target, moleStrategy, soloMining } = ctx
-  const equipped = equippedGadgetNames(ctx)
+  const { lasers, baseTarget: target, moleStrategy, soloMining, equipped } = ctx
 
   for (const gadget of listMiningGadgets()) {
-    if (equipped.has(gadget.name)) continue
+    if (equipped?.name === gadget.name) continue
     if (gadget.resistanceModifier >= 0) continue
+    if (equipped && gadget.resistanceModifier >= equipped.resistanceModifier) continue
     const adjustedTarget = targetWithGadgetResistance(target, gadget)
     if (!adjustedTarget) continue
 
@@ -191,7 +201,7 @@ function findResistanceGadgetCandidates(ctx: GadgetSuggestionContext): GadgetCan
 
     candidates.push({
       gadget,
-      reason,
+      reason: withSwapPrefix(ctx, gadget, reason),
       requiredPower,
       score: Math.abs(gadget.resistanceModifier) * 10 + margin,
     })
@@ -202,16 +212,17 @@ function findResistanceGadgetCandidates(ctx: GadgetSuggestionContext): GadgetCan
 }
 
 function findInstabilityGadgetCandidates(ctx: GadgetSuggestionContext): GadgetCandidate[] {
-  const instability = ctx.instability
-  if (instability == null || instability < HIGH_INSTABILITY_THRESHOLD) return []
+  if (ctx.instability == null || ctx.instability < HIGH_INSTABILITY_THRESHOLD) return []
+  const instability = ctx.baseInstability
+  if (instability == null) return []
 
   const candidates: GadgetCandidate[] = []
-  const { lasers, target, moleStrategy, soloMining } = ctx
-  const equipped = equippedGadgetNames(ctx)
+  const { lasers, baseTarget: target, moleStrategy, soloMining, equipped } = ctx
 
   for (const gadget of listMiningGadgets()) {
-    if (equipped.has(gadget.name)) continue
+    if (equipped?.name === gadget.name) continue
     if (gadget.instabilityModifier >= 0) continue
+    if (equipped && gadget.instabilityModifier >= equipped.instabilityModifier) continue
     const adjustedTarget = targetWithGadgetResistance(target, gadget) ?? target
 
     const comparison = compareLoadoutToRock(lasers, adjustedTarget)
@@ -232,7 +243,11 @@ function findInstabilityGadgetCandidates(ctx: GadgetSuggestionContext): GadgetCa
 
     candidates.push({
       gadget,
-      reason: `${gadget.displayName} cuts instability from ${Math.round(instability).toLocaleString()} to ~${Math.round(adjusted).toLocaleString()} (${formatGadgetModifierPercent(gadget.instabilityModifier)}).${tradeoff}`,
+      reason: withSwapPrefix(
+        ctx,
+        gadget,
+        `${gadget.displayName} cuts instability from ${Math.round(instability).toLocaleString()} to ~${Math.round(adjusted).toLocaleString()} (${formatGadgetModifierPercent(gadget.instabilityModifier)}).${tradeoff}`
+      ),
       requiredPower: comparison.requiredPower,
       score: Math.abs(gadget.instabilityModifier) - gadget.resistanceModifier * 2,
     })
@@ -246,16 +261,17 @@ function findWindowGadgetCandidates(ctx: GadgetSuggestionContext): GadgetCandida
   if (!ctx.needWindow) return []
 
   const candidates: GadgetCandidate[] = []
-  const equipped = equippedGadgetNames(ctx)
+  const { equipped } = ctx
 
   for (const gadget of listMiningGadgets()) {
-    if (equipped.has(gadget.name)) continue
-    const windowScore = gadget.optimalWindowModifier + gadget.optimalWindowRateModifier * 0.5
+    if (equipped?.name === gadget.name) continue
+    const windowScore = windowScoreOf(gadget)
     if (windowScore <= 0) continue
+    if (equipped && windowScore <= windowScoreOf(equipped)) continue
 
     candidates.push({
       gadget,
-      reason: formatWindowGadgetReason(gadget, ctx.instability),
+      reason: withSwapPrefix(ctx, gadget, formatWindowGadgetReason(gadget, ctx.baseInstability)),
       requiredPower: null,
       score: windowScore,
     })
@@ -299,10 +315,6 @@ function shouldOfferRole(role: GadgetSuggestionRole, ctx: GadgetSuggestionContex
 
 function buildGadgetSuggestions(ctx: GadgetSuggestionContext): GadgetSuggestion[] {
   if (!ctx.needResistance && !ctx.needInstability && !ctx.needWindow) {
-    return []
-  }
-  // Both gadget ports are already filled — nothing left to suggest.
-  if ((ctx.target.selectedGadgetNames?.length ?? 0) >= 2) {
     return []
   }
 
@@ -372,6 +384,17 @@ function buildGadgetContext(
     canBreak && instability != null && instability >= HIGH_INSTABILITY_THRESHOLD && !easyCrack
   const needWindow = canBreak && windowPressure && !easyCrack
 
+  const equipped = target.selectedGadgetName
+    ? getMiningGadgetByName(target.selectedGadgetName) ?? null
+    : null
+  const baseResistance = equipped ? target.baseResistancePercent : target.resistancePercent
+  const baseInstability = equipped ? target.baseInstability ?? null : instability
+  const baseTarget: RockBreakabilityTarget = {
+    ...target,
+    resistancePercent: baseResistance ?? null,
+    instability: baseInstability,
+  }
+
   return {
     canBreak,
     needResistance,
@@ -380,6 +403,9 @@ function buildGadgetContext(
     instability,
     lasers,
     target,
+    baseTarget,
+    baseInstability,
+    equipped,
     comparison,
     moleStrategy,
     soloMining,
