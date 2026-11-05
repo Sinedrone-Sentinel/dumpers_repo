@@ -247,6 +247,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 177 | `212_ship_hangar.sql` | Ship Hangar for a signed-in account. `get_ship_hangar` and `save_ship_hangar` are the only client paths. A member can store 10 ships, or 20 when `rsi_handle_verified` is set. Replacing or removing a ship still works if verification is later removed and the hangar is already over 10. Apply after **211** |
 | 178 | `213_friends_blueprint_owners.sql` | `get_friends_blueprint_owners` returns RSI handles of accepted friends who own the listed blueprints. Pending and banned friends are left out. Apply after **212** |
 | 179 | `214_discord_webhook_groups.sql` | Webhook groups, RSI gate on marketplace alerts, 2-minute listing bursts, 5-minute edit digests, Executive Hangar and Franken-Fit member alerts, and separate org webhook groups. Officer demotion does not use the officer channel. Apply after **213** |
+| 180 | `215_cron_run_history_cleanup.sql` | Deletes pg_cron run logs (`cron.job_run_details`) older than 7 days now and nightly at 04:45 UTC (`cleanup-cron-run-history`). The every-minute jobs had grown that log to most of the database. Optional, to give the disk space back right away: run `VACUUM FULL cron.job_run_details;` in the SQL editor once. Apply after **214** |
 
 ### pg_cron (migrations 054, 065-068, 144, 147, 178, 179, 191, 196)
 
