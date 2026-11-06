@@ -5,6 +5,29 @@ import {
   formatTickerMetaChips,
   resolveTickerLayoutFromEntry,
 } from '../../lib/tickerLayout'
+import { splitTickerText } from '../../lib/tickerLinks'
+
+function TickerText({ text }: { text: string }) {
+  return (
+    <>
+      {splitTickerText(text).map((part, index) =>
+        part.kind === 'link' ? (
+          <a
+            key={index}
+            href={part.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sky-300 underline underline-offset-2 hover:text-sky-200"
+          >
+            {part.text}
+          </a>
+        ) : (
+          <span key={index}>{part.text}</span>
+        )
+      )}
+    </>
+  )
+}
 
 type Props = {
   item: SiteTickerWhatsNew
@@ -49,9 +72,13 @@ export default function SiteTickerDetailModal({ item, onClose }: Props) {
               className="site-surface px-3 py-2"
               style={layout.rowStyle}
             >
-              <p className="text-sm text-slate-100 font-medium">{row.label}</p>
+              <p className="text-sm text-slate-100 font-medium">
+                <TickerText text={row.label} />
+              </p>
               {row.summary ? (
-                <p className="text-xs text-slate-400 mt-1 break-words">{row.summary}</p>
+                <p className="text-xs text-slate-400 mt-1 break-words">
+                  <TickerText text={row.summary} />
+                </p>
               ) : null}
             </li>
           ))}
