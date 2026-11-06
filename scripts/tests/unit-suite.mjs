@@ -51,6 +51,7 @@ const modules = [
   'src/lib/blueprintQuality.ts',
   'src/lib/canCraft.ts',
   'src/lib/craftFromStock.ts',
+  'src/lib/tickerLinks.ts',
 ]
 
 console.log('Unit tests: bundling modules...')
@@ -2754,6 +2755,28 @@ check(
     quality.getPropertyLabel('Fuel_Hydrogenflow') === 'Hydrogen Flow (SCU/s)' &&
     quality.getPropertyLabel('Fuel_Quantumflow') === 'Quantum Fuel Flow (SCU/s)',
   'industrial stats: ore pod capacity and fuel nozzle flow have member labels',
+)
+
+const tickerLinks = await import(pathToFileURL(path.join(outDir, 'tickerLinks.mjs')).href)
+const kofiParts = tickerLinks.splitTickerText('Support the site on Ko-fi at ko-fi.com/dumpers_repo. Thanks!')
+check(
+  kofiParts.length === 3 &&
+    kofiParts[1].kind === 'link' &&
+    kofiParts[1].text === 'ko-fi.com/dumpers_repo' &&
+    kofiParts[1].href === 'https://ko-fi.com/dumpers_repo' &&
+    kofiParts[2].text === '. Thanks!',
+  'ticker links: trusted bare address becomes an https link without the trailing period',
+)
+check(
+  tickerLinks.splitTickerText('Visit evil.example.com/login now').every((part) => part.kind === 'text') &&
+    tickerLinks.trustedTickerHref('https://ko-fi.com.evil.io/x') === null &&
+    tickerLinks.trustedTickerHref('https://user@github.com/x') === null &&
+    tickerLinks.trustedTickerHref('http://dumpers-repo.com/blueprints') === 'https://dumpers-repo.com/blueprints',
+  'ticker links: untrusted or look-alike hosts stay plain text',
+)
+check(
+  tickerLinks.splitTickerText("Dumper's Repo helps your runs.").every((part) => part.kind === 'text'),
+  'ticker links: ordinary sentences are not linked',
 )
 
 console.log(`Unit tests: ${pass} passed`)
