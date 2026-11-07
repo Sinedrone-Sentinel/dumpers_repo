@@ -72,7 +72,7 @@ const FEATURES: FeatureCard[] = [
   },
   {
     title: 'Flight Profile',
-    body: 'Place your VKB sticks, throttle, and modules, then upload a Star Citizen flight profile to see those joystick assignments on the controls. Sign-in required.',
+    body: 'Place your VKB sticks, throttle, and modules, then upload a Star Citizen flight profile. In Chrome or Edge, press one button on each module so the numbers match your devices. Sign-in required.',
     action: 'signin',
     cta: 'Sign in to use Flight Profile →',
   },
