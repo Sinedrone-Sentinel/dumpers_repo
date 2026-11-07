@@ -221,6 +221,158 @@ export function risingBit(previous: Uint8Array, current: Uint8Array): number | n
   return null
 }
 
+export interface ButtonBit {
+  reportId: number
+  byteIndex: number
+  mask: number
+  button: number
+}
+
+interface HidReportItemLike {
+  isArray?: boolean
+  isRange?: boolean
+  usages?: number[]
+  usageMinimum?: number
+  reportSize?: number
+  reportCount?: number
+  logicalMaximum?: number
+}
+
+interface HidReportLike {
+  reportId?: number
+  items?: HidReportItemLike[]
+}
+
+interface HidCollectionLike {
+  children?: HidCollectionLike[]
+  inputReports?: HidReportLike[]
+}
+
+/** Button bits only. Axis bytes in the same report are not buttons. */
+export function buttonBitsFromCollections(collections: HidCollectionLike[]): ButtonBit[] {
+  const found: ButtonBit[] = []
+  const walk = (nodes: HidCollectionLike[]) => {
+    for (const node of nodes) {
+      for (const report of node.inputReports ?? []) {
+        let cursor = 0
+        for (const item of report.items ?? []) {
+          const size = item.reportSize ?? 0
+          const count = item.reportCount ?? 0
+          const buttonField = size === 1 && count > 0 && item.logicalMaximum === 1 && !item.isArray
+          if (buttonField) {
+            for (let offset = 0; offset < count; offset += 1) {
+              const button = item.isRange
+                ? (item.usageMinimum ?? 1) + offset
+                : (item.usages?.[offset] ?? (item.usages?.[0] ?? 1) + offset)
+              if (button > 0) {
+                const bit = cursor + offset
+                found.push({
+                  reportId: report.reportId ?? 0,
+                  byteIndex: bit >> 3,
+                  mask: 1 << (bit & 7),
+                  button,
+                })
+              }
+            }
+          }
+          cursor += size * count
+        }
+      }
+      if (node.children?.length) walk(node.children)
+    }
+  }
+  walk(collections)
+  return found
+}
+
+/** Update button highs from one report. Bytes outside the button fields stay out of the result. */
+export function applyButtonReport(
+  highs: boolean[],
+  bits: ButtonBit[],
+  reportId: number,
+  data: Uint8Array,
+): boolean[] {
+  const next = highs.slice()
+  let touched = false
+  for (const bit of bits) {
+    if (bit.reportId !== reportId || bit.button < 1) continue
+    touched = true
+    const index = bit.button - 1
+    while (next.length <= index) next.push(false)
+    next[index] = ((data[bit.byteIndex] ?? 0) & bit.mask) !== 0
+  }
+  return touched ? next : highs
+}
+
+interface ButtonTrack {
+  primed: boolean
+  high: boolean
+  downSince: number | null
+  rises: number[]
+  blocked: boolean
+  shown: boolean
+}
+
+const HOLD_MS = 60
+const FLAP_WINDOW_MS = 400
+const FLAP_LIMIT = 4
+
+/**
+ * A button counts after it stays down. The first look only records what is already held.
+ * Four rises in under half a second are a controller flipping on its own, and that button is ignored.
+ */
+export function buttonTracks(): Map<string, ButtonTrack> {
+  return new Map()
+}
+
+export function stableButton(
+  trackers: Map<string, ButtonTrack>,
+  source: string,
+  highs: boolean[],
+  now: number,
+): { button: number | null; revoked: number[] } {
+  let button: number | null = null
+  const revoked: number[] = []
+  for (let index = 0; index < highs.length; index += 1) {
+    const key = `${source}:${index}`
+    let tracker = trackers.get(key)
+    if (!tracker) {
+      tracker = { primed: false, high: false, downSince: null, rises: [], blocked: false, shown: false }
+      trackers.set(key, tracker)
+    }
+    const high = highs[index] === true
+    if (!tracker.primed) {
+      tracker.primed = true
+      tracker.high = high
+      continue
+    }
+    if (tracker.blocked) continue
+    if (!high) {
+      tracker.high = false
+      tracker.downSince = null
+      tracker.shown = false
+      continue
+    }
+    if (!tracker.high) {
+      tracker.high = true
+      tracker.downSince = now
+      tracker.shown = false
+      tracker.rises = tracker.rises.filter((time) => now - time < FLAP_WINDOW_MS)
+      tracker.rises.push(now)
+      if (tracker.rises.length >= FLAP_LIMIT) {
+        tracker.blocked = true
+        revoked.push(index + 1)
+        continue
+      }
+    }
+    if (tracker.downSince != null && !tracker.shown && now - tracker.downSince >= HOLD_MS) {
+      tracker.shown = true
+      if (button == null) button = index + 1
+    }
+  }
+  return { button, revoked }
+}
+
 export function sampleButton(device: DeviceDef): { name: string; button: number } | null {
   let best: { name: string; button: number } | null = null
   for (const control of device.controls) {
