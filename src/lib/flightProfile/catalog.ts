@@ -273,10 +273,11 @@ export function buttonBitsFromCollections(collections: HidCollectionLike[]): But
       const buttonField = size === 1 && count > 0 && !item.isArray && (item.logicalMaximum === 1 || ranged)
       if (buttonField) {
         for (let offset = 0; offset < count; offset += 1) {
-          const button = item.isRange
+          const raw = item.isRange
             ? (item.usageMinimum ?? 1) + offset
             : (item.usages?.[offset] ?? (item.usages?.[0] ?? 1) + offset)
-          if (button > 0) {
+          const button = raw & 0xffff
+          if (button > 0 && button <= 128) {
             const bit = cursor + offset
             found.push({
               reportId,

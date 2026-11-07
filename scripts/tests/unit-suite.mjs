@@ -2940,6 +2940,29 @@ check(
     })())[38] === true,
   'a STEM button past 32 is read from the throttle report',
 )
+const paged = flightProfile.buttonBitsFromCollections([
+  {
+    inputReports: [
+      {
+        reportId: 1,
+        items: [
+          {
+            reportSize: 1,
+            reportCount: 128,
+            logicalMaximum: 1,
+            isRange: true,
+            usageMinimum: 0x00090001,
+            isArray: false,
+          },
+        ],
+      },
+    ],
+  },
+])
+check(
+  paged.find((bit) => bit.button === 63) && !paged.some((bit) => bit.button === 589887),
+  'SEM A1 is button 63, not the HID usage code',
+)
 const steady = flightProfile.buttonTracks()
 check(flightProfile.stableButton(steady, 'pad:0', [false], 0).button === null, 'the first look does not count as a press')
 check(flightProfile.stableButton(steady, 'pad:0', [true], 10).button === 1, 'a press counts as soon as the button goes down')
