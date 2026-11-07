@@ -1,0 +1,27 @@
+---
+description: VKB flight-profile mount rules. Read before adding a module or changing a bay.
+globs: src/lib/flightProfile/**,src/components/flightProfile/**
+alwaysApply: false
+---
+
+# Flight profile modules
+
+The mount table is `src/lib/flightProfile/rules.ts`. Change mounts there. Do not hardcode a bay exception in the page.
+
+## Adding a module
+
+1. The id already exists in `MODULE_RULES`. Add a new id there first if it does not.
+2. It appears in the picker only when `ready` is true, `photo` is set, and `devices.json` uses the same id.
+3. Copy button numbers from the matching handed module. A Space Throttle is not a Modern throttle. A WWII THQ is not the standard THQ.
+4. Keyboard and mouse binds stay off the sheets.
+
+## Mounts
+
+- `top` is above the main. `bottom` is the front, toward the pilot. `left` and `right` are the Gladiator side bus.
+- A Gladiator exposes top, left, and right. It has no bottom port.
+- An Omni Throttle counts as a throttle. Its elbow closes that side: left-hand keeps the right bus, right-hand keeps the left bus.
+- A STECS base has no side bus. The front holder is `bottom`. SEM-V may also sit on `top`.
+- Desktop SEM and THQ use the side bus only. SEM-V and THQ-V use a throttle's top and bottom. They do not bolt to a Gladiator.
+- STEM is a bottom mount on every STECS. ATEM is a bottom mount on Mini Plus and Max only (`acceptsAtem`).
+- Two sticks are allowed. Two throttles are not. Each module id is placed once.
+- Gunfighter has no side bus. Add it only with a sheet, and only as an overhead main.

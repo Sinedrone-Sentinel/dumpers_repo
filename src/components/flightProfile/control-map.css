@@ -1,0 +1,245 @@
+.fp-page {
+  width: 11in;
+  height: 8.5in;
+  background: white;
+  color: #1a1e24;
+  font-family: "Segoe UI", Arial, sans-serif;
+  padding: 0.32in 0.38in 0.26in;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.fp-page header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.2in;
+  border-bottom: 1.5pt solid #1a1e24;
+  padding-bottom: 0.06in;
+  margin-bottom: 0.1in;
+}
+
+.fp-page h1 {
+  font-size: 15pt;
+  margin: 0;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+}
+
+.fp-page header p {
+  margin: 0;
+  font-size: 8.5pt;
+  color: #4a5160;
+  text-align: right;
+}
+
+.fp-body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1.05fr;
+  gap: 0.16in;
+  min-height: 0;
+}
+
+.fp-body.dead {
+  grid-template-columns: 1fr;
+}
+
+.fp-list {
+  border-right: 0.75pt solid #c5c9d0;
+  padding-right: 0.1in;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-auto-flow: row;
+  align-content: start;
+  gap: 0.02in 0.12in;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.fp-list.two {
+  grid-template-rows: repeat(var(--rows), auto);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-auto-flow: column;
+}
+
+.fp-body.dead .fp-list {
+  border-right: none;
+  padding-right: 0;
+}
+
+.fp-row {
+  display: grid;
+  grid-template-columns: 0.36in minmax(0, 0.92in) minmax(0, 1fr);
+  gap: 0.04in;
+  align-items: start;
+  min-height: 0.15in;
+  min-width: 0;
+  font-size: 7pt;
+  line-height: 1.15;
+}
+
+.fp-body.dead .fp-row {
+  grid-template-columns: 1.15in 1.35in minmax(0, 1fr);
+  font-size: 9pt;
+  min-height: 0.22in;
+}
+
+.fp-n {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.fp-hw {
+  color: #5c6573;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fp-fn {
+  display: block;
+  border-bottom: 0.4pt solid #d5d8de;
+  overflow-wrap: anywhere;
+}
+
+.fp-ln {
+  border-bottom: 0.6pt solid #9aa1ab;
+  height: 0.12in;
+}
+
+.fp-empty {
+  margin: 0.2in 0 0;
+  font-size: 11pt;
+}
+
+.fp-art {
+  position: relative;
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fp-frame {
+  position: relative;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.fp-frame img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+}
+
+.fp-leaders,
+.fp-badges {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.fp-leaders {
+  overflow: visible;
+}
+
+.fp-leaders .halo {
+  stroke: white;
+  fill: none;
+}
+
+.fp-leaders .ink {
+  stroke: #0084ff;
+  fill: none;
+}
+
+.fp-badge,
+.fp-callout .b {
+  background: white;
+  border: 0.75pt solid #0084ff;
+  color: #06315c;
+  border-radius: 2pt;
+  font-size: 6.5pt;
+  font-weight: 700;
+  line-height: 1;
+  padding: 0.6pt 1.8pt;
+  min-width: 0.16in;
+  text-align: center;
+}
+
+.fp-badge {
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
+.fp-callout {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.95);
+  border: 0.9pt solid #0084ff;
+  border-radius: 3pt;
+  padding: 1.4pt 2pt 2pt;
+  z-index: 2;
+}
+
+.fp-cap {
+  font-size: 5.5pt;
+  font-weight: 700;
+  color: #0084ff;
+  text-align: center;
+  letter-spacing: 0.03em;
+  line-height: 1;
+  margin-bottom: 1pt;
+}
+
+.fp-cross {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-template-areas: ". u ." "l p r" ". d .";
+  justify-items: center;
+  align-items: center;
+  gap: 1pt;
+}
+
+.fp-up { grid-area: u; }
+.fp-left { grid-area: l; }
+.fp-press { grid-area: p; }
+.fp-right { grid-area: r; }
+.fp-down { grid-area: d; }
+
+.fp-stack {
+  display: flex;
+  gap: 1pt;
+}
+
+.fp-callout.col .fp-stack {
+  flex-direction: column;
+  align-items: center;
+}
+
+.fp-callout.row .fp-stack {
+  flex-direction: row;
+}
+
+.fp-extra {
+  display: flex;
+  justify-content: center;
+  gap: 1pt;
+  margin-top: 1pt;
+}
+
+.fp-credit {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  font-size: 6.5pt;
+  color: #8a909a;
+}

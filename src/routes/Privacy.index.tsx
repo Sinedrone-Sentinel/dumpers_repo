@@ -137,6 +137,10 @@ export default function PrivacyRoute() {
                 see your RSI Handle only—not your display name
               </li>
               <li>Optional Discord webhook URLs you configure for personal or org alerts</li>
+              <li>
+                One Star Citizen flight-control profile, if you upload one on Flight Profile. A new
+                upload replaces the previous file
+              </li>
               <li>BP Dumper-related API credentials you generate for sync</li>
               <li>
                 Optional file uploads for specific flows (for example org logos for admins, or temporary

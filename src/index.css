@@ -502,6 +502,25 @@
     font-family: Orbitron, sans-serif;
   }
 
+  /* Music "explicit" label: black box, white hairline, heavy grotesque caps. */
+  .explicit-tag {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    margin-bottom: 0.15em;
+    padding: 0.22em 0.38em 0.16em;
+    border: 1.5px solid #fff;
+    border-radius: 2px;
+    background: #000;
+    color: #fff;
+    font-family: "Arial Black", "Arial Bold", Impact, sans-serif;
+    font-size: 0.62rem;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
   .site-page-subtitle {
     @apply text-slate-400 text-xs sm:text-sm mt-1 tracking-[0.2em] uppercase;
     font-family: Orbitron, sans-serif;

@@ -638,4 +638,19 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     ],
     relatesTo: ['Component Database', 'Resource Lore'],
   },
+  {
+    id: 'flight-profile',
+    title: 'Flight Profile',
+    description: 'Map a signed-in member\'s Star Citizen joystick and HOTAS profile onto the VKB controls they have mounted.',
+    details: [
+      'Open Flight Profile from the avatar menu after sign-in. Pending accounts do not see it',
+      'The banner is a left bay and a right bay. Each bay has a center Main plus Top, Left, Right, and Bottom mounts',
+      'A main can only be a stick or a throttle, and only the hand that matches that side. Two sticks are allowed. Two throttles are not',
+      'The Gladiator has side connectors for the desktop SEM and no bottom connector. FSM-GA sits above a stick. SEM-V and the STEM mount on the STECS: SEM-V above it or on the front, STEM on the front only. Each module can be placed once',
+      'Upload one Star Citizen flight-control XML. The file saved on the account is replaced completely. Keyboard and mouse assignments are ignored',
+      'If a profile is already on the account, it loads when the page opens and a green line says so',
+      'Show Map needs a left main, a right main, and a flight profile. The sheets fill the width of the panel under the banner',
+    ],
+    relatesTo: ['Settings'],
+  },
 ]

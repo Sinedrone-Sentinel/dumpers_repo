@@ -25,6 +25,7 @@ export type FeatureId =
   | 'partnership'
   | 'contribute'
   | 'contributor_team_admin'
+  | 'flight_profile'
 
 export interface VisibilityContext {
   role: UserRole | null
@@ -145,6 +146,9 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
 
     case 'contributor_team_admin':
       return ctx.isSuperAdmin
+
+    case 'flight_profile':
+      return ctx.isApproved
 
     default:
       return false

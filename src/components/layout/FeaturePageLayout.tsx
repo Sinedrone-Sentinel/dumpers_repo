@@ -6,6 +6,8 @@ interface FeaturePageLayoutProps {
   /** Crawlable intro under the header (search intent; keep short). */
   seoIntro?: string
   badge?: string
+  /** `explicit` is the black-and-white music label. Other pages keep the orange pill. */
+  badgeVariant?: 'pill' | 'explicit'
   meta?: React.ReactNode
   actions?: React.ReactNode
   children: React.ReactNode
@@ -16,6 +18,7 @@ export default function FeaturePageLayout({
   subtitle,
   seoIntro,
   badge,
+  badgeVariant = 'pill',
   meta,
   actions,
   children,
@@ -26,11 +29,14 @@ export default function FeaturePageLayout({
         <div className="min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <h1 className="site-page-title">{title}</h1>
-            {badge && (
-              <span className="px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide rounded bg-orange-950/50 text-orange-300 border border-orange-500/30">
-                {badge}
-              </span>
-            )}
+            {badge &&
+              (badgeVariant === 'explicit' ? (
+                <span className="explicit-tag">{badge}</span>
+              ) : (
+                <span className="px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide rounded bg-orange-950/50 text-orange-300 border border-orange-500/30">
+                  {badge}
+                </span>
+              ))}
           </div>
           {subtitle && <p className="site-page-subtitle">{subtitle}</p>}
           {meta && <div className="text-slate-500 text-xs sm:text-sm mt-1">{meta}</div>}
