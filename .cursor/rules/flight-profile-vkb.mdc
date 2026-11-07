@@ -17,11 +17,12 @@ The mount table is `src/lib/flightProfile/rules.ts`. Change mounts there. Do not
 
 ## Mounts
 
-- `top` is above the main. `bottom` is the front, toward the pilot. `left` and `right` are the Gladiator side bus.
-- A Gladiator exposes top, left, and right. It has no bottom port.
-- An Omni Throttle counts as a throttle. Its elbow closes that side: left-hand keeps the right bus, right-hand keeps the left bus.
-- A STECS base has no side bus. The front holder is `bottom`. SEM-V may also sit on `top`.
-- Desktop SEM and THQ use the side bus only. SEM-V and THQ-V use a throttle's top and bottom. They do not bolt to a Gladiator.
+- `top` is above the main. `topLeft` and `topRight` are the wings beside the grip. `bottom` is the front, toward the pilot. `left` and `right` are the Gladiator side bus.
+- A Gladiator exposes top, both wings, and both side connectors. It has no bottom port.
+- An Omni Throttle counts as a throttle. Its elbow closes that side, wing included: left-hand keeps the right bus, right-hand keeps the left bus.
+- A STECS base has no side bus and no wings. The front holder is `bottom`. SEM-V may also sit on `top`.
+- Desktop SEM and THQ use the side bus only. SEM-V uses a throttle's top and bottom, and a stick's center top. On a stick it sits on an MFH or a mount and cables to the Gladiator. It does not use the side bus.
+- FSM-GA uses a stick's top-left or top-right wing. One module id is placed once, so only one wing gets it.
 - STEM is a bottom mount on every STECS. ATEM is a bottom mount on Mini Plus and Max only (`acceptsAtem`).
 - Two sticks are allowed. Two throttles are not. Each module id is placed once.
 - Gunfighter has no side bus. Add it only with a sheet, and only as an overhead main.

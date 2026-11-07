@@ -4,14 +4,16 @@ import { MODULE_RULES, mountsFor, type ModuleId, type ModuleRule, type SideId, t
 export type { ModuleId, ModuleRule, SideId, SlotId }
 
 export const SIDES: SideId[] = ['left', 'right']
-export const SLOTS: SlotId[] = ['main', 'left', 'right', 'top', 'bottom']
-export const SHEET_SLOTS: SlotId[] = ['top', 'main', 'left', 'right', 'bottom']
+export const SLOTS: SlotId[] = ['main', 'left', 'right', 'top', 'topLeft', 'topRight', 'bottom']
+export const SHEET_SLOTS: SlotId[] = ['topLeft', 'top', 'topRight', 'main', 'left', 'right', 'bottom']
 
 export const SLOT_LABEL: Record<SlotId, string> = {
   main: 'Main',
   left: 'Left',
   right: 'Right',
   top: 'Top',
+  topLeft: 'Top left',
+  topRight: 'Top right',
   bottom: 'Bottom',
 }
 
@@ -50,8 +52,8 @@ export const MODULES: ModuleDef[] = MODULE_RULES.filter((rule) => rule.ready).ma
 export type Setup = Record<SideId, Record<SlotId, ModuleId | null>>
 
 export const EMPTY_SETUP: Setup = {
-  left: { main: null, left: null, right: null, top: null, bottom: null },
-  right: { main: null, left: null, right: null, top: null, bottom: null },
+  left: { main: null, left: null, right: null, top: null, topLeft: null, topRight: null, bottom: null },
+  right: { main: null, left: null, right: null, top: null, topLeft: null, topRight: null, bottom: null },
 }
 
 const MODULE_BY_ID = new Map(MODULES.map((module) => [module.id, module]))
