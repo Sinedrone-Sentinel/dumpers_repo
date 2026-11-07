@@ -2793,9 +2793,17 @@ check(
   'desktop SEM stays on the side bus',
 )
 const oneWing = flightProfile.place(stickBay, 'right', 'topLeft', 'fsm')
+const bothWings = flightProfile.place(oneWing, 'right', 'topRight', 'fsm')
 check(
-  !flightProfile.optionsFor(oneWing, 'right', 'topRight').some((module) => module.id === 'fsm'),
-  'one FSM-GA occupies a single wing',
+  flightProfile.optionsFor(oneWing, 'right', 'topRight').some((module) => module.id === 'fsm') &&
+    bothWings.right.topLeft === 'fsm' &&
+    bothWings.right.topRight === 'fsm',
+  'both Gladiator wings can hold an FSM-GA',
+)
+const oneSide = flightProfile.place(stickBay, 'right', 'left', 'sem-h')
+check(
+  flightProfile.optionsFor(oneSide, 'right', 'right').some((module) => module.id === 'sem-h'),
+  'both side connectors can hold a desktop SEM',
 )
 const throttleBay = flightProfile.place(flightProfile.EMPTY_SETUP, 'left', 'main', 'stecs')
 check(

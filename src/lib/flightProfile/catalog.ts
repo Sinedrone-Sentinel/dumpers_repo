@@ -82,20 +82,10 @@ function throttleAlreadyMounted(setup: Setup, side: SideId): boolean {
 }
 
 export function optionsFor(setup: Setup, side: SideId, slot: SlotId): ModuleDef[] {
-  const used = new Set<ModuleId>()
-  for (const mountedSide of SIDES) {
-    for (const mountedSlot of SLOTS) {
-      const id = setup[mountedSide][mountedSlot]
-      if (id && !(mountedSide === side && mountedSlot === slot)) used.add(id)
-    }
-  }
   const main = slot === 'main' ? null : setup[side].main
   const throttleTaken = slot === 'main' && throttleAlreadyMounted(setup, side)
   return MODULES.filter(
-    (module) =>
-      !used.has(module.id) &&
-      fits(module, side, slot, main) &&
-      !(throttleTaken && module.role === 'throttle')
+    (module) => fits(module, side, slot, main) && !(throttleTaken && module.role === 'throttle')
   )
 }
 
@@ -103,13 +93,6 @@ export function place(setup: Setup, side: SideId, slot: SlotId, id: ModuleId | n
   const next: Setup = {
     left: { ...setup.left },
     right: { ...setup.right },
-  }
-  if (id) {
-    for (const mountedSide of SIDES) {
-      for (const mountedSlot of SLOTS) {
-        if (next[mountedSide][mountedSlot] === id) next[mountedSide][mountedSlot] = null
-      }
-    }
   }
   next[side][slot] = id
   if (slot === 'main' && id && moduleById(id).role === 'throttle') {

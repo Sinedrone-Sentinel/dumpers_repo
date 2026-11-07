@@ -22,7 +22,8 @@ The mount table is `src/lib/flightProfile/rules.ts`. Change mounts there. Do not
 - An Omni Throttle counts as a throttle. Its elbow closes that side, wing included: left-hand keeps the right bus, right-hand keeps the left bus.
 - A STECS base has no side bus and no wings. The front holder is `bottom`. SEM-V may also sit on `top`.
 - Desktop SEM and THQ use the side bus only. SEM-V uses a throttle's top and bottom, and a stick's center top. On a stick it sits on an MFH or a mount and cables to the Gladiator. It does not use the side bus.
-- FSM-GA uses a stick's top-left or top-right wing. One module id is placed once, so only one wing gets it.
+- FSM-GA uses a stick's top-left or top-right wing. Both wings may hold one.
 - STEM is a bottom mount on every STECS. ATEM is a bottom mount on Mini Plus and Max only (`acceptsAtem`).
-- Two sticks are allowed. Two throttles are not. Each module id is placed once.
+- A mount holds one module. The same module may be placed on every mount VKB allows. Do not limit a count to one owner's set.
+- Two sticks are allowed. Two throttles are not.
 - Gunfighter has no side bus. Add it only with a sheet, and only as an overhead main.
