@@ -650,7 +650,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Upload one Star Citizen flight-control XML. The file saved on the account is replaced completely. Keyboard and mouse assignments are ignored',
       'The modules you place are saved on your account. Opening Flight Profile shows that same layout again',
       'If a profile is already on the account, it loads when the page opens and a green line says so',
-      'In Chrome or Edge, each placed module needs one accepted button press before Show Map. The page listens for that press and shows the number. Accept saves it. Choosing the same module in the same slot asks again. Other browsers keep the numbers already on the sheet',
+      'In Chrome or Edge, each placed module needs one accepted button press before Show Map. Allow the VKB controller when asked. SEM and STEM are part of the throttle, and the browser list cannot hear them until that controller is allowed. Allow the stick with another click. Accept saves the number. Choosing the same module in the same slot asks again. Other browsers keep the numbers already on the sheet',
       'Show Map needs a left main, a right main, and a flight profile. The sheets fill the width of the panel under the banner',
     ],
     relatesTo: ['Settings'],

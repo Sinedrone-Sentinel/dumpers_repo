@@ -387,7 +387,11 @@ export default function FlightProfilePage() {
         <ButtonPressModal
           key={`${prompt.side}-${prompt.slot}`}
           moduleName={promptDevice.title}
-          controlName={promptSample?.name ?? 'the first button'}
+          controlName={
+            promptSample?.name === 'SYS'
+              ? 'SYS. It is on the throttle base, next to START'
+              : (promptSample?.name ?? 'the first button')
+          }
           onAccept={acceptPress}
           onSkip={() => setPrompt(null)}
         />
