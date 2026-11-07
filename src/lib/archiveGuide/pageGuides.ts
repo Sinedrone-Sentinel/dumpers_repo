@@ -648,6 +648,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'A main can only be a stick or a throttle, and only the hand that matches that side. Two sticks are allowed. Two throttles are not',
       'The Gladiator top takes a SEM-V on a mount, cabled to the stick. Each wing can hold an FSM-GA, and each side connector can hold a desktop SEM. There is no bottom connector. SEM-V and the STEM also mount on the STECS: SEM-V above it or on the front, STEM on the front only. A mount holds one module, and the same module can be used again on another mount VKB allows',
       'Upload one Star Citizen flight-control XML. The file saved on the account is replaced completely. Keyboard and mouse assignments are ignored',
+      'The modules you place are saved on your account. Opening Flight Profile shows that same layout again',
       'If a profile is already on the account, it loads when the page opens and a green line says so',
       'Show Map needs a left main, a right main, and a flight profile. The sheets fill the width of the panel under the banner',
     ],

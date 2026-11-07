@@ -34,7 +34,7 @@ export const GUEST_LOCKED_FEATURE_COPY: Partial<Record<FeatureId, GuestFeatureCo
     description: 'Map a Star Citizen joystick and HOTAS profile onto your VKB controls.',
     details: [
       'Sign in with a free member account',
-      'Pick the stick, throttle, and the modules mounted on each side',
+      'Pick the stick, throttle, and the modules mounted on each side. Those choices are saved on your account',
       'Upload one flight profile. A new upload replaces the saved one',
       'Show Map draws the selected controls with your joystick assignments',
     ],

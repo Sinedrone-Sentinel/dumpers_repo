@@ -58,6 +58,27 @@ export const EMPTY_SETUP: Setup = {
 
 const MODULE_BY_ID = new Map(MODULES.map((module) => [module.id, module]))
 
+/** Restore a saved bay. Unknown ids are dropped so a removed module cannot break the page. */
+export function setupFromStored(value: unknown): Setup {
+  const next: Setup = {
+    left: { ...EMPTY_SETUP.left },
+    right: { ...EMPTY_SETUP.right },
+  }
+  if (!value || typeof value !== 'object') return next
+  const raw = value as Record<string, unknown>
+  for (const side of SIDES) {
+    const bay = raw[side]
+    if (!bay || typeof bay !== 'object') continue
+    const slots = bay as Record<string, unknown>
+    for (const slot of SLOTS) {
+      const id = slots[slot]
+      if (typeof id !== 'string' || !MODULE_BY_ID.has(id as ModuleId)) continue
+      next[side][slot] = id as ModuleId
+    }
+  }
+  return next
+}
+
 export function moduleById(id: ModuleId): ModuleDef {
   const module = MODULE_BY_ID.get(id)
   if (!module) throw new Error(`Unknown module ${id}`)

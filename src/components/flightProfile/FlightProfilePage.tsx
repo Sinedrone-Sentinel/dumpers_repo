@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import FeaturePageLayout from '../layout/FeaturePageLayout'
 import ControlMap from './ControlMap'
-import { loadFlightProfile, saveFlightProfile } from '../../lib/flightProfile/api'
+import { loadFlightProfile, saveFlightLayout, saveFlightProfile } from '../../lib/flightProfile/api'
 import {
   EMPTY_SETUP,
   SLOT_LABEL,
@@ -16,8 +16,11 @@ import {
 import { deadBinds, readFlightProfile, type ParsedFlightProfile } from '../../lib/flightProfile/parseProfile'
 
 function explainProfileError(message: string): string {
+  if (/save_flight_profile_layout|column .*layout/i.test(message)) {
+    return 'The flight profile layout is not on the database yet. Run supabase/migrations/217_flight_profile_layout.sql, then reload this page.'
+  }
   if (/flight_profiles/i.test(message) && /schema cache|does not exist/i.test(message)) {
-    return 'The flight profile table is not on the database yet. Run supabase/migrations/216_flight_profiles.sql, then reload this page.'
+    return 'The flight profile table is not on the database yet. Run supabase/migrations/216_flight_profiles.sql, then 217_flight_profile_layout.sql, and reload this page.'
   }
   return message
 }
@@ -94,13 +97,16 @@ export default function FlightProfilePage() {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [shown, setShown] = useState<Setup | null>(null)
+  const layoutSave = useRef({ running: false, dirty: false, latest: EMPTY_SETUP })
+  const editedLayout = useRef(false)
 
   useEffect(() => {
     let cancelled = false
     void loadFlightProfile().then((result) => {
       if (cancelled) return
+      if (!editedLayout.current) setSetup(result.setup)
       if (result.error) setError(explainProfileError(result.error))
-      else if (result.profile) {
+      if (result.profile) {
         setProfile(result.profile)
         setSource('account')
       }
@@ -110,6 +116,27 @@ export default function FlightProfilePage() {
       cancelled = true
     }
   }, [])
+
+  async function persistLayout(next: Setup) {
+    const gate = layoutSave.current
+    gate.latest = next
+    if (gate.running) {
+      gate.dirty = true
+      return
+    }
+    gate.running = true
+    try {
+      do {
+        gate.dirty = false
+        const snapshot = gate.latest
+        const saved = await saveFlightLayout(snapshot)
+        if (gate.latest !== snapshot) continue
+        if (saved.error) setError(explainProfileError(saved.error))
+      } while (gate.dirty)
+    } finally {
+      gate.running = false
+    }
+  }
 
   const sheets = useMemo(() => (shown ? sheetsFor(shown) : []), [shown])
   const dead = useMemo(
@@ -130,9 +157,12 @@ export default function FlightProfilePage() {
 
   function apply(id: Parameters<typeof place>[3]) {
     if (!active) return
-    setSetup(place(setup, active.side, active.slot, id))
+    editedLayout.current = true
+    const next = place(setup, active.side, active.slot, id)
+    setSetup(next)
     setShown(null)
     setActive(null)
+    void persistLayout(next)
   }
 
   async function onFile(file: File) {
