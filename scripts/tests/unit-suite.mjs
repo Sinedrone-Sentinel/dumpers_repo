@@ -2783,22 +2783,21 @@ check(
 const flightProfile = await import(pathToFileURL(path.join(outDir, 'catalog.mjs')).href)
 const stickBay = flightProfile.place(flightProfile.EMPTY_SETUP, 'right', 'main', 'scg')
 const stickIds = (slot) => flightProfile.optionsFor(stickBay, 'right', slot).map((module) => module.id)
-check(stickIds('top').join() === 'sem', 'stick top offers SEM-V')
 check(
-  stickIds('topLeft').join() === 'fsm' && stickIds('topRight').join() === 'fsm',
-  'stick wings offer FSM-GA',
+  stickIds('top').includes('sem') && stickIds('top').includes('fsm'),
+  'stick top offers SEM-V and FSM-GA',
 )
 check(
-  stickIds('left').includes('sem-h') && !stickIds('left').includes('sem') && !stickIds('top').includes('fsm'),
+  stickIds('top').includes('fsm') &&
+    stickIds('topLeft').length === 0 &&
+    stickIds('topRight').length === 0 &&
+    stickIds('bottom').length === 0 &&
+    !stickIds('left').includes('fsm'),
+  'FSM-GA is a stick top option only',
+)
+check(
+  stickIds('left').includes('sem-h') && !stickIds('left').includes('sem'),
   'desktop SEM stays on the side bus',
-)
-const oneWing = flightProfile.place(stickBay, 'right', 'topLeft', 'fsm')
-const bothWings = flightProfile.place(oneWing, 'right', 'topRight', 'fsm')
-check(
-  flightProfile.optionsFor(oneWing, 'right', 'topRight').some((module) => module.id === 'fsm') &&
-    bothWings.right.topLeft === 'fsm' &&
-    bothWings.right.topRight === 'fsm',
-  'both Gladiator wings can hold an FSM-GA',
 )
 const oneSide = flightProfile.place(stickBay, 'right', 'left', 'sem-h')
 check(
@@ -2808,37 +2807,34 @@ check(
 const throttleBay = flightProfile.place(flightProfile.EMPTY_SETUP, 'left', 'main', 'stecs')
 check(
   flightProfile.optionsFor(throttleBay, 'left', 'top').some((module) => module.id === 'sem') &&
-    flightProfile.optionsFor(throttleBay, 'left', 'topLeft').length === 0,
-  'STECS keeps SEM-V on top and has no wing',
+    !flightProfile.optionsFor(throttleBay, 'left', 'top').some((module) => module.id === 'fsm') &&
+    !flightProfile.optionsFor(throttleBay, 'left', 'bottom').some((module) => module.id === 'fsm'),
+  'a STECS offers SEM-V on top and does not take an FSM-GA',
 )
 check(
-  flightProfile.visibleSlots(flightProfile.EMPTY_SETUP, 'right').join() === 'main',
-  'an empty bay shows only the main',
-)
-check(
-  flightProfile.visibleSlots(stickBay, 'right').join() === 'topLeft,top,topRight,left,main,right' &&
-    flightProfile.SLOT_LABEL.top === 'Top' &&
-    flightProfile.SLOT_LABEL.topLeft === 'Left wing' &&
-    flightProfile.SLOT_LABEL.topRight === 'Right wing',
-  'a Gladiator shows a top mount and two wings, and the wings are not called top',
-)
-check(
-  flightProfile.visibleSlots(throttleBay, 'left').join() === 'top,main,bottom',
-  'a STECS shows top and the front only',
+  !flightProfile.slotAvailable(stickBay, 'right', 'bottom') &&
+    flightProfile.slotAvailable(stickBay, 'right', 'left') &&
+    flightProfile.slotAvailable(stickBay, 'right', 'right') &&
+    !flightProfile.slotAvailable(throttleBay, 'left', 'left') &&
+    !flightProfile.slotAvailable(throttleBay, 'left', 'right') &&
+    flightProfile.slotAvailable(throttleBay, 'left', 'bottom') &&
+    !flightProfile.slotAvailable(flightProfile.EMPTY_SETUP, 'right', 'bottom'),
+  'a missing left, right, or bottom mount stays closed',
 )
 const restored = flightProfile.setupFromStored({
   left: { main: 'stecs', bottom: 'stem', top: 'nope' },
-  right: { main: 'scg', topLeft: 'fsm', topRight: 'fsm' },
+  right: { main: 'scg', top: 'fsm', topLeft: 'fsm', topRight: 'fsm' },
   extra: { main: 'scg' },
 })
 check(
   restored.left.main === 'stecs' &&
     restored.left.bottom === 'stem' &&
     restored.left.top === null &&
-    restored.right.topLeft === 'fsm' &&
-    restored.right.topRight === 'fsm' &&
+    restored.right.top === 'fsm' &&
+    restored.right.topLeft === null &&
+    restored.right.topRight === null &&
     restored.right.main === 'scg',
-  'a saved bay restores known modules and drops unknown ids',
+  'a saved bay restores known modules and drops mounts that do not fit',
 )
 
 console.log(`Unit tests: ${pass} passed`)

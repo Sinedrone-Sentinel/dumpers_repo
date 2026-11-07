@@ -17,15 +17,8 @@ export const SLOT_LABEL: Record<SlotId, string> = {
   bottom: 'Bottom',
 }
 
-const SLOT_ORDER: SlotId[] = ['topLeft', 'top', 'topRight', 'left', 'main', 'right', 'bottom']
-
-/** Mounts this bay should draw. Top is the UCM or standalone mount, never a wing. */
-export function visibleSlots(setup: Setup, side: SideId): SlotId[] {
-  const main = setup[side].main
-  if (!main) return ['main']
-  const ports = new Set(moduleById(main).ports ?? [])
-  return SLOT_ORDER.filter((slot) => slot === 'main' || ports.has(slot) || setup[side][slot] != null)
-}
+/** Every bay draws these. A mount the main lacks stays visible and disabled. */
+export const BAY_SLOTS: SlotId[] = ['top', 'left', 'main', 'right', 'bottom']
 
 export interface ModuleDef {
   id: ModuleId
@@ -86,7 +79,23 @@ export function setupFromStored(value: unknown): Setup {
       next[side][slot] = id as ModuleId
     }
   }
+  for (const side of SIDES) {
+    const main = next[side].main
+    for (const slot of SLOTS) {
+      if (slot === 'main') continue
+      const id = next[side][slot]
+      if (id && !fits(moduleById(id), side, slot, main)) next[side][slot] = null
+    }
+  }
   return next
+}
+
+/** False when this main has no such connector, so the bay can grey that mount out. */
+export function slotAvailable(setup: Setup, side: SideId, slot: SlotId): boolean {
+  if (slot === 'main') return true
+  const main = setup[side].main
+  if (!main) return false
+  return moduleById(main).ports?.includes(slot) ?? false
 }
 
 export function moduleById(id: ModuleId): ModuleDef {
