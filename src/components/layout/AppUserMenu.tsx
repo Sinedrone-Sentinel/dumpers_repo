@@ -198,6 +198,9 @@ export default function AppUserMenu({
                 >
                   Ship Hangar
                 </button>
+                <Link to="/flight-profile" onClick={close} className={`block ${menuItemClass}`}>
+                  Flight Profile
+                </Link>
                 <button
                   type="button"
                   onClick={() => {

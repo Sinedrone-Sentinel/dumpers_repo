@@ -29,6 +29,16 @@ export const GUEST_LOCKED_FEATURE_COPY: Partial<Record<FeatureId, GuestFeatureCo
       'Requires a verified RSI Handle and officer approval to participate',
     ],
   },
+  flight_profile: {
+    title: 'Flight Profile',
+    description: 'Map a Star Citizen joystick and HOTAS profile onto your VKB controls.',
+    details: [
+      'Sign in with a free member account',
+      'Pick the stick, throttle, and the modules mounted on each side',
+      'Upload one flight profile. A new upload replaces the saved one',
+      'Show Map draws the selected controls with your joystick assignments',
+    ],
+  },
   smart_hauler: {
     title: 'Smart Hauler',
     description: 'Plan cargo runs from where you are, or find buyers for cargo you already carry.',

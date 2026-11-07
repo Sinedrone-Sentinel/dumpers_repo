@@ -27,6 +27,7 @@ import AuthCallbackRoute from './AuthCallback.index'
 import PrivacyRoute from './Privacy.index'
 import ShipShopRoute from './ShipShop.index'
 import ExecutiveHangarRoute from './ExecutiveHangar.index'
+import FlightProfileRoute from './FlightProfile.index'
 import { requireFeature, requireSuperAdmin } from '../lib/routeGuards'
 import type { FeatureId } from '../lib/featureAccess'
 
@@ -247,6 +248,13 @@ const privacyRoute = createRoute({
   component: PrivacyRoute,
 })
 
+const flightProfileRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/flight-profile',
+  component: FlightProfileRoute,
+  beforeLoad: requireFeature('flight_profile'),
+})
+
 export const routeTree = rootRoute.addChildren([
   indexRoute,
   publicBlueprintsRoute,
@@ -274,6 +282,7 @@ export const routeTree = rootRoute.addChildren([
   authCallbackRoute,
   shipShopRoute,
   executiveHangarRoute,
+  flightProfileRoute,
 ])
 
 export default routeTree
