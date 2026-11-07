@@ -1,14 +1,17 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import FeaturePageLayout from '../layout/FeaturePageLayout'
+import SiteTooltip from '../SiteTooltip'
 import ControlMap from './ControlMap'
 import { loadFlightProfile, saveFlightLayout, saveFlightProfile } from '../../lib/flightProfile/api'
 import {
+  BAY_SLOTS,
   EMPTY_SETUP,
   SLOT_LABEL,
   moduleById,
   optionsFor,
   place,
   sheetsFor,
+  slotAvailable,
   type Setup,
   type SideId,
   type SlotId,
@@ -35,6 +38,19 @@ const SLOT_CLASS: Record<SlotId, string> = {
   bottom: 'col-start-2 row-start-3',
 }
 
+function mountHint(setup: Setup, side: SideId, slot: SlotId, open: boolean): string {
+  if (!open) {
+    if (!setup[side].main) return "Choose this side's main first."
+    if (slot === 'left' || slot === 'right') return 'This hardware has no side connector.'
+    if (slot === 'bottom') return 'This hardware has no front connector.'
+    return 'This hardware has no top mount.'
+  }
+  if (slot === 'main') return 'Stick or throttle for this side.'
+  if (slot === 'top') return 'UCM desk mount, or a standalone mount.'
+  if (slot === 'left' || slot === 'right') return 'Side connector on the stick base.'
+  return 'Front of the throttle, toward you.'
+}
+
 function Bay({
   side,
   setup,
@@ -52,34 +68,49 @@ function Bay({
         {side === 'left' ? 'Left side' : 'Right side'}
       </p>
       <div className="grid grid-cols-[4.25rem_6.75rem_4.25rem] grid-rows-[3.1rem_5.4rem_3.1rem] gap-1.5">
-        {(['topLeft', 'top', 'topRight', 'left', 'main', 'right', 'bottom'] as SlotId[]).map((slot) => {
+        {BAY_SLOTS.map((slot) => {
           const id = setup[side][slot]
           const module = id ? moduleById(id) : null
-          const selected = active === slot
+          const open = slotAvailable(setup, side, slot)
+          const selected = open && active === slot
+          const hint = mountHint(setup, side, slot, open)
           return (
-            <button
+            <SiteTooltip
               key={slot}
-              type="button"
-              onClick={() => onPick(slot)}
-              className={`${SLOT_CLASS[slot]} relative overflow-hidden rounded-lg border text-center transition-colors ${
-                selected
-                  ? 'border-amber-300 ring-2 ring-amber-300/70'
-                  : module
-                    ? 'border-orange-400/70'
-                    : 'border-dashed border-orange-500/40 bg-slate-950/80 hover:border-orange-300/70'
-              }`}
+              className={`${SLOT_CLASS[slot]} !block h-full w-full ${open ? '' : 'cursor-not-allowed'}`}
+              side="bottom"
+              content={hint}
             >
-              {module && (
-                <img src={module.photo} alt="" className="absolute inset-0 h-full w-full object-cover opacity-80" />
-              )}
-              <span
-                className={`relative px-1 text-[10px] font-semibold uppercase leading-tight tracking-wide ${
-                  module ? 'text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]' : 'text-orange-100/80'
+              <button
+                type="button"
+                disabled={!open}
+                onClick={() => onPick(slot)}
+                className={`relative h-full w-full overflow-hidden rounded-lg border text-center transition-colors ${
+                  !open
+                    ? 'cursor-not-allowed border-slate-600 bg-slate-900/80 text-slate-500 opacity-50'
+                    : selected
+                      ? 'border-amber-300 ring-2 ring-amber-300/70'
+                      : module
+                        ? 'border-orange-400/70'
+                        : 'border-dashed border-orange-500/40 bg-slate-950/80 hover:border-orange-300/70'
                 }`}
               >
-                {module ? module.name : SLOT_LABEL[slot]}
-              </span>
-            </button>
+                {module && open && (
+                  <img src={module.photo} alt="" className="absolute inset-0 h-full w-full object-cover opacity-80" />
+                )}
+                <span
+                  className={`relative px-1 text-[10px] font-semibold uppercase leading-tight tracking-wide ${
+                    !open
+                      ? 'text-slate-500'
+                      : module
+                        ? 'text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]'
+                        : 'text-orange-100/80'
+                  }`}
+                >
+                  {module && open ? module.name : SLOT_LABEL[slot]}
+                </span>
+              </button>
+            </SiteTooltip>
           )
         })}
       </div>

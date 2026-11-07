@@ -12,10 +12,13 @@ export const SLOT_LABEL: Record<SlotId, string> = {
   left: 'Left',
   right: 'Right',
   top: 'Top',
-  topLeft: 'Top left',
-  topRight: 'Top right',
+  topLeft: 'Left wing',
+  topRight: 'Right wing',
   bottom: 'Bottom',
 }
+
+/** Every bay draws these. A mount the main lacks stays visible and disabled. */
+export const BAY_SLOTS: SlotId[] = ['top', 'left', 'main', 'right', 'bottom']
 
 export interface ModuleDef {
   id: ModuleId
@@ -76,7 +79,23 @@ export function setupFromStored(value: unknown): Setup {
       next[side][slot] = id as ModuleId
     }
   }
+  for (const side of SIDES) {
+    const main = next[side].main
+    for (const slot of SLOTS) {
+      if (slot === 'main') continue
+      const id = next[side][slot]
+      if (id && !fits(moduleById(id), side, slot, main)) next[side][slot] = null
+    }
+  }
   return next
+}
+
+/** False when this main has no such connector, so the bay can grey that mount out. */
+export function slotAvailable(setup: Setup, side: SideId, slot: SlotId): boolean {
+  if (slot === 'main') return true
+  const main = setup[side].main
+  if (!main) return false
+  return moduleById(main).ports?.includes(slot) ?? false
 }
 
 export function moduleById(id: ModuleId): ModuleDef {

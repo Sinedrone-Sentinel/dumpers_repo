@@ -17,12 +17,13 @@ The mount table is `src/lib/flightProfile/rules.ts`. Change mounts there. Do not
 
 ## Mounts
 
-- `top` is above the main. `topLeft` and `topRight` are the wings beside the grip. `bottom` is the front, toward the pilot. `left` and `right` are the Gladiator side bus.
-- A Gladiator exposes top, both wings, and both side connectors. It has no bottom port.
-- An Omni Throttle counts as a throttle. Its elbow closes that side, wing included: left-hand keeps the right bus, right-hand keeps the left bus.
-- A STECS base has no side bus and no wings. The front holder is `bottom`. SEM-V may also sit on `top`.
-- Desktop SEM and THQ use the side bus only. SEM-V uses a throttle's top and bottom, and a stick's center top. On a stick it sits on an MFH or a mount and cables to the Gladiator. It does not use the side bus.
-- FSM-GA uses a stick's top-left or top-right wing. Both wings may hold one.
+- `top` on a stick is the UCM desk mount or a standalone mount. On a throttle it is the module sitting on the throttle. `bottom` is the front, toward the pilot. `left` and `right` are the Gladiator side bus.
+- Every bay draws Top, Left, Main, Right, and Bottom. Grey out and disable a mount the selected main does not have.
+- A Gladiator exposes top and both side connectors. It has no bottom port.
+- An Omni Throttle counts as a throttle. Its elbow closes that side: left-hand keeps the right bus, right-hand keeps the left bus.
+- A STECS base has no side bus. The front holder is `bottom`. SEM-V may also sit on `top`.
+- Desktop SEM and THQ use the side bus only. SEM-V uses a throttle's top and bottom, and a stick's top. On a stick that top is the UCM or standalone mount, cabled to the Gladiator. It does not use the side bus.
+- FSM-GA is a Top option on a stick or a throttle. Top is the UCM desk mount or a standalone mount. It does not use a side connector or the front.
 - STEM is a bottom mount on every STECS. ATEM is a bottom mount on Mini Plus and Max only (`acceptsAtem`).
 - A mount holds one module. The same module may be placed on every mount VKB allows. Do not limit a count to one owner's set.
 - Two sticks are allowed. Two throttles are not.

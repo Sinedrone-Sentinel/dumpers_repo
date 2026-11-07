@@ -38,7 +38,7 @@ export interface ModuleRule {
   mounts?: Partial<Record<ModuleId, SlotId[]>>
 }
 
-const stickPorts: SlotId[] = ['top', 'topLeft', 'topRight', 'left', 'right']
+const stickPorts: SlotId[] = ['top', 'left', 'right']
 const throttlePorts: SlotId[] = ['top', 'bottom']
 
 /** Desktop SEM and THQ. The Omni elbow closes the side it occupies. */
@@ -63,23 +63,26 @@ function verticalOnThrottle(): Partial<Record<ModuleId, SlotId[]>> {
   }
 }
 
-/** FSM-GA sits on either wing of a Gladiator, beside the grip. The Omni elbow closes one wing. */
-function stickWings(): Partial<Record<ModuleId, SlotId[]>> {
-  return {
-    scg: ['topLeft', 'topRight'],
-    'scg-lh': ['topLeft', 'topRight'],
-    ota: ['topLeft'],
-    'ota-lh': ['topRight'],
-  }
-}
-
-/** SEM-V on a stick is the center top: an MFH or mount, cabled to the Gladiator. */
+/** UCM desk mount or a standalone module on the top of a stick. */
 function stickTop(): Partial<Record<ModuleId, SlotId[]>> {
   return {
     scg: ['top'],
     'scg-lh': ['top'],
     ota: ['top'],
     'ota-lh': ['top'],
+  }
+}
+
+/** FSM-GA uses Top on a stick or a throttle. It does not use a side connector or the front. */
+function standaloneTop(): Partial<Record<ModuleId, SlotId[]>> {
+  const top: SlotId[] = ['top']
+  return {
+    ...stickTop(),
+    stecs: top,
+    'stecs-plus': top,
+    'stecs-max': top,
+    stg: top,
+    'stg-lh': top,
   }
 }
 
@@ -95,16 +98,16 @@ function throttleBottom(): Partial<Record<ModuleId, SlotId[]>> {
 }
 
 /**
- * VKB mount rules. `top` is above the main. `topLeft` and `topRight` are the wings beside the grip.
- * `bottom` is the front, toward the pilot. `left` and `right` are the Gladiator side bus.
- * A STECS base has no side bus and no wings.
+ * VKB mount rules. `top` on a stick is the UCM desk mount or a standalone mount.
+ * On a throttle it is the module sitting on the throttle. `bottom` is the front, toward
+ * the pilot. `left` and `right` are the Gladiator side bus. A STECS base has no side bus.
  * Set `ready` only when devices.json has the same id.
  */
 export const MODULE_RULES: ModuleRule[] = [
   { id: 'scg', name: 'NXT EVO Space Combat (RH)', kind: 'main', ready: true, photo: '/flight-profile/scg.jpg', hand: 'right', role: 'stick', ports: stickPorts },
   { id: 'scg-lh', name: 'NXT EVO Space Combat (LH)', kind: 'main', ready: true, photo: '/flight-profile/scg-lh.jpg', hand: 'left', role: 'stick', ports: stickPorts },
-  { id: 'ota', name: 'NXT EVO Omni Throttle (RH)', kind: 'main', ready: false, hand: 'right', role: 'throttle', ports: ['top', 'topLeft', 'left'] },
-  { id: 'ota-lh', name: 'NXT EVO Omni Throttle (LH)', kind: 'main', ready: false, hand: 'left', role: 'throttle', ports: ['top', 'topRight', 'right'] },
+  { id: 'ota', name: 'NXT EVO Omni Throttle (RH)', kind: 'main', ready: false, hand: 'right', role: 'throttle', ports: ['top', 'left'] },
+  { id: 'ota-lh', name: 'NXT EVO Omni Throttle (LH)', kind: 'main', ready: false, hand: 'left', role: 'throttle', ports: ['top', 'right'] },
   { id: 'stecs', name: 'STECS Modern Throttle (LH)', kind: 'main', ready: true, photo: '/flight-profile/stecs.jpg', hand: 'left', role: 'throttle', ports: throttlePorts },
   { id: 'stecs-plus', name: 'STECS Modern Throttle Mini Plus (LH)', kind: 'main', ready: false, hand: 'left', role: 'throttle', ports: throttlePorts, acceptsAtem: true },
   { id: 'stecs-max', name: 'STECS Modern Throttle Max (LH)', kind: 'main', ready: false, hand: 'left', role: 'throttle', ports: throttlePorts, acceptsAtem: true },
@@ -116,10 +119,7 @@ export const MODULE_RULES: ModuleRule[] = [
     kind: 'attach',
     ready: true,
     photo: '/flight-profile/fsm.jpg',
-    mounts: {
-      ...stickWings(),
-      ...throttleBottom(),
-    },
+    mounts: standaloneTop(),
   },
   { id: 'sem', name: 'SEM-V', kind: 'attach', ready: true, photo: '/flight-profile/semv.jpg', mounts: { ...verticalOnThrottle(), ...stickTop() } },
   { id: 'sem-h', name: 'SEM', kind: 'attach', ready: true, photo: '/flight-profile/sem.jpg', mounts: sideBus() },
