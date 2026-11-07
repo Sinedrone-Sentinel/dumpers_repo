@@ -4,14 +4,16 @@ import { MODULE_RULES, mountsFor, type ModuleId, type ModuleRule, type SideId, t
 export type { ModuleId, ModuleRule, SideId, SlotId }
 
 export const SIDES: SideId[] = ['left', 'right']
-export const SLOTS: SlotId[] = ['main', 'left', 'right', 'top', 'bottom']
-export const SHEET_SLOTS: SlotId[] = ['top', 'main', 'left', 'right', 'bottom']
+export const SLOTS: SlotId[] = ['main', 'left', 'right', 'top', 'topLeft', 'topRight', 'bottom']
+export const SHEET_SLOTS: SlotId[] = ['topLeft', 'top', 'topRight', 'main', 'left', 'right', 'bottom']
 
 export const SLOT_LABEL: Record<SlotId, string> = {
   main: 'Main',
   left: 'Left',
   right: 'Right',
   top: 'Top',
+  topLeft: 'Top left',
+  topRight: 'Top right',
   bottom: 'Bottom',
 }
 
@@ -50,8 +52,8 @@ export const MODULES: ModuleDef[] = MODULE_RULES.filter((rule) => rule.ready).ma
 export type Setup = Record<SideId, Record<SlotId, ModuleId | null>>
 
 export const EMPTY_SETUP: Setup = {
-  left: { main: null, left: null, right: null, top: null, bottom: null },
-  right: { main: null, left: null, right: null, top: null, bottom: null },
+  left: { main: null, left: null, right: null, top: null, topLeft: null, topRight: null, bottom: null },
+  right: { main: null, left: null, right: null, top: null, topLeft: null, topRight: null, bottom: null },
 }
 
 const MODULE_BY_ID = new Map(MODULES.map((module) => [module.id, module]))
@@ -80,20 +82,10 @@ function throttleAlreadyMounted(setup: Setup, side: SideId): boolean {
 }
 
 export function optionsFor(setup: Setup, side: SideId, slot: SlotId): ModuleDef[] {
-  const used = new Set<ModuleId>()
-  for (const mountedSide of SIDES) {
-    for (const mountedSlot of SLOTS) {
-      const id = setup[mountedSide][mountedSlot]
-      if (id && !(mountedSide === side && mountedSlot === slot)) used.add(id)
-    }
-  }
   const main = slot === 'main' ? null : setup[side].main
   const throttleTaken = slot === 'main' && throttleAlreadyMounted(setup, side)
   return MODULES.filter(
-    (module) =>
-      !used.has(module.id) &&
-      fits(module, side, slot, main) &&
-      !(throttleTaken && module.role === 'throttle')
+    (module) => fits(module, side, slot, main) && !(throttleTaken && module.role === 'throttle')
   )
 }
 
@@ -101,13 +93,6 @@ export function place(setup: Setup, side: SideId, slot: SlotId, id: ModuleId | n
   const next: Setup = {
     left: { ...setup.left },
     right: { ...setup.right },
-  }
-  if (id) {
-    for (const mountedSide of SIDES) {
-      for (const mountedSlot of SLOTS) {
-        if (next[mountedSide][mountedSlot] === id) next[mountedSide][mountedSlot] = null
-      }
-    }
   }
   next[side][slot] = id
   if (slot === 'main' && id && moduleById(id).role === 'throttle') {

@@ -23,7 +23,9 @@ function explainProfileError(message: string): string {
 }
 
 const SLOT_CLASS: Record<SlotId, string> = {
+  topLeft: 'col-start-1 row-start-1',
   top: 'col-start-2 row-start-1',
+  topRight: 'col-start-3 row-start-1',
   left: 'col-start-1 row-start-2',
   main: 'col-start-2 row-start-2',
   right: 'col-start-3 row-start-2',
@@ -47,7 +49,7 @@ function Bay({
         {side === 'left' ? 'Left side' : 'Right side'}
       </p>
       <div className="grid grid-cols-[4.25rem_6.75rem_4.25rem] grid-rows-[3.1rem_5.4rem_3.1rem] gap-1.5">
-        {(['top', 'left', 'main', 'right', 'bottom'] as SlotId[]).map((slot) => {
+        {(['topLeft', 'top', 'topRight', 'left', 'main', 'right', 'bottom'] as SlotId[]).map((slot) => {
           const id = setup[side][slot]
           const module = id ? moduleById(id) : null
           const selected = active === slot

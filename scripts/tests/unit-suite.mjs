@@ -52,6 +52,7 @@ const modules = [
   'src/lib/canCraft.ts',
   'src/lib/craftFromStock.ts',
   'src/lib/tickerLinks.ts',
+  'src/lib/flightProfile/catalog.ts',
 ]
 
 console.log('Unit tests: bundling modules...')
@@ -2777,6 +2778,38 @@ check(
 check(
   tickerLinks.splitTickerText("Dumper's Repo helps your runs.").every((part) => part.kind === 'text'),
   'ticker links: ordinary sentences are not linked',
+)
+
+const flightProfile = await import(pathToFileURL(path.join(outDir, 'catalog.mjs')).href)
+const stickBay = flightProfile.place(flightProfile.EMPTY_SETUP, 'right', 'main', 'scg')
+const stickIds = (slot) => flightProfile.optionsFor(stickBay, 'right', slot).map((module) => module.id)
+check(stickIds('top').join() === 'sem', 'stick top offers SEM-V')
+check(
+  stickIds('topLeft').join() === 'fsm' && stickIds('topRight').join() === 'fsm',
+  'stick wings offer FSM-GA',
+)
+check(
+  stickIds('left').includes('sem-h') && !stickIds('left').includes('sem') && !stickIds('top').includes('fsm'),
+  'desktop SEM stays on the side bus',
+)
+const oneWing = flightProfile.place(stickBay, 'right', 'topLeft', 'fsm')
+const bothWings = flightProfile.place(oneWing, 'right', 'topRight', 'fsm')
+check(
+  flightProfile.optionsFor(oneWing, 'right', 'topRight').some((module) => module.id === 'fsm') &&
+    bothWings.right.topLeft === 'fsm' &&
+    bothWings.right.topRight === 'fsm',
+  'both Gladiator wings can hold an FSM-GA',
+)
+const oneSide = flightProfile.place(stickBay, 'right', 'left', 'sem-h')
+check(
+  flightProfile.optionsFor(oneSide, 'right', 'right').some((module) => module.id === 'sem-h'),
+  'both side connectors can hold a desktop SEM',
+)
+const throttleBay = flightProfile.place(flightProfile.EMPTY_SETUP, 'left', 'main', 'stecs')
+check(
+  flightProfile.optionsFor(throttleBay, 'left', 'top').some((module) => module.id === 'sem') &&
+    flightProfile.optionsFor(throttleBay, 'left', 'topLeft').length === 0,
+  'STECS keeps SEM-V on top and has no wing',
 )
 
 console.log(`Unit tests: ${pass} passed`)
