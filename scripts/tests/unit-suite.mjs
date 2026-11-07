@@ -2793,7 +2793,7 @@ check(
     stickIds('topRight').length === 0 &&
     stickIds('bottom').length === 0 &&
     !stickIds('left').includes('fsm'),
-  'FSM-GA is a stick top option only',
+  'FSM-GA is a top option, not a side or front mount',
 )
 check(
   stickIds('left').includes('sem-h') && !stickIds('left').includes('sem'),
@@ -2807,9 +2807,9 @@ check(
 const throttleBay = flightProfile.place(flightProfile.EMPTY_SETUP, 'left', 'main', 'stecs')
 check(
   flightProfile.optionsFor(throttleBay, 'left', 'top').some((module) => module.id === 'sem') &&
-    !flightProfile.optionsFor(throttleBay, 'left', 'top').some((module) => module.id === 'fsm') &&
+    flightProfile.optionsFor(throttleBay, 'left', 'top').some((module) => module.id === 'fsm') &&
     !flightProfile.optionsFor(throttleBay, 'left', 'bottom').some((module) => module.id === 'fsm'),
-  'a STECS offers SEM-V on top and does not take an FSM-GA',
+  'a STECS offers SEM-V and FSM-GA on top, and the FSM-GA is not on the front',
 )
 check(
   !flightProfile.slotAvailable(stickBay, 'right', 'bottom') &&

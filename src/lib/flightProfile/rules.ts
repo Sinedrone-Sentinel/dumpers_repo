@@ -63,13 +63,26 @@ function verticalOnThrottle(): Partial<Record<ModuleId, SlotId[]>> {
   }
 }
 
-/** SEM-V and FSM-GA on a stick: the UCM desk mount or a standalone mount, cabled to the Gladiator. */
+/** UCM desk mount or a standalone module on the top of a stick. */
 function stickTop(): Partial<Record<ModuleId, SlotId[]>> {
   return {
     scg: ['top'],
     'scg-lh': ['top'],
     ota: ['top'],
     'ota-lh': ['top'],
+  }
+}
+
+/** FSM-GA uses Top on a stick or a throttle. It does not use a side connector or the front. */
+function standaloneTop(): Partial<Record<ModuleId, SlotId[]>> {
+  const top: SlotId[] = ['top']
+  return {
+    ...stickTop(),
+    stecs: top,
+    'stecs-plus': top,
+    'stecs-max': top,
+    stg: top,
+    'stg-lh': top,
   }
 }
 
@@ -106,7 +119,7 @@ export const MODULE_RULES: ModuleRule[] = [
     kind: 'attach',
     ready: true,
     photo: '/flight-profile/fsm.jpg',
-    mounts: { scg: ['top'], 'scg-lh': ['top'] },
+    mounts: standaloneTop(),
   },
   { id: 'sem', name: 'SEM-V', kind: 'attach', ready: true, photo: '/flight-profile/semv.jpg', mounts: { ...verticalOnThrottle(), ...stickTop() } },
   { id: 'sem-h', name: 'SEM', kind: 'attach', ready: true, photo: '/flight-profile/sem.jpg', mounts: sideBus() },

@@ -46,12 +46,7 @@ function mountHint(setup: Setup, side: SideId, slot: SlotId, open: boolean): str
     return 'This hardware has no top mount.'
   }
   if (slot === 'main') return 'Stick or throttle for this side.'
-  const main = moduleById(setup[side].main as NonNullable<Setup[SideId]['main']>)
-  if (slot === 'top') {
-    return main.role === 'stick'
-      ? 'UCM desk mount, or a standalone mount cabled to the stick.'
-      : 'Module mounted on top of the throttle.'
-  }
+  if (slot === 'top') return 'UCM desk mount, or a standalone mount.'
   if (slot === 'left' || slot === 'right') return 'Side connector on the stick base.'
   return 'Front of the throttle, toward you.'
 }
