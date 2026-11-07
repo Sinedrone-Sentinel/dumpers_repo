@@ -2874,5 +2874,57 @@ check(
   restoredPresses.right.main.delta === 3 && restoredPresses.right.top === null && restoredPresses.left.main === null,
   'a saved press keeps an accepted shift and drops an unknown module',
 )
+const buttonBits = flightProfile.buttonBitsFromCollections([
+  {
+    inputReports: [
+      {
+        reportId: 1,
+        items: [
+          { reportSize: 16, reportCount: 2, logicalMaximum: 65535, isArray: false },
+          { reportSize: 1, reportCount: 8, logicalMaximum: 1, isRange: true, usageMinimum: 1, isArray: false },
+        ],
+      },
+    ],
+  },
+])
+const axisNoise = flightProfile.applyButtonReport([], buttonBits, 1, new Uint8Array([0xff, 0xff, 0xff, 0xff, 0]))
+const buttonByte = flightProfile.applyButtonReport([], buttonBits, 1, new Uint8Array([0, 0, 0, 0, 0x41]))
+check(
+  buttonBits.length === 8 &&
+    buttonBits[0].button === 1 &&
+    buttonBits[0].byteIndex === 4 &&
+    axisNoise.every((high) => high === false) &&
+    buttonByte[0] === true &&
+    buttonByte[6] === true &&
+    buttonByte[1] === false,
+  'axis bytes are not button numbers',
+)
+const steady = flightProfile.buttonTracks()
+check(flightProfile.stableButton(steady, 'pad:0', [false], 0).button === null, 'the first look does not count as a press')
+check(flightProfile.stableButton(steady, 'pad:0', [true], 10).button === null, 'a press is not shown until it stays down')
+check(flightProfile.stableButton(steady, 'pad:0', [true], 80).button === 1, 'a button that stays down is shown')
+const flapping = flightProfile.buttonTracks()
+flightProfile.stableButton(flapping, 'pad:1', [false, false, false, false, false, false, false], 0)
+let flapped = null
+for (const time of [10, 20, 30, 40, 50, 60, 70, 80]) {
+  flapped = flightProfile.stableButton(
+    flapping,
+    'pad:1',
+    [time % 20 < 10, false, false, false, false, false, time % 20 < 10],
+    time,
+  )
+}
+const stillFlapping = flightProfile.stableButton(flapping, 'pad:1', [true, false, false, false, false, false, true], 200)
+const stayedNoisy = flightProfile.stableButton(flapping, 'pad:1', [true, false, false, false, false, false, true], 280)
+const other = flightProfile.buttonTracks()
+flightProfile.stableButton(other, 'pad:2', [false], 0)
+check(flightProfile.stableButton(other, 'pad:2', [true], 10).button === null, 'another controller waits for the press to stay down')
+check(
+  flapped.button === null &&
+    stillFlapping.button === null &&
+    stayedNoisy.button === null &&
+    flightProfile.stableButton(other, 'pad:2', [true], 80).button === 1,
+  'a controller that flips 1 and 7 is ignored, and another controller still counts',
+)
 
 console.log(`Unit tests: ${pass} passed`)
