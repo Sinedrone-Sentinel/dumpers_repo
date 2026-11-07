@@ -94,11 +94,20 @@ export function inputParts(input: string): [string, string] {
 }
 
 export function deadBinds(profile: ParsedFlightProfile, devices: DeviceDef[]): ProfileBind[] {
-  const known = new Set(devices.flatMap((device) => device.controls.map((control) => control.input)))
+  const known = new Set<string>()
+  const knownButtons = new Set<number>()
+  for (const device of devices) {
+    for (const control of device.controls) {
+      known.add(control.input)
+      const button = control.input.match(/^js\d+_button(\d+)$/)
+      if (button) knownButtons.add(Number(button[1]))
+    }
+  }
   const dead: ProfileBind[] = []
   const seen = new Set<string>()
   for (const bind of profile.profileBinds) {
-    if (known.has(bind.input)) continue
+    const button = bind.input.match(/^js\d+_button(\d+)$/)
+    if (known.has(bind.input) || (button && knownButtons.has(Number(button[1])))) continue
     const key = `${bind.input}\0${bind.label}`
     if (seen.has(key)) continue
     seen.add(key)

@@ -36,6 +36,7 @@ export const GUEST_LOCKED_FEATURE_COPY: Partial<Record<FeatureId, GuestFeatureCo
       'Sign in with a free member account',
       'Pick the stick, throttle, and the modules mounted on each side. Those choices are saved on your account',
       'Upload one flight profile. A new upload replaces the saved one',
+      'In Chrome or Edge, press one button on each module before Show Map. The number you accept is saved on your account',
       'Show Map draws the selected controls with your joystick assignments',
     ],
   },

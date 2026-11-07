@@ -136,8 +136,8 @@ Header (signed-in): **?** Help, **Friends**, **Request Services** (RSI verified)
 
 - Signed-in members only, from the avatar menu. Guests see the locked page. Marked EXPERIMENTAL
 - Left and right VKB bays: a matching-hand stick or throttle, plus the mounts that hardware can take. Two sticks are allowed. Two throttles are not
-- One uploaded Star Citizen flight-control XML replaces the saved file (`save_flight_profile`). The modules placed in the bays are saved separately (`save_flight_profile_layout`) and restored on the next visit. Show Map draws joystick and HOTAS assignments and ignores keyboard and mouse binds
-- Apply migration **216**, then **217**, before a member can save a profile and the bay layout
+- One uploaded Star Citizen flight-control XML replaces the saved file (`save_flight_profile`). The modules placed in the bays are saved separately (`save_flight_profile_layout`) and restored on the next visit. In Chrome or Edge, Show Map waits until each placed module has an accepted button press (`save_flight_button_presses`). The sheet numbers are the `sinedrone_sentinel` mapping. Show Map draws joystick and HOTAS assignments and ignores keyboard and mouse binds
+- Apply migration **216**, then **217**, then **218**, before a member can save a profile, the bay layout, and button numbers
 
 ### Friends (header)
 
