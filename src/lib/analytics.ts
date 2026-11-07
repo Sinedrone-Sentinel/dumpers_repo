@@ -125,6 +125,7 @@ function pathToTool(pathname: string): string | null {
   if (pathname.startsWith('/partnership')) return 'partnership'
   if (pathname.startsWith('/contribute')) return 'contribute'
   if (pathname.startsWith('/guest-locked')) return 'guest_locked'
+  if (pathname.startsWith('/flight-profile')) return 'flight_profile'
 
   return null
 }
@@ -282,6 +283,7 @@ export const ANALYTICS_TOOL_LABELS: Record<string, string> = {
   partnership: 'Partnership',
   contribute: 'Contribute',
   guest_locked: 'Guest Locked',
+  flight_profile: 'Flight Profile',
 }
 
 export const ANALYTICS_SUB_TOOL_LABELS: Record<string, string> = {

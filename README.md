@@ -132,6 +132,13 @@ Header (signed-in): **?** Help, **Friends**, **Request Services** (RSI verified)
 - Prices, terminals, and crate sizes come from the baked UEX index. Live buy/sell availability comes from the `smart-hauler-availability` Edge Function whenever a buy or sell list is built, and only a check from the last 7 days is used. If it fails, the baked list is used and the step says local info may not match demand
 - **Sell what I have**: per-commodity rows (SCU, smallest and largest crate) and **Find buyer** for the nearest terminal that buys it, with Zero / Partial / Full follow-ups
 
+### Flight Profile (`/flight-profile`)
+
+- Signed-in members only, from the avatar menu. Guests see the locked page. Marked EXPERIMENTAL
+- Left and right VKB bays: a matching-hand stick or throttle, plus the mounts that hardware can take. Two sticks are allowed. Two throttles are not
+- One uploaded Star Citizen flight-control XML replaces the saved row (`save_flight_profile`). Show Map draws joystick and HOTAS assignments and ignores keyboard and mouse binds
+- Apply migration **216** before a member can save a profile
+
 ### Friends (header)
 
 - Header Friends control (between notifications and avatar): add by RSI Handle, remove, private reorderable groups — RSI-verified members only (both sides)
@@ -340,7 +347,7 @@ Signed-out visitors land on the public home page first. Choose **Browse tools of
 
 Requires a free member account:
 
-- Smart Hauler, Ship Hangar, Smart Cracker (and its Advisor), My Listings, The Bazaar (buy/sell), BP Dumper + Live Tracker, Mining Ledgers, member directory / collection counts, cross-device sync
+- Smart Hauler, Ship Hangar, Smart Cracker (and its Advisor), Flight Profile, My Listings, The Bazaar (buy/sell), BP Dumper + Live Tracker, Mining Ledgers, member directory / collection counts, cross-device sync
 
 On **first sign-in** (welcome onboarding), valid offline data migrates to the account. Stale offline IDs from before an update are cleared automatically.
 

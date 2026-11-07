@@ -248,6 +248,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 178 | `213_friends_blueprint_owners.sql` | `get_friends_blueprint_owners` returns RSI handles of accepted friends who own the listed blueprints. Pending and banned friends are left out. Apply after **212** |
 | 179 | `214_discord_webhook_groups.sql` | Webhook groups, RSI gate on marketplace alerts, 2-minute listing bursts, 5-minute edit digests, Executive Hangar and Franken-Fit member alerts, and separate org webhook groups. Officer demotion does not use the officer channel. Apply after **213** |
 | 180 | `215_cron_run_history_cleanup.sql` | Deletes pg_cron run logs (`cron.job_run_details`) older than 7 days now and nightly at 04:45 UTC (`cleanup-cron-run-history`). The every-minute jobs had grown that log to most of the database. Optional, to give the disk space back right away: run `VACUUM FULL cron.job_run_details;` in the SQL editor once. Apply after **214** |
+| 181 | `216_flight_profiles.sql` | Flight Profile: one Star Citizen flight-control XML per member (`flight_profiles`). Members `SELECT` their own row only. Saving replaces the previous file through the SECURITY DEFINER `save_flight_profile` RPC. Apply after **215** |
 
 ### pg_cron (migrations 054, 065-068, 144, 147, 178, 179, 191, 196)
 

@@ -71,6 +71,12 @@ const FEATURES: FeatureCard[] = [
     cta: 'Sign in to use Smart Cracker →',
   },
   {
+    title: 'Flight Profile',
+    body: 'Place your VKB sticks, throttle, and modules, then upload a Star Citizen flight profile to see those joystick assignments on the controls. Sign-in required.',
+    action: 'signin',
+    cta: 'Sign in to use Flight Profile →',
+  },
+  {
     title: "Fuzy's Ship Shop",
     body: 'Build a ship loadout, compare Pilot DPS and Burst DPS, and see where to buy the parts. Sign in to save ships in My Hangar.',
     href: '/ship-shop',
@@ -185,7 +191,7 @@ export default function PublicSeoLanding({ onBrowseOffline }: PublicSeoLandingPr
           <p className="mx-auto mt-5 max-w-2xl text-center text-base text-slate-300 sm:text-lg">
             Blueprints, missions, Wikelo, Resource Tracker, Mining Tracker, Fuzy&apos;s Ship Shop,
             UEX Lookup, the Shopping Cart, and Executive Hangar. Offline Mode opens them in this
-            browser. Sign in for Smart Hauler, Smart Cracker, My Hangar, and My Listings.
+            browser. Sign in for Smart Hauler, Smart Cracker, Flight Profile, My Hangar, and My Listings.
           </p>
           {error && (
             <div className="site-banner-error mx-auto mt-6 max-w-xl" role="alert">
