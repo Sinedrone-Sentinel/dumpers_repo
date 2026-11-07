@@ -2,16 +2,26 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import FeaturePageLayout from '../layout/FeaturePageLayout'
 import SiteTooltip from '../SiteTooltip'
 import ControlMap from './ControlMap'
-import { loadFlightProfile, saveFlightLayout, saveFlightProfile } from '../../lib/flightProfile/api'
+import ButtonPressModal from './ButtonPressModal'
+import { loadFlightProfile, saveFlightLayout, saveFlightPresses, saveFlightProfile } from '../../lib/flightProfile/api'
+import { DEVICES } from '../../lib/flightProfile/devices'
 import {
   BAY_SLOTS,
   EMPTY_SETUP,
   SLOT_LABEL,
+  emptyPresses,
+  firstUnpressed,
+  hearsButtonPress,
   moduleById,
   optionsFor,
   place,
+  sampleButton,
   sheetsFor,
+  shiftDevice,
   slotAvailable,
+  syncPresses,
+  unpressedLabels,
+  type PressSetup,
   type Setup,
   type SideId,
   type SlotId,
@@ -19,8 +29,11 @@ import {
 import { deadBinds, readFlightProfile, type ParsedFlightProfile } from '../../lib/flightProfile/parseProfile'
 
 function explainProfileError(message: string): string {
+  if (/save_flight_button_presses|column .*button_presses/i.test(message)) {
+    return 'Button numbers are not on the database yet. Run supabase/migrations/218_flight_button_presses.sql, then reload this page.'
+  }
   if (/save_flight_profile_layout|column .*layout/i.test(message)) {
-    return 'The flight profile layout is not on the database yet. Run supabase/migrations/217_flight_profile_layout.sql, then reload this page.'
+    return 'The flight profile layout is not on the database yet. Run supabase/migrations/217_flight_profile_layout.sql, then 218_flight_button_presses.sql, and reload this page.'
   }
   if (/flight_profiles/i.test(message) && /schema cache|does not exist/i.test(message)) {
     return 'The flight profile table is not on the database yet. Run supabase/migrations/216_flight_profiles.sql, then 217_flight_profile_layout.sql, and reload this page.'
@@ -121,6 +134,8 @@ function Bay({
 export default function FlightProfilePage() {
   const fileRef = useRef<HTMLInputElement>(null)
   const [setup, setSetup] = useState<Setup>(EMPTY_SETUP)
+  const [presses, setPresses] = useState<PressSetup>(emptyPresses)
+  const [prompt, setPrompt] = useState<{ side: SideId; slot: SlotId } | null>(null)
   const [active, setActive] = useState<{ side: SideId; slot: SlotId } | null>(null)
   const [profile, setProfile] = useState<ParsedFlightProfile | null>(null)
   const [source, setSource] = useState<'account' | 'upload' | null>(null)
@@ -128,14 +143,19 @@ export default function FlightProfilePage() {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [shown, setShown] = useState<Setup | null>(null)
-  const layoutSave = useRef({ running: false, dirty: false, latest: EMPTY_SETUP })
+  const layoutSave = useRef({ running: false, dirty: false, setup: EMPTY_SETUP, presses: emptyPresses() })
   const editedLayout = useRef(false)
+  const hear = hearsButtonPress(typeof navigator === 'undefined' ? '' : navigator.userAgent)
 
   useEffect(() => {
     let cancelled = false
     void loadFlightProfile().then((result) => {
       if (cancelled) return
-      if (!editedLayout.current) setSetup(result.setup)
+      if (!editedLayout.current) {
+        setSetup(result.setup)
+        setPresses(result.presses)
+        if (hear) setPrompt(firstUnpressed(result.setup, result.presses))
+      }
       if (result.error) setError(explainProfileError(result.error))
       if (result.profile) {
         setProfile(result.profile)
@@ -146,11 +166,12 @@ export default function FlightProfilePage() {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [hear])
 
-  async function persistLayout(next: Setup) {
+  async function persist(nextSetup: Setup, nextPresses: PressSetup) {
     const gate = layoutSave.current
-    gate.latest = next
+    gate.setup = nextSetup
+    gate.presses = nextPresses
     if (gate.running) {
       gate.dirty = true
       return
@@ -159,27 +180,39 @@ export default function FlightProfilePage() {
     try {
       do {
         gate.dirty = false
-        const snapshot = gate.latest
-        const saved = await saveFlightLayout(snapshot)
-        if (gate.latest !== snapshot) continue
-        if (saved.error) setError(explainProfileError(saved.error))
+        const setupSnapshot = gate.setup
+        const pressSnapshot = gate.presses
+        const savedLayout = await saveFlightLayout(setupSnapshot)
+        const savedPresses = await saveFlightPresses(pressSnapshot)
+        if (gate.setup !== setupSnapshot || gate.presses !== pressSnapshot) continue
+        if (savedLayout.error) setError(explainProfileError(savedLayout.error))
+        else if (savedPresses.error) setError(explainProfileError(savedPresses.error))
       } while (gate.dirty)
     } finally {
       gate.running = false
     }
   }
 
-  const sheets = useMemo(() => (shown ? sheetsFor(shown) : []), [shown])
+  const sheets = useMemo(() => {
+    if (!shown) return []
+    return sheetsFor(shown).map((sheet) => {
+      const press = presses[sheet.side][sheet.slot]
+      const delta = press?.accepted && press.moduleId === sheet.device.id ? press.delta : 0
+      return { ...sheet, device: shiftDevice(sheet.device, delta) }
+    })
+  }, [shown, presses])
   const dead = useMemo(
     () => (profile && shown ? deadBinds(profile, sheets.map((sheet) => sheet.device)) : []),
     [profile, shown, sheets]
   )
 
-  const ready = Boolean(setup.left.main && setup.right.main && profile)
+  const pendingPresses = hear ? unpressedLabels(setup, presses) : []
+  const ready = Boolean(setup.left.main && setup.right.main && profile) && pendingPresses.length === 0
   const missing = [
     !setup.left.main ? 'a left main' : null,
     !setup.right.main ? 'a right main' : null,
     !profile ? 'a flight profile' : null,
+    pendingPresses.length ? `a button press for ${pendingPresses.join(', ')}` : null,
   ].filter((item): item is string => Boolean(item))
 
   function choose(side: SideId, slot: SlotId) {
@@ -188,12 +221,40 @@ export default function FlightProfilePage() {
 
   function apply(id: Parameters<typeof place>[3]) {
     if (!active) return
+    const same = id != null && setup[active.side][active.slot] === id
+    if (same) {
+      if (hear) setPrompt(active)
+      return
+    }
     editedLayout.current = true
     const next = place(setup, active.side, active.slot, id)
+    const nextPresses = syncPresses(presses, setup, next)
     setSetup(next)
+    setPresses(nextPresses)
     setShown(null)
     setActive(null)
-    void persistLayout(next)
+    void persist(next, nextPresses)
+    if (hear && id) setPrompt({ side: active.side, slot: active.slot })
+  }
+
+  function acceptPress(button: number) {
+    if (!prompt) return
+    const id = setup[prompt.side][prompt.slot]
+    const device = id ? DEVICES.find((item) => item.id === id) : null
+    const sample = device ? sampleButton(device) : null
+    if (!id || !sample) {
+      setPrompt(null)
+      return
+    }
+    const nextPresses: PressSetup = {
+      left: { ...presses.left },
+      right: { ...presses.right },
+    }
+    nextPresses[prompt.side][prompt.slot] = { moduleId: id, delta: button - sample.button, accepted: true }
+    editedLayout.current = true
+    setPresses(nextPresses)
+    void persist(setup, nextPresses)
+    setPrompt(firstUnpressed(setup, nextPresses))
   }
 
   async function onFile(file: File) {
@@ -216,6 +277,9 @@ export default function FlightProfilePage() {
     setShown(null)
   }
 
+  const promptId = prompt ? setup[prompt.side][prompt.slot] : null
+  const promptDevice = promptId ? DEVICES.find((item) => item.id === promptId) ?? null : null
+  const promptSample = promptDevice ? sampleButton(promptDevice) : null
   const choices = active ? optionsFor(setup, active.side, active.slot) : []
   const activeFilled = active ? setup[active.side][active.slot] : null
   const needsMain = active ? active.slot !== 'main' && !setup[active.side].main : false
@@ -245,9 +309,7 @@ export default function FlightProfilePage() {
                     <button
                       key={module.id}
                       type="button"
-                      onClick={() => {
-                        if (!current) apply(module.id)
-                      }}
+                      onClick={() => apply(module.id)}
                       className={`flex w-36 flex-col overflow-hidden rounded-lg border text-left ${
                         current ? 'border-amber-300 ring-2 ring-amber-300/60' : 'border-orange-500/40 hover:border-orange-300'
                       }`}
@@ -320,6 +382,16 @@ export default function FlightProfilePage() {
           <p className="mt-2 text-xs text-slate-500">Show Map needs {missing.join(', ')}.</p>
         )}
       </section>
+
+      {prompt && hear && promptDevice && (
+        <ButtonPressModal
+          key={`${prompt.side}-${prompt.slot}`}
+          moduleName={promptDevice.title}
+          controlName={promptSample?.name ?? 'the first button'}
+          onAccept={acceptPress}
+          onSkip={() => setPrompt(null)}
+        />
+      )}
 
       {shown && profile && (
         <div className="mt-4 w-full min-w-0 overflow-x-hidden">

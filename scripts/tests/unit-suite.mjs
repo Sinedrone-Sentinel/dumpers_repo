@@ -2836,5 +2836,43 @@ check(
     restored.right.main === 'scg',
   'a saved bay restores known modules and drops mounts that do not fit',
 )
+const scgSheet = flightProfile.sheetsFor(stickBay).find((sheet) => sheet.device.id === 'scg')
+const sample = flightProfile.sampleButton(scgSheet.device)
+check(sample.button === 1 && sample.name === 'Trigger stage 1', 'the stick sample is trigger stage 1')
+const shiftedStick = flightProfile.shiftDevice(scgSheet.device, 10)
+const trigger = shiftedStick.controls.find((control) => control.name === 'Trigger stage 1')
+check(trigger.label === '11' && trigger.input === 'js1_button11', 'an accepted press shifts the sheet numbers')
+const withFsm = flightProfile.place(stickBay, 'right', 'top', 'fsm')
+const fsmSheet = flightProfile.sheetsFor(withFsm).find((sheet) => sheet.device.id === 'fsm')
+check(flightProfile.sampleButton(fsmSheet.device).button === 41, 'the FSM-GA sample is button 41')
+const shiftedFsm = flightProfile.shiftDevice(fsmSheet.device, -40)
+const hdg = shiftedFsm.controls.find((control) => control.name === 'HDG')
+check(hdg.label === '1' && hdg.input === 'js1_button1', 'an FSM-GA press moves HDG off 41')
+check(
+  flightProfile.hearsButtonPress('Mozilla/5.0 Chrome/120.0') &&
+    flightProfile.hearsButtonPress('Mozilla/5.0 Chrome/120.0 Edg/120.0') &&
+    !flightProfile.hearsButtonPress('Mozilla/5.0 Firefox/120.0') &&
+    flightProfile.risingButton([false, false], [false, true]) === 2,
+  'only Chrome or Edge hears a button, and a new press is 1-based',
+)
+check(
+  flightProfile.unpressedLabels(withFsm, flightProfile.emptyPresses()).length === 2,
+  'each placed module still needs a press',
+)
+const acceptedPresses = flightProfile.emptyPresses()
+acceptedPresses.right.main = { moduleId: 'scg', delta: 0, accepted: true }
+acceptedPresses.right.top = { moduleId: 'fsm', delta: -40, accepted: true }
+check(flightProfile.unpressedLabels(withFsm, acceptedPresses).length === 0, 'accepted presses open Show Map')
+const restoredPresses = flightProfile.pressesFromStored({
+  baseline: { scg: 0 },
+  right: {
+    main: { moduleId: 'scg', delta: 3, accepted: true },
+    top: { moduleId: 'nope', delta: 1, accepted: true },
+  },
+})
+check(
+  restoredPresses.right.main.delta === 3 && restoredPresses.right.top === null && restoredPresses.left.main === null,
+  'a saved press keeps an accepted shift and drops an unknown module',
+)
 
 console.log(`Unit tests: ${pass} passed`)

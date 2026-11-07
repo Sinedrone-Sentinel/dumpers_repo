@@ -250,6 +250,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 180 | `215_cron_run_history_cleanup.sql` | Deletes pg_cron run logs (`cron.job_run_details`) older than 7 days now and nightly at 04:45 UTC (`cleanup-cron-run-history`). The every-minute jobs had grown that log to most of the database. Optional, to give the disk space back right away: run `VACUUM FULL cron.job_run_details;` in the SQL editor once. Apply after **214** |
 | 181 | `216_flight_profiles.sql` | Flight Profile: one Star Citizen flight-control XML per member (`flight_profiles`). Members `SELECT` their own row only. Saving replaces the previous file through the SECURITY DEFINER `save_flight_profile` RPC. Apply after **215** |
 | 182 | `217_flight_profile_layout.sql` | Flight Profile bay layout (`layout` jsonb). `save_flight_profile_layout` replaces the mounted modules and leaves the uploaded file alone. A layout can be saved before a file exists. Apply after **216** |
+| 183 | `218_flight_button_presses.sql` | Flight Profile button-number shifts (`button_presses`). `save_flight_button_presses` stores the accepted press for each placed module. The sheet numbers are saved once as the baseline for the verified `sinedrone_sentinel` profile. Apply after **217** |
 
 ### pg_cron (migrations 054, 065-068, 144, 147, 178, 179, 191, 196)
 

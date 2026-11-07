@@ -137,6 +137,16 @@ function FunctionText({ labels }: { labels: string[] }) {
   )
 }
 
+function labelsFor(control: ControlDef, binds: Map<string, string[]>): string[] {
+  const button = control.input.match(/^js\d+_button(\d+)$/)
+  if (!button) return binds.get(control.input) ?? []
+  const merged = [
+    ...(binds.get(`js1_button${button[1]}`) ?? []),
+    ...(binds.get(`js2_button${button[1]}`) ?? []),
+  ]
+  return [...new Set(merged)]
+}
+
 function ControlList({
   controls,
   binds,
@@ -153,7 +163,7 @@ function ControlList({
         <div key={control.input} className="fp-row">
           <span className="fp-n">{control.label}</span>
           <span className="fp-hw">{control.name}</span>
-          <FunctionText labels={binds.get(control.input) ?? []} />
+          <FunctionText labels={labelsFor(control, binds)} />
         </div>
       ))}
     </div>
