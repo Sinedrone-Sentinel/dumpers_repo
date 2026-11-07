@@ -2811,5 +2811,19 @@ check(
     flightProfile.optionsFor(throttleBay, 'left', 'topLeft').length === 0,
   'STECS keeps SEM-V on top and has no wing',
 )
+const restored = flightProfile.setupFromStored({
+  left: { main: 'stecs', bottom: 'stem', top: 'nope' },
+  right: { main: 'scg', topLeft: 'fsm', topRight: 'fsm' },
+  extra: { main: 'scg' },
+})
+check(
+  restored.left.main === 'stecs' &&
+    restored.left.bottom === 'stem' &&
+    restored.left.top === null &&
+    restored.right.topLeft === 'fsm' &&
+    restored.right.topRight === 'fsm' &&
+    restored.right.main === 'scg',
+  'a saved bay restores known modules and drops unknown ids',
+)
 
 console.log(`Unit tests: ${pass} passed`)

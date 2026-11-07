@@ -138,8 +138,9 @@ export default function PrivacyRoute() {
               </li>
               <li>Optional Discord webhook URLs you configure for personal or org alerts</li>
               <li>
-                One Star Citizen flight-control profile, if you upload one on Flight Profile. A new
-                upload replaces the previous file
+                One Star Citizen flight-control profile, if you upload one on Flight Profile, and the
+                VKB modules you place in the bays. A new upload replaces the previous file. The modules
+                stay until you change them
               </li>
               <li>BP Dumper-related API credentials you generate for sync</li>
               <li>
