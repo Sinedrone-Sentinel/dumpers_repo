@@ -65,6 +65,11 @@ export function readFlightProfile(xml: string, fileName: string): ReadFlightResu
   return { ok: true, profile: { profileName, fileName: base, binds, profileBinds } }
 }
 
+/** Joystick 1 and joystick 2 keep their own actions. Button 2 on the stick is not button 2 on the throttle. */
+export function bindLabels(input: string, binds: Map<string, string[]>): string[] {
+  return binds.get(input) ?? []
+}
+
 function inputSort(input: string): [number, number, number, string] {
   const button = input.match(/^js([12])_button(\d+)$/)
   if (button) return [Number(button[1]), 0, Number(button[2]), input]
@@ -95,19 +100,13 @@ export function inputParts(input: string): [string, string] {
 
 export function deadBinds(profile: ParsedFlightProfile, devices: DeviceDef[]): ProfileBind[] {
   const known = new Set<string>()
-  const knownButtons = new Set<number>()
   for (const device of devices) {
-    for (const control of device.controls) {
-      known.add(control.input)
-      const button = control.input.match(/^js\d+_button(\d+)$/)
-      if (button) knownButtons.add(Number(button[1]))
-    }
+    for (const control of device.controls) known.add(control.input)
   }
   const dead: ProfileBind[] = []
   const seen = new Set<string>()
   for (const bind of profile.profileBinds) {
-    const button = bind.input.match(/^js\d+_button(\d+)$/)
-    if (known.has(bind.input) || (button && knownButtons.has(Number(button[1])))) continue
+    if (known.has(bind.input)) continue
     const key = `${bind.input}\0${bind.label}`
     if (seen.has(key)) continue
     seen.add(key)

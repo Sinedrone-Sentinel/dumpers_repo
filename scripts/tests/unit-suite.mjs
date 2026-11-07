@@ -53,6 +53,7 @@ const modules = [
   'src/lib/craftFromStock.ts',
   'src/lib/tickerLinks.ts',
   'src/lib/flightProfile/catalog.ts',
+  'src/lib/flightProfile/parseProfile.ts',
 ]
 
 console.log('Unit tests: bundling modules...')
@@ -2781,6 +2782,7 @@ check(
 )
 
 const flightProfile = await import(pathToFileURL(path.join(outDir, 'catalog.mjs')).href)
+const flightParse = await import(pathToFileURL(path.join(outDir, 'parseProfile.mjs')).href)
 const stickBay = flightProfile.place(flightProfile.EMPTY_SETUP, 'right', 'main', 'scg')
 const stickIds = (slot) => flightProfile.optionsFor(stickBay, 'right', slot).map((module) => module.id)
 check(
@@ -2962,6 +2964,29 @@ const paged = flightProfile.buttonBitsFromCollections([
 check(
   paged.find((bit) => bit.button === 63) && !paged.some((bit) => bit.button === 589887),
   'SEM A1 is button 63, not the HID usage code',
+)
+const separatedBinds = new Map([
+  ['js1_button2', ['Flight ready']],
+  ['js2_button2', ['Boost']],
+])
+const separatedProfile = {
+  profileName: 'SentinelMax',
+  fileName: 'SentinelMax.xml',
+  binds: separatedBinds,
+  profileBinds: [
+    { action: 'flight_ready', label: 'Flight ready', input: 'js1_button2' },
+    { action: 'boost', label: 'Boost', input: 'js2_button2' },
+  ],
+}
+check(
+  flightParse.bindLabels('js1_button2', separatedBinds).join() === 'Flight ready' &&
+    flightParse.bindLabels('js2_button2', separatedBinds).join() === 'Boost' &&
+    flightParse.deadBinds(separatedProfile, [{ controls: [{ input: 'js1_button2' }] }]).some((bind) => bind.input === 'js2_button2') &&
+    !flightParse.deadBinds(separatedProfile, [
+      { controls: [{ input: 'js1_button2' }] },
+      { controls: [{ input: 'js2_button2' }] },
+    ]).some((bind) => bind.input === 'js2_button2'),
+  'joystick 1 and joystick 2 keep their own button actions',
 )
 const steady = flightProfile.buttonTracks()
 check(flightProfile.stableButton(steady, 'pad:0', [false], 0).button === null, 'the first look does not count as a press')
