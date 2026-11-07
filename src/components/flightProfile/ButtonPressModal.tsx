@@ -11,6 +11,8 @@ import {
 const VKB_VENDOR = 0x231d
 
 interface HidDeviceLike {
+  vendorId?: number
+  productId?: number
   productName?: string
   opened: boolean
   open: () => Promise<void>
@@ -28,13 +30,17 @@ interface HidDeviceLike {
 interface Heard {
   button: number
   source: string
-  label: string
 }
 
 interface HidWatch {
   id: string
   bits: ButtonBit[]
   highs: boolean[]
+}
+
+interface ControllerChoice {
+  name: string
+  devices: HidDeviceLike[]
 }
 
 interface HidLike {
@@ -53,13 +59,16 @@ function reportBytes(data: DataView): Uint8Array {
   return bytes
 }
 
-function controllerLabel(id: string): string {
-  const name = id.split('(')[0]?.trim()
-  return name || 'controller'
-}
-
-function digitalDown(button: GamepadButton): boolean {
-  return button.pressed || button.value >= 0.5
+function controllerChoices(devices: HidDeviceLike[]): ControllerChoice[] {
+  const groups = new Map<string, HidDeviceLike[]>()
+  for (const device of devices) {
+    if (device.vendorId !== VKB_VENDOR) continue
+    const name = device.productName?.trim() || 'VKB controller'
+    const list = groups.get(name) ?? []
+    list.push(device)
+    groups.set(name, list)
+  }
+  return [...groups.entries()].map(([name, list]) => ({ name, devices: list }))
 }
 
 export default function ButtonPressModal({
@@ -73,58 +82,25 @@ export default function ButtonPressModal({
   onAccept: (button: number) => void
   onSkip: () => void
 }) {
+  const [step, setStep] = useState<'choose' | 'press'>('choose')
+  const [choices, setChoices] = useState<ControllerChoice[]>([])
+  const [chosen, setChosen] = useState<string | null>(null)
   const [heard, setHeard] = useState<Heard | null>(null)
-  const [allowed, setAllowed] = useState<string[]>([])
   const [usbError, setUsbError] = useState<string | null>(null)
   const trackers = useRef(buttonTracks())
   const hid = useRef(new Map<HidDeviceLike, HidWatch>())
   const listeners = useRef(new Map<HidDeviceLike, (event: { data: DataView; reportId?: number }) => void>())
   const hidSerial = useRef(0)
 
-  useEffect(() => {
-    let stopped = false
-    let frame = 0
-    const tick = () => {
-      if (stopped) return
-      const now = performance.now()
-      const updates: { source: string; label: string; button: number | null; revoked: number[] }[] = []
-      if (hid.current.size === 0) {
-        const pads = navigator.getGamepads?.() ?? []
-        for (const pad of pads) {
-          if (!pad?.connected || pad.mapping === 'standard') continue
-          const settled = stableButton(
-            trackers.current,
-            `pad:${pad.index}`,
-            pad.buttons.map((button) => digitalDown(button)),
-            now,
-          )
-          updates.push({ source: `pad:${pad.index}`, label: controllerLabel(pad.id), ...settled })
-        }
-      }
-      for (const watch of hid.current.values()) {
-        const settled = stableButton(trackers.current, watch.id, watch.highs, now)
-        updates.push({ source: watch.id, label: 'VKB device', ...settled })
-      }
-      if (updates.length) {
-        setHeard((current) => {
-          let next = current
-          for (const update of updates) {
-            if (update.button != null) next = { button: update.button, source: update.source, label: update.label }
-            else if (next && next.source === update.source && update.revoked.includes(next.button)) next = null
-          }
-          if (next === current) return current
-          if (next && current && next.button === current.button && next.source === current.source) return current
-          return next
-        })
-      }
-      frame = window.requestAnimationFrame(tick)
+  function stopListening() {
+    for (const [device, listener] of listeners.current) {
+      device.removeEventListener('inputreport', listener)
     }
-    frame = window.requestAnimationFrame(tick)
-    return () => {
-      stopped = true
-      window.cancelAnimationFrame(frame)
-    }
-  }, [])
+    listeners.current.clear()
+    hid.current.clear()
+    trackers.current = buttonTracks()
+    setHeard(null)
+  }
 
   useEffect(() => {
     const watches = hid.current
@@ -137,92 +113,172 @@ export default function ButtonPressModal({
     }
   }, [])
 
-  async function allowUsb() {
+  useEffect(() => {
+    let cancelled = false
+    const api = hidApi()
+    if (!api?.getDevices) return
+    void api.getDevices().then((devices) => {
+      if (!cancelled) setChoices(controllerChoices(devices))
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  useEffect(() => {
+    if (step !== 'press') return
+    let stopped = false
+    let frame = 0
+    const tick = () => {
+      if (stopped) return
+      const now = performance.now()
+      let nextHeard: Heard | null = null
+      const revoked = new Set<string>()
+      for (const watch of hid.current.values()) {
+        const settled = stableButton(trackers.current, watch.id, watch.highs, now)
+        if (settled.button != null) nextHeard = { button: settled.button, source: watch.id }
+        for (const button of settled.revoked) revoked.add(`${watch.id}:${button}`)
+      }
+      if (nextHeard || revoked.size) {
+        setHeard((current) => {
+          if (nextHeard) return nextHeard
+          if (current && revoked.has(`${current.source}:${current.button}`)) return null
+          return current
+        })
+      }
+      frame = window.requestAnimationFrame(tick)
+    }
+    frame = window.requestAnimationFrame(tick)
+    return () => {
+      stopped = true
+      window.cancelAnimationFrame(frame)
+    }
+  }, [step])
+
+  async function refreshChoices(extra: HidDeviceLike[] = []) {
+    const api = hidApi()
+    const known = api?.getDevices ? await api.getDevices() : []
+    const devices = [...extra]
+    for (const device of known) {
+      if (!devices.includes(device)) devices.push(device)
+    }
+    setChoices(controllerChoices(devices))
+  }
+
+  async function allowController() {
     const api = hidApi()
     if (!api) {
-      setUsbError('This browser cannot open the VKB device directly.')
+      setUsbError('This browser cannot open a VKB controller.')
       return
     }
     setUsbError(null)
     try {
       const picked = await api.requestDevice({ filters: [{ vendorId: VKB_VENDOR }] })
-      const known = api.getDevices ? await api.getDevices() : []
-      const devices = [...picked]
-      for (const device of known) {
-        if (!devices.includes(device)) devices.push(device)
-      }
-      const names: string[] = []
-      for (const device of devices) {
-        if (!device.opened) await device.open()
-        if (listeners.current.has(device)) {
-          if (device.productName) names.push(device.productName)
-          continue
-        }
-        const bits = buttonBitsFromCollections(device.collections ?? [])
-        if (!bits.length) continue
-        hidSerial.current += 1
-        const watch: HidWatch = {
-          id: `hid:${hidSerial.current}`,
-          bits,
-          highs: [],
-        }
-        hid.current.set(device, watch)
-        const listener = (event: { data: DataView; reportId?: number }) => {
-          watch.highs = applyButtonReport(watch.highs, watch.bits, event.reportId ?? 0, reportBytes(event.data))
-        }
-        listeners.current.set(device, listener)
-        device.addEventListener('inputreport', listener)
-        names.push(device.productName || 'VKB controller')
-      }
-      setAllowed((current) => [...new Set([...current, ...names])])
-      if (!names.length) {
-        setUsbError('That connection has no button list. Allow the throttle or the stick.')
-      }
+      await refreshChoices(picked)
     } catch {
-      setUsbError('The VKB device was not allowed.')
+      setUsbError('The controller was not allowed.')
     }
+  }
+
+  async function chooseController(choice: ControllerChoice) {
+    stopListening()
+    setUsbError(null)
+    let listening = false
+    for (const device of choice.devices) {
+      if (!device.opened) await device.open()
+      const bits = buttonBitsFromCollections(device.collections ?? [])
+      if (!bits.length) continue
+      hidSerial.current += 1
+      const watch: HidWatch = { id: `hid:${hidSerial.current}`, bits, highs: [] }
+      hid.current.set(device, watch)
+      const listener = (event: { data: DataView; reportId?: number }) => {
+        watch.highs = applyButtonReport(watch.highs, watch.bits, event.reportId ?? 0, reportBytes(event.data))
+      }
+      listeners.current.set(device, listener)
+      device.addEventListener('inputreport', listener)
+      listening = true
+    }
+    if (!listening) {
+      setUsbError('That controller has no button list. Choose the other one.')
+      return
+    }
+    setChosen(choice.name)
+    setStep('press')
+  }
+
+  function changeController() {
+    stopListening()
+    setChosen(null)
+    setStep('choose')
   }
 
   return (
     <AppModal
       title={moduleName}
-      subtitle={`Press ${controlName}.`}
+      subtitle={step === 'choose' ? 'Choose the controller' : `Press ${controlName}.`}
       onClose={onSkip}
       size="sm"
       closeOnBackdrop={false}
       footer={
         <div className="flex flex-wrap items-center justify-end gap-2">
+          {step === 'press' && (
+            <button type="button" className="site-btn-ghost px-3 py-1.5" onClick={changeController}>
+              Change controller
+            </button>
+          )}
           <button type="button" className="site-btn-ghost px-3 py-1.5" onClick={onSkip}>
             Skip
           </button>
-          <button
-            type="button"
-            className="site-btn-primary px-4 py-1.5 text-sm"
-            disabled={heard == null}
-            onClick={() => {
-              if (heard != null) onAccept(heard.button)
-            }}
-          >
-            Accept
-          </button>
+          {step === 'press' && (
+            <button
+              type="button"
+              className="site-btn-primary px-4 py-1.5 text-sm"
+              disabled={heard == null}
+              onClick={() => {
+                if (heard != null) onAccept(heard.button)
+              }}
+            >
+              Accept
+            </button>
+          )}
         </div>
       }
     >
-      <p className="text-sm text-slate-300">
-        The browser&apos;s controller list stops at button 32, so SEM and STEM never appear there. They are part of the
-        throttle. Allow that controller. Allow the stick with another click. The number below is the button you pressed.
-        Press again to replace it.
-      </p>
-      <p className="mt-4 text-center text-4xl font-semibold tabular-nums text-amber-100">
-        {heard == null ? '—' : heard.button}
-      </p>
-      <p className="mt-1 text-center text-xs uppercase tracking-wide text-slate-500">
-        {heard == null ? 'Waiting for a press' : heard.label}
-      </p>
-      <button type="button" className="site-btn-secondary mt-4 px-3 py-1.5 text-sm" onClick={() => void allowUsb()}>
-        {allowed.length ? 'Allow another controller' : 'Allow VKB controller'}
-      </button>
-      {allowed.length > 0 && <p className="mt-2 text-sm text-slate-400">Listening to {allowed.join(', ')}.</p>}
+      {step === 'choose' ? (
+        <>
+          <p className="text-sm text-slate-300">
+            Choose the controller this module is on before you press a button. Chrome asks only the first time you
+            allow one. SEM and STEM are part of the throttle.
+          </p>
+          <div className="mt-4 flex flex-col gap-2">
+            {choices.map((choice) => (
+              <button
+                key={choice.name}
+                type="button"
+                className="site-btn-secondary px-3 py-2 text-left text-sm"
+                onClick={() => void chooseController(choice)}
+              >
+                {choice.name}
+              </button>
+            ))}
+            <button type="button" className="site-btn-primary px-3 py-2 text-sm" onClick={() => void allowController()}>
+              {choices.length ? 'Allow another controller' : 'Allow a controller'}
+            </button>
+          </div>
+        </>
+      ) : (
+        <>
+          <p className="text-sm text-slate-300">
+            Press {controlName} on {chosen}. Press again to replace the number.
+          </p>
+          <p className="mt-4 text-center text-4xl font-semibold tabular-nums text-amber-100">
+            {heard == null ? '—' : heard.button}
+          </p>
+          <p className="mt-1 text-center text-xs uppercase tracking-wide text-slate-500">
+            {heard == null ? 'Waiting for a press' : chosen}
+          </p>
+        </>
+      )}
       {usbError && <p className="mt-2 text-sm text-red-300">{usbError}</p>}
     </AppModal>
   )

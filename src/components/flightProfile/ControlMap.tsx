@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useRef, useState } from 'react'
 import type { BreakoutDef, ControlDef, DeviceDef } from '../../lib/flightProfile/devices'
 import { PHOTO_SIZE } from '../../lib/flightProfile/devices'
-import { inputParts, type ProfileBind } from '../../lib/flightProfile/parseProfile'
+import { bindLabels, inputParts, type ProfileBind } from '../../lib/flightProfile/parseProfile'
 import type { SideId } from '../../lib/flightProfile/catalog'
 import './control-map.css'
 
@@ -138,13 +138,7 @@ function FunctionText({ labels }: { labels: string[] }) {
 }
 
 function labelsFor(control: ControlDef, binds: Map<string, string[]>): string[] {
-  const button = control.input.match(/^js\d+_button(\d+)$/)
-  if (!button) return binds.get(control.input) ?? []
-  const merged = [
-    ...(binds.get(`js1_button${button[1]}`) ?? []),
-    ...(binds.get(`js2_button${button[1]}`) ?? []),
-  ]
-  return [...new Set(merged)]
+  return bindLabels(control.input, binds)
 }
 
 function ControlList({
