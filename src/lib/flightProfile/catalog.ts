@@ -248,40 +248,48 @@ interface HidCollectionLike {
   inputReports?: HidReportLike[]
 }
 
-/** Button bits only. Axis bytes in the same report are not buttons. */
+/** Button bits only. Axis bytes in the same report are not buttons. One report keeps a single bit cursor across nested collections, so buttons past 32 stay in the right byte. */
 export function buttonBitsFromCollections(collections: HidCollectionLike[]): ButtonBit[] {
-  const found: ButtonBit[] = []
+  const itemsByReport = new Map<number, HidReportItemLike[]>()
   const walk = (nodes: HidCollectionLike[]) => {
     for (const node of nodes) {
       for (const report of node.inputReports ?? []) {
-        let cursor = 0
-        for (const item of report.items ?? []) {
-          const size = item.reportSize ?? 0
-          const count = item.reportCount ?? 0
-          const buttonField = size === 1 && count > 0 && item.logicalMaximum === 1 && !item.isArray
-          if (buttonField) {
-            for (let offset = 0; offset < count; offset += 1) {
-              const button = item.isRange
-                ? (item.usageMinimum ?? 1) + offset
-                : (item.usages?.[offset] ?? (item.usages?.[0] ?? 1) + offset)
-              if (button > 0) {
-                const bit = cursor + offset
-                found.push({
-                  reportId: report.reportId ?? 0,
-                  byteIndex: bit >> 3,
-                  mask: 1 << (bit & 7),
-                  button,
-                })
-              }
-            }
-          }
-          cursor += size * count
-        }
+        const id = report.reportId ?? 0
+        const items = itemsByReport.get(id) ?? []
+        items.push(...(report.items ?? []))
+        itemsByReport.set(id, items)
       }
       if (node.children?.length) walk(node.children)
     }
   }
   walk(collections)
+  const found: ButtonBit[] = []
+  for (const [reportId, items] of itemsByReport) {
+    let cursor = 0
+    for (const item of items) {
+      const size = item.reportSize ?? 0
+      const count = item.reportCount ?? 0
+      const ranged = item.isRange === true && (item.usageMinimum ?? 0) >= 1
+      const buttonField = size === 1 && count > 0 && !item.isArray && (item.logicalMaximum === 1 || ranged)
+      if (buttonField) {
+        for (let offset = 0; offset < count; offset += 1) {
+          const button = item.isRange
+            ? (item.usageMinimum ?? 1) + offset
+            : (item.usages?.[offset] ?? (item.usages?.[0] ?? 1) + offset)
+          if (button > 0) {
+            const bit = cursor + offset
+            found.push({
+              reportId,
+              byteIndex: bit >> 3,
+              mask: 1 << (bit & 7),
+              button,
+            })
+          }
+        }
+      }
+      cursor += size * count
+    }
+  }
   return found
 }
 
@@ -307,18 +315,16 @@ export function applyButtonReport(
 interface ButtonTrack {
   primed: boolean
   high: boolean
-  downSince: number | null
   rises: number[]
   blocked: boolean
-  shown: boolean
 }
 
-const HOLD_MS = 60
 const FLAP_WINDOW_MS = 400
 const FLAP_LIMIT = 4
 
 /**
- * A button counts after it stays down. The first look only records what is already held.
+ * A press counts as soon as the button goes down. Holding it does not send it again.
+ * The first look only records what is already held.
  * Four rises in under half a second are a controller flipping on its own, and that button is ignored.
  */
 export function buttonTracks(): Map<string, ButtonTrack> {
@@ -337,7 +343,7 @@ export function stableButton(
     const key = `${source}:${index}`
     let tracker = trackers.get(key)
     if (!tracker) {
-      tracker = { primed: false, high: false, downSince: null, rises: [], blocked: false, shown: false }
+      tracker = { primed: false, high: false, rises: [], blocked: false }
       trackers.set(key, tracker)
     }
     const high = highs[index] === true
@@ -349,26 +355,18 @@ export function stableButton(
     if (tracker.blocked) continue
     if (!high) {
       tracker.high = false
-      tracker.downSince = null
-      tracker.shown = false
       continue
     }
-    if (!tracker.high) {
-      tracker.high = true
-      tracker.downSince = now
-      tracker.shown = false
-      tracker.rises = tracker.rises.filter((time) => now - time < FLAP_WINDOW_MS)
-      tracker.rises.push(now)
-      if (tracker.rises.length >= FLAP_LIMIT) {
-        tracker.blocked = true
-        revoked.push(index + 1)
-        continue
-      }
+    if (tracker.high) continue
+    tracker.high = true
+    tracker.rises = tracker.rises.filter((time) => now - time < FLAP_WINDOW_MS)
+    tracker.rises.push(now)
+    if (tracker.rises.length >= FLAP_LIMIT) {
+      tracker.blocked = true
+      revoked.push(index + 1)
+      continue
     }
-    if (tracker.downSince != null && !tracker.shown && now - tracker.downSince >= HOLD_MS) {
-      tracker.shown = true
-      if (button == null) button = index + 1
-    }
+    if (button == null || index + 1 > button) button = index + 1
   }
   return { button, revoked }
 }
