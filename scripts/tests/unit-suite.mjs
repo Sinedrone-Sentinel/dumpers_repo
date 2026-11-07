@@ -2811,6 +2811,21 @@ check(
     flightProfile.optionsFor(throttleBay, 'left', 'topLeft').length === 0,
   'STECS keeps SEM-V on top and has no wing',
 )
+check(
+  flightProfile.visibleSlots(flightProfile.EMPTY_SETUP, 'right').join() === 'main',
+  'an empty bay shows only the main',
+)
+check(
+  flightProfile.visibleSlots(stickBay, 'right').join() === 'topLeft,top,topRight,left,main,right' &&
+    flightProfile.SLOT_LABEL.top === 'Top' &&
+    flightProfile.SLOT_LABEL.topLeft === 'Left wing' &&
+    flightProfile.SLOT_LABEL.topRight === 'Right wing',
+  'a Gladiator shows a top mount and two wings, and the wings are not called top',
+)
+check(
+  flightProfile.visibleSlots(throttleBay, 'left').join() === 'top,main,bottom',
+  'a STECS shows top and the front only',
+)
 const restored = flightProfile.setupFromStored({
   left: { main: 'stecs', bottom: 'stem', top: 'nope' },
   right: { main: 'scg', topLeft: 'fsm', topRight: 'fsm' },

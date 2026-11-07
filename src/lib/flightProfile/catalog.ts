@@ -12,9 +12,19 @@ export const SLOT_LABEL: Record<SlotId, string> = {
   left: 'Left',
   right: 'Right',
   top: 'Top',
-  topLeft: 'Top left',
-  topRight: 'Top right',
+  topLeft: 'Left wing',
+  topRight: 'Right wing',
   bottom: 'Bottom',
+}
+
+const SLOT_ORDER: SlotId[] = ['topLeft', 'top', 'topRight', 'left', 'main', 'right', 'bottom']
+
+/** Mounts this bay should draw. Top is the UCM or standalone mount, never a wing. */
+export function visibleSlots(setup: Setup, side: SideId): SlotId[] {
+  const main = setup[side].main
+  if (!main) return ['main']
+  const ports = new Set(moduleById(main).ports ?? [])
+  return SLOT_ORDER.filter((slot) => slot === 'main' || ports.has(slot) || setup[side][slot] != null)
 }
 
 export interface ModuleDef {

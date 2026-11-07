@@ -95,7 +95,8 @@ function throttleBottom(): Partial<Record<ModuleId, SlotId[]>> {
 }
 
 /**
- * VKB mount rules. `top` is above the main. `topLeft` and `topRight` are the wings beside the grip.
+ * VKB mount rules. `top` is the UCM desk mount or a standalone mount on a stick, and the
+ * module sitting on a throttle. `topLeft` and `topRight` are wings beside the grip, not tops.
  * `bottom` is the front, toward the pilot. `left` and `right` are the Gladiator side bus.
  * A STECS base has no side bus and no wings.
  * Set `ready` only when devices.json has the same id.

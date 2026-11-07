@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import FeaturePageLayout from '../layout/FeaturePageLayout'
+import SiteTooltip from '../SiteTooltip'
 import ControlMap from './ControlMap'
 import { loadFlightProfile, saveFlightLayout, saveFlightProfile } from '../../lib/flightProfile/api'
 import {
@@ -9,6 +10,7 @@ import {
   optionsFor,
   place,
   sheetsFor,
+  visibleSlots,
   type Setup,
   type SideId,
   type SlotId,
@@ -35,6 +37,22 @@ const SLOT_CLASS: Record<SlotId, string> = {
   bottom: 'col-start-2 row-start-3',
 }
 
+function mountHint(setup: Setup, side: SideId, slot: SlotId): string | null {
+  if (slot === 'main') return 'Stick or throttle for this side.'
+  const mainId = setup[side].main
+  if (!mainId) return null
+  const main = moduleById(mainId)
+  if (slot === 'top') {
+    return main.role === 'stick'
+      ? 'UCM desk mount, or a standalone mount cabled to the stick.'
+      : 'Module mounted on top of the throttle.'
+  }
+  if (slot === 'topLeft' || slot === 'topRight') return 'Wing beside the grip. An FSM-GA mounts here.'
+  if (slot === 'left' || slot === 'right') return 'Side connector on the stick base.'
+  if (slot === 'bottom') return 'Front of the throttle, toward you.'
+  return null
+}
+
 function Bay({
   side,
   setup,
@@ -52,16 +70,16 @@ function Bay({
         {side === 'left' ? 'Left side' : 'Right side'}
       </p>
       <div className="grid grid-cols-[4.25rem_6.75rem_4.25rem] grid-rows-[3.1rem_5.4rem_3.1rem] gap-1.5">
-        {(['topLeft', 'top', 'topRight', 'left', 'main', 'right', 'bottom'] as SlotId[]).map((slot) => {
+        {visibleSlots(setup, side).map((slot) => {
           const id = setup[side][slot]
           const module = id ? moduleById(id) : null
           const selected = active === slot
-          return (
+          const hint = mountHint(setup, side, slot)
+          const button = (
             <button
-              key={slot}
               type="button"
               onClick={() => onPick(slot)}
-              className={`${SLOT_CLASS[slot]} relative overflow-hidden rounded-lg border text-center transition-colors ${
+              className={`relative h-full w-full overflow-hidden rounded-lg border text-center transition-colors ${
                 selected
                   ? 'border-amber-300 ring-2 ring-amber-300/70'
                   : module
@@ -80,6 +98,18 @@ function Bay({
                 {module ? module.name : SLOT_LABEL[slot]}
               </span>
             </button>
+          )
+          if (!hint) {
+            return (
+              <div key={slot} className={SLOT_CLASS[slot]}>
+                {button}
+              </div>
+            )
+          }
+          return (
+            <SiteTooltip key={slot} className={`${SLOT_CLASS[slot]} !block h-full w-full`} side="bottom" content={hint}>
+              {button}
+            </SiteTooltip>
           )
         })}
       </div>
