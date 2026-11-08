@@ -12056,28 +12056,41 @@
     },
     {
       "id": "t-rudder",
-      "title": "T-Rudder",
+      "title": "T-Rudders Mk.V",
       "subtitle": "Standalone",
       "photo": "gear/t-rudder.jpg",
       "columns": 1,
-      "breakouts": [],
+      "breakouts": [
+        {
+          "name": "Left pedal",
+          "cx": 38,
+          "cy": 34,
+          "r": 8,
+          "x": 8,
+          "y": 18,
+          "kind": "col",
+          "items": [
+            "Z"
+          ]
+        },
+        {
+          "name": "Right pedal",
+          "cx": 78,
+          "cy": 42,
+          "r": 8,
+          "x": 92,
+          "y": 58,
+          "kind": "col",
+          "items": [
+            "Z"
+          ]
+        }
+      ],
       "controls": [
         {
-          "label": "1",
-          "input": "js1_button1",
-          "name": "Button 1",
-          "pin": false
-        },
-        {
-          "label": "2",
-          "input": "js1_button2",
-          "name": "Button 2",
-          "pin": false
-        },
-        {
-          "label": "3",
-          "input": "js1_button3",
-          "name": "Button 3",
+          "label": "Z",
+          "input": "js3_z",
+          "name": "Rudder",
           "pin": false
         }
       ]

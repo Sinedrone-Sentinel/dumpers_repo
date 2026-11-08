@@ -50,3 +50,5 @@ export const PHOTO_SIZE: Record<string, { width: number; height: number }> = {
 for (const device of generated.devices as DeviceDef[]) {
   if (!PHOTO_SIZE[device.photo]) PHOTO_SIZE[device.photo] = { width: 485, height: 770 }
 }
+
+PHOTO_SIZE['gear/t-rudder.jpg'] = { width: 600, height: 600 }

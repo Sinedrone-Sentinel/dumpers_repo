@@ -16,6 +16,7 @@ import { DEVICES } from '../../lib/flightProfile/devices'
 import {
   BAY_SLOTS,
   DEFAULT_LISTED,
+  deviceNeedsPress,
   EMPTY_EXTERNALS,
   EMPTY_SETUP,
   EXTERNAL_SIDES,
@@ -241,7 +242,7 @@ function firstExternal(
   for (const side of EXTERNAL_SIDES) {
     for (const index of [0, 1] as const) {
       const id = layout[side][index]
-      if (!id) continue
+      if (!id || !deviceNeedsPress(id)) continue
       const press = stored[side][index]
       if (press?.accepted && press.moduleId === id) continue
       return { side, index }
@@ -256,7 +257,7 @@ function externalLabels(layout: ExternalSetup, stored: ExternalPresses): string[
     const place = side === 'externalLeft' ? 'External 1' : 'External 2'
     for (const index of [0, 1] as const) {
       const id = layout[side][index]
-      if (!id) continue
+      if (!id || !deviceNeedsPress(id)) continue
       const press = stored[side][index]
       if (press?.accepted && press.moduleId === id) continue
       labels.push(`${place} ${moduleById(id).name}`)
@@ -431,7 +432,7 @@ export default function FlightProfilePage() {
     setShown(null)
     setActive(null)
     void persist(next, nextPresses)
-    if (hear && id) {
+    if (hear && id && deviceNeedsPress(id)) {
       setExternalPrompt(null)
       setPrompt({ side: active.side, slot: active.slot })
     }
@@ -441,7 +442,7 @@ export default function FlightProfilePage() {
     if (!externalActive) return
     const current = externals[externalActive.side][externalActive.index]
     if (id != null && current === id) {
-      if (hear) {
+      if (hear && deviceNeedsPress(id)) {
         setPrompt(null)
         setExternalPrompt(externalActive)
       }
@@ -463,7 +464,7 @@ export default function FlightProfilePage() {
     setShown(null)
     setExternalActive(null)
     void persist(setup, presses, next, nextPresses)
-    if (hear && id) {
+    if (hear && id && deviceNeedsPress(id)) {
       setPrompt(null)
       setExternalPrompt(externalActive)
     }
