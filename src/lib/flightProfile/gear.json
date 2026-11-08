@@ -54,6 +54,6 @@
     {"id": "sd-plus", "name": "Stream Deck Plus", "manufacturer": "Elgato", "kind": "peripheral", "listed": false, "family": "peripheral", "photo": "gear/sd-plus.jpg", "sheet": "stub"},
     {"id": "sd-neo", "name": "Stream Deck Neo", "manufacturer": "Elgato", "kind": "peripheral", "listed": false, "family": "peripheral", "photo": "gear/sd-neo.jpg", "sheet": "stub"},
     {"id": "sd-pedal", "name": "Stream Deck Pedal", "manufacturer": "Elgato", "kind": "peripheral", "listed": false, "family": "peripheral", "photo": "gear/sd-pedal.jpg", "sheet": "stub"},
-    {"id": "t-rudder", "name": "T-Rudders Mk.V", "manufacturer": "VKB", "kind": "peripheral", "listed": false, "family": "peripheral", "photo": "gear/t-rudder.jpg", "sheet": "rudder"}
+    {"id": "t-rudder", "name": "T-Rudders Mk.V", "manufacturer": "VKB", "kind": "peripheral", "listed": true, "family": "peripheral", "photo": "gear/t-rudder.jpg", "sheet": "rudder"}
   ]
 }
