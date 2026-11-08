@@ -37,7 +37,7 @@ export const GUEST_LOCKED_FEATURE_COPY: Partial<Record<FeatureId, GuestFeatureCo
       'Pick the stick, throttle, and the modules mounted on each side. Those choices are saved on your account',
       'Upload one flight profile. A new upload replaces the saved one',
       'In Chrome or Edge, choose the stick or the throttle before you press a button. Joystick 1 and joystick 2 stay separate. The number you accept is saved on your account',
-      'Show Map draws the selected controls with your joystick assignments',
+      'Show Map draws the selected controls with your joystick assignments. Print map opens that sheet as it looks. Print blank leaves three lines on every numbered control',
     ],
   },
   smart_hauler: {

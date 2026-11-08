@@ -652,6 +652,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'If a profile is already on the account, it loads when the page opens and a green line says so',
       'In Chrome or Edge, choose the controller for that module before you press a button. Chrome asks the first time. After that, pick the stick or the throttle from the list. SEM and STEM are part of the throttle. Accept saves the number. Joystick 1 actions stay on the stick and joystick 2 actions stay on the throttle. Choosing the same module in the same slot asks again. Other browsers keep the numbers already on the sheet',
       'Show Map needs a left main, a right main, and a flight profile. The sheets fill the width of the panel under the banner',
+      'Each sheet has Print map and Print blank. Print map opens that sheet in a new window the way it looks, with a print button. Print blank clears the flight-profile actions and leaves three lines on every numbered control',
     ],
     relatesTo: ['Settings'],
   },

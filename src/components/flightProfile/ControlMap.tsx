@@ -1,9 +1,68 @@
 import React, { useLayoutEffect, useRef, useState } from 'react'
+import { createRoot, type Root } from 'react-dom/client'
 import type { BreakoutDef, ControlDef, DeviceDef } from '../../lib/flightProfile/devices'
 import { PHOTO_SIZE } from '../../lib/flightProfile/devices'
 import { bindLabels, inputParts, type ProfileBind } from '../../lib/flightProfile/parseProfile'
 import type { SideId } from '../../lib/flightProfile/catalog'
+import SiteTooltip from '../SiteTooltip'
+import mapCss from './control-map.css?raw'
 import './control-map.css'
+
+const PRINT_FRAME = `
+html, body { margin: 0; background: #e7e9ee; }
+.fp-printbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 16px;
+  background: #1a1e24;
+}
+.fp-printbar button {
+  font: 600 14px/1 "Segoe UI", Arial, sans-serif;
+  color: #1a1e24;
+  background: white;
+  border: 0;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+.fp-printmount { display: flex; justify-content: center; padding: 16px; }
+.fp-printmount .fp-page { box-shadow: 0 8px 28px rgba(0, 0, 0, 0.18); }
+@media print {
+  html, body { background: white; }
+  .fp-printbar { display: none !important; }
+  .fp-printmount { display: block; padding: 0; }
+  .fp-printmount .fp-page { box-shadow: none; }
+}
+@page { size: 11in 8.5in; margin: 0; }
+`
+
+function escapeHtml(value: string): string {
+  return value.replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch] ?? ch)
+}
+
+function openMapWindow(title: string, sheet: React.ReactNode): boolean {
+  const win = window.open('', '_blank', 'width=1200,height=900')
+  if (!win) return false
+  const origin = window.location.origin
+  win.document.open()
+  win.document.write(
+    `<!DOCTYPE html><html><head><meta charset="utf-8"><base href="${origin}/"><title>${escapeHtml(title)}</title></head><body><div class="fp-printbar"><button type="button" id="fp-print">Print</button></div><div id="fp-mount" class="fp-printmount"></div></body></html>`,
+  )
+  win.document.close()
+  const style = win.document.createElement('style')
+  style.textContent = `${mapCss}\n${PRINT_FRAME}`
+  win.document.head.appendChild(style)
+  win.document.getElementById('fp-print')?.addEventListener('click', () => win.print())
+  const mount = win.document.getElementById('fp-mount')
+  if (!mount) return true
+  const root: Root = createRoot(mount)
+  root.render(sheet)
+  win.addEventListener('pagehide', () => root.unmount())
+  return true
+}
 
 const PAGE_WIDTH = 11 * 96
 const PAGE_HEIGHT = 8.5 * 96
@@ -137,6 +196,16 @@ function FunctionText({ labels }: { labels: string[] }) {
   )
 }
 
+function BlankLines() {
+  return (
+    <span className="fp-blanklines">
+      <span className="fp-ln" />
+      <span className="fp-ln" />
+      <span className="fp-ln" />
+    </span>
+  )
+}
+
 function labelsFor(control: ControlDef, binds: Map<string, string[]>): string[] {
   return bindLabels(control.input, binds)
 }
@@ -145,10 +214,12 @@ function ControlList({
   controls,
   binds,
   columns,
+  blank,
 }: {
   controls: ControlDef[]
   binds: Map<string, string[]>
   columns: number
+  blank?: boolean
 }) {
   const rows = Math.ceil(controls.length / columns)
   return (
@@ -157,23 +228,25 @@ function ControlList({
         <div key={control.input} className="fp-row">
           <span className="fp-n">{control.label}</span>
           <span className="fp-hw">{control.name}</span>
-          <FunctionText labels={labelsFor(control, binds)} />
+          {blank ? <BlankLines /> : <FunctionText labels={labelsFor(control, binds)} />}
         </div>
       ))}
     </div>
   )
 }
 
-function DeviceSheet({
+function DevicePage({
   device,
   side,
   profileName,
   binds,
+  blank,
 }: {
   device: DeviceDef
   side: SideId
   profileName: string
   binds: Map<string, string[]>
+  blank?: boolean
 }) {
   const size = PHOTO_SIZE[device.photo]
   const grouped = new Set((device.breakouts ?? []).flatMap(groupLabels))
@@ -186,71 +259,111 @@ function DeviceSheet({
   )
   const sideName = side === 'left' ? 'Left side' : 'Right side'
   return (
-    <FitPage>
-      <section className="fp-page">
-        <header>
-          <h1>{device.title}</h1>
-          <p>
-            {device.subtitle} · {sideName} · {profileName}
-          </p>
-        </header>
-        <div className="fp-body">
-          <ControlList controls={device.controls} binds={binds} columns={device.columns} />
-          <div className="fp-art">
-            <div className="fp-frame">
-              <img src={`/flight-profile/${device.photo}`} alt="" />
-              {size && <Leaders device={device} width={size.width} height={size.height} />}
-              <div className="fp-badges">
-                {badges.map((control) => (
-                  <span key={control.label} className="fp-badge" style={{ left: `${control.x}%`, top: `${control.y}%` }}>
-                    {control.label}
-                  </span>
-                ))}
-                {(device.breakouts ?? []).map((group, index) => (
-                  <Callout key={`${group.name}-${index}`} group={group} />
-                ))}
-              </div>
-              <p className="fp-credit">Photo from VKB</p>
+    <section className={blank ? 'fp-page fp-blank' : 'fp-page'}>
+      <header>
+        <h1>{device.title}</h1>
+        <p>
+          {device.subtitle} · {sideName} · {profileName}
+          {blank ? ' · Blank' : ''}
+        </p>
+      </header>
+      <div className="fp-body">
+        <ControlList controls={device.controls} binds={binds} columns={device.columns} blank={blank} />
+        <div className="fp-art">
+          <div className="fp-frame">
+            <img src={`/flight-profile/${device.photo}`} alt="" />
+            {size && <Leaders device={device} width={size.width} height={size.height} />}
+            <div className="fp-badges">
+              {badges.map((control) => (
+                <span key={control.label} className="fp-badge" style={{ left: `${control.x}%`, top: `${control.y}%` }}>
+                  {control.label}
+                </span>
+              ))}
+              {(device.breakouts ?? []).map((group, index) => (
+                <Callout key={`${group.name}-${index}`} group={group} />
+              ))}
             </div>
+            <p className="fp-credit">Photo from VKB</p>
           </div>
         </div>
-      </section>
-    </FitPage>
+      </div>
+    </section>
   )
 }
 
-function DeadSheet({ dead, profileName }: { dead: ProfileBind[]; profileName: string }) {
+function DeadPage({ dead, profileName, blank }: { dead: ProfileBind[]; profileName: string; blank?: boolean }) {
   const columns = dead.length > 18 ? 2 : 1
   const rows = Math.ceil(dead.length / columns) || 1
   return (
-    <FitPage>
-      <section className="fp-page">
-        <header>
-          <h1>Dead Assignments</h1>
-          <p>
-            Joystick / HOTAS flight binds that are not on any control in this setup · {dead.length} · {profileName}
-          </p>
-        </header>
-        <div className="fp-body dead">
-          {dead.length ? (
-            <div className={`fp-list${columns === 2 ? ' two' : ''}`} style={{ ['--rows' as string]: rows }}>
-              {dead.map((bind) => {
-                const [where, what] = inputParts(bind.input)
-                return (
-                  <div key={`${bind.input}-${bind.label}`} className="fp-row">
-                    <span className="fp-n">{where}</span>
-                    <span className="fp-hw">{what}</span>
-                    <span className="fp-fn">{bind.label}</span>
-                  </div>
-                )
-              })}
-            </div>
-          ) : (
-            <p className="fp-empty">Every joystick assignment in the flight profile matches a control in this setup.</p>
-          )}
+    <section className={blank ? 'fp-page fp-blank' : 'fp-page'}>
+      <header>
+        <h1>Dead Assignments</h1>
+        <p>
+          Joystick / HOTAS flight binds that are not on any control in this setup · {dead.length} · {profileName}
+          {blank ? ' · Blank' : ''}
+        </p>
+      </header>
+      <div className="fp-body dead">
+        {dead.length ? (
+          <div className={`fp-list${columns === 2 ? ' two' : ''}`} style={{ ['--rows' as string]: rows }}>
+            {dead.map((bind) => {
+              const [where, what] = inputParts(bind.input)
+              return (
+                <div key={`${bind.input}-${bind.label}`} className="fp-row">
+                  <span className="fp-n">{where}</span>
+                  <span className="fp-hw">{what}</span>
+                  {blank ? <BlankLines /> : <span className="fp-fn">{bind.label}</span>}
+                </div>
+              )
+            })}
+          </div>
+        ) : (
+          <p className="fp-empty">Every joystick assignment in the flight profile matches a control in this setup.</p>
+        )}
+      </div>
+    </section>
+  )
+}
+
+function MapSection({
+  title,
+  screen,
+  openFilled,
+  openBlank,
+}: {
+  title: string
+  screen: React.ReactNode
+  openFilled: () => React.ReactNode
+  openBlank: () => React.ReactNode
+}) {
+  const [blocked, setBlocked] = useState(false)
+  const open = (kind: 'filled' | 'blank') => {
+    const sheet = kind === 'filled' ? openFilled() : openBlank()
+    const name = kind === 'filled' ? title : `${title} blank`
+    setBlocked(!openMapWindow(name, sheet))
+  }
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="site-surface flex flex-wrap items-center justify-between gap-2 rounded-lg px-3 py-2">
+        <h2 className="text-sm font-semibold text-slate-100">{title}</h2>
+        <div className="flex flex-wrap gap-2">
+          <SiteTooltip side="top" content="Opens this sheet the way it looks now. The new window has a print button.">
+            <button type="button" className="site-btn-secondary px-3 py-1.5 text-xs" onClick={() => open('filled')}>
+              Print map
+            </button>
+          </SiteTooltip>
+          <SiteTooltip side="top" content="Opens this sheet with the flight-profile actions cleared. Each numbered control has three blank lines.">
+            <button type="button" className="site-btn-secondary px-3 py-1.5 text-xs" onClick={() => open('blank')}>
+              Print blank
+            </button>
+          </SiteTooltip>
         </div>
-      </section>
-    </FitPage>
+      </div>
+      {blocked && (
+        <p className="site-error-text text-xs">Allow pop-ups for this site, then try the print button again.</p>
+      )}
+      {screen}
+    </div>
   )
 }
 
@@ -267,16 +380,36 @@ export default function ControlMap({
 }) {
   return (
     <div className="flex w-full min-w-0 flex-col gap-3 overflow-x-hidden">
-      {pages.map((page) => (
-        <DeviceSheet
-          key={`${page.side}-${page.device.id}`}
-          device={page.device}
-          side={page.side}
-          profileName={profileName}
-          binds={binds}
-        />
-      ))}
-      <DeadSheet dead={dead} profileName={profileName} />
+      {pages.map((page) => {
+        const sideName = page.side === 'left' ? 'Left side' : 'Right side'
+        const title = `${page.device.title} · ${sideName}`
+        const sheet = (blank: boolean) => (
+          <DevicePage device={page.device} side={page.side} profileName={profileName} binds={binds} blank={blank} />
+        )
+        return (
+          <MapSection
+            key={`${page.side}-${page.device.id}`}
+            title={title}
+            screen={
+              <FitPage>
+                <DevicePage device={page.device} side={page.side} profileName={profileName} binds={binds} />
+              </FitPage>
+            }
+            openFilled={() => sheet(false)}
+            openBlank={() => sheet(true)}
+          />
+        )
+      })}
+      <MapSection
+        title="Dead Assignments"
+        screen={
+          <FitPage>
+            <DeadPage dead={dead} profileName={profileName} />
+          </FitPage>
+        }
+        openFilled={() => <DeadPage dead={dead} profileName={profileName} />}
+        openBlank={() => <DeadPage dead={dead} profileName={profileName} blank />}
+      />
     </div>
   )
 }
