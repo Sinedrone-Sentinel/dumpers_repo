@@ -282,6 +282,7 @@
 
 .fp-page.fp-blank .fp-list {
   overflow: visible;
+  row-gap: 0.15in;
 }
 
 .fp-page.fp-blank .fp-art {
