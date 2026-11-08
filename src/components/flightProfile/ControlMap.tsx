@@ -196,12 +196,13 @@ function FunctionText({ labels }: { labels: string[] }) {
   )
 }
 
-function BlankLines() {
+function BlankWrite({ name }: { name: string }) {
   return (
-    <span className="fp-blanklines">
-      <span className="fp-ln" />
-      <span className="fp-ln" />
-      <span className="fp-ln" />
+    <span className="fp-write">
+      <span className="fp-hw">{name}</span>
+      <span className="fp-rule" />
+      <span className="fp-rule" />
+      <span className="fp-rule" />
     </span>
   )
 }
@@ -225,10 +226,16 @@ function ControlList({
   return (
     <div className={`fp-list${columns === 2 ? ' two' : ''}`} style={{ ['--rows' as string]: rows }}>
       {controls.map((control) => (
-        <div key={control.input} className="fp-row">
+        <div key={control.input} className={blank ? 'fp-row fp-row-blank' : 'fp-row'}>
           <span className="fp-n">{control.label}</span>
-          <span className="fp-hw">{control.name}</span>
-          {blank ? <BlankLines /> : <FunctionText labels={labelsFor(control, binds)} />}
+          {blank ? (
+            <BlankWrite name={control.name} />
+          ) : (
+            <>
+              <span className="fp-hw">{control.name}</span>
+              <FunctionText labels={labelsFor(control, binds)} />
+            </>
+          )}
         </div>
       ))}
     </div>
@@ -309,10 +316,16 @@ function DeadPage({ dead, profileName, blank }: { dead: ProfileBind[]; profileNa
             {dead.map((bind) => {
               const [where, what] = inputParts(bind.input)
               return (
-                <div key={`${bind.input}-${bind.label}`} className="fp-row">
+                <div key={`${bind.input}-${bind.label}`} className={blank ? 'fp-row fp-row-blank' : 'fp-row'}>
                   <span className="fp-n">{where}</span>
-                  <span className="fp-hw">{what}</span>
-                  {blank ? <BlankLines /> : <span className="fp-fn">{bind.label}</span>}
+                  {blank ? (
+                    <BlankWrite name={what} />
+                  ) : (
+                    <>
+                      <span className="fp-hw">{what}</span>
+                      <span className="fp-fn">{bind.label}</span>
+                    </>
+                  )}
                 </div>
               )
             })}
