@@ -2836,6 +2836,11 @@ check(
     flightProfile.optionsFor(flightProfile.EMPTY_SETUP, 'right', 'main', gunfighterListed).some((module) => module.id === 'gf4-scg'),
   'a listed Gunfighter keeps the top mount and has no side or front connector',
 )
+check(
+  flightProfile.externalOptions(flightProfile.DEFAULT_LISTED, 'ALL').some((module) => module.id === 't-rudder') &&
+    !flightProfile.optionsFor(flightProfile.EMPTY_SETUP, 'right', 'main').some((module) => module.id === 't-rudder'),
+  'approved T-Rudders are on the external list and not on a stick mount',
+)
 const restored = flightProfile.setupFromStored({
   left: { main: 'stecs', bottom: 'stem', top: 'nope' },
   right: { main: 'scg', top: 'fsm', topLeft: 'fsm', topRight: 'fsm' },

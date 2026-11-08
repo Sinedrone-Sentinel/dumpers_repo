@@ -252,6 +252,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 182 | `217_flight_profile_layout.sql` | Flight Profile bay layout (`layout` jsonb). `save_flight_profile_layout` replaces the mounted modules and leaves the uploaded file alone. A layout can be saved before a file exists. Apply after **216** |
 | 183 | `218_flight_button_presses.sql` | Flight Profile button-number shifts (`button_presses`). `save_flight_button_presses` stores the accepted press for each placed module. The sheet numbers are saved once as the baseline for the verified `sinedrone_sentinel` profile. Apply after **217** |
 | 184 | `219_flight_gear.sql` | Flight gear catalog (`flight_gear`) and external device slots. Members can read which gear is listed. `admin_set_flight_gear_listed` is super-admin only. `save_flight_profile_layout` and `save_flight_button_presses` accept optional `externalLeft` and `externalRight` arrays of two devices, and only when `rsi_handle_verified` is set. External slots reject sticks and throttles. Apply after **218** |
+| 185 | `220_flight_gear_list_rudder.sql` | Lists T-Rudders Mk.V (`t-rudder`) so RSI-verified members can place it on External 1 or External 2. Apply after **219** |
 
 ### pg_cron (migrations 054, 065-068, 144, 147, 178, 179, 191, 196)
 
