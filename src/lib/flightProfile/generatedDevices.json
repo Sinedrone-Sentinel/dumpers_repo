@@ -12094,6 +12094,1040 @@
           "pin": false
         }
       ]
+    },
+    {
+      "id": "vp-alpha-r",
+      "title": "Constellation ALPHA",
+      "subtitle": "Right hand",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "1",
+          "input": "js1_button1",
+          "name": "Button 1",
+          "pin": false
+        },
+        {
+          "label": "2",
+          "input": "js1_button2",
+          "name": "Button 2",
+          "pin": false
+        },
+        {
+          "label": "3",
+          "input": "js1_button3",
+          "name": "Button 3",
+          "pin": false
+        }
+      ]
+    },
+    {
+      "id": "vp-alpha-l",
+      "title": "Constellation ALPHA",
+      "subtitle": "Left hand",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "1",
+          "input": "js1_button1",
+          "name": "Button 1",
+          "pin": false
+        },
+        {
+          "label": "2",
+          "input": "js1_button2",
+          "name": "Button 2",
+          "pin": false
+        },
+        {
+          "label": "3",
+          "input": "js1_button3",
+          "name": "Button 3",
+          "pin": false
+        }
+      ]
+    },
+    {
+      "id": "vp-alpha-prime-r",
+      "title": "Constellation ALPHA Prime",
+      "subtitle": "Right hand",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "1",
+          "input": "js1_button1",
+          "name": "Button 1",
+          "pin": false
+        },
+        {
+          "label": "2",
+          "input": "js1_button2",
+          "name": "Button 2",
+          "pin": false
+        },
+        {
+          "label": "3",
+          "input": "js1_button3",
+          "name": "Button 3",
+          "pin": false
+        }
+      ]
+    },
+    {
+      "id": "vp-alpha-prime-l",
+      "title": "Constellation ALPHA Prime",
+      "subtitle": "Left hand",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "1",
+          "input": "js1_button1",
+          "name": "Button 1",
+          "pin": false
+        },
+        {
+          "label": "2",
+          "input": "js1_button2",
+          "name": "Button 2",
+          "pin": false
+        },
+        {
+          "label": "3",
+          "input": "js1_button3",
+          "name": "Button 3",
+          "pin": false
+        }
+      ]
+    },
+    {
+      "id": "vp-delta",
+      "title": "Constellation Delta",
+      "subtitle": "Standalone",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "1",
+          "input": "js1_button1",
+          "name": "Button 1",
+          "pin": false
+        },
+        {
+          "label": "2",
+          "input": "js1_button2",
+          "name": "Button 2",
+          "pin": false
+        },
+        {
+          "label": "3",
+          "input": "js1_button3",
+          "name": "Button 3",
+          "pin": false
+        }
+      ]
+    },
+    {
+      "id": "vp-cdt-aero-r",
+      "title": "CDT-AERO",
+      "subtitle": "Right hand",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "1",
+          "input": "js1_button1",
+          "name": "Button 1",
+          "pin": false
+        },
+        {
+          "label": "2",
+          "input": "js1_button2",
+          "name": "Button 2",
+          "pin": false
+        },
+        {
+          "label": "3",
+          "input": "js1_button3",
+          "name": "Button 3",
+          "pin": false
+        }
+      ]
+    },
+    {
+      "id": "vp-cdt-aero-l",
+      "title": "CDT-AERO",
+      "subtitle": "Left hand",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "1",
+          "input": "js1_button1",
+          "name": "Button 1",
+          "pin": false
+        },
+        {
+          "label": "2",
+          "input": "js1_button2",
+          "name": "Button 2",
+          "pin": false
+        },
+        {
+          "label": "3",
+          "input": "js1_button3",
+          "name": "Button 3",
+          "pin": false
+        }
+      ]
+    },
+    {
+      "id": "vp-flnkr",
+      "title": "FLNKR",
+      "subtitle": "Right hand",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "1",
+          "input": "js1_button1",
+          "name": "Button 1",
+          "pin": false
+        },
+        {
+          "label": "2",
+          "input": "js1_button2",
+          "name": "Button 2",
+          "pin": false
+        },
+        {
+          "label": "3",
+          "input": "js1_button3",
+          "name": "Button 3",
+          "pin": false
+        }
+      ]
+    },
+    {
+      "id": "vp-archer-sf",
+      "title": "Archer-SF",
+      "subtitle": "Standalone",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "1",
+          "input": "js1_button1",
+          "name": "Button 1",
+          "pin": false
+        },
+        {
+          "label": "2",
+          "input": "js1_button2",
+          "name": "Button 2",
+          "pin": false
+        },
+        {
+          "label": "3",
+          "input": "js1_button3",
+          "name": "Button 3",
+          "pin": false
+        }
+      ]
+    },
+    {
+      "id": "vp-aeromax-l",
+      "title": "CDT-AEROMAX",
+      "subtitle": "Left hand",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "1",
+          "input": "js1_button1",
+          "name": "Button 1",
+          "pin": false
+        },
+        {
+          "label": "2",
+          "input": "js1_button2",
+          "name": "Button 2",
+          "pin": false
+        },
+        {
+          "label": "3",
+          "input": "js1_button3",
+          "name": "Button 3",
+          "pin": false
+        }
+      ]
+    },
+    {
+      "id": "vp-aeromax-r",
+      "title": "CDT-AEROMAX",
+      "subtitle": "Right hand",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "1",
+          "input": "js1_button1",
+          "name": "Button 1",
+          "pin": false
+        },
+        {
+          "label": "2",
+          "input": "js1_button2",
+          "name": "Button 2",
+          "pin": false
+        },
+        {
+          "label": "3",
+          "input": "js1_button3",
+          "name": "Button 3",
+          "pin": false
+        }
+      ]
+    },
+    {
+      "id": "vp-aeromax-lz",
+      "title": "CDT-AEROMAX LZ",
+      "subtitle": "Left hand",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "1",
+          "input": "js1_button1",
+          "name": "Button 1",
+          "pin": false
+        },
+        {
+          "label": "2",
+          "input": "js1_button2",
+          "name": "Button 2",
+          "pin": false
+        },
+        {
+          "label": "3",
+          "input": "js1_button3",
+          "name": "Button 3",
+          "pin": false
+        }
+      ]
+    },
+    {
+      "id": "vp-aeromax-rz",
+      "title": "CDT-AEROMAX RZ",
+      "subtitle": "Right hand",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "1",
+          "input": "js1_button1",
+          "name": "Button 1",
+          "pin": false
+        },
+        {
+          "label": "2",
+          "input": "js1_button2",
+          "name": "Button 2",
+          "pin": false
+        },
+        {
+          "label": "3",
+          "input": "js1_button3",
+          "name": "Button 3",
+          "pin": false
+        }
+      ]
+    },
+    {
+      "id": "vp-vmax-prime",
+      "title": "VMAX Prime",
+      "subtitle": "Standalone",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "1",
+          "input": "js1_button1",
+          "name": "Button 1",
+          "pin": false
+        },
+        {
+          "label": "2",
+          "input": "js1_button2",
+          "name": "Button 2",
+          "pin": false
+        },
+        {
+          "label": "3",
+          "input": "js1_button3",
+          "name": "Button 3",
+          "pin": false
+        }
+      ]
+    },
+    {
+      "id": "vp-mt50cm3-throttle",
+      "title": "MongoosT-50CM3",
+      "subtitle": "Standalone",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "1",
+          "input": "js1_button1",
+          "name": "Button 1",
+          "pin": false
+        },
+        {
+          "label": "2",
+          "input": "js1_button2",
+          "name": "Button 2",
+          "pin": false
+        },
+        {
+          "label": "3",
+          "input": "js1_button3",
+          "name": "Button 3",
+          "pin": false
+        }
+      ]
+    },
+    {
+      "id": "vp-mt50cm4",
+      "title": "MongoosT-50CM4",
+      "subtitle": "Standalone",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "1",
+          "input": "js1_button1",
+          "name": "Button 1",
+          "pin": false
+        },
+        {
+          "label": "2",
+          "input": "js1_button2",
+          "name": "Button 2",
+          "pin": false
+        },
+        {
+          "label": "3",
+          "input": "js1_button3",
+          "name": "Button 3",
+          "pin": false
+        }
+      ]
+    },
+    {
+      "id": "vp-cdt-vmax",
+      "title": "CDT-VMAX",
+      "subtitle": "Standalone",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "1",
+          "input": "js1_button1",
+          "name": "Button 1",
+          "pin": false
+        },
+        {
+          "label": "2",
+          "input": "js1_button2",
+          "name": "Button 2",
+          "pin": false
+        },
+        {
+          "label": "3",
+          "input": "js1_button3",
+          "name": "Button 3",
+          "pin": false
+        }
+      ]
+    },
+    {
+      "id": "vp-warbrd",
+      "title": "WarBRD",
+      "subtitle": "Base",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "X",
+          "input": "js1_x",
+          "name": "Stick X",
+          "pin": false
+        },
+        {
+          "label": "Y",
+          "input": "js1_y",
+          "name": "Stick Y",
+          "pin": false
+        }
+      ]
+    },
+    {
+      "id": "vp-warbrd-d",
+      "title": "WarBRD-D",
+      "subtitle": "Base",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "X",
+          "input": "js1_x",
+          "name": "Stick X",
+          "pin": false
+        },
+        {
+          "label": "Y",
+          "input": "js1_y",
+          "name": "Stick Y",
+          "pin": false
+        }
+      ]
+    },
+    {
+      "id": "vp-mt50cm3-base",
+      "title": "MongoosT-50CM3",
+      "subtitle": "Base",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "X",
+          "input": "js1_x",
+          "name": "Stick X",
+          "pin": false
+        },
+        {
+          "label": "Y",
+          "input": "js1_y",
+          "name": "Stick Y",
+          "pin": false
+        }
+      ]
+    },
+    {
+      "id": "vp-atlas",
+      "title": "ATLAS",
+      "subtitle": "Base",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "X",
+          "input": "js1_x",
+          "name": "Stick X",
+          "pin": false
+        },
+        {
+          "label": "Y",
+          "input": "js1_y",
+          "name": "Stick Y",
+          "pin": false
+        }
+      ]
+    },
+    {
+      "id": "vp-atlas-pro",
+      "title": "ATLAS Pro",
+      "subtitle": "Base",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "X",
+          "input": "js1_x",
+          "name": "Stick X",
+          "pin": false
+        },
+        {
+          "label": "Y",
+          "input": "js1_y",
+          "name": "Stick Y",
+          "pin": false
+        }
+      ]
+    },
+    {
+      "id": "vp-aeromax-module",
+      "title": "CDT-AEROMAX Throttle Module",
+      "subtitle": "Standalone",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "1",
+          "input": "js1_button1",
+          "name": "Button 1",
+          "pin": false
+        },
+        {
+          "label": "2",
+          "input": "js1_button2",
+          "name": "Button 2",
+          "pin": false
+        },
+        {
+          "label": "3",
+          "input": "js1_button3",
+          "name": "Button 3",
+          "pin": false
+        }
+      ]
+    },
+    {
+      "id": "vp-ucp-1",
+      "title": "Universal Control Panel 1",
+      "subtitle": "Standalone",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "1",
+          "input": "js1_button1",
+          "name": "Button 1",
+          "pin": false
+        },
+        {
+          "label": "2",
+          "input": "js1_button2",
+          "name": "Button 2",
+          "pin": false
+        },
+        {
+          "label": "3",
+          "input": "js1_button3",
+          "name": "Button 3",
+          "pin": false
+        }
+      ]
+    },
+    {
+      "id": "vp-ucp-2",
+      "title": "Universal Control Panel 2",
+      "subtitle": "Standalone",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "1",
+          "input": "js1_button1",
+          "name": "Button 1",
+          "pin": false
+        },
+        {
+          "label": "2",
+          "input": "js1_button2",
+          "name": "Button 2",
+          "pin": false
+        },
+        {
+          "label": "3",
+          "input": "js1_button3",
+          "name": "Button 3",
+          "pin": false
+        }
+      ]
+    },
+    {
+      "id": "vp-ucp-3",
+      "title": "Universal Control Panel 3",
+      "subtitle": "Standalone",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "1",
+          "input": "js1_button1",
+          "name": "Button 1",
+          "pin": false
+        },
+        {
+          "label": "2",
+          "input": "js1_button2",
+          "name": "Button 2",
+          "pin": false
+        },
+        {
+          "label": "3",
+          "input": "js1_button3",
+          "name": "Button 3",
+          "pin": false
+        }
+      ]
+    },
+    {
+      "id": "vp-r1-falcon",
+      "title": "R1-Falcon",
+      "subtitle": "Standalone",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "1",
+          "input": "js1_button1",
+          "name": "Button 1",
+          "pin": false
+        },
+        {
+          "label": "2",
+          "input": "js1_button2",
+          "name": "Button 2",
+          "pin": false
+        },
+        {
+          "label": "3",
+          "input": "js1_button3",
+          "name": "Button 3",
+          "pin": false
+        }
+      ]
+    },
+    {
+      "id": "vp-r1-legend",
+      "title": "R1-Legend",
+      "subtitle": "Standalone",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "1",
+          "input": "js1_button1",
+          "name": "Button 1",
+          "pin": false
+        },
+        {
+          "label": "2",
+          "input": "js1_button2",
+          "name": "Button 2",
+          "pin": false
+        },
+        {
+          "label": "3",
+          "input": "js1_button3",
+          "name": "Button 3",
+          "pin": false
+        }
+      ]
+    },
+    {
+      "id": "vp-ace",
+      "title": "ACE",
+      "subtitle": "Standalone",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "1",
+          "input": "js1_button1",
+          "name": "Button 1",
+          "pin": false
+        },
+        {
+          "label": "2",
+          "input": "js1_button2",
+          "name": "Button 2",
+          "pin": false
+        },
+        {
+          "label": "3",
+          "input": "js1_button3",
+          "name": "Button 3",
+          "pin": false
+        }
+      ]
+    },
+    {
+      "id": "vp-hawk-60",
+      "title": "Hawk-60",
+      "subtitle": "Standalone",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "1",
+          "input": "js1_button1",
+          "name": "Button 1",
+          "pin": false
+        },
+        {
+          "label": "2",
+          "input": "js1_button2",
+          "name": "Button 2",
+          "pin": false
+        },
+        {
+          "label": "3",
+          "input": "js1_button3",
+          "name": "Button 3",
+          "pin": false
+        }
+      ]
+    },
+    {
+      "id": "vp-sharka-50",
+      "title": "SharKa-50",
+      "subtitle": "Standalone",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "1",
+          "input": "js1_button1",
+          "name": "Button 1",
+          "pin": false
+        },
+        {
+          "label": "2",
+          "input": "js1_button2",
+          "name": "Button 2",
+          "pin": false
+        },
+        {
+          "label": "3",
+          "input": "js1_button3",
+          "name": "Button 3",
+          "pin": false
+        }
+      ]
+    },
+    {
+      "id": "vp-dual-sf",
+      "title": "Dual-SF",
+      "subtitle": "Standalone",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "1",
+          "input": "js1_button1",
+          "name": "Button 1",
+          "pin": false
+        },
+        {
+          "label": "2",
+          "input": "js1_button2",
+          "name": "Button 2",
+          "pin": false
+        },
+        {
+          "label": "3",
+          "input": "js1_button3",
+          "name": "Button 3",
+          "pin": false
+        }
+      ]
+    },
+    {
+      "id": "vp-rotor-tcs",
+      "title": "Rotor TCS",
+      "subtitle": "Standalone",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "1",
+          "input": "js1_button1",
+          "name": "Button 1",
+          "pin": false
+        },
+        {
+          "label": "2",
+          "input": "js1_button2",
+          "name": "Button 2",
+          "pin": false
+        },
+        {
+          "label": "3",
+          "input": "js1_button3",
+          "name": "Button 3",
+          "pin": false
+        }
+      ]
+    },
+    {
+      "id": "vp-rotor-tcs-plus",
+      "title": "Rotor TCS Plus",
+      "subtitle": "Standalone",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "1",
+          "input": "js1_button1",
+          "name": "Button 1",
+          "pin": false
+        },
+        {
+          "label": "2",
+          "input": "js1_button2",
+          "name": "Button 2",
+          "pin": false
+        },
+        {
+          "label": "3",
+          "input": "js1_button3",
+          "name": "Button 3",
+          "pin": false
+        }
+      ]
+    },
+    {
+      "id": "vp-vector",
+      "title": "Vector",
+      "subtitle": "Standalone",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "1",
+          "input": "js1_button1",
+          "name": "Button 1",
+          "pin": false
+        },
+        {
+          "label": "2",
+          "input": "js1_button2",
+          "name": "Button 2",
+          "pin": false
+        },
+        {
+          "label": "3",
+          "input": "js1_button3",
+          "name": "Button 3",
+          "pin": false
+        }
+      ]
+    },
+    {
+      "id": "vp-vega",
+      "title": "Constellation VEGA",
+      "subtitle": "Standalone",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "1",
+          "input": "js1_button1",
+          "name": "Button 1",
+          "pin": false
+        },
+        {
+          "label": "2",
+          "input": "js1_button2",
+          "name": "Button 2",
+          "pin": false
+        },
+        {
+          "label": "3",
+          "input": "js1_button3",
+          "name": "Button 3",
+          "pin": false
+        }
+      ]
+    },
+    {
+      "id": "vp-b-jet",
+      "title": "B-JET",
+      "subtitle": "Standalone",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "1",
+          "input": "js1_button1",
+          "name": "Button 1",
+          "pin": false
+        },
+        {
+          "label": "2",
+          "input": "js1_button2",
+          "name": "Button 2",
+          "pin": false
+        },
+        {
+          "label": "3",
+          "input": "js1_button3",
+          "name": "Button 3",
+          "pin": false
+        }
+      ]
+    },
+    {
+      "id": "vp-p-jet",
+      "title": "P-JET",
+      "subtitle": "Standalone",
+      "photo": "gear/virpil-pending.jpg",
+      "columns": 1,
+      "breakouts": [],
+      "controls": [
+        {
+          "label": "1",
+          "input": "js1_button1",
+          "name": "Button 1",
+          "pin": false
+        },
+        {
+          "label": "2",
+          "input": "js1_button2",
+          "name": "Button 2",
+          "pin": false
+        },
+        {
+          "label": "3",
+          "input": "js1_button3",
+          "name": "Button 3",
+          "pin": false
+        }
+      ]
     }
   ]
 }

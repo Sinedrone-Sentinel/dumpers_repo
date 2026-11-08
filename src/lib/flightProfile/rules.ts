@@ -7,13 +7,17 @@ export interface GearItem {
   id: string
   name: string
   manufacturer: string
-  kind: 'main' | 'attach' | 'peripheral'
+  kind: 'main' | 'attach' | 'peripheral' | 'base'
   listed: boolean
   family: string
   hand?: 'left' | 'right'
   role?: 'stick' | 'throttle'
   photo: string
   sheet: string
+  /** Stick grip that needs a separate base under it. */
+  needsBase?: boolean
+  /** Base ids this grip mounts on. */
+  bases?: string[]
 }
 
 export const GEAR = gearFile.gear as GearItem[]
@@ -28,7 +32,7 @@ export interface ModuleRule {
   ready: boolean
   photo?: string
   hand?: SideId
-  /** Two sticks are legal. Two throttles are not. An Omni Throttle counts as a throttle. */
+  /** Two sticks are legal. Two throttles are legal when each matches that side. An Omni Throttle counts as a throttle. */
   role?: 'stick' | 'throttle'
   /** Mounts this main physically exposes. A Gladiator has no bottom port. */
   ports?: SlotId[]
@@ -159,15 +163,19 @@ const RULE_IDS = new Set(MODULE_RULES.map((rule) => rule.id))
 for (const item of GEAR) {
   if (item.kind !== 'main' || RULE_IDS.has(item.id)) continue
   const ports: SlotId[] =
-    item.family === 'gladiator-stick'
-      ? stickPorts
-      : item.family === 'gunfighter-stick'
-        ? ['top']
-        : item.family === 'omni-right'
-          ? ['top', 'left']
-          : item.family === 'omni-left'
-            ? ['top', 'right']
-            : throttlePorts
+    item.family === 'virpil-aio'
+      ? ['top']
+      : item.family === 'virpil-grip' || item.family === 'virpil-throttle'
+        ? []
+        : item.family === 'gladiator-stick'
+          ? stickPorts
+          : item.family === 'gunfighter-stick'
+            ? ['top']
+            : item.family === 'omni-right'
+              ? ['top', 'left']
+              : item.family === 'omni-left'
+                ? ['top', 'right']
+                : throttlePorts
   MODULE_RULES.push({
     id: item.id,
     name: item.name,
@@ -180,6 +188,19 @@ for (const item of GEAR) {
     acceptsAtem: item.family === 'stecs-atem',
   })
 }
+
+const aeromaxMounts: Partial<Record<ModuleId, SlotId[]>> = {}
+for (const item of GEAR) {
+  if (item.family === 'virpil-aio') aeromaxMounts[item.id] = ['top']
+}
+MODULE_RULES.push({
+  id: 'vp-aeromax-module',
+  name: 'CDT-AEROMAX Throttle Module',
+  kind: 'attach',
+  ready: false,
+  photo: '/flight-profile/gear/virpil-pending.jpg',
+  mounts: aeromaxMounts,
+})
 
 /** ATEM uses the rear plate, which this bay draws as the front mount, and only on Mini Plus and Max. */
 export function mountsFor(rule: ModuleRule): Partial<Record<ModuleId, SlotId[]>> | undefined {
