@@ -104,8 +104,8 @@ function throttleBottom(): Partial<Record<ModuleId, SlotId[]>> {
  * Set `ready` only when devices.json has the same id.
  */
 export const MODULE_RULES: ModuleRule[] = [
-  { id: 'scg', name: 'NXT EVO Space Combat (RH)', kind: 'main', ready: true, photo: '/flight-profile/scg.jpg', hand: 'right', role: 'stick', ports: stickPorts },
-  { id: 'scg-lh', name: 'NXT EVO Space Combat (LH)', kind: 'main', ready: true, photo: '/flight-profile/scg-lh.jpg', hand: 'left', role: 'stick', ports: stickPorts },
+  { id: 'scg', name: 'Gladiator NXT EVO Space Combat Edition (Right Hand)', kind: 'main', ready: true, photo: '/flight-profile/scg.jpg', hand: 'right', role: 'stick', ports: stickPorts },
+  { id: 'scg-lh', name: 'Gladiator NXT EVO Space Combat Edition (Left Hand)', kind: 'main', ready: true, photo: '/flight-profile/scg-lh.jpg', hand: 'left', role: 'stick', ports: stickPorts },
   { id: 'ota', name: 'NXT EVO Omni Throttle (RH)', kind: 'main', ready: false, hand: 'right', role: 'throttle', ports: ['top', 'left'] },
   { id: 'ota-lh', name: 'NXT EVO Omni Throttle (LH)', kind: 'main', ready: false, hand: 'left', role: 'throttle', ports: ['top', 'right'] },
   { id: 'stecs', name: 'STECS Modern Throttle (LH)', kind: 'main', ready: true, photo: '/flight-profile/stecs.jpg', hand: 'left', role: 'throttle', ports: throttlePorts },
