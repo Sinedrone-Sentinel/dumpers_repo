@@ -244,10 +244,31 @@
   color: #8a909a;
 }
 
-.fp-blanklines {
-  display: flex;
-  flex-direction: column;
-  gap: 0.03in;
+.fp-write {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 0.05in;
+  row-gap: 0.15in;
+  align-items: end;
+  min-width: 0;
+}
+
+.fp-write .fp-hw {
+  grid-column: 1;
+  grid-row: 1;
+  overflow: visible;
+  text-overflow: unset;
+  line-height: 1;
+}
+
+.fp-write .fp-rule {
+  grid-column: 2;
+  height: 0;
+  border-bottom: 0.6pt solid #9aa1ab;
+}
+
+.fp-write .fp-rule:nth-child(2) {
+  grid-row: 1;
 }
 
 .fp-page.fp-blank {
@@ -272,7 +293,11 @@
   break-inside: avoid;
 }
 
-.fp-page.fp-blank .fp-ln {
-  display: block;
-  height: 0.18in;
+.fp-page.fp-blank .fp-row-blank,
+.fp-page.fp-blank .fp-body.dead .fp-row-blank {
+  grid-template-columns: 0.36in minmax(0, 1fr);
+}
+
+.fp-page.fp-blank .fp-body.dead .fp-row-blank {
+  grid-template-columns: 1.15in minmax(0, 1fr);
 }
