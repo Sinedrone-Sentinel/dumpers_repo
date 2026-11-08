@@ -243,3 +243,36 @@
   font-size: 6.5pt;
   color: #8a909a;
 }
+
+.fp-blanklines {
+  display: flex;
+  flex-direction: column;
+  gap: 0.03in;
+}
+
+.fp-page.fp-blank {
+  height: auto;
+  min-height: 8.5in;
+}
+
+.fp-page.fp-blank .fp-body {
+  align-items: start;
+}
+
+.fp-page.fp-blank .fp-list {
+  overflow: visible;
+}
+
+.fp-page.fp-blank .fp-art {
+  height: 7.2in;
+  align-self: start;
+}
+
+.fp-page.fp-blank .fp-row {
+  break-inside: avoid;
+}
+
+.fp-page.fp-blank .fp-ln {
+  display: block;
+  height: 0.18in;
+}
