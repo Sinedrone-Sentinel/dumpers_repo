@@ -28,7 +28,19 @@ function without(device, names) {
   return { breakouts, controls }
 }
 
+function rudderSheet() {
+  return {
+    columns: 1,
+    breakouts: [
+      { name: 'Left pedal', cx: 38, cy: 34, r: 8, x: 8, y: 18, kind: 'col', items: ['Z'] },
+      { name: 'Right pedal', cx: 78, cy: 42, r: 8, x: 92, y: 58, kind: 'col', items: ['Z'] },
+    ],
+    controls: [{ label: 'Z', input: 'js3_z', name: 'Rudder', pin: false }],
+  }
+}
+
 function cloneSheet(sourceId, mode) {
+  if (mode === 'rudder') return rudderSheet()
   if (mode === 'stub') {
     return {
       columns: 1,
@@ -69,6 +81,7 @@ const modeFor = {
   'scg-std-gf-lh': ['scg-lh', 'std-gf'],
   stecs: ['stecs', 'same'],
   stub: [null, 'stub'],
+  rudder: [null, 'rudder'],
 }
 
 const devices = []

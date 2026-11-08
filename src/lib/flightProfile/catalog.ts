@@ -420,6 +420,11 @@ export function stableButton(
   return { button, revoked }
 }
 
+export function deviceNeedsPress(id: ModuleId): boolean {
+  const device = DEVICES.find((item) => item.id === id)
+  return Boolean(device && sampleButton(device))
+}
+
 export function sampleButton(device: DeviceDef): { name: string; button: number } | null {
   let best: { name: string; button: number } | null = null
   for (const control of device.controls) {
@@ -493,7 +498,7 @@ export function unpressedLabels(setup: Setup, presses: PressSetup): string[] {
   for (const side of SIDES) {
     for (const slot of SHEET_SLOTS) {
       const id = setup[side][slot]
-      if (!id) continue
+      if (!id || !deviceNeedsPress(id)) continue
       const press = presses[side][slot]
       if (press?.accepted && press.moduleId === id) continue
       labels.push(`${side === 'left' ? 'Left' : 'Right'} ${moduleById(id).name}`)
@@ -545,7 +550,7 @@ export function firstUnpressed(setup: Setup, presses: PressSetup): { side: SideI
   for (const side of SIDES) {
     for (const slot of SHEET_SLOTS) {
       const id = setup[side][slot]
-      if (!id) continue
+      if (!id || !deviceNeedsPress(id)) continue
       const press = presses[side][slot]
       if (press?.accepted && press.moduleId === id) continue
       return { side, slot }

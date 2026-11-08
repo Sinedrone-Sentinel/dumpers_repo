@@ -1,7 +1,7 @@
 import { ACTION_NAMES } from './actionNames'
 import type { DeviceDef } from './devices'
 
-const INPUT_OK = /^js[12]_(button\d+|hat\d+_(up|down|left|right)|x|y|z|rotx|roty|rotz)$/
+const INPUT_OK = /^js[1-8]_(button\d+|hat\d+_(up|down|left|right)|x|y|z|rotx|roty|rotz)$/
 const MAX_XML = 2_000_000
 
 export interface ProfileBind {
@@ -54,7 +54,7 @@ export function readFlightProfile(xml: string, fileName: string): ReadFlightResu
     let rebindMatch: RegExpExecArray | null
     while ((rebindMatch = rebindRe.exec(actionMatch[2]))) {
       const input = rebindMatch[1].trim()
-      if (!input || /^js[12]_\s*$/.test(input) || !INPUT_OK.test(input)) continue
+      if (!input || /^js[1-8]_\s*$/.test(input) || !INPUT_OK.test(input)) continue
       profileBinds.push({ action, label, input })
       const list = binds.get(input) ?? []
       if (!list.includes(label)) list.push(label)
@@ -71,19 +71,19 @@ export function bindLabels(input: string, binds: Map<string, string[]>): string[
 }
 
 function inputSort(input: string): [number, number, number, string] {
-  const button = input.match(/^js([12])_button(\d+)$/)
+  const button = input.match(/^js([1-8])_button(\d+)$/)
   if (button) return [Number(button[1]), 0, Number(button[2]), input]
-  const hat = input.match(/^js([12])_hat(\d+)_(up|down|left|right)$/)
+  const hat = input.match(/^js([1-8])_hat(\d+)_(up|down|left|right)$/)
   if (hat) return [Number(hat[1]), 1, Number(hat[2]), hat[3]]
-  const axis = input.match(/^js([12])_(x|y|z|rotx|roty|rotz)$/)
+  const axis = input.match(/^js([1-8])_(x|y|z|rotx|roty|rotz)$/)
   if (axis) return [Number(axis[1]), 2, 0, axis[2]]
   return [9, 0, 0, input]
 }
 
 export function inputParts(input: string): [string, string] {
-  const button = input.match(/^js([12])_button(\d+)$/)
+  const button = input.match(/^js([1-8])_button(\d+)$/)
   if (button) return [`Joystick ${button[1]}`, `Button ${button[2]}`]
-  const hat = input.match(/^js([12])_hat(\d+)_(up|down|left|right)$/)
+  const hat = input.match(/^js([1-8])_hat(\d+)_(up|down|left|right)$/)
   if (hat) return [`Joystick ${hat[1]}`, `Hat ${hat[2]} ${hat[3]}`]
   const axisNames: Record<string, string> = {
     x: 'X axis',
@@ -93,7 +93,7 @@ export function inputParts(input: string): [string, string] {
     roty: 'Y rotation',
     rotz: 'Z rotation',
   }
-  const axis = input.match(/^js([12])_(x|y|z|rotx|roty|rotz)$/)
+  const axis = input.match(/^js([1-8])_(x|y|z|rotx|roty|rotz)$/)
   if (axis) return [`Joystick ${axis[1]}`, axisNames[axis[2]]]
   return ['Joystick', input]
 }
