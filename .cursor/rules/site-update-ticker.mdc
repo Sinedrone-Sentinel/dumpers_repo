@@ -63,8 +63,7 @@ Skip proposing for pure internals **and** for work members do not care about (SE
 Include only what members **see or use** as a product capability:
 
 - New pages, tabs, workflows, onboarding steps (member-facing wording)
-- Changed labels, requirements, or how a tool works
-- Visible polish members notice
+- A requirement or a workflow that changed (what the member must do, or what the tool now does)
 - Public poll / Archive / Blueprints / Bazaar / Mission Tracker behavior
 - **New Request Services partners or 3rd Party orgs** (showcase — short title + detail in items)
 
@@ -102,6 +101,11 @@ the digests do not already convey.
 - Officer/super-admin-only tooling with no member impact
 - Cursor rules, docs-only, deps, parser internals
 - Duplicate of an entry already on the ticker for this ship
+- **Small corrections** — do not build a candidate list for these. Reply only **Site Update: none recommended.**
+  - A diagram, photo, or callout that already existed and now points at the right control
+  - A picker, title, or label renamed to the product name it should have used
+  - Spacing, overlap, or alignment fixes
+  - Any change whose only news is that an existing label is more accurate
 
 Exception: if the same commit also ships a **real member-facing workflow** (e.g. a new tool tab members use), propose **that** capability only — never the SEO/metrics/maintenance angle.
 
