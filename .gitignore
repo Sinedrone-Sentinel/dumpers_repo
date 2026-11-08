@@ -53,6 +53,9 @@ scripts/generate-component-metadata.mjs
 # Extracted Star Citizen game data (large, regenerated locally)
 extracted-data/
 
+# Flight Profile sheets waiting on a personal approval pass
+flight-profile-finalization.md
+
 # SCMDB BP Dumpers Cache & Binaries
 .dumper_cache.json
 scripts/bp-dumper-go/dumper*

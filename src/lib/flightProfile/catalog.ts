@@ -1,5 +1,5 @@
 import { DEVICES, type DeviceDef } from './devices'
-import { MODULE_RULES, mountsFor, type ModuleId, type ModuleRule, type SideId, type SlotId } from './rules'
+import { GEAR, MODULE_RULES, mountsFor, type GearItem, type ModuleId, type ModuleRule, type SideId, type SlotId } from './rules'
 
 export type { ModuleId, ModuleRule, SideId, SlotId }
 
@@ -24,7 +24,8 @@ export interface ModuleDef {
   id: ModuleId
   name: string
   photo: string
-  kind: 'main' | 'attach'
+  manufacturer: string
+  kind: 'main' | 'attach' | 'peripheral'
   /** Main sticks and throttles only fit the matching hand. */
   hand?: SideId
   /** A setup can hold two sticks, or one stick and one throttle. */
@@ -35,22 +36,32 @@ export interface ModuleDef {
   mounts?: Partial<Record<ModuleId, SlotId[]>>
 }
 
-function toModule(rule: ModuleRule): ModuleDef {
-  if (!rule.photo) throw new Error(`${rule.id} is marked ready without a photo`)
+const RULE_BY_ID = new Map(MODULE_RULES.map((rule) => [rule.id, rule]))
+
+function moduleFromGear(item: GearItem): ModuleDef {
+  const rule = RULE_BY_ID.get(item.id)
+  const photo = rule?.photo ?? (item.photo.startsWith('/') ? item.photo : `/flight-profile/${item.photo}`)
   return {
-    id: rule.id,
-    name: rule.name,
-    photo: rule.photo,
-    kind: rule.kind,
-    hand: rule.hand,
-    role: rule.role,
-    ports: rule.ports,
-    mounts: mountsFor(rule),
+    id: item.id,
+    name: rule?.name ?? item.name,
+    photo,
+    manufacturer: item.manufacturer,
+    kind: item.kind,
+    hand: rule?.hand ?? item.hand,
+    role: rule?.role ?? item.role,
+    ports: rule?.ports,
+    mounts: rule ? mountsFor(rule) : undefined,
   }
 }
 
-/** Modules with a control sheet. The full mount table, including future modules, is in rules.ts. */
-export const MODULES: ModuleDef[] = MODULE_RULES.filter((rule) => rule.ready).map(toModule)
+export const ALL_MODULES: ModuleDef[] = GEAR.map(moduleFromGear)
+
+export const DEFAULT_LISTED = new Set(GEAR.filter((item) => item.listed).map((item) => item.id))
+
+/** Gear a member can pick before a database list replaces this set. */
+export const MODULES: ModuleDef[] = ALL_MODULES.filter(
+  (module) => DEFAULT_LISTED.has(module.id) && module.kind !== 'peripheral'
+)
 
 export type Setup = Record<SideId, Record<SlotId, ModuleId | null>>
 
@@ -59,7 +70,7 @@ export const EMPTY_SETUP: Setup = {
   right: { main: null, left: null, right: null, top: null, topLeft: null, topRight: null, bottom: null },
 }
 
-const MODULE_BY_ID = new Map(MODULES.map((module) => [module.id, module]))
+const MODULE_BY_ID = new Map(ALL_MODULES.map((module) => [module.id, module]))
 
 /** Restore a saved bay. Unknown ids are dropped so a removed module cannot break the page. */
 export function setupFromStored(value: unknown): Setup {
@@ -121,12 +132,49 @@ function throttleAlreadyMounted(setup: Setup, side: SideId): boolean {
   return Boolean(other && moduleById(other).role === 'throttle')
 }
 
-export function optionsFor(setup: Setup, side: SideId, slot: SlotId): ModuleDef[] {
+export function optionsFor(
+  setup: Setup,
+  side: SideId,
+  slot: SlotId,
+  listed: Set<string> = DEFAULT_LISTED
+): ModuleDef[] {
   const main = slot === 'main' ? null : setup[side].main
   const throttleTaken = slot === 'main' && throttleAlreadyMounted(setup, side)
-  return MODULES.filter(
-    (module) => fits(module, side, slot, main) && !(throttleTaken && module.role === 'throttle')
+  return ALL_MODULES.filter(
+    (module) =>
+      listed.has(module.id) &&
+      module.kind !== 'peripheral' &&
+      fits(module, side, slot, main) &&
+      !(throttleTaken && module.role === 'throttle')
   )
+}
+
+export type ExternalSide = 'externalLeft' | 'externalRight'
+
+export const EXTERNAL_SIDES: ExternalSide[] = ['externalLeft', 'externalRight']
+
+export type ExternalBay = [ModuleId | null, ModuleId | null]
+
+export interface ExternalSetup {
+  externalLeft: ExternalBay
+  externalRight: ExternalBay
+}
+
+export const EMPTY_EXTERNALS: ExternalSetup = {
+  externalLeft: [null, null],
+  externalRight: [null, null],
+}
+
+export function externalOptions(listed: Set<string>, manufacturer: string): ModuleDef[] {
+  return ALL_MODULES.filter((module) => {
+    if (!listed.has(module.id) || module.kind === 'main') return false
+    if (manufacturer !== 'ALL' && module.manufacturer !== manufacturer) return false
+    return true
+  })
+}
+
+export function manufacturers(): string[] {
+  return [...new Set(GEAR.map((item) => item.manufacturer))]
 }
 
 export function place(setup: Setup, side: SideId, slot: SlotId, id: ModuleId | null): Setup {
@@ -452,6 +500,45 @@ export function unpressedLabels(setup: Setup, presses: PressSetup): string[] {
     }
   }
   return labels
+}
+
+export function externalsFromStored(value: unknown): ExternalSetup {
+  const next: ExternalSetup = {
+    externalLeft: [null, null],
+    externalRight: [null, null],
+  }
+  if (!value || typeof value !== 'object') return next
+  const raw = value as Record<string, unknown>
+  for (const side of EXTERNAL_SIDES) {
+    const bay = raw[side]
+    if (!Array.isArray(bay)) continue
+    next[side] = [0, 1].map((index) => {
+      const id = bay[index]
+      if (typeof id !== 'string' || !MODULE_BY_ID.has(id)) return null
+      const module = MODULE_BY_ID.get(id)
+      return module && module.kind !== 'main' ? id : null
+    }) as ExternalBay
+  }
+  return next
+}
+
+export function externalPressesFromStored(value: unknown): Record<ExternalSide, [SlotPress | null, SlotPress | null]> {
+  const next = {
+    externalLeft: [null, null] as [SlotPress | null, SlotPress | null],
+    externalRight: [null, null] as [SlotPress | null, SlotPress | null],
+  }
+  if (!value || typeof value !== 'object') return next
+  const raw = value as Record<string, unknown>
+  for (const side of EXTERNAL_SIDES) {
+    const bay = raw[side]
+    if (!Array.isArray(bay)) continue
+    next[side] = [readSlotPress(bay[0]), readSlotPress(bay[1])]
+  }
+  return next
+}
+
+export function externalsEmpty(externals: ExternalSetup): boolean {
+  return EXTERNAL_SIDES.every((side) => externals[side].every((id) => !id))
 }
 
 export function firstUnpressed(setup: Setup, presses: PressSetup): { side: SideId; slot: SlotId } | null {
