@@ -2823,6 +2823,19 @@ check(
     !flightProfile.slotAvailable(flightProfile.EMPTY_SETUP, 'right', 'bottom'),
   'a missing left, right, or bottom mount stays closed',
 )
+const hiddenGunfighter = flightProfile
+  .optionsFor(flightProfile.EMPTY_SETUP, 'right', 'main')
+  .some((module) => module.id === 'gf4-scg')
+check(!hiddenGunfighter, 'an unlisted Gunfighter stays out of the picker')
+const gunfighterListed = new Set([...flightProfile.DEFAULT_LISTED, 'gf4-scg'])
+const gunfighterBay = flightProfile.place(flightProfile.EMPTY_SETUP, 'right', 'main', 'gf4-scg')
+check(
+  flightProfile.slotAvailable(gunfighterBay, 'right', 'top') &&
+    !flightProfile.slotAvailable(gunfighterBay, 'right', 'left') &&
+    !flightProfile.slotAvailable(gunfighterBay, 'right', 'bottom') &&
+    flightProfile.optionsFor(flightProfile.EMPTY_SETUP, 'right', 'main', gunfighterListed).some((module) => module.id === 'gf4-scg'),
+  'a listed Gunfighter keeps the top mount and has no side or front connector',
+)
 const restored = flightProfile.setupFromStored({
   left: { main: 'stecs', bottom: 'stem', top: 'nope' },
   right: { main: 'scg', top: 'fsm', topLeft: 'fsm', topRight: 'fsm' },

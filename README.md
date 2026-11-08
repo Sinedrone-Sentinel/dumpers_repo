@@ -135,9 +135,10 @@ Header (signed-in): **?** Help, **Friends**, **Request Services** (RSI verified)
 ### Flight Profile (`/flight-profile`)
 
 - Signed-in members only, from the avatar menu. Guests see the locked page. Marked EXPERIMENTAL
-- Left and right VKB bays: a matching-hand stick or throttle, plus the mounts that hardware can take. Two sticks are allowed. Two throttles are not
+- Two setup panels, left and right. Each has a Setup menu. VKB is the only setup. A bay holds a matching-hand stick or throttle, plus the mounts that hardware can take. Two sticks are allowed. Two throttles are not
+- RSI-verified members also get External 1 and External 2. Each holds two extra devices. The menu filters by manufacturer, with ALL selected. Sticks and throttles stay on the setup panels
 - One uploaded Star Citizen flight-control XML replaces the saved file (`save_flight_profile`). The modules placed in the bays are saved separately (`save_flight_profile_layout`) and restored on the next visit. In Chrome or Edge, Show Map waits until each placed module has an accepted button press (`save_flight_button_presses`). The browser controller list stops at button 32, so SEM and STEM are read from the throttle after the member chooses that controller. Chrome asks the first time. Joystick 1 actions stay on the stick and joystick 2 actions stay on the throttle. The sheet numbers are the `sinedrone_sentinel` mapping. Show Map draws joystick and HOTAS assignments and ignores keyboard and mouse binds
-- Apply migration **216**, then **217**, then **218**, before a member can save a profile, the bay layout, and button numbers
+- Apply migration **216**, then **217**, then **218**, then **219**, before a member can save a profile, the bay layout, button numbers, and external devices. Gear that is not listed in `flight_gear` stays out of the picker until a super-admin marks it listed
 
 ### Friends (header)
 

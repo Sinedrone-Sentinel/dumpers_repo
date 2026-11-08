@@ -1,4 +1,5 @@
 import spec from './devices.json'
+import generated from './generatedDevices.json'
 
 export interface ControlDef {
   label: string
@@ -34,7 +35,7 @@ export interface DeviceDef {
   controls: ControlDef[]
 }
 
-export const DEVICES = spec.devices as DeviceDef[]
+export const DEVICES = [...(spec.devices as DeviceDef[]), ...(generated.devices as DeviceDef[])]
 
 export const PHOTO_SIZE: Record<string, { width: number; height: number }> = {
   'scg.jpg': { width: 485, height: 770 },
@@ -44,4 +45,8 @@ export const PHOTO_SIZE: Record<string, { width: number; height: number }> = {
   'stem.jpg': { width: 1200, height: 1200 },
   'semv.jpg': { width: 490, height: 326 },
   'sem.jpg': { width: 750, height: 750 },
+}
+
+for (const device of generated.devices as DeviceDef[]) {
+  if (!PHOTO_SIZE[device.photo]) PHOTO_SIZE[device.photo] = { width: 485, height: 770 }
 }

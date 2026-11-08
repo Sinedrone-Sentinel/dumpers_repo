@@ -245,12 +245,14 @@ function ControlList({
 function DevicePage({
   device,
   side,
+  place,
   profileName,
   binds,
   blank,
 }: {
   device: DeviceDef
   side: SideId
+  place?: string
   profileName: string
   binds: Map<string, string[]>
   blank?: boolean
@@ -264,7 +266,7 @@ function DevicePage({
       Number.isFinite(control.x) &&
       Number.isFinite(control.y)
   )
-  const sideName = side === 'left' ? 'Left side' : 'Right side'
+  const sideName = place ?? (side === 'left' ? 'Left side' : 'Right side')
   return (
     <section className={blank ? 'fp-page fp-blank' : 'fp-page'}>
       <header>
@@ -386,7 +388,7 @@ export default function ControlMap({
   dead,
   profileName,
 }: {
-  pages: { device: DeviceDef; side: SideId }[]
+  pages: { device: DeviceDef; side: SideId; place?: string }[]
   binds: Map<string, string[]>
   dead: ProfileBind[]
   profileName: string
@@ -394,10 +396,17 @@ export default function ControlMap({
   return (
     <div className="flex w-full min-w-0 flex-col gap-3 overflow-x-hidden">
       {pages.map((page) => {
-        const sideName = page.side === 'left' ? 'Left side' : 'Right side'
+        const sideName = page.place ?? (page.side === 'left' ? 'Left side' : 'Right side')
         const title = `${page.device.title} · ${sideName}`
         const sheet = (blank: boolean) => (
-          <DevicePage device={page.device} side={page.side} profileName={profileName} binds={binds} blank={blank} />
+          <DevicePage
+            device={page.device}
+            side={page.side}
+            place={page.place}
+            profileName={profileName}
+            binds={binds}
+            blank={blank}
+          />
         )
         return (
           <MapSection
@@ -405,7 +414,7 @@ export default function ControlMap({
             title={title}
             screen={
               <FitPage>
-                <DevicePage device={page.device} side={page.side} profileName={profileName} binds={binds} />
+                <DevicePage device={page.device} side={page.side} place={page.place} profileName={profileName} binds={binds} />
               </FitPage>
             }
             openFilled={() => sheet(false)}
