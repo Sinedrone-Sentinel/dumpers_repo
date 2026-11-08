@@ -209,7 +209,7 @@ function ExternalPanel({
         const module = id ? moduleById(id) : null
         const selected = activeIndex === slot
         return (
-          <SiteTooltip key={`${side}-${slot}`} side="top" content="One extra device. A VKB module here is standalone.">
+          <SiteTooltip key={`${side}-${slot}`} side="top" content="One extra device. It is used on its own.">
           <button
             type="button"
             onClick={() => onPick(slot)}
