@@ -61,6 +61,33 @@ export function caveBody(id: string): CaveBody | null {
   return bodyById.get(id) ?? null
 }
 
+const caveIndex = new Map<string, number>()
+{
+  const groups = new Map<string, CaveSite[]>()
+  for (const cave of caveSites) {
+    const key = `${cave.bodyId}\0${cave.biome}`
+    const list = groups.get(key)
+    if (list) list.push(cave)
+    else groups.set(key, [cave])
+  }
+  for (const list of groups.values()) {
+    list.sort((a, b) => a.id.localeCompare(b.id))
+    list.forEach((cave, index) => caveIndex.set(cave.id, index + 1))
+  }
+}
+
+function biomeLabel(biome: string): string {
+  if (!biome) return 'Unknown'
+  return biome.charAt(0).toUpperCase() + biome.slice(1)
+}
+
+/** Stable catalog name: "Stanton 1b Sand Cave 023". The number is that body's count of this kind. */
+export function caveDisplayName(cave: CaveSite): string {
+  const where = bodyById.get(cave.bodyId)?.label ?? cave.bodyId
+  const number = String(caveIndex.get(cave.id) ?? 0).padStart(3, '0')
+  return `${where} ${biomeLabel(cave.biome)} Cave ${number}`
+}
+
 export function caveTags(cave: CaveSite): string[] {
   const size = [cave.size, ...cave.sizeRest].join('x')
   const tags = [

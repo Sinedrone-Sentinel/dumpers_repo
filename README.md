@@ -180,7 +180,7 @@ Three tabs members see — **RS Tracker**, **Mining Guide**, and **Ledgers** (RS
 
 **Caves** (super-admin only)
 
-- Every placed cave from the game containers, in a system → planet or moon → Cave tree. Tags come from the file name (body, biome, occupied or not, size)
+- Every placed cave from the game containers, in a system → planet or moon → Cave tree. Each cave has a catalog name such as Stanton 1b Sand Cave 023
 - Starting location is the same place list Smart Hauler uses. Picking a cave shows the jump path, then on that body the closest orbital markers, the nearest named surface location, and the compass heading and distance from there to the cave
 
 **Ledgers** (RSI-verified members)
