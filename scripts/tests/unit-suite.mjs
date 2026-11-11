@@ -2841,6 +2841,56 @@ check(
     !flightProfile.optionsFor(flightProfile.EMPTY_SETUP, 'right', 'main').some((module) => module.id === 't-rudder'),
   'approved T-Rudders are on the external list and not on a stick mount',
 )
+const throttleHands = new Set([...flightProfile.DEFAULT_LISTED, 'stg'])
+const dualThrottle = flightProfile.place(
+  flightProfile.place(flightProfile.EMPTY_SETUP, 'left', 'main', 'stecs'),
+  'right',
+  'main',
+  'stg',
+)
+check(
+  dualThrottle.left.main === 'stecs' && dualThrottle.right.main === 'stg',
+  'a left-hand throttle and a right-hand throttle can both be placed',
+)
+check(
+  !flightProfile.optionsFor(flightProfile.EMPTY_SETUP, 'right', 'main', throttleHands).some((module) => module.id === 'stecs'),
+  'a left-hand throttle stays off the right',
+)
+const virpilBay = flightProfile.setBrand(flightProfile.EMPTY_SETUP, 'left', 'virpil')
+const virpilGrip = flightProfile.place(virpilBay, 'left', 'main', 'vp-alpha-l')
+const virpilListed = new Set(['vp-alpha-l', 'vp-warbrd', 'vp-vmax-prime', 'vp-aeromax-l'])
+check(
+  flightProfile.baseAvailable(virpilGrip, 'left') &&
+    !flightProfile.baseAvailable(flightProfile.place(virpilBay, 'left', 'main', 'vp-aeromax-l'), 'left') &&
+    flightProfile.baseOptions(virpilGrip, 'left', virpilListed).some((module) => module.id === 'vp-warbrd'),
+  'a Virpil grip opens the bases that fit it, and an all-in-one stick does not',
+)
+const bothVirpil = flightProfile.setBrand(virpilBay, 'right', 'virpil')
+check(
+  !flightProfile.optionsFor(virpilBay, 'left', 'main').some((module) => module.manufacturer === 'Virpil') &&
+    !flightProfile.optionsFor(flightProfile.EMPTY_SETUP, 'left', 'main', virpilListed).some((module) => module.id === 'vp-alpha-l') &&
+    flightProfile.optionsFor(virpilBay, 'left', 'main', virpilListed).some((module) => module.id === 'vp-alpha-l') &&
+    !flightProfile.optionsFor(bothVirpil, 'right', 'main', virpilListed).some((module) => module.id === 'vp-alpha-l') &&
+    !flightProfile.optionsFor(bothVirpil, 'right', 'main', virpilListed).some((module) => module.id === 'vp-aeromax-l') &&
+    flightProfile.optionsFor(bothVirpil, 'left', 'main', virpilListed).some((module) => module.id === 'vp-vmax-prime') &&
+    flightProfile.optionsFor(bothVirpil, 'right', 'main', virpilListed).some((module) => module.id === 'vp-vmax-prime'),
+  'an unlisted Virpil grip stays hidden, a left-hand grip stays off the right, and a throttle with no hand can sit on either side',
+)
+const storedVirpil = flightProfile.setupFromStored({
+  left: { setup: 'virpil', top: null, main: 'vp-alpha-l', base: 'vp-warbrd' },
+  right: { main: 'scg', left: null, right: null, top: null, topLeft: null, topRight: null, bottom: null },
+})
+const storedSides = flightProfile.layoutSides(storedVirpil)
+check(
+  storedVirpil.left.brand === 'virpil' &&
+    storedVirpil.left.base === 'vp-warbrd' &&
+    storedVirpil.right.brand === 'vkb' &&
+    storedSides.left.setup === 'virpil' &&
+    !('left' in storedSides.left) &&
+    !('setup' in storedSides.right) &&
+    Object.keys(storedSides.right).length === 7,
+  'a Virpil side saves top, main, and base, and a VKB side keeps seven slots',
+)
 const restored = flightProfile.setupFromStored({
   left: { main: 'stecs', bottom: 'stem', top: 'nope' },
   right: { main: 'scg', top: 'fsm', topLeft: 'fsm', topRight: 'fsm' },

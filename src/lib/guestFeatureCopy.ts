@@ -31,7 +31,7 @@ export const GUEST_LOCKED_FEATURE_COPY: Partial<Record<FeatureId, GuestFeatureCo
   },
   flight_profile: {
     title: 'Flight Profile',
-    description: 'Map a Star Citizen joystick and HOTAS profile onto your VKB controls.',
+    description: 'Map a Star Citizen joystick and HOTAS profile onto the VKB or Virpil controls you mounted.',
     details: [
       'Sign in with a free member account',
       'Pick the stick, throttle, and the modules mounted on each side. Those choices are saved on your account',
