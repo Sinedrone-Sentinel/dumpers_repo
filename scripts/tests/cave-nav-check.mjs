@@ -43,14 +43,19 @@ assert.ok(Math.abs(surface.place.km - 1.0) < 0.05)
 assert.ok(Math.abs(surface.place.heading - 222.9) < 0.15)
 assert.ok(Math.abs(surface.place.backHeading - 43.0) < 0.15)
 assert.equal(surface.useOmDescent, false)
+assert.ok(surface.place.km < surface.omDescent.flyKm)
 
-const far = cave.caveSites.find((entry) => {
+for (const entry of cave.caveSites) {
   const route = cave.surfaceRoute(entry)
-  return route.useOmDescent
-})
-assert.ok(far, 'at least one cave is farther than 150 km from a named location')
+  const markerCloser = route.place != null && route.place.km < route.omDescent.flyKm
+  assert.equal(route.useOmDescent, !markerCloser)
+  assert.ok(route.omDescent.flyKm + 0.001 >= route.omDescent.approxKm)
+}
+
+const far = cave.caveSites.find((entry) => cave.surfaceRoute(entry).useOmDescent)
+assert.ok(far, 'at least one cave is shorter from an orbital marker')
 const farRoute = cave.surfaceRoute(far)
-assert.ok(farRoute.place == null || farRoute.place.km > 150)
+assert.ok(farRoute.place == null || farRoute.place.km >= farRoute.omDescent.flyKm)
 assert.match(farRoute.omDescent.marker, /^OM-[1-6]$/)
 assert.equal(farRoute.omDescent.marker, farRoute.markers[0].name)
 assert.ok(farRoute.omDescent.heading >= 0 && farRoute.omDescent.heading < 360)

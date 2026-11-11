@@ -181,7 +181,7 @@ Three tabs members see — **RS Tracker**, **Mining Guide**, and **Ledgers** (RS
 **Caves** (super-admin only)
 
 - Every placed cave from the game containers, in a system → planet or moon → Cave tree. Each cave has a catalog name such as Stanton 1b Sand Cave 023
-- Starting location is the same place list Smart Hauler uses. Picking a cave shows the jump path. When a named surface location is within 150 km, the route uses that location, a heading, and a distance. When the nearest named location is farther than that, the route sends you to the nearest orbital marker, then toward the middle of the planet (not a quantum trip to the planet), and gives an approximate heading and distance from the surface
+- Starting location is the same place list Smart Hauler uses. Picking a cave shows the jump path. The route uses the nearest named surface location when that flight is shorter than flying from the nearest orbital marker down to the surface and then across to the cave. Otherwise it sends you to that orbital marker, then toward the middle of the planet (not a quantum trip to the planet), and gives an approximate heading and distance from the surface
 
 **Ledgers** (RSI-verified members)
 

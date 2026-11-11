@@ -142,9 +142,6 @@ export function formatKm(km: number): string {
   return `${km.toLocaleString(undefined, { maximumFractionDigits: digits, minimumFractionDigits: digits })} km`
 }
 
-/** A named surface location farther than this is a poor place to start the last leg. */
-export const NAMED_LOCATION_LIMIT_KM = 150
-
 export interface CaveMarker {
   name: string
   km: number
@@ -153,7 +150,10 @@ export interface CaveMarker {
 export interface CaveOmDescent {
   marker: string
   heading: number
+  /** Surface distance from the point under the marker to the cave. */
   approxKm: number
+  /** Flight from the marker down to the surface, then across to the cave. */
+  flyKm: number
 }
 
 export interface CaveApproach {
@@ -166,7 +166,7 @@ export interface CaveApproach {
 export interface CaveSurfaceRoute {
   markers: CaveMarker[]
   place: CaveApproach | null
-  /** True when no named location is within 150 km. The last leg starts at the nearest orbital marker. */
+  /** True when the orbital-marker flight is shorter than the nearest named location, or there is no named location. */
   useOmDescent: boolean
   omDescent: CaveOmDescent
 }
@@ -195,10 +195,13 @@ export function surfaceRoute(cave: CaveSite): CaveSurfaceRoute {
     nearest.axis[1] * surfaceRadius,
     nearest.axis[2] * surfaceRadius,
   ]
+  const approxKm = surfaceArcKm(surfacePoint, here, surfaceRadius)
+  const descentKm = Math.max(0, (radius - surfaceRadius) / 1000)
   const omDescent: CaveOmDescent = {
     marker: nearest.name,
     heading: heading360(compassHeading(surfacePoint, here)),
-    approxKm: surfaceArcKm(surfacePoint, here, surfaceRadius),
+    approxKm,
+    flyKm: descentKm + approxKm,
   }
   const markers = ranked.slice(0, 3).map(({ name, km }) => ({ name, km }))
 
@@ -216,7 +219,7 @@ export function surfaceRoute(cave: CaveSite): CaveSurfaceRoute {
       backHeading: heading360(compassHeading(here, from)),
     }
   }
-  const useOmDescent = place == null || place.km > NAMED_LOCATION_LIMIT_KM
+  const useOmDescent = place == null || place.km >= omDescent.flyKm
   return { markers, place, useOmDescent, omDescent }
 }
 
