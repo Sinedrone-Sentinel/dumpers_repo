@@ -212,38 +212,63 @@ export default function CavesTab() {
                 <span className="site-hint"> on {body.name}</span>
               </p>
               <ol className="list-decimal space-y-2 pl-5">
-                {route.alreadyThere ? (
-                  <li>You are already at {route.bodyName}.</li>
+                {route.surface.useOmDescent ? (
+                  <>
+                    {route.alreadyThere ? (
+                      <li>You are already at {route.bodyName}.</li>
+                    ) : (
+                      route.jumps.map((jump) => (
+                        <li key={jump}>{jump}.</li>
+                      ))
+                    )}
+                    <li>
+                      Quantum travel to <span className="text-white">{route.surface.omDescent.marker}</span> at {route.bodyName}. Do not quantum travel to {route.bodyName}. A quantum trip to the planet does not fly in a straight line.
+                    </li>
+                    <li>
+                      From {route.surface.omDescent.marker}, point at the middle of {route.bodyName} and fly in until you reach the surface.
+                    </li>
+                    <li>
+                      On the surface, fly heading approximately{' '}
+                      <span className="text-white">
+                        {Math.round(route.surface.omDescent.heading)}° {headingCardinal(route.surface.omDescent.heading)}
+                      </span>
+                      . The cave is approximately {formatKm(route.surface.omDescent.approxKm)} from there. You cannot hold an exact straight line, so the heading will drift and the distance is approximate.
+                    </li>
+                  </>
                 ) : (
                   <>
-                    {route.jumps.map((jump) => (
-                      <li key={jump}>{jump}.</li>
-                    ))}
-                    <li>Quantum travel to {route.bodyName}.</li>
+                    {route.alreadyThere ? (
+                      <li>You are already at {route.bodyName}.</li>
+                    ) : (
+                      <>
+                        {route.jumps.map((jump) => (
+                          <li key={jump}>{jump}.</li>
+                        ))}
+                        <li>Quantum travel to {route.bodyName}.</li>
+                      </>
+                    )}
+                    <li>
+                      On {route.bodyName}, the closest orbital markers to this cave are{' '}
+                      {route.surface.markers.map((marker, index) => (
+                        <span key={marker.name}>
+                          {index > 0 ? ', ' : ''}
+                          <span className="text-white">{marker.name}</span> {formatKm(marker.km)}
+                        </span>
+                      ))}
+                      .
+                    </li>
+                    {route.surface.place && (
+                      <li>
+                        Nearest named location: <span className="text-white">{route.surface.place.name}</span>,{' '}
+                        {formatKm(route.surface.place.km)} from the cave. From there, fly heading{' '}
+                        <span className="text-white">
+                          {Math.round(route.surface.place.heading)}° {headingCardinal(route.surface.place.heading)}
+                        </span>{' '}
+                        for {formatKm(route.surface.place.km)}. From the cave, {route.surface.place.name} is back on heading{' '}
+                        {Math.round(route.surface.place.backHeading)}° {headingCardinal(route.surface.place.backHeading)}.
+                      </li>
+                    )}
                   </>
-                )}
-                <li>
-                  On {route.bodyName}, the closest orbital markers to this cave are{' '}
-                  {route.surface.markers.map((marker, index) => (
-                    <span key={marker.name}>
-                      {index > 0 ? ', ' : ''}
-                      <span className="text-white">{marker.name}</span> {formatKm(marker.km)}
-                    </span>
-                  ))}
-                  .
-                </li>
-                {route.surface.place ? (
-                  <li>
-                    Nearest named location: <span className="text-white">{route.surface.place.name}</span>,{' '}
-                    {formatKm(route.surface.place.km)} from the cave. From there, fly heading{' '}
-                    <span className="text-white">
-                      {Math.round(route.surface.place.heading)}° {headingCardinal(route.surface.place.heading)}
-                    </span>{' '}
-                    for {formatKm(route.surface.place.km)}. From the cave, {route.surface.place.name} is back on heading{' '}
-                    {Math.round(route.surface.place.backHeading)}° {headingCardinal(route.surface.place.backHeading)}.
-                  </li>
-                ) : (
-                  <li>This body has no named surface location in the files to aim from. Use the orbital markers above.</li>
                 )}
               </ol>
             </div>

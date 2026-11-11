@@ -142,9 +142,18 @@ export function formatKm(km: number): string {
   return `${km.toLocaleString(undefined, { maximumFractionDigits: digits, minimumFractionDigits: digits })} km`
 }
 
+/** A named surface location farther than this is a poor place to start the last leg. */
+export const NAMED_LOCATION_LIMIT_KM = 150
+
 export interface CaveMarker {
   name: string
   km: number
+}
+
+export interface CaveOmDescent {
+  marker: string
+  heading: number
+  approxKm: number
 }
 
 export interface CaveApproach {
@@ -157,18 +166,41 @@ export interface CaveApproach {
 export interface CaveSurfaceRoute {
   markers: CaveMarker[]
   place: CaveApproach | null
+  /** True when no named location is within 150 km. The last leg starts at the nearest orbital marker. */
+  useOmDescent: boolean
+  omDescent: CaveOmDescent
+}
+
+function surfaceArcKm(from: Vec, to: Vec, radiusM: number): number {
+  const fromLen = Math.hypot(from[0], from[1], from[2])
+  const toLen = Math.hypot(to[0], to[1], to[2])
+  if (fromLen === 0 || toLen === 0 || radiusM <= 0) return distanceM(from, to) / 1000
+  const dot = (from[0] * to[0] + from[1] * to[1] + from[2] * to[2]) / (fromLen * toLen)
+  const clamped = Math.min(1, Math.max(-1, dot))
+  return (Math.acos(clamped) * radiusM) / 1000
 }
 
 export function surfaceRoute(cave: CaveSite): CaveSurfaceRoute {
   const body = bodyById.get(cave.bodyId)
   const here = vecOf(cave)
   const radius = body?.omRadiusM ?? 0
-  const markers = AXES.map(({ name, axis }) => {
+  const ranked = AXES.map(({ name, axis }) => {
     const beacon: Vec = [axis[0] * radius, axis[1] * radius, axis[2] * radius]
-    return { name, km: distanceM(here, beacon) / 1000 }
-  })
-    .sort((a, b) => a.km - b.km)
-    .slice(0, 3)
+    return { name, axis, km: distanceM(here, beacon) / 1000 }
+  }).sort((a, b) => a.km - b.km)
+  const nearest = ranked[0]
+  const surfaceRadius = body?.radiusM ?? 0
+  const surfacePoint: Vec = [
+    nearest.axis[0] * surfaceRadius,
+    nearest.axis[1] * surfaceRadius,
+    nearest.axis[2] * surfaceRadius,
+  ]
+  const omDescent: CaveOmDescent = {
+    marker: nearest.name,
+    heading: heading360(compassHeading(surfacePoint, here)),
+    approxKm: surfaceArcKm(surfacePoint, here, surfaceRadius),
+  }
+  const markers = ranked.slice(0, 3).map(({ name, km }) => ({ name, km }))
 
   let place: CaveApproach | null = null
   let best = Number.POSITIVE_INFINITY
@@ -184,7 +216,8 @@ export function surfaceRoute(cave: CaveSite): CaveSurfaceRoute {
       backHeading: heading360(compassHeading(here, from)),
     }
   }
-  return { markers, place }
+  const useOmDescent = place == null || place.km > NAMED_LOCATION_LIMIT_KM
+  return { markers, place, useOmDescent, omDescent }
 }
 
 export interface CaveSmartRoute {

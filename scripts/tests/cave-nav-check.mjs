@@ -42,6 +42,19 @@ assert.equal(surface.place?.name, 'HDMS-Bezdek')
 assert.ok(Math.abs(surface.place.km - 1.0) < 0.05)
 assert.ok(Math.abs(surface.place.heading - 222.9) < 0.15)
 assert.ok(Math.abs(surface.place.backHeading - 43.0) < 0.15)
+assert.equal(surface.useOmDescent, false)
+
+const far = cave.caveSites.find((entry) => {
+  const route = cave.surfaceRoute(entry)
+  return route.useOmDescent
+})
+assert.ok(far, 'at least one cave is farther than 150 km from a named location')
+const farRoute = cave.surfaceRoute(far)
+assert.ok(farRoute.place == null || farRoute.place.km > 150)
+assert.match(farRoute.omDescent.marker, /^OM-[1-6]$/)
+assert.equal(farRoute.omDescent.marker, farRoute.markers[0].name)
+assert.ok(farRoute.omDescent.heading >= 0 && farRoute.omDescent.heading < 360)
+assert.ok(farRoute.omDescent.approxKm >= 0)
 
 const body = cave.caveBody('stanton1a')
 assert.equal(body?.name, 'Arial')
