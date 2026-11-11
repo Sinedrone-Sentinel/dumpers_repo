@@ -61,13 +61,15 @@ export function caveBody(id: string): CaveBody | null {
   return bodyById.get(id) ?? null
 }
 
-export function caveTags(cave: CaveSite): [string, string, string] {
+export function caveTags(cave: CaveSite): string[] {
   const size = [cave.size, ...cave.sizeRest].join('x')
-  return [
+  const tags = [
     `${cave.biome} - ${cave.biomeNum}`,
     `${cave.occupied ? 'occupied' : 'unoccupied'} - ${cave.occNum}`,
     `size ${size}`,
   ]
+  if (cave.id.endsWith('_fauna')) tags.push('fauna')
+  return tags
 }
 
 function vecOf(point: { x: number; y: number; z: number }): Vec {

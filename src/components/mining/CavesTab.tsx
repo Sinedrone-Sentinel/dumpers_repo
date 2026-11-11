@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react'
 import SiteTooltip from '../SiteTooltip'
-import { navMap } from '../../lib/navSystems'
+import { navMap, type NavPoint } from '../../lib/navSystems'
 import {
   caveBodies,
   caveSites,
@@ -24,24 +24,33 @@ function startPoints() {
 
 const STARTS = startPoints()
 
+function startMatches(point: NavPoint, term: string): boolean {
+  if (!term) return true
+  const systemName = navMap.systems.find((system) => system.id === point.system)?.name ?? ''
+  return `${point.name} ${systemName}`.toLowerCase().includes(term)
+}
+
 export default function CavesTab() {
-  const [startId, setStartId] = useState(STARTS[0]?.id ?? '')
-  const [query, setQuery] = useState('')
+  const firstStart = STARTS[0]
+  const [startId, setStartId] = useState(firstStart?.id ?? '')
+  const [startText, setStartText] = useState(firstStart?.name ?? '')
+  const [startOpen, setStartOpen] = useState(false)
   const [openSystems, setOpenSystems] = useState<Set<string>>(() => new Set(SYSTEM_ORDER))
   const [openBodies, setOpenBodies] = useState<Set<string>>(() => new Set())
   const [selectedId, setSelectedId] = useState<string | null>(null)
 
+  const selectedStart = STARTS.find((point) => point.id === startId) ?? null
+  const startChoices = useMemo(() => {
+    const term = startText.trim().toLowerCase()
+    const showingAll = term.length === 0 || term === (selectedStart?.name ?? '').toLowerCase()
+    return STARTS.filter((point) => showingAll || startMatches(point, term))
+  }, [startText, selectedStart])
+
   const systems = useMemo(() => {
-    const term = query.trim().toLowerCase()
     const bySystem = new Map<string, { id: string; name: string; bodies: { id: string; name: string; label: string; caves: CaveSite[] }[] }>()
     for (const body of caveBodies) {
       const caves = caveSites
         .filter((cave) => cave.bodyId === body.id)
-        .filter((cave) => {
-          if (!term) return true
-          const tags = caveTags(cave).join(' ')
-          return `${body.label} ${body.name} ${tags}`.toLowerCase().includes(term)
-        })
         .sort((a, b) => caveTags(a).join().localeCompare(caveTags(b).join()))
       if (caves.length === 0) continue
       const system = bySystem.get(body.systemId) ?? {
@@ -58,12 +67,11 @@ export default function CavesTab() {
         bodies: system.bodies.sort((a, b) => a.name.localeCompare(b.name)),
       }))
       .sort((a, b) => (SYSTEM_ORDER.indexOf(a.id) === -1 ? 9 : SYSTEM_ORDER.indexOf(a.id)) - (SYSTEM_ORDER.indexOf(b.id) === -1 ? 9 : SYSTEM_ORDER.indexOf(b.id)))
-  }, [query])
+  }, [])
 
   const selected = caveSites.find((cave) => cave.id === selectedId) ?? null
   const body = selected ? caveBodies.find((entry) => entry.id === selected.bodyId) ?? null : null
   const route = selected && startId ? smartCaveRoute(startId, selected) : null
-  const filtering = query.trim().length > 0
 
   function toggle(set: Set<string>, id: string, update: (next: Set<string>) => void) {
     const next = new Set(set)
@@ -78,49 +86,68 @@ export default function CavesTab() {
         <div className="site-section-header space-y-3">
           <SiteTooltip
             side="top"
-            content="Where you are now. The route uses the same system jumps as Smart Hauler, then the markers on the cave's planet or moon."
+            content="Where you are now. Type to search. The route uses the same system jumps as Smart Hauler, then the markers on the cave's planet or moon."
           >
-            <label className="block">
+            <label className="relative block">
               <span className="site-label">Starting location</span>
-              <select
-                className="site-input mt-1 w-full px-3 py-2"
-                value={startId}
-                onChange={(event) => setStartId(event.target.value)}
-              >
-                {SYSTEM_ORDER.map((systemId) => {
-                  const points = STARTS.filter((point) => point.system === systemId)
-                  if (points.length === 0) return null
-                  const systemName = navMap.systems.find((system) => system.id === systemId)?.name ?? systemId
-                  return (
-                    <optgroup key={systemId} label={systemName}>
-                      {points.map((point) => (
-                        <option key={point.id} value={point.id}>
-                          {point.name}
-                        </option>
-                      ))}
-                    </optgroup>
-                  )
-                })}
-              </select>
-            </label>
-          </SiteTooltip>
-          <SiteTooltip side="top" content="Hides caves whose tags do not include this text.">
-            <label className="block">
-              <span className="site-label">Filter caves</span>
               <input
                 className="site-input mt-1 w-full px-3 py-2"
-                value={query}
-                placeholder="Biome, size, or moon"
-                onChange={(event) => setQuery(event.target.value)}
+                value={startText}
+                onFocus={(event) => {
+                  setStartOpen(true)
+                  event.currentTarget.select()
+                }}
+                onChange={(event) => {
+                  const value = event.target.value
+                  setStartText(value)
+                  setStartOpen(true)
+                  const exact = STARTS.find((point) => point.name.toLowerCase() === value.trim().toLowerCase())
+                  if (exact) setStartId(exact.id)
+                }}
+                onBlur={(event) => {
+                  const next = event.relatedTarget
+                  if (next instanceof Node && event.currentTarget.parentElement?.contains(next)) return
+                  setStartOpen(false)
+                  if (selectedStart) setStartText(selectedStart.name)
+                }}
               />
+              {startOpen && (
+                <div className="site-dropdown-list left-0 right-0 top-full z-40 max-h-72 overflow-y-auto">
+                  {startChoices.length === 0 ? (
+                    <p className="site-hint px-3 py-2">No matching location.</p>
+                  ) : SYSTEM_ORDER.map((systemId) => {
+                    const points = startChoices.filter((point) => point.system === systemId)
+                    if (points.length === 0) return null
+                    const systemName = navMap.systems.find((system) => system.id === systemId)?.name ?? systemId
+                    return (
+                      <div key={systemId}>
+                        <p className="site-menu-section">{systemName}</p>
+                        {points.map((point) => (
+                          <button
+                            key={point.id}
+                            type="button"
+                            className={`site-dropdown-item w-full text-left ${point.id === startId ? 'site-dropdown-item-active' : ''}`}
+                            onMouseDown={(event) => event.preventDefault()}
+                            onClick={() => {
+                              setStartId(point.id)
+                              setStartText(point.name)
+                              setStartOpen(false)
+                            }}
+                          >
+                            {point.name}
+                          </button>
+                        ))}
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
             </label>
           </SiteTooltip>
         </div>
         <div className="site-section-body max-h-[70vh] overflow-y-auto !space-y-1">
-          {systems.length === 0 ? (
-            <p className="site-empty">No caves match that filter.</p>
-          ) : systems.map((system) => {
-            const systemOpen = filtering || openSystems.has(system.id)
+          {systems.map((system) => {
+            const systemOpen = openSystems.has(system.id)
             return (
               <div key={system.id}>
                 <button
@@ -131,7 +158,7 @@ export default function CavesTab() {
                   {systemOpen ? '▾' : '▸'} {system.name}
                 </button>
                 {systemOpen && system.bodies.map((entry) => {
-                  const bodyOpen = filtering || openBodies.has(entry.id)
+                  const bodyOpen = openBodies.has(entry.id)
                   return (
                     <div key={entry.id} className="pl-3">
                       <button
@@ -155,8 +182,7 @@ export default function CavesTab() {
                                 className={`site-dropdown-item ${active ? 'site-dropdown-item-active' : ''}`}
                                 onClick={() => setSelectedId(cave.id)}
                               >
-                                <span className="block text-xs text-slate-400">{entry.label}</span>
-                                <span className="mt-1 flex flex-wrap gap-1">
+                                <span className="flex flex-wrap gap-1">
                                   {tags.map((tag) => (
                                     <span key={tag} className="site-badge-slate">
                                       {tag}
