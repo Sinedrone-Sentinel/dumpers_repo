@@ -186,9 +186,10 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     id: 'mining-tracker',
     title: 'Mining Tracker',
     description:
-      'Compare RS signatures, plan rocks with the calculator, get loadout advice, browse where ores spawn, and run crew payout ledgers.',
+      'Compare RS signatures, plan rocks with the calculator, get loadout advice, browse where ores spawn, find caves, and run crew payout ledgers.',
     details: [
-      'Three tabs: **RS Tracker** (signature reference + tools on the right), **Mining Guide** (browse ores and locations), and **Ledgers** (crew payout books — RSI-verified members only)',
+      'Four tabs: **RS Tracker** (signature reference + tools on the right), **Mining Guide** (browse ores and locations), **Ledgers** (crew payout books — RSI-verified members only), and **Caves**',
+      '**Caves** lists every placed cave by system, then planet or moon, then cave. Names look like Stanton 1b Sand Cave 023. Pick a starting location and a cave for a route. A nearby marked location is used when that flight is shorter. Otherwise the route sends you to the nearest orbital marker, then toward the middle of the planet, with an approximate heading and distance on the surface. Green is 100 km or less from a marked location, yellow is over 100 km, and red means you fly down from an orbital marker. Hover a cave to see why. Caves works signed out',
       '**RS Tracker** lists each ship-mining ore\'s base RS signature and typical cluster spawn odds. Use it to sanity-check what your in-game scanner is showing',
       'Next to the ore search, type an **RS signature** from your scanner. The list only offers ores that can actually spawn that many rocks — a 4-rock reading is left out when the game never drops more than 3, and skipped cluster sizes (such as 2-rock Aluminum) are left out too. **Surface** and **Asteroid** are separate rows when both can produce that number. Picking a row fills the ore search and clears the signature box',
       '**Anomaly Override**, beside the signature box, is off unless you check it, and that choice is not saved. Use it only when you trust the scanner number and the list stayed empty. It then lists every ship ore whose base signature divides that number evenly, even when that many rocks is outside the usual cluster sizes. Gems never appear',

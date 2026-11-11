@@ -84,7 +84,7 @@ const pages: Record<string, SeoPageConfig> = {
   '/mining-tracker': {
     title: "Star Citizen Mining Tracker — Ore Guide, RS & Ledgers | Dumper's Repo",
     description:
-      'Star Citizen mining tracker with ore properties, location guide, cluster RS reference, and spawn-weighted chances. RS Tracker and Mining Guide work in Offline Mode.',
+      'Star Citizen mining tracker with ore properties, location guide, cluster RS reference, spawn-weighted chances, and cave routes from where you are. RS Tracker, Mining Guide, and Caves work in Offline Mode.',
     canonicalPath: '/mining-tracker/',
   },
   '/commodity-lookup': {
@@ -228,7 +228,7 @@ export function buildJsonLdGraph(): Record<string, unknown> {
           'Star Citizen crafting blueprint database and tracker',
           'Blueprint mission tracker and reputation rewards',
           'Wikelo favors, reputation, and barter trade guide',
-          'Mining tracker with ore guide and RS reference',
+          'Mining tracker with ore guide, RS reference, and cave routes',
           'Resource tracker for crafting materials',
           "Fuzy's Ship Shop loadouts and where to buy",
           'UEX Lookup and Shopping Cart',
