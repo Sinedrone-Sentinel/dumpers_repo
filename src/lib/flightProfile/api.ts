@@ -3,7 +3,9 @@ import {
   externalPressesFromStored,
   externalsEmpty,
   externalsFromStored,
+  layoutSides,
   pressesFromStored,
+  pressSides,
   setupFromStored,
   type ExternalSetup,
   type PressSetup,
@@ -75,7 +77,7 @@ export async function saveFlightProfile(profile: ParsedFlightProfile, xml: strin
 }
 
 export async function saveFlightLayout(setup: Setup, externals: ExternalSetup): Promise<{ error?: string }> {
-  const payload = externalsEmpty(externals) ? setup : { ...setup, ...externals }
+  const payload = externalsEmpty(externals) ? layoutSides(setup) : { ...layoutSides(setup), ...externals }
   const { error } = await supabase.rpc('save_flight_profile_layout', {
     p_layout: payload,
   })
@@ -85,11 +87,13 @@ export async function saveFlightLayout(setup: Setup, externals: ExternalSetup): 
 
 export async function saveFlightPresses(
   presses: PressSetup,
-  externalPresses: ExternalPresses
+  externalPresses: ExternalPresses,
+  setup: Setup
 ): Promise<{ error?: string }> {
   const include =
     externalPresses.externalLeft.some(Boolean) || externalPresses.externalRight.some(Boolean)
-  const payload = include ? { ...presses, ...externalPresses } : presses
+  const sides = pressSides(presses, setup)
+  const payload = include ? { ...sides, ...externalPresses } : sides
   const { error } = await supabase.rpc('save_flight_button_presses', {
     p_presses: payload,
   })

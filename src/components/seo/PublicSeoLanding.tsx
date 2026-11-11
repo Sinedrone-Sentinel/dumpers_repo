@@ -72,7 +72,7 @@ const FEATURES: FeatureCard[] = [
   },
   {
     title: 'Flight Profile',
-    body: 'Place your VKB sticks, throttle, and modules on two setups, then upload a Star Citizen flight profile. RSI-verified members also get two panels for extra devices. In Chrome or Edge, press one button on each module so the numbers match your devices. Show Map can print that sheet, or a blank copy with three lines on each control. Sign-in required.',
+    body: 'Place sticks, throttles, and modules on two setups. Each setup is VKB or Virpil. Then upload a Star Citizen flight profile. RSI-verified members also get two panels for extra devices. In Chrome or Edge, press one button on each module so the numbers match your devices. Show Map can print that sheet, or a blank copy with three lines on each control. Sign-in required.',
     action: 'signin',
     cta: 'Sign in to use Flight Profile →',
   },

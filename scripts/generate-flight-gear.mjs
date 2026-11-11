@@ -39,7 +39,19 @@ function rudderSheet() {
   }
 }
 
+function axesSheet() {
+  return {
+    columns: 1,
+    breakouts: [],
+    controls: [
+      { label: 'X', input: 'js1_x', name: 'Stick X', pin: false },
+      { label: 'Y', input: 'js1_y', name: 'Stick Y', pin: false },
+    ],
+  }
+}
+
 function cloneSheet(sourceId, mode) {
+  if (mode === 'axes') return axesSheet()
   if (mode === 'rudder') return rudderSheet()
   if (mode === 'stub') {
     return {
@@ -82,6 +94,7 @@ const modeFor = {
   stecs: ['stecs', 'same'],
   stub: [null, 'stub'],
   rudder: [null, 'rudder'],
+  axes: [null, 'axes'],
 }
 
 const devices = []
@@ -90,10 +103,15 @@ for (const item of gear) {
   const [sourceId, mode] = modeFor[item.sheet] ?? [null, 'stub']
   const sheet = cloneSheet(sourceId, mode)
   const hand = item.hand === 'left' ? 'Left hand' : item.hand === 'right' ? 'Right hand' : 'Standalone'
+  const subtitle = item.kind === 'base'
+    ? 'Base'
+    : item.kind === 'peripheral' || item.kind === 'attach'
+      ? 'Standalone'
+      : hand
   devices.push({
     id: item.id,
     title: item.name.replace(/ \((Right|Left) Hand\)$/, ''),
-    subtitle: item.kind === 'peripheral' || item.kind === 'attach' ? 'Standalone' : hand,
+    subtitle,
     photo: item.photo,
     columns: sheet.columns,
     breakouts: sheet.breakouts,

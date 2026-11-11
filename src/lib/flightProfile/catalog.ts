@@ -7,7 +7,10 @@ export const SIDES: SideId[] = ['left', 'right']
 export const SLOTS: SlotId[] = ['main', 'left', 'right', 'top', 'topLeft', 'topRight', 'bottom']
 export const SHEET_SLOTS: SlotId[] = ['topLeft', 'top', 'topRight', 'main', 'left', 'right', 'bottom']
 
-export const SLOT_LABEL: Record<SlotId, string> = {
+export type BaySlot = SlotId | 'base'
+export type SetupBrand = 'vkb' | 'virpil'
+
+export const SLOT_LABEL: Record<BaySlot, string> = {
   main: 'Main',
   left: 'Left',
   right: 'Right',
@@ -15,6 +18,7 @@ export const SLOT_LABEL: Record<SlotId, string> = {
   topLeft: 'Left wing',
   topRight: 'Right wing',
   bottom: 'Bottom',
+  base: 'Base',
 }
 
 /** Every bay draws these. A mount the main lacks stays visible and disabled. */
@@ -25,15 +29,19 @@ export interface ModuleDef {
   name: string
   photo: string
   manufacturer: string
-  kind: 'main' | 'attach' | 'peripheral'
-  /** Main sticks and throttles only fit the matching hand. */
+  kind: 'main' | 'attach' | 'peripheral' | 'base'
+  /** Main sticks and throttles only fit the matching hand. A main with no hand fits either side. */
   hand?: SideId
-  /** A setup can hold two sticks, or one stick and one throttle. */
+  /** Two sticks are allowed. Two throttles are allowed when each matches its side. */
   role?: 'stick' | 'throttle'
   /** Mounts this main exposes. */
   ports?: SlotId[]
   /** Where this attachment can sit on each main. */
   mounts?: Partial<Record<ModuleId, SlotId[]>>
+  /** This stick grip needs a base under it. */
+  needsBase?: boolean
+  /** Bases this grip mounts on. */
+  bases?: ModuleId[]
 }
 
 const RULE_BY_ID = new Map(MODULE_RULES.map((rule) => [rule.id, rule]))
@@ -51,6 +59,8 @@ function moduleFromGear(item: GearItem): ModuleDef {
     role: rule?.role ?? item.role,
     ports: rule?.ports,
     mounts: rule ? mountsFor(rule) : undefined,
+    needsBase: item.needsBase,
+    bases: item.bases,
   }
 }
 
@@ -63,20 +73,53 @@ export const MODULES: ModuleDef[] = ALL_MODULES.filter(
   (module) => DEFAULT_LISTED.has(module.id) && module.kind !== 'peripheral'
 )
 
-export type Setup = Record<SideId, Record<SlotId, ModuleId | null>>
-
-export const EMPTY_SETUP: Setup = {
-  left: { main: null, left: null, right: null, top: null, topLeft: null, topRight: null, bottom: null },
-  right: { main: null, left: null, right: null, top: null, topLeft: null, topRight: null, bottom: null },
+export interface SideBay {
+  brand: SetupBrand
+  main: ModuleId | null
+  left: ModuleId | null
+  right: ModuleId | null
+  top: ModuleId | null
+  topLeft: ModuleId | null
+  topRight: ModuleId | null
+  bottom: ModuleId | null
+  base: ModuleId | null
 }
 
+export type Setup = Record<SideId, SideBay>
+
+export function emptySide(brand: SetupBrand = 'vkb'): SideBay {
+  return {
+    brand,
+    main: null,
+    left: null,
+    right: null,
+    top: null,
+    topLeft: null,
+    topRight: null,
+    bottom: null,
+    base: null,
+  }
+}
+
+export const EMPTY_SETUP: Setup = {
+  left: emptySide(),
+  right: emptySide(),
+}
+
+const STORED_SLOTS: BaySlot[] = [...SLOTS, 'base']
+
 const MODULE_BY_ID = new Map(ALL_MODULES.map((module) => [module.id, module]))
+
+function readStoredId(value: unknown): ModuleId | null {
+  if (typeof value !== 'string' || !MODULE_BY_ID.has(value as ModuleId)) return null
+  return value as ModuleId
+}
 
 /** Restore a saved bay. Unknown ids are dropped so a removed module cannot break the page. */
 export function setupFromStored(value: unknown): Setup {
   const next: Setup = {
-    left: { ...EMPTY_SETUP.left },
-    right: { ...EMPTY_SETUP.right },
+    left: emptySide(),
+    right: emptySide(),
   }
   if (!value || typeof value !== 'object') return next
   const raw = value as Record<string, unknown>
@@ -84,19 +127,27 @@ export function setupFromStored(value: unknown): Setup {
     const bay = raw[side]
     if (!bay || typeof bay !== 'object') continue
     const slots = bay as Record<string, unknown>
-    for (const slot of SLOTS) {
-      const id = slots[slot]
-      if (typeof id !== 'string' || !MODULE_BY_ID.has(id as ModuleId)) continue
-      next[side][slot] = id as ModuleId
-    }
+    const virpil = slots.setup === 'virpil'
+    next[side].brand = virpil ? 'virpil' : 'vkb'
+    const keys: BaySlot[] = virpil ? ['top', 'main', 'base'] : SLOTS
+    for (const slot of keys) next[side][slot] = readStoredId(slots[slot])
   }
   for (const side of SIDES) {
     const main = next[side].main
+    const brand = next[side].brand
+    if (brand === 'virpil') {
+      next[side].left = null
+      next[side].right = null
+      next[side].topLeft = null
+      next[side].topRight = null
+      next[side].bottom = null
+    }
     for (const slot of SLOTS) {
       if (slot === 'main') continue
       const id = next[side][slot]
-      if (id && !fits(moduleById(id), side, slot, main)) next[side][slot] = null
+      if (id && !fits(moduleById(id), side, slot, main, brand)) next[side][slot] = null
     }
+    if (next[side].base && !baseFits(next[side].base, main)) next[side].base = null
   }
   return next
 }
@@ -115,21 +166,33 @@ export function moduleById(id: ModuleId): ModuleDef {
   return module
 }
 
-function otherSide(side: SideId): SideId {
-  return side === 'left' ? 'right' : 'left'
-}
-
-function fits(module: ModuleDef, side: SideId, slot: SlotId, main: ModuleId | null): boolean {
-  if (module.kind === 'main') return slot === 'main' && module.hand === side
+function fits(module: ModuleDef, side: SideId, slot: SlotId, main: ModuleId | null, brand: SetupBrand): boolean {
+  if (module.kind === 'base') return false
+  if (module.kind === 'main') {
+    if (slot !== 'main') return false
+    if (module.manufacturer !== (brand === 'virpil' ? 'Virpil' : 'VKB')) return false
+    if (module.hand && module.hand !== side) return false
+    return true
+  }
   if (!main) return false
   const host = moduleById(main)
   if (host.ports && !host.ports.includes(slot)) return false
   return module.mounts?.[main]?.includes(slot) ?? false
 }
 
-function throttleAlreadyMounted(setup: Setup, side: SideId): boolean {
-  const other = setup[otherSide(side)].main
-  return Boolean(other && moduleById(other).role === 'throttle')
+export function baseFits(baseId: ModuleId, mainId: ModuleId | null): boolean {
+  if (!mainId) return false
+  const main = moduleById(mainId)
+  const base = MODULE_BY_ID.get(baseId)
+  if (!base || base.kind !== 'base' || !main.needsBase) return false
+  return main.bases?.includes(baseId) ?? false
+}
+
+export function baseAvailable(setup: Setup, side: SideId): boolean {
+  if (setup[side].brand !== 'virpil') return false
+  const main = setup[side].main
+  if (!main) return false
+  return moduleById(main).needsBase === true
 }
 
 export function optionsFor(
@@ -139,14 +202,31 @@ export function optionsFor(
   listed: Set<string> = DEFAULT_LISTED
 ): ModuleDef[] {
   const main = slot === 'main' ? null : setup[side].main
-  const throttleTaken = slot === 'main' && throttleAlreadyMounted(setup, side)
+  const brand = setup[side].brand
   return ALL_MODULES.filter(
     (module) =>
       listed.has(module.id) &&
       module.kind !== 'peripheral' &&
-      fits(module, side, slot, main) &&
-      !(throttleTaken && module.role === 'throttle')
+      module.kind !== 'base' &&
+      fits(module, side, slot, main, brand)
   )
+}
+
+export function baseOptions(setup: Setup, side: SideId, listed: Set<string> = DEFAULT_LISTED): ModuleDef[] {
+  const main = setup[side].main
+  if (!main || setup[side].brand !== 'virpil') return []
+  const allowed = new Set(moduleById(main).bases ?? [])
+  return ALL_MODULES.filter((module) => module.kind === 'base' && listed.has(module.id) && allowed.has(module.id))
+}
+
+export function setBrand(setup: Setup, side: SideId, brand: SetupBrand): Setup {
+  if (setup[side].brand === brand) return setup
+  return { ...setup, [side]: emptySide(brand) }
+}
+
+export function visibleSlots(setup: Setup, side: SideId): BaySlot[] {
+  if (setup[side].brand === 'virpil') return ['top', 'main', 'base']
+  return SHEET_SLOTS
 }
 
 export type ExternalSide = 'externalLeft' | 'externalRight'
@@ -167,7 +247,7 @@ export const EMPTY_EXTERNALS: ExternalSetup = {
 
 export function externalOptions(listed: Set<string>, manufacturer: string): ModuleDef[] {
   return ALL_MODULES.filter((module) => {
-    if (!listed.has(module.id) || module.kind === 'main') return false
+    if (!listed.has(module.id) || module.kind === 'main' || module.kind === 'base') return false
     if (manufacturer !== 'ALL' && module.manufacturer !== manufacturer) return false
     return true
   })
@@ -177,49 +257,67 @@ export function manufacturers(): string[] {
   return [...new Set(GEAR.map((item) => item.manufacturer))]
 }
 
-export function place(setup: Setup, side: SideId, slot: SlotId, id: ModuleId | null): Setup {
+export function place(setup: Setup, side: SideId, slot: BaySlot, id: ModuleId | null): Setup {
   const next: Setup = {
     left: { ...setup.left },
     right: { ...setup.right },
   }
   next[side][slot] = id
-  if (slot === 'main' && id && moduleById(id).role === 'throttle') {
-    const other = otherSide(side)
-    const otherMain = next[other].main
-    if (otherMain && moduleById(otherMain).role === 'throttle') {
-      next[other].main = null
-      for (const otherSlot of SLOTS) {
-        if (otherSlot === 'main') continue
-        const current = next[other][otherSlot]
-        if (current && !fits(moduleById(current), other, otherSlot, null)) next[other][otherSlot] = null
-      }
-    }
+  if (slot === 'base') {
+    if (id && !baseFits(id, next[side].main)) next[side].base = null
+    return next
   }
   if (slot === 'main') {
     for (const otherSlot of SLOTS) {
       if (otherSlot === 'main') continue
       const current = next[side][otherSlot]
       if (!current) continue
-      if (!fits(moduleById(current), side, otherSlot, id)) next[side][otherSlot] = null
+      if (!fits(moduleById(current), side, otherSlot, id, next[side].brand)) next[side][otherSlot] = null
     }
+    if (next[side].base && !baseFits(next[side].base, id)) next[side].base = null
   }
   return next
 }
 
+/** VKB sides keep the seven slots. A Virpil side saves top, main, and base. */
+export function layoutSides(setup: Setup): Record<SideId, Record<string, ModuleId | null | SetupBrand>> {
+  const out = {} as Record<SideId, Record<string, ModuleId | null | SetupBrand>>
+  for (const side of SIDES) {
+    const bay = setup[side]
+    out[side] =
+      bay.brand === 'virpil'
+        ? { setup: 'virpil', top: bay.top, main: bay.main, base: bay.base }
+        : {
+            main: bay.main,
+            left: bay.left,
+            right: bay.right,
+            top: bay.top,
+            topLeft: bay.topLeft,
+            topRight: bay.topRight,
+            bottom: bay.bottom,
+          }
+  }
+  return out
+}
+
 export interface SheetRef {
   side: SideId
-  slot: SlotId
+  slot: BaySlot
   device: DeviceDef
+  place?: string
 }
 
 export function sheetsFor(setup: Setup): SheetRef[] {
   const sheets: SheetRef[] = []
   for (const side of SIDES) {
-    for (const slot of SHEET_SLOTS) {
+    const virpil = setup[side].brand === 'virpil'
+    for (const slot of visibleSlots(setup, side)) {
       const id = setup[side][slot]
       if (!id) continue
       const device = DEVICES.find((item) => item.id === id)
-      if (device) sheets.push({ side, slot, device })
+      if (!device) continue
+      const place = virpil ? `${side === 'left' ? 'Left side' : 'Right side'} · ${SLOT_LABEL[slot]}` : undefined
+      sheets.push({ side, slot, device, place })
     }
   }
   return sheets
@@ -231,10 +329,12 @@ export interface SlotPress {
   accepted: boolean
 }
 
-export type PressSetup = Record<SideId, Record<SlotId, SlotPress | null>>
+export type SidePresses = Record<BaySlot, SlotPress | null>
 
-function emptyBay(): Record<SlotId, SlotPress | null> {
-  return { main: null, left: null, right: null, top: null, topLeft: null, topRight: null, bottom: null }
+export type PressSetup = Record<SideId, SidePresses>
+
+function emptyBay(): SidePresses {
+  return { main: null, left: null, right: null, top: null, topLeft: null, topRight: null, bottom: null, base: null }
 }
 
 export function emptyPresses(): PressSetup {
@@ -476,7 +576,7 @@ export function pressesFromStored(value: unknown): PressSetup {
     const bay = raw[side]
     if (!bay || typeof bay !== 'object') continue
     const slots = bay as Record<string, unknown>
-    for (const slot of SLOTS) next[side][slot] = readSlotPress(slots[slot])
+    for (const slot of STORED_SLOTS) next[side][slot] = readSlotPress(slots[slot])
   }
   return next
 }
@@ -484,7 +584,7 @@ export function pressesFromStored(value: unknown): PressSetup {
 export function syncPresses(presses: PressSetup, before: Setup, after: Setup): PressSetup {
   const next = emptyPresses()
   for (const side of SIDES) {
-    for (const slot of SLOTS) {
+    for (const slot of STORED_SLOTS) {
       const kept = presses[side][slot]
       const id = after[side][slot]
       if (before[side][slot] === id && kept && kept.moduleId === id) next[side][slot] = kept
@@ -496,7 +596,7 @@ export function syncPresses(presses: PressSetup, before: Setup, after: Setup): P
 export function unpressedLabels(setup: Setup, presses: PressSetup): string[] {
   const labels: string[] = []
   for (const side of SIDES) {
-    for (const slot of SHEET_SLOTS) {
+    for (const slot of visibleSlots(setup, side)) {
       const id = setup[side][slot]
       if (!id || !deviceNeedsPress(id)) continue
       const press = presses[side][slot]
@@ -546,9 +646,9 @@ export function externalsEmpty(externals: ExternalSetup): boolean {
   return EXTERNAL_SIDES.every((side) => externals[side].every((id) => !id))
 }
 
-export function firstUnpressed(setup: Setup, presses: PressSetup): { side: SideId; slot: SlotId } | null {
+export function firstUnpressed(setup: Setup, presses: PressSetup): { side: SideId; slot: BaySlot } | null {
   for (const side of SIDES) {
-    for (const slot of SHEET_SLOTS) {
+    for (const slot of visibleSlots(setup, side)) {
       const id = setup[side][slot]
       if (!id || !deviceNeedsPress(id)) continue
       const press = presses[side][slot]
@@ -557,4 +657,25 @@ export function firstUnpressed(setup: Setup, presses: PressSetup): { side: SideI
     }
   }
   return null
+}
+
+/** Presses follow the side. VKB keeps seven slots. Virpil keeps top, main, and base. */
+export function pressSides(presses: PressSetup, setup: Setup): Record<SideId, Record<string, SlotPress | null>> {
+  const out = {} as Record<SideId, Record<string, SlotPress | null>>
+  for (const side of SIDES) {
+    const bay = presses[side]
+    out[side] =
+      setup[side].brand === 'virpil'
+        ? { top: bay.top, main: bay.main, base: bay.base }
+        : {
+            main: bay.main,
+            left: bay.left,
+            right: bay.right,
+            top: bay.top,
+            topLeft: bay.topLeft,
+            topRight: bay.topRight,
+            bottom: bay.bottom,
+          }
+  }
+  return out
 }

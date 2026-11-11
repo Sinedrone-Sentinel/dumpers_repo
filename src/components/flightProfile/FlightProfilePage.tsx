@@ -15,6 +15,8 @@ import {
 import { DEVICES } from '../../lib/flightProfile/devices'
 import {
   BAY_SLOTS,
+  baseAvailable,
+  baseOptions,
   DEFAULT_LISTED,
   deviceNeedsPress,
   EMPTY_EXTERNALS,
@@ -31,15 +33,18 @@ import {
   optionsFor,
   place,
   sampleButton,
+  setBrand,
   sheetsFor,
   shiftDevice,
   slotAvailable,
   syncPresses,
   unpressedLabels,
+  type BaySlot,
   type ExternalSetup,
   type ExternalSide,
   type PressSetup,
   type Setup,
+  type SetupBrand,
   type SideId,
   type SlotId,
 } from '../../lib/flightProfile/catalog'
@@ -51,6 +56,9 @@ function explainProfileError(message: string): string {
   }
   if (/save_flight_button_presses|column .*button_presses/i.test(message)) {
     return 'Button numbers are not on the database yet. Run supabase/migrations/218_flight_button_presses.sql, then reload this page.'
+  }
+  if (/Invalid flight layout|Invalid button presses/i.test(message)) {
+    return 'That layout was rejected. A Virpil side needs supabase/migrations/221_flight_virpil.sql applied after 220. Then reload this page.'
   }
   if (/save_flight_profile_layout|column .*layout/i.test(message)) {
     return 'The flight profile layout is not on the database yet. Run supabase/migrations/217_flight_profile_layout.sql, then 218_flight_button_presses.sql, and reload this page.'
@@ -151,16 +159,141 @@ function Bay({
   )
 }
 
-function SetupMenu() {
+function SetupMenu({ value, onChange }: { value: SetupBrand; onChange: (brand: SetupBrand) => void }) {
   return (
-    <SiteTooltip side="top" content="VKB is the only setup. This panel keeps its own mounts.">
+    <SiteTooltip side="top" content="VKB keeps its mounts. Virpil is a top, a main, and a base under a stick. This panel keeps its own choice.">
       <label className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-orange-200/80">
         Setup
-        <select className="site-input px-2 py-1 text-xs normal-case tracking-normal" value="vkb" onChange={() => undefined}>
+        <select
+          className="site-input px-2 py-1 text-xs normal-case tracking-normal"
+          value={value}
+          onChange={(event) => onChange(event.target.value === 'virpil' ? 'virpil' : 'vkb')}
+        >
           <option value="vkb">VKB</option>
+          <option value="virpil">Virpil</option>
         </select>
       </label>
     </SiteTooltip>
+  )
+}
+
+function slotFace(
+  name: string | null,
+  photo: string | null,
+  open: boolean,
+  selected: boolean,
+  label: string,
+  onClick: () => void,
+) {
+  return (
+    <button
+      type="button"
+      disabled={!open}
+      onClick={onClick}
+      className={`relative h-full w-full overflow-hidden rounded-lg border text-center transition-colors ${
+        !open
+          ? 'cursor-not-allowed border-slate-600 bg-slate-900/80 text-slate-500 opacity-50'
+          : selected
+            ? 'border-amber-300 ring-2 ring-amber-300/70'
+            : name
+              ? 'border-orange-400/70'
+              : 'border-dashed border-orange-500/40 bg-slate-950/80 hover:border-orange-300/70'
+      }`}
+    >
+      {photo && open && <img src={photo} alt="" className="absolute inset-0 h-full w-full object-cover opacity-80" />}
+      <span
+        className={`relative px-1 text-[10px] font-semibold uppercase leading-tight tracking-wide ${
+          !open ? 'text-slate-500' : name ? 'text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]' : 'text-orange-100/80'
+        }`}
+      >
+        {name && open ? name : label}
+      </span>
+    </button>
+  )
+}
+
+function VirpilBay({
+  side,
+  setup,
+  active,
+  onPick,
+}: {
+  side: SideId
+  setup: Setup
+  active: BaySlot | null
+  onPick: (slot: BaySlot) => void
+}) {
+  const mainId = setup[side].main
+  const main = mainId ? moduleById(mainId) : null
+  const topId = setup[side].top
+  const top = topId ? moduleById(topId) : null
+  const baseId = setup[side].base
+  const base = baseId ? moduleById(baseId) : null
+  const topOpen = slotAvailable(setup, side, 'top')
+  const baseOpen = baseAvailable(setup, side)
+  const topHint = topOpen ? 'Module on this stick.' : main ? 'This hardware has no top module.' : "Choose this side's main first."
+  const baseHint = baseOpen
+    ? 'Base this grip mounts on.'
+    : main
+      ? 'This stick does not use a separate base.'
+      : "Choose this side's main first."
+  const face = (
+    slot: BaySlot,
+    open: boolean,
+    name: string | null,
+    photo: string | null,
+    label: string,
+    hint: string,
+    box: string,
+  ) => (
+    <SiteTooltip className={`${box} !block`} side="bottom" content={hint}>
+      {slotFace(name, photo, open, open && active === slot, label, () => onPick(slot))}
+    </SiteTooltip>
+  )
+  return (
+    <div className="flex flex-col items-center gap-2">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-200/80">
+        {side === 'left' ? 'Left side' : 'Right side'}
+      </p>
+      <div className="flex flex-col items-center gap-1.5">
+        {face('top', topOpen, top?.name ?? null, top?.photo ?? null, 'Top', topHint, 'h-12 w-28')}
+        {face('main', true, main?.name ?? null, main?.photo ?? null, 'Main', 'Stick or throttle for this side.', 'h-[5.4rem] w-[6.75rem]')}
+        {face('base', baseOpen, base?.name ?? null, base?.photo ?? null, 'Base', baseHint, 'h-10 w-20')}
+      </div>
+    </div>
+  )
+}
+
+function GearStrip({
+  modules,
+  current,
+  onPick,
+}: {
+  modules: { id: string; name: string; photo: string }[]
+  current: string | null
+  onPick: (id: string) => void
+}) {
+  return (
+    <div className="min-w-0 max-w-full overflow-x-auto">
+      <div className="flex w-max flex-nowrap gap-2 pb-1">
+        {modules.map((module) => {
+          const selected = current === module.id
+          return (
+            <button
+              key={module.id}
+              type="button"
+              onClick={() => onPick(module.id)}
+              className={`flex w-36 shrink-0 flex-col overflow-hidden rounded-lg border text-left ${
+                selected ? 'border-amber-300 ring-2 ring-amber-300/60' : 'border-orange-500/40 hover:border-orange-300'
+              }`}
+            >
+              <img src={module.photo} alt="" className="h-20 w-full object-cover" />
+              <span className="px-2 py-1.5 text-[11px] font-semibold leading-tight text-slate-100">{module.name}</span>
+            </button>
+          )
+        })}
+      </div>
+    </div>
   )
 }
 
@@ -276,9 +409,9 @@ export default function FlightProfilePage() {
   const [externalPresses, setExternalPresses] = useState<ExternalPresses>(EMPTY_EXTERNAL_PRESSES)
   const [listed, setListed] = useState<Set<string>>(DEFAULT_LISTED)
   const [filters, setFilters] = useState<Record<ExternalSide, string>>({ externalLeft: 'ALL', externalRight: 'ALL' })
-  const [prompt, setPrompt] = useState<{ side: SideId; slot: SlotId } | null>(null)
+  const [prompt, setPrompt] = useState<{ side: SideId; slot: BaySlot } | null>(null)
   const [externalPrompt, setExternalPrompt] = useState<{ side: ExternalSide; index: 0 | 1 } | null>(null)
-  const [active, setActive] = useState<{ side: SideId; slot: SlotId } | null>(null)
+  const [active, setActive] = useState<{ side: SideId; slot: BaySlot } | null>(null)
   const [externalActive, setExternalActive] = useState<{ side: ExternalSide; index: 0 | 1 } | null>(null)
   const [profile, setProfile] = useState<ParsedFlightProfile | null>(null)
   const [source, setSource] = useState<'account' | 'upload' | null>(null)
@@ -354,7 +487,8 @@ export default function FlightProfilePage() {
         const savedLayout = await saveFlightLayout(setupSnapshot, verified ? externalSnapshot : EMPTY_EXTERNALS)
         const savedPresses = await saveFlightPresses(
           pressSnapshot,
-          verified ? externalPressSnapshot : EMPTY_EXTERNAL_PRESSES
+          verified ? externalPressSnapshot : EMPTY_EXTERNAL_PRESSES,
+          setupSnapshot,
         )
         if (
           gate.setup !== setupSnapshot ||
@@ -377,7 +511,7 @@ export default function FlightProfilePage() {
     const bay = sheetsFor(shown.setup).map((sheet) => {
       const press = presses[sheet.side][sheet.slot]
       const delta = press?.accepted && press.moduleId === sheet.device.id ? press.delta : 0
-      return { device: shiftDevice(sheet.device, delta), side: sheet.side, place: undefined as string | undefined }
+      return { device: shiftDevice(sheet.device, delta), side: sheet.side, place: sheet.place }
     })
     const extra = EXTERNAL_SIDES.flatMap((side) =>
       shown.externals[side].flatMap((id, index) => {
@@ -412,7 +546,19 @@ export default function FlightProfilePage() {
     pendingPresses.length ? `a button press for ${pendingPresses.join(', ')}` : null,
   ].filter((item): item is string => Boolean(item))
 
-  function choose(side: SideId, slot: SlotId) {
+  function onBrand(side: SideId, brand: SetupBrand) {
+    if (setup[side].brand === brand) return
+    editedLayout.current = true
+    const next = setBrand(setup, side, brand)
+    const nextPresses = syncPresses(presses, setup, next)
+    setSetup(next)
+    setPresses(nextPresses)
+    setShown(null)
+    setActive(null)
+    void persist(next, nextPresses)
+  }
+
+  function choose(side: SideId, slot: BaySlot) {
     setExternalActive(null)
     setActive((current) => (current?.side === side && current.slot === slot ? null : { side, slot }))
   }
@@ -539,14 +685,18 @@ export default function FlightProfilePage() {
   const promptId = prompt ? setup[prompt.side][prompt.slot] : null
   const promptDevice = promptId ? DEVICES.find((item) => item.id === promptId) ?? null : null
   const promptSample = promptDevice ? sampleButton(promptDevice) : null
-  const choices = active ? optionsFor(setup, active.side, active.slot, listed) : []
+  const choices = active
+    ? active.slot === 'base'
+      ? baseOptions(setup, active.side, listed)
+      : optionsFor(setup, active.side, active.slot, listed)
+    : []
   const externalChoices = externalActive ? externalOptions(listed, filters[externalActive.side]) : []
   const activeFilled = active ? setup[active.side][active.slot] : null
   const needsMain = active ? active.slot !== 'main' && !setup[active.side].main : false
 
   return (
     <FeaturePageLayout title="Flight Profile" badge="Experimental" badgeVariant="explicit">
-      <section className="rounded-2xl border border-orange-500/30 bg-slate-950/75 p-4 sm:p-5">
+      <section className="min-w-0 rounded-2xl border border-orange-500/30 bg-slate-950/75 p-4 sm:p-5">
         <div className="flex flex-wrap items-start justify-center gap-x-10 gap-y-6">
           {verified && (
             <ExternalPanel
@@ -566,12 +716,20 @@ export default function FlightProfilePage() {
             />
           )}
           <div className="flex flex-col items-start gap-2">
-            <SetupMenu />
-            <Bay side="left" setup={setup} active={active?.side === 'left' ? active.slot : null} onPick={(slot) => choose('left', slot)} />
+            <SetupMenu value={setup.left.brand} onChange={(brand) => onBrand('left', brand)} />
+            {setup.left.brand === 'virpil' ? (
+              <VirpilBay side="left" setup={setup} active={active?.side === 'left' ? active.slot : null} onPick={(slot) => choose('left', slot)} />
+            ) : (
+              <Bay side="left" setup={setup} active={active?.side === 'left' && active.slot !== 'base' ? active.slot : null} onPick={(slot) => choose('left', slot)} />
+            )}
           </div>
           <div className="flex flex-col items-start gap-2">
-            <SetupMenu />
-            <Bay side="right" setup={setup} active={active?.side === 'right' ? active.slot : null} onPick={(slot) => choose('right', slot)} />
+            <SetupMenu value={setup.right.brand} onChange={(brand) => onBrand('right', brand)} />
+            {setup.right.brand === 'virpil' ? (
+              <VirpilBay side="right" setup={setup} active={active?.side === 'right' ? active.slot : null} onPick={(slot) => choose('right', slot)} />
+            ) : (
+              <Bay side="right" setup={setup} active={active?.side === 'right' && active.slot !== 'base' ? active.slot : null} onPick={(slot) => choose('right', slot)} />
+            )}
           </div>
           {verified && (
             <ExternalPanel
@@ -600,26 +758,17 @@ export default function FlightProfilePage() {
             {needsMain ? (
               <p className="text-sm text-slate-300">Choose this side&apos;s main first. A main is a stick or a throttle.</p>
             ) : choices.length === 0 ? (
-              <p className="text-sm text-slate-300">No designed VKB module fits this mount.</p>
+              <p className="text-sm text-slate-300">
+                {setup[active.side].brand === 'virpil'
+                  ? active.slot === 'base'
+                    ? 'No base fits this grip yet.'
+                    : active.slot === 'main'
+                      ? 'No Virpil stick or throttle is available for this side yet.'
+                      : 'No module fits this stick yet.'
+                  : 'No designed VKB module fits this mount.'}
+              </p>
             ) : (
-              <div className="flex flex-wrap gap-2">
-                {choices.map((module) => {
-                  const current = activeFilled === module.id
-                  return (
-                    <button
-                      key={module.id}
-                      type="button"
-                      onClick={() => apply(module.id)}
-                      className={`flex w-36 flex-col overflow-hidden rounded-lg border text-left ${
-                        current ? 'border-amber-300 ring-2 ring-amber-300/60' : 'border-orange-500/40 hover:border-orange-300'
-                      }`}
-                    >
-                      <img src={module.photo} alt="" className="h-20 w-full object-cover" />
-                      <span className="px-2 py-1.5 text-[11px] font-semibold leading-tight text-slate-100">{module.name}</span>
-                    </button>
-                  )
-                })}
-              </div>
+              <GearStrip modules={choices} current={activeFilled} onPick={(id) => apply(id)} />
             )}
             {activeFilled && (
               <button type="button" onClick={() => apply(null)} className="site-btn-ghost mt-3 px-3 py-1.5 text-slate-300">
@@ -637,24 +786,11 @@ export default function FlightProfilePage() {
             {externalChoices.length === 0 ? (
               <p className="text-sm text-slate-300">No extra device is available for this filter yet.</p>
             ) : (
-              <div className="flex flex-wrap gap-2">
-                {externalChoices.map((module) => {
-                  const current = externals[externalActive.side][externalActive.index] === module.id
-                  return (
-                    <button
-                      key={module.id}
-                      type="button"
-                      onClick={() => applyExternal(module.id)}
-                      className={`flex w-36 flex-col overflow-hidden rounded-lg border text-left ${
-                        current ? 'border-amber-300 ring-2 ring-amber-300/60' : 'border-orange-500/40 hover:border-orange-300'
-                      }`}
-                    >
-                      <img src={module.photo} alt="" className="h-20 w-full object-cover" />
-                      <span className="px-2 py-1.5 text-[11px] font-semibold leading-tight text-slate-100">{module.name}</span>
-                    </button>
-                  )
-                })}
-              </div>
+              <GearStrip
+                modules={externalChoices}
+                current={externals[externalActive.side][externalActive.index]}
+                onPick={(id) => applyExternal(id)}
+              />
             )}
             {externals[externalActive.side][externalActive.index] && (
               <button type="button" onClick={() => applyExternal(null)} className="site-btn-ghost mt-3 px-3 py-1.5 text-slate-300">

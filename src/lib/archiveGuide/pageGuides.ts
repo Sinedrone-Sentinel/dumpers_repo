@@ -641,12 +641,12 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
   {
     id: 'flight-profile',
     title: 'Flight Profile',
-    description: 'Map a signed-in member\'s Star Citizen joystick and HOTAS profile onto the VKB controls they have mounted.',
+    description: 'Map a signed-in member\'s Star Citizen joystick and HOTAS profile onto the VKB or Virpil controls they have mounted.',
     details: [
       'Open Flight Profile from the avatar menu after sign-in. Pending accounts do not see it',
-      'The banner is a left bay and a right bay. Each bay has a Setup menu in the top left. VKB is the only setup. Each bay shows Top, Left, the main, Right, and Bottom. A mount that stick or throttle does not have stays grey and cannot be selected',
+      'The banner is a left bay and a right bay. Each bay has a Setup menu in the top left. VKB shows Top, Left, the main, Right, and Bottom. A mount that stick or throttle does not have stays grey and cannot be selected. Virpil shows Top, Main, and a smaller base under the main. The base opens only when the main is a stick that needs one. A throttle or an all-in-one stick leaves the base grey',
       'An RSI-verified member also gets External 1 on the left and External 2 on the right. Each holds two extra devices, stacked. The menu at the top filters by manufacturer, and ALL is selected. Sticks and throttles stay on the two setup panels. Anything placed here is used on its own. T-Rudders Mk.V is one of those extra devices',
-      'A main can only be a stick or a throttle, and only the hand that matches that side. Two sticks are allowed. Two throttles are not',
+      'A main can only be a stick or a throttle. A left-hand one stays on the left, and a right-hand one stays on the right. A control with no hand can sit on either side. Two sticks are allowed. Two throttles are allowed when each one matches that side',
       'Top is the UCM desk mount or a standalone mount, on a stick or a throttle. SEM-V and the FSM-GA are options there. The FSM-GA does not use a side connector or the front. Each side connector can hold a desktop SEM. A Gladiator has no front connector, so Bottom stays grey. A STECS has no side connectors, so Left and Right stay grey. On a STECS, SEM-V also sits on the front, and the STEM sits on the front. A mount holds one module, and the same module can be used again on another mount VKB allows',
       'Upload one Star Citizen flight-control XML. The file saved on the account is replaced completely. Keyboard and mouse assignments are ignored',
       'The modules you place are saved on your account. Opening Flight Profile shows that same layout again',
