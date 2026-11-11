@@ -159,7 +159,7 @@ Header (signed-in): **?** Help, **Friends**, **Request Services** (RSI verified)
 
 ### Mining Tracker (`/mining-tracker`)
 
-Three tabs members see — **RS Tracker**, **Mining Guide**, and **Ledgers** (RSI-verified). **Caves** is on the same page for super-admins only until it is released.
+Four tabs — **RS Tracker**, **Mining Guide**, **Ledgers** (RSI-verified), and **Caves** (works signed out).
 
 **RS Tracker**
 
@@ -178,7 +178,7 @@ Three tabs members see — **RS Tracker**, **Mining Guide**, and **Ledgers** (RS
 - 📍 **Find-it-in-game hints** on belt/cluster tooltips, plus a grouped **QT markers & stations** panel when you click a location (PYAM stations per Lagrange point, RAB/RMB cluster bases per Pyro region, BRK breakers) — all parsed from game files
 - Negligible odds show as **trace spawn (<0.01%)** — dimmed and sorted last instead of a misleading "0.00%"
 
-**Caves** (super-admin only)
+**Caves**
 
 - Every placed cave from the game containers, in a system → planet or moon → Cave tree. Each cave has a catalog name such as Stanton 1b Sand Cave 023
 - Starting location is the same place list Smart Hauler uses. Picking a cave shows the jump path. The route uses the nearest named surface location when that flight is shorter than flying from the nearest orbital marker down to the surface and then across to the cave. Otherwise it sends you to that orbital marker, then toward the middle of the planet (not a quantum trip to the planet), and gives an approximate heading and distance from the surface
@@ -350,7 +350,7 @@ The production build regenerates [`public/archive-guide.html`](public/archive-gu
 
 Signed-out visitors land on the public home page first. Choose **Browse tools offline** (or **Continue in Offline Mode**). That choice is remembered in this browser, so a bookmark to a tool opens that tool instead of the sign-in page.
 
-- Blueprints (acquired marks), Wikelo, Mission Tracker, Resource Tracker, Mining Tracker (RS + Guide), UEX Lookup, Shopping Cart, Fuzy's Ship Shop, Executive Hangar, Archive, Bazaar listing-count teaser
+- Blueprints (acquired marks), Wikelo, Mission Tracker, Resource Tracker, Mining Tracker (RS + Guide + Caves), UEX Lookup, Shopping Cart, Fuzy's Ship Shop, Executive Hangar, Archive, Bazaar listing-count teaser
 
 Requires a free member account:
 

@@ -59,7 +59,7 @@ const FEATURES: FeatureCard[] = [
   },
   {
     title: 'Mining Tracker',
-    body: 'Ore guide, cluster RS reference, spawn chances, the rock calculator, and crew mining ledgers.',
+    body: 'Ore guide, cluster RS reference, spawn chances, the rock calculator, crew mining ledgers, and cave routes from where you are.',
     href: '/mining-tracker',
     action: 'offline',
     cta: 'Open Mining Tracker offline →',
