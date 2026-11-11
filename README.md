@@ -159,7 +159,7 @@ Header (signed-in): **?** Help, **Friends**, **Request Services** (RSI verified)
 
 ### Mining Tracker (`/mining-tracker`)
 
-Three tabs — **RS Tracker**, **Mining Guide**, and **Ledgers** (RSI-verified).
+Three tabs members see — **RS Tracker**, **Mining Guide**, and **Ledgers** (RSI-verified). **Caves** is on the same page for super-admins only until it is released.
 
 **RS Tracker**
 
@@ -177,6 +177,11 @@ Three tabs — **RS Tracker**, **Mining Guide**, and **Ledgers** (RSI-verified).
 - **All / Stanton / Pyro / Nyx** (systems that appear in the data) plus **All Sites / Surface / Asteroid** — search first, then system, then deposit type
 - 📍 **Find-it-in-game hints** on belt/cluster tooltips, plus a grouped **QT markers & stations** panel when you click a location (PYAM stations per Lagrange point, RAB/RMB cluster bases per Pyro region, BRK breakers) — all parsed from game files
 - Negligible odds show as **trace spawn (<0.01%)** — dimmed and sorted last instead of a misleading "0.00%"
+
+**Caves** (super-admin only)
+
+- Every placed cave from the game containers, in a system → planet or moon → Cave tree. Tags come from the file name (body, biome, occupied or not, size)
+- Starting location is the same place list Smart Hauler uses. Picking a cave shows the jump path, then on that body the closest orbital markers, the nearest named surface location, and the compass heading and distance from there to the cave
 
 **Ledgers** (RSI-verified members)
 

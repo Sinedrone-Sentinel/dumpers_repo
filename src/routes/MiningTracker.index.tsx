@@ -94,13 +94,14 @@ import {
 } from '../lib/handMineables'
 import { formatHandMineableHabitatAtSite } from '../lib/handMineableHabitats'
 import type { DepositType, MiningTrackerEntry } from '../lib/localGuestCache'
+import CavesTab from '../components/mining/CavesTab'
 
-type ViewMode = 'tracker' | 'guide' | 'ledger'
+type ViewMode = 'tracker' | 'guide' | 'ledger' | 'caves'
 
 const miningTrackerRoute = getRouteApi('/mining-tracker')
 
 export default function MiningTrackerRoute() {
-  const { isGuestPreview } = useAuth()
+  const { isGuestPreview, isSuperAdmin } = useAuth()
   const { canUse: canUseLoadouts, store: loadoutStore } = useMiningLoadouts()
   const { data, loading, error, refetch } = useMiningData()
   const { entries, addEntry, removeEntry, clearAll, isTracked } = useMiningTracker()
@@ -197,8 +198,16 @@ export default function MiningTrackerRoute() {
       setViewMode('guide')
     } else if (search.view === 'ledger') {
       setViewMode('ledger')
+    } else if (search.view === 'caves' && isSuperAdmin) {
+      setViewMode('caves')
+    } else if (search.view === 'caves') {
+      setViewMode('tracker')
     }
-  }, [search.view])
+  }, [search.view, isSuperAdmin])
+
+  useEffect(() => {
+    if (!isSuperAdmin && viewMode === 'caves') setViewMode('tracker')
+  }, [isSuperAdmin, viewMode])
 
   useEffect(() => {
     if (smartCrackerOpen) {
@@ -206,9 +215,15 @@ export default function MiningTrackerRoute() {
       return
     }
     const subTool =
-      viewMode === 'guide' ? 'mining_guide' : viewMode === 'ledger' ? 'ledger' : 'rs_tracker'
+      viewMode === 'guide'
+        ? 'mining_guide'
+        : viewMode === 'ledger'
+          ? 'ledger'
+          : viewMode === 'caves' && isSuperAdmin
+            ? 'caves'
+            : 'rs_tracker'
     setAnalyticsSubTool(subTool)
-  }, [viewMode, smartCrackerOpen])
+  }, [viewMode, smartCrackerOpen, isSuperAdmin])
 
   useEffect(() => {
     if (viewMode !== 'ledger' || isGuestPreview) return
@@ -462,21 +477,21 @@ export default function MiningTrackerRoute() {
           ? 'Browse all ores by rarity or find ores at specific locations.'
           : viewMode === 'ledger'
             ? 'Track mining crew shares, payouts, and paid status for your runs.'
-            : undefined
+            : isSuperAdmin && viewMode === 'caves'
+              ? 'Every placed cave, and a route from where you are.'
+              : undefined
       }
       badge={isGuestPreview ? 'Local only' : undefined}
       meta={
-        viewMode === 'tracker' ? (
-          isGuestPreview ? (
-            <span className="text-amber-400/90">
-              Tracked ores save in this browser only. Sign in for acquired blueprint tracking and more.
-            </span>
-          ) : undefined
-        ) : (
+        viewMode === 'tracker' && isGuestPreview ? (
+          <span className="text-amber-400/90">
+            Tracked ores save in this browser only. Sign in for acquired blueprint tracking and more.
+          </span>
+        ) : viewMode === 'guide' ? (
           <span>
             Use the Track button to add ores to your tracker. Only ores with mining signatures can be tracked.
           </span>
-        )
+        ) : undefined
       }
       actions={
         <div className="flex items-center gap-3">
@@ -525,6 +540,18 @@ export default function MiningTrackerRoute() {
           >
             Ledgers
           </button>
+          {isSuperAdmin && (
+            <button
+              onClick={() => setViewMode('caves')}
+              className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors site-btn-shimmer ${
+                viewMode === 'caves'
+                  ? 'site-filter-selected-orange'
+                  : 'site-filter-idle'
+              }`}
+            >
+              Caves
+            </button>
+          )}
         </div>
         {viewMode === 'ledger' && ledgerSiteStats && !isGuestPreview && (
           <p className="text-sm text-amber-200/95 font-medium tracking-wide max-w-3xl">
@@ -532,7 +559,7 @@ export default function MiningTrackerRoute() {
           </p>
         )}
       </div>
-      {loading && viewMode !== 'ledger' && (
+      {loading && viewMode !== 'ledger' && viewMode !== 'caves' && (
         <div className="flex items-center justify-center min-h-[300px]">
           <div className="w-8 h-8 border-2 border-orange-500/30 border-t-orange-500 rounded-full animate-spin" />
         </div>
@@ -889,6 +916,8 @@ export default function MiningTrackerRoute() {
           onLedgerArchived={refreshLedgerSiteStats}
         />
       )}
+
+      {isSuperAdmin && viewMode === 'caves' && <CavesTab />}
 
       {/* Mining Guide View */}
       {!loading && !error && data && viewMode === 'guide' && (
