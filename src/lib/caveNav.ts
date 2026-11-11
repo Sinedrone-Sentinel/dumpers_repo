@@ -156,12 +156,19 @@ export interface CaveOmDescent {
   flyKm: number
 }
 
+/** Surface travel at or under this stays a short run from a marked location. */
+export const CAVE_SHORT_SURFACE_KM = 100
+
 export interface CaveApproach {
   name: string
   km: number
+  /** Surface distance from this location to the cave. */
+  surfaceKm: number
   heading: number
   backHeading: number
 }
+
+export type CaveListTone = 'short' | 'long' | 'om'
 
 export interface CaveSurfaceRoute {
   markers: CaveMarker[]
@@ -215,12 +222,31 @@ export function surfaceRoute(cave: CaveSite): CaveSurfaceRoute {
     place = {
       name: candidate.name,
       km: meters / 1000,
+      surfaceKm: surfaceArcKm(from, here, surfaceRadius),
       heading: heading360(compassHeading(from, here)),
       backHeading: heading360(compassHeading(here, from)),
     }
   }
   const useOmDescent = place == null || place.km >= omDescent.flyKm
   return { markers, place, useOmDescent, omDescent }
+}
+
+export function caveListTone(route: CaveSurfaceRoute): CaveListTone {
+  if (route.useOmDescent || !route.place) return 'om'
+  return route.place.surfaceKm > CAVE_SHORT_SURFACE_KM ? 'long' : 'short'
+}
+
+export function caveListNote(route: CaveSurfaceRoute): string {
+  const tone = caveListTone(route)
+  if (tone === 'om') {
+    return `Red. Fly down from ${route.omDescent.marker}. The cave is about ${formatKm(route.omDescent.approxKm)} across the surface from there.`
+  }
+  const place = route.place
+  if (!place) return 'Red. Fly down from an orbital marker.'
+  if (tone === 'long') {
+    return `Yellow. Surface travel from ${place.name} is over 100 km, about ${formatKm(place.surfaceKm)}.`
+  }
+  return `Green. A short surface run from ${place.name}, about ${formatKm(place.surfaceKm)}.`
 }
 
 export interface CaveSmartRoute {

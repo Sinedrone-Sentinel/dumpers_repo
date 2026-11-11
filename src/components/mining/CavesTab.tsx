@@ -4,10 +4,14 @@ import { navMap, type NavPoint } from '../../lib/navSystems'
 import {
   caveBodies,
   caveDisplayName,
+  caveListNote,
+  caveListTone,
   caveSites,
   formatKm,
   headingCardinal,
   smartCaveRoute,
+  surfaceRoute,
+  type CaveListTone,
   type CaveSite,
 } from '../../lib/caveNav'
 
@@ -23,6 +27,12 @@ function startPoints() {
 }
 
 const STARTS = startPoints()
+
+const CAVE_TONE_CLASS: Record<CaveListTone, string> = {
+  short: 'text-green-300',
+  long: 'text-amber-300',
+  om: 'text-red-300',
+}
 
 function startMatches(point: NavPoint, term: string): boolean {
   if (!term) return true
@@ -173,16 +183,24 @@ export default function CavesTab() {
                         <div className="pl-3">
                           <p className="site-menu-section text-xs font-medium text-slate-300">Cave</p>
                           {entry.caves.map((cave) => {
+                            const surface = surfaceRoute(cave)
+                            const tone = caveListTone(surface)
                             const active = cave.id === selectedId
                             return (
-                              <button
+                              <SiteTooltip
                                 key={cave.id}
-                                type="button"
-                                className={`site-dropdown-item text-left ${active ? 'site-dropdown-item-active' : ''}`}
-                                onClick={() => setSelectedId(cave.id)}
+                                side="right"
+                                className="!block w-full"
+                                content={caveListNote(surface)}
                               >
-                                {caveDisplayName(cave)}
-                              </button>
+                                <button
+                                  type="button"
+                                  className={`site-dropdown-item text-left ${active ? 'site-dropdown-item-active' : ''}`}
+                                  onClick={() => setSelectedId(cave.id)}
+                                >
+                                  <span className={CAVE_TONE_CLASS[tone]}>{caveDisplayName(cave)}</span>
+                                </button>
+                              </SiteTooltip>
                             )
                           })}
                         </div>
