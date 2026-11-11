@@ -299,6 +299,7 @@ export const ANALYTICS_SUB_TOOL_LABELS: Record<string, string> = {
   rs_tracker: 'RS Tracker',
   mining_guide: 'Mining Guide',
   ledger: 'Ledgers',
+  caves: 'Caves',
   smart_cracker: 'Smart Cracker',
   smart_cracker_advisor: 'Smart Cracker Advisor',
   active: 'Active Orders',

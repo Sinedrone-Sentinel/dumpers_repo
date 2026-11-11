@@ -81,9 +81,11 @@ const miningTrackerRoute = createRoute({
         ? 'guide'
         : search.view === 'ledger'
           ? 'ledger'
-          : search.view === 'tracker'
-            ? 'tracker'
-            : undefined,
+          : search.view === 'caves'
+            ? 'caves'
+            : search.view === 'tracker'
+              ? 'tracker'
+              : undefined,
   }),
 })
 
