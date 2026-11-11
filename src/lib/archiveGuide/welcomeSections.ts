@@ -24,7 +24,7 @@ export const OFFLINE_MODE_SECTION = {
     '**Blueprints** — every blueprint with its crafting materials, quality sliders, and DFP values. Mark the ones you have unlocked (saved in this browser)',
     '**Mission Tracker** — browse every faction\'s missions and build your tracking list (saved in this browser)',
     '**Resource Tracker** — log your stock and see which blueprints you can craft with it (saved in this browser)',
-    '**Mining Tracker** — RS signature reference, the Rock Calculator, and the Mining Guide to find where every ore spawns',
+    '**Mining Tracker** — RS signature reference, the Rock Calculator, the Mining Guide, and Caves with a route from where you are',
     '**Wikelo** — every barter trade, what to hand in, and what you get back',
     '**UEX Lookup** — where to buy guns, ammo, ship components, armor, ships, commodities, food, and drinks, and where to sell commodities',
     '**Shopping Cart** — a browser list of shop buys, separate from Fuzy\'s Ship Shop. Calculate a route with Fewest Stops, Cheapest, or Efficient',
