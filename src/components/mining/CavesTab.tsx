@@ -3,8 +3,8 @@ import SiteTooltip from '../SiteTooltip'
 import { navMap, type NavPoint } from '../../lib/navSystems'
 import {
   caveBodies,
+  caveDisplayName,
   caveSites,
-  caveTags,
   formatKm,
   headingCardinal,
   smartCaveRoute,
@@ -51,7 +51,7 @@ export default function CavesTab() {
     for (const body of caveBodies) {
       const caves = caveSites
         .filter((cave) => cave.bodyId === body.id)
-        .sort((a, b) => caveTags(a).join().localeCompare(caveTags(b).join()))
+        .sort((a, b) => caveDisplayName(a).localeCompare(caveDisplayName(b)))
       if (caves.length === 0) continue
       const system = bySystem.get(body.systemId) ?? {
         id: body.systemId,
@@ -173,22 +173,15 @@ export default function CavesTab() {
                         <div className="pl-3">
                           <p className="site-menu-section text-xs font-medium text-slate-300">Cave</p>
                           {entry.caves.map((cave) => {
-                            const tags = caveTags(cave)
                             const active = cave.id === selectedId
                             return (
                               <button
                                 key={cave.id}
                                 type="button"
-                                className={`site-dropdown-item ${active ? 'site-dropdown-item-active' : ''}`}
+                                className={`site-dropdown-item text-left ${active ? 'site-dropdown-item-active' : ''}`}
                                 onClick={() => setSelectedId(cave.id)}
                               >
-                                <span className="flex flex-wrap gap-1">
-                                  {tags.map((tag) => (
-                                    <span key={tag} className="site-badge-slate">
-                                      {tag}
-                                    </span>
-                                  ))}
-                                </span>
+                                {caveDisplayName(cave)}
                               </button>
                             )
                           })}
@@ -215,7 +208,7 @@ export default function CavesTab() {
           ) : (
             <div className="space-y-4 text-sm text-slate-200">
               <p>
-                <span className="text-white">{body.label}</span>
+                <span className="text-white">{caveDisplayName(selected)}</span>
                 <span className="site-hint"> on {body.name}</span>
               </p>
               <ol className="list-decimal space-y-2 pl-5">
