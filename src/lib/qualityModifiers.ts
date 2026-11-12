@@ -196,6 +196,34 @@ const PROPERTY_LABELS: Record<string, string> = {
   'Quantum_Fuelrequirement': 'Fuel Requirement',
   'Radar_Minaimassistdistance': 'Min Aim Assist Distance',
   'Radar_Maxaimassistdistance': 'Max Aim Assist Distance',
+  'Radar_DistanceMin': 'Min Aim Assist Distance',
+  'Radar_DistanceMax': 'Max Aim Assist Distance',
+  'Shield_PhysicalReduction': 'Shield Physical Reduction',
+  'Shield_EnergyReduction': 'Shield Energy Reduction',
+  'Signature_Em': 'EM Signature',
+  'Signature_Ir': 'IR Signature',
+  'Temp_IrPerDegree': 'IR Per Degree',
+  'Temp_IrMinimum': 'Minimum IR Temperature',
+  'Temp_MinCooling': 'Minimum Cooling Temperature',
+  'Temp_Overheat': 'Overheat Temperature',
+  'Temp_Heat': 'Heat Generation',
+  'Coolant_PowerDraw': 'Coolant Power Draw',
+  'Power_Min': 'Minimum Power Pips',
+  'Flight_BoostBackward': 'Reverse Boost Speed',
+  'Weapon_CapacitorShots': 'Capacitor Shots',
+  'Weapon_RegenPerSec': 'Regen per Second',
+  'Weapon_ChargeTime': 'Charge Time',
+  'Weapon_CooldownTime': 'Cooldown Time',
+  'Weapon_SequenceDelay': 'Sequence Delay',
+  'Weapon_Overheat': 'Weapon Overheat',
+  'Weapon_Cooling': 'Cooling per Second',
+  'Weapon_OverheatFix': 'Overheat Recovery',
+  'Weapon_CycleShots': 'Cycle Shots',
+  'Weapon_CycleSeconds': 'Cycle Seconds',
+  'Emp_Charge': 'EMP Charge Time',
+  'Emp_Damage': 'EMP Distortion',
+  'Emp_Radius': 'EMP Radius',
+  'Emp_Cooldown': 'EMP Cooldown',
   'Weapon_Hullscraping_Efficiency': 'Scraping Efficiency (%)',
   'Weapon_Hullscraping_Radius': 'Scraping Radius (m)',
   'Weapon_Hullscraping_Speed': 'Scraping Speed',
@@ -272,18 +300,96 @@ export function canonicalStatKey(property: string): string {
   return key || property
 }
 
+const SPEC_ACRONYMS = new Map(
+  ['em', 'ir', 'cs', 'emp', 'fps', 'scu', 'rpm', 'dps', 'hp', 'qd'].map((word) => [word, word.toUpperCase()])
+)
+
+/** Words CIG glues on with no break, as in Physicalreduction or Irperdegree. */
+const GLUED_SPEC_WORDS = [
+  'reduction', 'minimum', 'maximum', 'cooling', 'degree', 'draw', 'shots',
+  'time', 'delay', 'backward', 'seconds', 'distance', 'output', 'generation',
+  'requirement', 'signature', 'capacity', 'speed', 'radius', 'charge',
+  'cooldown', 'overheat', 'dynamic', 'enabled', 'physical', 'energy',
+  'distortion', 'infrared', 'electromagnetic', 'persec',
+]
+
+function humanizeSpecKey(property: string): string {
+  let text = property.replace(/[._-]+/g, ' ')
+  text = text.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2')
+  for (const word of GLUED_SPEC_WORDS) {
+    text = text.replace(new RegExp(`([A-Za-z])(${word})\\b`, 'gi'), '$1 $2')
+  }
+  text = text.replace(/\bpersec\b/gi, 'per sec')
+  return text
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((word) => {
+      const lower = word.toLowerCase()
+      if (SPEC_ACRONYMS.has(lower)) return SPEC_ACRONYMS.get(lower) as string
+      if (lower === 'per') return 'per'
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+    })
+    .join(' ')
+}
+
 export function getPropertyLabel(property: string | null | undefined): string {
   if (!property) return 'Unknown'
   const key = Object.keys(PROPERTY_LABELS).find(
     k => k.toLowerCase() === property.toLowerCase()
   )
   if (key) return PROPERTY_LABELS[key]
-  
-  // Fallback: convert snake_case to Title Case
-  return property
-    .split('_')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(' ')
+  return humanizeSpecKey(property)
+}
+
+/** Presence flags. They are always 1 and are not a specification. */
+const HIDDEN_SPEC_KEYS = new Set(['temp_enabled', 'coolant_dynamic'])
+
+/**
+ * Same reading stored under two keys. The first key is the one members see
+ * when the numbers match.
+ */
+const SPEC_ALIASES: string[][] = [
+  ['weapon_em', 'signature_em', 'signature_electromagnetic'],
+  ['signature_ir', 'signature_infrared'],
+  ['radar_minaimassistdistance', 'radar_distancemin'],
+  ['radar_maxaimassistdistance', 'radar_distancemax'],
+  ['missile_damage', 'weapon_damage'],
+]
+
+const TYPED_DAMAGE_KEYS = ['weapon_damage_physical', 'weapon_damage_energy', 'weapon_damage_distortion']
+
+/** Member-facing base specs: readable keys, with the same reading listed once. */
+export function presentBlueprintSpecs(stats: Record<string, number>): Record<string, number> {
+  const next: Record<string, number> = {}
+  for (const [key, value] of Object.entries(stats)) {
+    if (value == null || !Number.isFinite(value)) continue
+    if (HIDDEN_SPEC_KEYS.has(key.toLowerCase())) continue
+    next[key] = value
+  }
+
+  const keyByLower = new Map(Object.keys(next).map((key) => [key.toLowerCase(), key]))
+  for (const group of SPEC_ALIASES) {
+    const present = group
+      .map((key) => keyByLower.get(key))
+      .filter((key): key is string => Boolean(key))
+    if (present.length < 2) continue
+    const first = next[present[0]]
+    if (!present.every((key) => next[key] === first)) continue
+    for (const key of present.slice(1)) {
+      delete next[key]
+      keyByLower.delete(key.toLowerCase())
+    }
+  }
+
+  const totalKey = keyByLower.get('weapon_damage')
+  if (totalKey != null) {
+    const typed = TYPED_DAMAGE_KEYS
+      .map((key) => keyByLower.get(key))
+      .filter((key): key is string => Boolean(key && next[key]))
+    if (typed.length === 1 && next[typed[0]] === next[totalKey]) delete next[totalKey]
+  }
+
+  return next
 }
 
 /**

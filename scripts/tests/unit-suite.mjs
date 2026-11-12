@@ -2758,6 +2758,52 @@ check(
     quality.getPropertyLabel('Fuel_Quantumflow') === 'Quantum Fuel Flow (SCU/s)',
   'industrial stats: ore pod capacity and fuel nozzle flow have member labels',
 )
+check(
+  quality.getPropertyLabel('Shield_PhysicalReduction') === 'Shield Physical Reduction' &&
+    quality.getPropertyLabel('Shield_EnergyReduction') === 'Shield Energy Reduction' &&
+    quality.getPropertyLabel('Temp_IrPerDegree') === 'IR Per Degree' &&
+    quality.getPropertyLabel('Temp_IrMinimum') === 'Minimum IR Temperature' &&
+    quality.getPropertyLabel('Temp_MinCooling') === 'Minimum Cooling Temperature' &&
+    quality.getPropertyLabel('Coolant_PowerDraw') === 'Coolant Power Draw' &&
+    quality.getPropertyLabel('Signature_Em') === 'EM Signature' &&
+    quality.getPropertyLabel('Radar_DistanceMax') === 'Max Aim Assist Distance' &&
+    quality.getPropertyLabel('Flight_BoostBackward') === 'Reverse Boost Speed' &&
+    quality.getPropertyLabel('Weapon_RegenPerSec') === 'Regen per Second',
+  'component specs: glued stat names split into words members can read',
+)
+const bretonSpecs = quality.presentBlueprintSpecs({
+  Weapon_Damage: 100,
+  Weapon_Damage_Energy: 100,
+  Health_Maxhealth: 300,
+  Weapon_Em: 7920,
+  Signature_Em: 7920,
+  Temp_Enabled: 1,
+  Temp_IrPerDegree: 7,
+  Coolant_Dynamic: 1,
+  Coolant_PowerDraw: 16,
+  Radar_Minaimassistdistance: 585,
+  Radar_DistanceMin: 585,
+  Radar_Maxaimassistdistance: 695.75,
+  Radar_DistanceMax: 695.75,
+})
+check(
+  bretonSpecs.Weapon_Em === 7920 &&
+    bretonSpecs.Signature_Em == null &&
+    bretonSpecs.Weapon_Damage == null &&
+    bretonSpecs.Weapon_Damage_Energy === 100 &&
+    bretonSpecs.Temp_Enabled == null &&
+    bretonSpecs.Coolant_Dynamic == null &&
+    bretonSpecs.Temp_IrPerDegree === 7 &&
+    bretonSpecs.Radar_DistanceMin == null &&
+    bretonSpecs.Radar_Minaimassistdistance === 585 &&
+    bretonSpecs.Radar_DistanceMax == null &&
+    quality.presentBlueprintSpecs({
+      Weapon_Damage: 30,
+      Weapon_Damage_Physical: 10,
+      Weapon_Damage_Energy: 20,
+    }).Weapon_Damage === 30,
+  'component specs: the same reading is listed once',
+)
 
 const tickerLinks = await import(pathToFileURL(path.join(outDir, 'tickerLinks.mjs')).href)
 const kofiParts = tickerLinks.splitTickerText('Support the site on Ko-fi at ko-fi.com/dumpers_repo. Thanks!')
