@@ -142,6 +142,36 @@ const PROPERTY_LABELS: Record<string, string> = {
   'Mining_ExtractionPower': 'Extraction Power',
   'Mining_OptimalRange': 'Optimal Range (m)',
   'Mining_MaxRange': 'Max Range (m)',
+  'Mining_LaserDamage': 'Laser Damage',
+  'Mining_LaserDamage_Physical': 'Laser Physical Damage',
+  'Mining_LaserDamage_Energy': 'Laser Energy Damage',
+  'Mining_LaserDamage_Distortion': 'Laser Distortion Damage',
+  'Mining_LaserDamage_Thermal': 'Laser Thermal Damage',
+  'Mining_LaserDamage_Biochemical': 'Laser Biochemical Damage',
+  'Mining_LaserDamage_Stun': 'Laser Stun Damage',
+  'Mining_LaserOptimalRange': 'Laser Optimal Range (m)',
+  'Mining_LaserMaxRange': 'Laser Max Range (m)',
+  'Mining_LaserHeat': 'Laser Heat per Second',
+  'Mining_ExtractorDamage': 'Extractor Damage',
+  'Mining_ExtractorDamage_Physical': 'Extractor Physical Damage',
+  'Mining_ExtractorDamage_Energy': 'Extractor Energy Damage',
+  'Mining_ExtractorDamage_Distortion': 'Extractor Distortion Damage',
+  'Mining_ExtractorDamage_Thermal': 'Extractor Thermal Damage',
+  'Mining_ExtractorDamage_Biochemical': 'Extractor Biochemical Damage',
+  'Mining_ExtractorDamage_Stun': 'Extractor Stun Damage',
+  'Mining_ExtractorOptimalRange': 'Extractor Optimal Range (m)',
+  'Mining_ExtractorMaxRange': 'Extractor Max Range (m)',
+  'Mining_ExtractorHeat': 'Extractor Heat per Second',
+  'Mining_Instability': 'Instability',
+  'Mining_Resistance': 'Resistance',
+  'Mining_OptimalWindow': 'Optimal Window',
+  'Mining_OptimalWindowRate': 'Optimal Window Rate',
+  'Mining_ShatterDamage': 'Shatter Damage',
+  'Mining_ClusterFactor': 'Cluster Factor',
+  'Mining_CatastrophicWindowRate': 'Catastrophic Window Rate',
+  'Mining_Filter': 'Filter',
+  'Mining_ThrottleSpeed': 'Throttle Lerp Speed',
+  'Mining_ThrottleMin': 'Throttle Min',
   'Weapon_Range': 'Effective Range (m)',
   'Weapon_MagazineSize': 'Magazine Size',
   'Weapon_Recoil_Smoothness': 'Recoil Smoothness',
@@ -365,6 +395,16 @@ export function presentBlueprintSpecs(stats: Record<string, number>): Record<str
     next[key] = value
   }
   if (signatureEm && weaponEm) delete next[signatureEm]
+  // A mining laser keeps Weapon_Damage equal to the laser beam for crafting quality.
+  // The spec list shows that beam as Laser Damage, and the extractor on its own.
+  if (Object.keys(next).some((key) => key.toLowerCase() === 'mining_laserdamage')) {
+    for (const key of Object.keys(next)) {
+      const lower = key.toLowerCase()
+      if (lower === 'weapon_damage' || lower === 'weapon_damage_physical' || lower === 'weapon_damage_energy' || lower === 'weapon_damage_distortion') {
+        delete next[key]
+      }
+    }
+  }
   return next
 }
 
@@ -601,6 +641,8 @@ export function aggregateModifiers(
     const baseKey = Object.keys(baseStats || {}).find(
       (k) => k.toLowerCase() === property.toLowerCase()
     )
+    const laserDamage = Object.keys(baseStats || {}).some((k) => k.toLowerCase() === 'mining_laserdamage')
+    const propertyLabel = property === 'weapon_damage' && laserDamage ? 'Laser Damage' : data.label
     const baseValue = baseKey ? baseStats![baseKey] : undefined
     const rawFinal =
       baseValue === undefined
@@ -617,7 +659,7 @@ export function aggregateModifiers(
 
     aggregated.push({
       property: data.originalProperty,
-      propertyLabel: data.label,
+      propertyLabel,
       combinedModifier,
       percentChange,
       additiveChange: data.isIntegerAdditive ? additiveChange : undefined,

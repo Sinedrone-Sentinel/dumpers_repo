@@ -2864,6 +2864,39 @@ check(
     shipShopMath.weaponBurstDps({ Weapon_Damage: 10, Weapon_Firerate: 60, Weapon_ChargeTime: 0, Weapon_Pellets: 0 }) === 10,
   'Ship Shop: a 0 spec reads the same as a missing one',
 )
+const miningLaser = shipItemStatsLib.extractShipItemStats({
+  _RecordValue_: {
+    Components: [
+      { _Type_: 'SEntityComponentMiningLaserParams', throttleLerpSpeed: 7, throttleMinimum: 0.2, miningLaserModifiers: { laserInstability: { value: 35 }, resistanceModifier: { value: 25 }, optimalChargeWindowRateModifier: { value: 0 }, shatterdamageModifier: { value: null } } },
+      { _Type_: 'SWeaponActionFireBeamParams', hitType: 'Extraction', mannequinTag: { tag: 'tractor' }, damagePerSecond: { _Type_: 'DamageInfo', DamagePhysical: 0, DamageEnergy: 1295, DamageDistortion: 0, DamageThermal: 0, DamageBiochemical: 0, DamageStun: 0 }, fullDamageRange: 40, zeroDamageRange: 45, heatPerSecond: 0 },
+      { _Type_: 'SWeaponActionFireBeamParams', hitType: 'ElectricArc', mannequinTag: { tag: 'laser' }, damagePerSecond: { _Type_: 'DamageInfo', DamagePhysical: 0, DamageEnergy: 3900, DamageDistortion: 0, DamageThermal: 0, DamageBiochemical: 0, DamageStun: 0 }, fullDamageRange: 40, zeroDamageRange: 45, heatPerSecond: 0 },
+    ],
+  },
+})
+const miningShown = quality.presentBlueprintSpecs(miningLaser)
+check(
+  miningLaser.Weapon_Damage === 3900 &&
+    miningLaser.Mining_LaserDamage === 3900 &&
+    miningLaser.Mining_ExtractorDamage === 1295 &&
+    miningLaser.Mining_LaserHeat === 0 &&
+    miningLaser.Mining_OptimalWindowRate === 0 &&
+    miningLaser.Mining_ShatterDamage === undefined &&
+    miningLaser.Weapon_Damage_Energy === undefined &&
+    miningShown.Weapon_Damage === undefined &&
+    miningShown.Mining_LaserDamage === 3900 &&
+    miningShown.Mining_ExtractorDamage === 1295 &&
+    quality.getPropertyLabel('Mining_LaserDamage') === 'Laser Damage' &&
+    quality.getPropertyLabel('Mining_ExtractorDamage') === 'Extractor Damage',
+  'mining laser: the laser beam and the extractor stay separate, and the extractor is not Energy Damage',
+)
+const miningMods = quality.aggregateModifiers(
+  [quality.calculateSlotModifiers(500, [{ property: 'weapon_damage', baseAmount: 1, perQuality: 0 }])],
+  miningLaser,
+)
+check(
+  miningMods[0]?.propertyLabel === 'Laser Damage' && miningMods[0]?.baseValue === 3900,
+  'mining laser: crafting quality scales Laser Damage',
+)
 
 const tickerLinks = await import(pathToFileURL(path.join(outDir, 'tickerLinks.mjs')).href)
 const kofiParts = tickerLinks.splitTickerText('Support the site on Ko-fi at ko-fi.com/dumpers_repo. Thanks!')
