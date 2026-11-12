@@ -68,6 +68,13 @@ export function parseFrakenFit(raw: unknown): FrakenFit | null {
     : { shipId: build.shipId, ports: build.ports }
 }
 
+export async function fetchShipShopFrakenShipIds(): Promise<string[]> {
+  const { data, error } = await supabase.rpc('list_ship_shop_fraken_ship_ids')
+  if (error) throw error
+  if (!Array.isArray(data)) return []
+  return data.filter((id): id is string => typeof id === 'string' && id.length > 0)
+}
+
 export async function fetchShipShopFrakenFit(shipId: string): Promise<FrakenFit | null> {
   const { data, error } = await supabase.rpc('get_ship_shop_fraken_fit', { p_ship_id: shipId })
   if (error) throw error
@@ -78,6 +85,11 @@ export async function fetchFrakenCanSave(): Promise<boolean> {
   const { data, error } = await supabase.rpc('ship_shop_fraken_can_save')
   if (error) throw error
   return data === true
+}
+
+export async function deleteShipShopFrakenFit(shipId: string): Promise<void> {
+  const { error } = await supabase.rpc('delete_ship_shop_fraken_fit', { p_ship_id: shipId })
+  if (error) throw error
 }
 
 export async function saveShipShopFrakenFit(build: ShipBuild): Promise<FrakenFit> {

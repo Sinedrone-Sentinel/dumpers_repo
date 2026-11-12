@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type MouseEvent, type ReactNode } from 'react'
+import { useEffect, useMemo, useRef, useState, type MouseEvent, type ReactNode } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { useOrderDraft } from '../../contexts/OrderDraftContext'
 import { pricingForBlueprintLine } from '../../lib/orderPricing'
@@ -63,7 +63,8 @@ import {
   type ShipItemStats,
 } from '../../lib/shipShopMath'
 import { getShipItem } from '../../lib/shipItemCatalog'
-import { defaultShipShopLoadouts, fetchFrakenCanSave, fetchShipShopFrakenFit, fetchShipShopLoadouts, readGuestShipShopStore, saveShipShopFrakenFit, saveShipShopLoadouts, shipShopStoreHasShip, clearGuestShipShopStore, writeGuestShipShopStore, type FrakenFit } from '../../lib/shipShopOps'
+import { supabase } from '../../lib/supabase'
+import { defaultShipShopLoadouts, deleteShipShopFrakenFit, fetchFrakenCanSave, fetchShipShopFrakenFit, fetchShipShopFrakenShipIds, fetchShipShopLoadouts, readGuestShipShopStore, saveShipShopFrakenFit, saveShipShopLoadouts, shipShopStoreHasShip, clearGuestShipShopStore, writeGuestShipShopStore, type FrakenFit } from '../../lib/shipShopOps'
 import { isForSale, listingsFor, partListings, shipListings, showPartWhereToBuy, type ShopListing } from '../../lib/shipShopShops'
 import { ShopBuyButtons, ShopCartModal, ShopModalFrame, ShopQtyModal, ShopWhereModal } from './ShipShopCart'
 import SiteTooltip from '../SiteTooltip'
@@ -581,6 +582,7 @@ export default function ShipShopPage() {
   const [viewingFraken, setViewingFraken] = useState(false)
   const [frakenDraft, setFrakenDraft] = useState<ShipBuild | null>(null)
   const [frakenByShip, setFrakenByShip] = useState<Record<string, FrakenFit | null>>({})
+  const [frakenShipIds, setFrakenShipIds] = useState<Set<string>>(() => new Set())
   const [frakenCanSave, setFrakenCanSave] = useState(false)
   const [frakenSaving, setFrakenSaving] = useState(false)
   const [hangarShips, setHangarShips] = useState<HangarShip[]>([])
@@ -696,17 +698,84 @@ export default function ShipShopPage() {
   const frakenLookupId = viewingFraken
     ? (frakenDraft?.shipId ?? null)
     : (store.builds[buildIndex]?.shipId ?? null)
+  const frakenLookupIdRef = useRef<string | null>(null)
+  frakenLookupIdRef.current = frakenLookupId
+  const frakenEpochRef = useRef(new Map<string, number>())
+
+  useEffect(() => {
+    let cancelled = false
+
+    const reload = () => {
+      fetchShipShopFrakenShipIds()
+        .then((ids) => {
+          if (!cancelled) setFrakenShipIds(new Set(ids))
+        })
+        .catch(() => {})
+    }
+
+    const syncShip = (shipId: string, listed: boolean) => {
+      setFrakenShipIds((prev) => {
+        if (prev.has(shipId) === listed) return prev
+        const next = new Set(prev)
+        if (listed) next.add(shipId)
+        else next.delete(shipId)
+        return next
+      })
+      if (frakenLookupIdRef.current !== shipId) return
+      if (!listed) {
+        frakenEpochRef.current.set(shipId, (frakenEpochRef.current.get(shipId) ?? 0) + 1)
+        setFrakenByShip((prev) => ({ ...prev, [shipId]: null }))
+        setViewingFraken(false)
+        setFrakenDraft(null)
+        return
+      }
+      fetchShipShopFrakenFit(shipId)
+        .then((fit) => {
+          if (cancelled || frakenLookupIdRef.current !== shipId) return
+          setFrakenByShip((prev) => ({ ...prev, [shipId]: fit }))
+        })
+        .catch(() => {})
+    }
+
+    reload()
+
+    const channel = supabase
+      .channel(`ship-shop-fraken-listed-${Math.random().toString(36).slice(2)}`)
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'ship_shop_fraken_listed' }, (payload) => {
+        const shipId = (payload.new as { ship_id?: unknown }).ship_id
+        if (typeof shipId === 'string') syncShip(shipId, true)
+      })
+      .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'ship_shop_fraken_listed' }, (payload) => {
+        const shipId = (payload.old as { ship_id?: unknown }).ship_id
+        if (typeof shipId === 'string') syncShip(shipId, false)
+      })
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') reload()
+      })
+
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') reload()
+    }
+    document.addEventListener('visibilitychange', onVisible)
+
+    return () => {
+      cancelled = true
+      document.removeEventListener('visibilitychange', onVisible)
+      void supabase.removeChannel(channel)
+    }
+  }, [])
 
   useEffect(() => {
     if (!frakenLookupId) return
     let cancelled = false
+    const epoch = frakenEpochRef.current.get(frakenLookupId) ?? 0
     fetchShipShopFrakenFit(frakenLookupId)
       .then((fit) => {
-        if (cancelled) return
+        if (cancelled || (frakenEpochRef.current.get(frakenLookupId) ?? 0) !== epoch) return
         setFrakenByShip((prev) => ({ ...prev, [frakenLookupId]: fit }))
       })
       .catch(() => {
-        if (cancelled) return
+        if (cancelled || (frakenEpochRef.current.get(frakenLookupId) ?? 0) !== epoch) return
         setFrakenByShip((prev) => ({ ...prev, [frakenLookupId]: null }))
       })
     return () => {
@@ -790,9 +859,34 @@ export default function ShipShopPage() {
     saveShipShopFrakenFit({ shipId, ports: personal.ports, power: personal.power })
       .then((saved) => {
         setFrakenByShip((prev) => ({ ...prev, [saved.shipId]: saved }))
+        setFrakenShipIds((prev) => {
+          const next = new Set(prev)
+          next.add(saved.shipId)
+          return next
+        })
         setSaveNote(null)
       })
       .catch(() => setSaveNote('Franken-Fit did not save.'))
+      .finally(() => setFrakenSaving(false))
+  }
+
+  function removeFrakenFit() {
+    if (!frakenCanSave || viewingFraken || !personal?.shipId || frakenSaving) return
+    const shipId = personal.shipId
+    frakenEpochRef.current.set(shipId, (frakenEpochRef.current.get(shipId) ?? 0) + 1)
+    setFrakenSaving(true)
+    deleteShipShopFrakenFit(shipId)
+      .then(() => {
+        setFrakenByShip((prev) => ({ ...prev, [shipId]: null }))
+        setFrakenShipIds((prev) => {
+          if (!prev.has(shipId)) return prev
+          const next = new Set(prev)
+          next.delete(shipId)
+          return next
+        })
+        setSaveNote(null)
+      })
+      .catch(() => setSaveNote('Franken-Fit did not come down.'))
       .finally(() => setFrakenSaving(false))
   }
 
@@ -912,11 +1006,20 @@ export default function ShipShopPage() {
             )}
             {shipQuery && !viewingFraken && (
               <div className="site-dropdown-list absolute left-0 right-0 top-full z-30 max-h-72 overflow-y-auto">
-                {shipChoices.map((entry) => (
-                  <button key={entry.id} type="button" className="site-dropdown-item w-full text-left" onClick={() => chooseShip(entry.id)}>
-                    {entry.displayName}
-                  </button>
-                ))}
+                {shipChoices.map((entry) => {
+                  const hasFraken = frakenShipIds.has(entry.id)
+                  const row = (
+                    <button key={entry.id} type="button" className="site-dropdown-item w-full text-left" onClick={() => chooseShip(entry.id)}>
+                      <span className={hasFraken ? 'text-yellow-300' : undefined}>{entry.displayName}</span>
+                    </button>
+                  )
+                  if (!hasFraken) return row
+                  return (
+                    <SiteTooltip key={entry.id} side="right" className="!block w-full" content="This ship has a published Franken-Fit.">
+                      {row}
+                    </SiteTooltip>
+                  )
+                })}
               </div>
             )}
           </div>
@@ -969,6 +1072,18 @@ export default function ShipShopPage() {
                 >
                   Save Franken-Fit
                 </button>
+              ) : null}
+              {frakenCanSave && !viewingFraken && publishedFraken?.shipId ? (
+                <SiteTooltip side="bottom" content="Take down the published Franken-Fit. Its name leaves gold in the ship search.">
+                  <button
+                    type="button"
+                    className={`${CHIP} site-btn-danger`}
+                    disabled={frakenSaving}
+                    onClick={removeFrakenFit}
+                  >
+                    Remove Franken-Fit
+                  </button>
+                </SiteTooltip>
               ) : null}
             </div>
           )}
