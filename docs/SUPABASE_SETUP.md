@@ -254,6 +254,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 184 | `219_flight_gear.sql` | Flight gear catalog (`flight_gear`) and external device slots. Members can read which gear is listed. `admin_set_flight_gear_listed` is super-admin only. `save_flight_profile_layout` and `save_flight_button_presses` accept optional `externalLeft` and `externalRight` arrays of two devices, and only when `rsi_handle_verified` is set. External slots reject sticks and throttles. Apply after **218** |
 | 185 | `220_flight_gear_list_rudder.sql` | Lists T-Rudders Mk.V (`t-rudder`) so RSI-verified members can place it on External 1 or External 2. Apply after **219** |
 | 186 | `221_flight_virpil.sql` | Virpil gear rows, all unlisted, and a `base` kind. A Virpil side saves `setup`, `top`, `main`, and `base`. A VKB side keeps its seven slots. Apply after **220** |
+| 187 | `222_list_ship_shop_fraken_ships.sql` | Ship search gold names. `list_ship_shop_fraken_ship_ids` returns the published ship ids. `ship_shop_fraken_listed` mirrors those ids (select only, realtime) so an open page hears a publish or a removal. `delete_ship_shop_fraken_fit` is the owner-only way to take one down. The fit JSON stays on `get_ship_shop_fraken_fit`. Apply after **221** |
 
 ### pg_cron (migrations 054, 065-068, 144, 147, 178, 179, 191, 196)
 
