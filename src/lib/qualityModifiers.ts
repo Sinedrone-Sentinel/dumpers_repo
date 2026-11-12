@@ -196,6 +196,36 @@ const PROPERTY_LABELS: Record<string, string> = {
   'Quantum_Fuelrequirement': 'Fuel Requirement',
   'Radar_Minaimassistdistance': 'Min Aim Assist Distance',
   'Radar_Maxaimassistdistance': 'Max Aim Assist Distance',
+  'Radar_DistanceMin': 'Radar Distance Min',
+  'Radar_DistanceMax': 'Radar Distance Max',
+  'Shield_PhysicalReduction': 'Shield Physical Reduction',
+  'Shield_EnergyReduction': 'Shield Energy Reduction',
+  'Signature_Em': 'EM Signature',
+  'Signature_Ir': 'Signature IR',
+  'Temp_Enabled': 'Temp Enabled',
+  'Temp_IrPerDegree': 'Temp IR Per Degree',
+  'Temp_IrMinimum': 'Temp IR Minimum',
+  'Temp_MinCooling': 'Temp Min Cooling',
+  'Temp_Overheat': 'Temp Overheat',
+  'Temp_Heat': 'Temp Heat',
+  'Coolant_PowerDraw': 'Coolant Power Draw',
+  'Coolant_Dynamic': 'Coolant Dynamic',
+  'Power_Min': 'Power Min',
+  'Flight_BoostBackward': 'Flight Boost Backward',
+  'Weapon_CapacitorShots': 'Weapon Capacitor Shots',
+  'Weapon_RegenPerSec': 'Weapon Regen Per Sec',
+  'Weapon_ChargeTime': 'Weapon Charge Time',
+  'Weapon_CooldownTime': 'Weapon Cooldown Time',
+  'Weapon_SequenceDelay': 'Weapon Sequence Delay',
+  'Weapon_Overheat': 'Weapon Overheat',
+  'Weapon_Cooling': 'Weapon Cooling',
+  'Weapon_OverheatFix': 'Weapon Overheat Fix',
+  'Weapon_CycleShots': 'Weapon Cycle Shots',
+  'Weapon_CycleSeconds': 'Weapon Cycle Seconds',
+  'Emp_Charge': 'EMP Charge',
+  'Emp_Damage': 'EMP Damage',
+  'Emp_Radius': 'EMP Radius',
+  'Emp_Cooldown': 'EMP Cooldown',
   'Weapon_Hullscraping_Efficiency': 'Scraping Efficiency (%)',
   'Weapon_Hullscraping_Radius': 'Scraping Radius (m)',
   'Weapon_Hullscraping_Speed': 'Scraping Speed',
@@ -272,18 +302,64 @@ export function canonicalStatKey(property: string): string {
   return key || property
 }
 
+const SPEC_ACRONYMS = new Map(
+  ['em', 'ir', 'cs', 'emp', 'fps', 'scu', 'rpm', 'dps', 'hp', 'qd'].map((word) => [word, word.toUpperCase()])
+)
+
+/** Words CIG glues on with no break, as in Physicalreduction or Irperdegree. */
+const GLUED_SPEC_WORDS = [
+  'reduction', 'minimum', 'maximum', 'cooling', 'degree', 'draw', 'shots',
+  'time', 'delay', 'backward', 'seconds', 'distance', 'output', 'generation',
+  'requirement', 'signature', 'capacity', 'speed', 'radius', 'charge',
+  'cooldown', 'overheat', 'dynamic', 'enabled', 'physical', 'energy',
+  'distortion', 'infrared', 'electromagnetic', 'persec',
+]
+
+function humanizeSpecKey(property: string): string {
+  let text = property.replace(/[._-]+/g, ' ')
+  text = text.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2')
+  for (const word of GLUED_SPEC_WORDS) {
+    text = text.replace(new RegExp(`([A-Za-z])(${word})\\b`, 'gi'), '$1 $2')
+  }
+  text = text.replace(/\bpersec\b/gi, 'per sec')
+  return text
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((word) => {
+      const lower = word.toLowerCase()
+      if (SPEC_ACRONYMS.has(lower)) return SPEC_ACRONYMS.get(lower) as string
+      if (lower === 'per') return 'per'
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+    })
+    .join(' ')
+}
+
 export function getPropertyLabel(property: string | null | undefined): string {
   if (!property) return 'Unknown'
   const key = Object.keys(PROPERTY_LABELS).find(
     k => k.toLowerCase() === property.toLowerCase()
   )
   if (key) return PROPERTY_LABELS[key]
-  
-  // Fallback: convert snake_case to Title Case
-  return property
-    .split('_')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(' ')
+  return humanizeSpecKey(property)
+}
+
+/**
+ * The parser stores EM Signature a second time as Signature_Em. The name is the
+ * same words in reverse. Other specs stay even when the numbers match.
+ */
+export function presentBlueprintSpecs(stats: Record<string, number>): Record<string, number> {
+  const next: Record<string, number> = {}
+  let signatureEm: string | null = null
+  let weaponEm: string | null = null
+  for (const [key, value] of Object.entries(stats)) {
+    if (value == null || !Number.isFinite(value)) continue
+    const lower = key.toLowerCase()
+    if (lower === 'signature_em') signatureEm = key
+    if (lower === 'weapon_em') weaponEm = key
+    next[key] = value
+  }
+  if (signatureEm && weaponEm) delete next[signatureEm]
+  return next
 }
 
 /**

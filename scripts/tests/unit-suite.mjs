@@ -2758,6 +2758,53 @@ check(
     quality.getPropertyLabel('Fuel_Quantumflow') === 'Quantum Fuel Flow (SCU/s)',
   'industrial stats: ore pod capacity and fuel nozzle flow have member labels',
 )
+check(
+  quality.getPropertyLabel('Shield_PhysicalReduction') === 'Shield Physical Reduction' &&
+    quality.getPropertyLabel('Shield_EnergyReduction') === 'Shield Energy Reduction' &&
+    quality.getPropertyLabel('Weapon_Power') === 'Power Draw' &&
+    quality.getPropertyLabel('Power_Segments') === 'Power Draw' &&
+    quality.getPropertyLabel('Power_Min') === 'Power Min' &&
+    quality.getPropertyLabel('Temp_IrPerDegree') === 'Temp IR Per Degree' &&
+    quality.getPropertyLabel('Temp_IrMinimum') === 'Temp IR Minimum' &&
+    quality.getPropertyLabel('Temp_MinCooling') === 'Temp Min Cooling' &&
+    quality.getPropertyLabel('Coolant_PowerDraw') === 'Coolant Power Draw' &&
+    quality.getPropertyLabel('Signature_Em') === 'EM Signature' &&
+    quality.getPropertyLabel('Radar_DistanceMax') === 'Radar Distance Max' &&
+    quality.getPropertyLabel('Radar_DistanceMin') === 'Radar Distance Min' &&
+    quality.getPropertyLabel('Flight_BoostBackward') === 'Flight Boost Backward' &&
+    quality.getPropertyLabel('Weapon_RegenPerSec') === 'Weapon Regen Per Sec' &&
+    quality.getPropertyLabel('Emp_Charge') === 'EMP Charge' &&
+    quality.getPropertyLabel('Emp_Damage') === 'EMP Damage',
+  'component specs: glued stat names split into the words already there',
+)
+const bretonSpecs = quality.presentBlueprintSpecs({
+  Weapon_Damage: 100,
+  Weapon_Damage_Energy: 100,
+  Health_Maxhealth: 300,
+  Weapon_Em: 7920,
+  Signature_Em: 1,
+  Temp_Enabled: 1,
+  Temp_IrPerDegree: 7,
+  Coolant_Dynamic: 1,
+  Coolant_PowerDraw: 16,
+  Radar_Minaimassistdistance: 585,
+  Radar_DistanceMin: 585,
+  Radar_Maxaimassistdistance: 100,
+  Radar_DistanceMax: 695.75,
+})
+check(
+  bretonSpecs.Weapon_Em === 7920 &&
+    bretonSpecs.Signature_Em == null &&
+    bretonSpecs.Weapon_Damage === 100 &&
+    bretonSpecs.Weapon_Damage_Energy === 100 &&
+    bretonSpecs.Coolant_Dynamic === 1 &&
+    bretonSpecs.Radar_DistanceMin === 585 &&
+    bretonSpecs.Radar_Minaimassistdistance === 585 &&
+    bretonSpecs.Radar_DistanceMax === 695.75 &&
+    bretonSpecs.Radar_Maxaimassistdistance === 100 &&
+    quality.presentBlueprintSpecs({ Signature_Em: 40 }).Signature_Em === 40,
+  'component specs: only Signature EM is the reverse of EM Signature',
+)
 
 const tickerLinks = await import(pathToFileURL(path.join(outDir, 'tickerLinks.mjs')).href)
 const kofiParts = tickerLinks.splitTickerText('Support the site on Ko-fi at ko-fi.com/dumpers_repo. Thanks!')

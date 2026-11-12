@@ -11,6 +11,7 @@ import {
   formatStatValue,
   getAggregatedModifierColorClass,
   getPropertyLabel,
+  presentBlueprintSpecs,
   calculateSlotModifiers,
   dropUnbackedArmorModifiers,
 } from '../lib/qualityModifiers'
@@ -274,6 +275,8 @@ export default function BlueprintDetailsModal({
     blueprint.entityClass,
   ])
 
+  const specStats = useMemo(() => presentBlueprintSpecs(mergedBaseStats), [mergedBaseStats])
+
   // Calculate modifiers for all slots based on current quality settings
   const allSlotModifiers = useMemo(() => {
     if (!blueprint.slots) return []
@@ -386,9 +389,9 @@ export default function BlueprintDetailsModal({
 
         <div className="site-surface rounded-xl p-3 sm:p-4">
           <h3 className="text-slate-400 text-sm mb-3">Base Specifications</h3>
-          {Object.keys(mergedBaseStats).length > 0 ? (
+          {Object.keys(specStats).length > 0 ? (
             <div className="grid grid-cols-2 gap-2">
-              {Object.entries(mergedBaseStats).map(([key, value]) => (
+              {Object.entries(specStats).map(([key, value]) => (
                 <div key={key} className="flex justify-between items-center text-sm">
                   <span className="text-slate-400">{getPropertyLabel(key)}</span>
                   <span className="text-white font-mono">{formatStatValue(value, key)}</span>
@@ -399,7 +402,7 @@ export default function BlueprintDetailsModal({
             <p className="site-hint text-sm">No Recorded Base Stats</p>
           )}
           {miningEffects && miningEffects.lines.length > 0 && (
-            <div className={Object.keys(mergedBaseStats).length > 0 ? 'mt-3 pt-3 site-divider' : ''}>
+            <div className={Object.keys(specStats).length > 0 ? 'mt-3 pt-3 site-divider' : ''}>
               {miningEffects.kind && (
                 <p className="text-xs uppercase tracking-wide text-slate-500 mb-2">
                   {miningEffects.kind === 'active' ? 'Active' : 'Passive'}
