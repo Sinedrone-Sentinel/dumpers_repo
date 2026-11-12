@@ -54,7 +54,7 @@ const pages: Record<string, SeoPageConfig> = {
   '/': {
     title: "Star Citizen Blueprint Tracker & Crafting Tools | Dumper's Repo",
     description:
-      "Free Star Citizen tools for blueprints, missions, Wikelo trades, mining, ship loadouts, shop runs, and the member marketplace. Most tools work in Offline Mode.",
+      "The all-in-one Star Citizen companion for ship fitting, cargo hauling, mining, crafting blueprints, and Wikelo trades. Also flight profiles, shop runs, cave routes, and a member marketplace. Most tools work signed out.",
     canonicalPath: '/',
   },
   '/blueprints': {
@@ -135,6 +135,12 @@ const pages: Record<string, SeoPageConfig> = {
       'Plan Star Citizen cargo runs to a profit goal or a number of trades, or find buyers for cargo you already carry. Sign-in required.',
     canonicalPath: '/smart-hauler/',
   },
+  '/flight-profile': {
+    title: "Flight Profile — Sticks, Throttles & Maps | Dumper's Repo",
+    description:
+      "Map a Star Citizen joystick and HOTAS profile onto the VKB or Virpil controls you have mounted. Sign-in required.",
+    canonicalPath: '/flight-profile/',
+  },
   '/privacy': {
     title: "Privacy Policy | Dumper's Repo",
     description:
@@ -208,8 +214,7 @@ export function buildJsonLdGraph(): Record<string, unknown> {
         name: "Dumper's Repo",
         url,
         logo: absoluteUrl('/favicon.png'),
-        description:
-          'Star Citizen blueprint tracker, Wikelo barter guide, ship loadouts, mining tools, shop runs, and community marketplace.',
+        description: pages['/'].description,
       },
       {
         '@type': 'SoftwareApplication',
@@ -225,17 +230,23 @@ export function buildJsonLdGraph(): Record<string, unknown> {
           priceCurrency: 'USD',
         },
         featureList: [
-          'Star Citizen crafting blueprint database and tracker',
-          'Blueprint mission tracker and reputation rewards',
-          'Wikelo favors, reputation, and barter trade guide',
-          'Mining tracker with ore guide, RS reference, and cave routes',
-          'Resource tracker for crafting materials',
-          "Fuzy's Ship Shop loadouts and where to buy",
-          'UEX Lookup and Shopping Cart',
-          'Executive Hangar light clock',
+          'Blueprints',
+          'Mission Tracker',
+          'Wikelo',
+          'Resource Tracker',
+          'Smart Hauler',
+          'Mining Tracker — ore guide, rock calculator, and cave routes',
+          'Smart Cracker',
+          'Flight Profile',
+          "Fuzy's Ship Shop",
+          'UEX Lookup',
+          'Shopping Cart',
+          'Executive Hangar',
+          'The Bazaar',
+          'My Listings',
+          'Info Archive',
           "Dumper's Fair-Value Price (DFP)",
-          'Community WTB/WTS marketplace',
-          'BP Dumper Game.log sync',
+          'BP Dumper',
         ],
       },
       {
