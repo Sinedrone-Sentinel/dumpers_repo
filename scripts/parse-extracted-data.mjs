@@ -20,6 +20,7 @@ import { parseMiningSpawns } from './lib/parseMiningSpawns.mjs'
 import { mergeSpawnOreLocations, rebuildRarityTiers } from './lib/mergeSpawnOreLocations.mjs'
 import { parseOreSignatures } from './lib/parseOreSignatures.mjs'
 import { parseShipShop } from './lib/parseShipShop.mjs'
+import { extractShipItemStats } from './lib/shipItemStats.mjs'
 import { parseNavSystems } from './lib/parseNavSystems.mjs'
 import {
   buildGuideToSpawnKeys,
@@ -4394,11 +4395,15 @@ function parseMiningLasers(localization = {}) {
       }
     }
     
-    // Extract all numeric stats via regex (faster than deep traversal)
+    // The laser beam and the extractor beam are separate fire actions. Laser power
+    // and range come from the laser beam (hit type ElectricArc), never whichever
+    // damage block happens to be first in the file.
+    const mined = extractShipItemStats(json)
     const damageMatch = content.match(/"DamageEnergy":\s*([\d.]+)/)
     const fullRangeMatch = content.match(/"fullDamageRange":\s*([\d.]+)/)
     const zeroRangeMatch = content.match(/"zeroDamageRange":\s*([\d.]+)/)
     const extractionMatch = content.match(/"extractionEfficiency":\s*([\d.]+)/)
+    const fromBeam = (value, match) => (typeof value === 'number' ? value : (match ? parseFloat(match[1]) : 0))
     
     // Extract and resolve display name
     const rawDisplayName = attachParams?.AttachDef?.Localization?.Name || recordName.replace('EntityClassDefinition.', '')
@@ -4413,10 +4418,10 @@ function parseMiningLasers(localization = {}) {
       size,
       moduleSlotCount: countMiningModulePorts(itemPortParams),
       // Power stats (the main "damage" value for mining)
-      laserPower: damageMatch ? parseFloat(damageMatch[1]) : 0,
+      laserPower: fromBeam(mined.Mining_LaserDamage, damageMatch),
       // Range stats
-      optimalRange: fullRangeMatch ? parseFloat(fullRangeMatch[1]) : 0,
-      maxRange: zeroRangeMatch ? parseFloat(zeroRangeMatch[1]) : 0,
+      optimalRange: fromBeam(mined.Mining_LaserOptimalRange, fullRangeMatch),
+      maxRange: fromBeam(mined.Mining_LaserMaxRange, zeroRangeMatch),
       // Extraction efficiency
       extractionEfficiency: extractionMatch ? parseFloat(extractionMatch[1]) : 1.0,
       // Mining modifiers

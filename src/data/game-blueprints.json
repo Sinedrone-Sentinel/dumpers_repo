@@ -170658,18 +170658,6 @@
           ]
         }
       ],
-      "vehicleBaseStats": {
-        "Health_Maxhealth": 8000,
-        "Weapon_Damage_Physical": 0,
-        "Weapon_Damage_Energy": 3900,
-        "Weapon_Damage_Distortion": 0,
-        "Weapon_Damage": 1295,
-        "Power_Min": 1,
-        "Weapon_Em": 0,
-        "Signature_Em": 0,
-        "Signature_Ir": 0,
-        "Power_Segments": 1
-      },
       "isReward": true,
       "rewardMissions": [
         {
@@ -170949,7 +170937,43 @@
         "shubinrank2to3",
         "battaglia",
         "battaglia_rpt1"
-      ]
+      ],
+      "vehicleBaseStats": {
+        "Health_Maxhealth": 8000,
+        "Weapon_Damage": 3900,
+        "Power_Min": 1,
+        "Weapon_Em": 0,
+        "Signature_Em": 0,
+        "Signature_Ir": 0,
+        "Power_Segments": 1,
+        "Mining_LaserDamage_Physical": 0,
+        "Mining_LaserDamage_Energy": 3900,
+        "Mining_LaserDamage_Distortion": 0,
+        "Mining_LaserDamage_Thermal": 0,
+        "Mining_LaserDamage_Biochemical": 0,
+        "Mining_LaserDamage_Stun": 0,
+        "Mining_LaserDamage": 3900,
+        "Mining_LaserOptimalRange": 40,
+        "Mining_LaserMaxRange": 45,
+        "Mining_LaserHeat": 0,
+        "Mining_ExtractorDamage_Physical": 0,
+        "Mining_ExtractorDamage_Energy": 1295,
+        "Mining_ExtractorDamage_Distortion": 0,
+        "Mining_ExtractorDamage_Thermal": 0,
+        "Mining_ExtractorDamage_Biochemical": 0,
+        "Mining_ExtractorDamage_Stun": 0,
+        "Mining_ExtractorDamage": 1295,
+        "Mining_ExtractorOptimalRange": 40,
+        "Mining_ExtractorMaxRange": 45,
+        "Mining_ExtractorHeat": 0,
+        "Mining_Instability": 35,
+        "Mining_Resistance": 25,
+        "Mining_OptimalWindow": 40,
+        "Mining_OptimalWindowRate": -40,
+        "Mining_Filter": 40,
+        "Mining_ThrottleSpeed": 7,
+        "Mining_ThrottleMin": 0.2
+      }
     },
     {
       "id": "93dbf337-be86-4c3b-80ba-015955b8b9b8",
@@ -171040,18 +171064,6 @@
           ]
         }
       ],
-      "vehicleBaseStats": {
-        "Health_Maxhealth": 8000,
-        "Weapon_Damage_Physical": 0,
-        "Weapon_Damage_Energy": 0.8,
-        "Weapon_Damage_Distortion": 0,
-        "Weapon_Damage": 0.8,
-        "Power_Min": 1,
-        "Weapon_Em": 0,
-        "Signature_Em": 0,
-        "Signature_Ir": 0,
-        "Power_Segments": 1
-      },
       "isReward": true,
       "rewardMissions": [
         {
@@ -171196,7 +171208,29 @@
       ],
       "missionPools": [
         "shubinrank0to1"
-      ]
+      ],
+      "vehicleBaseStats": {
+        "Health_Maxhealth": 8000,
+        "Weapon_Damage": 0.8,
+        "Power_Min": 1,
+        "Weapon_Em": 0,
+        "Signature_Em": 0,
+        "Signature_Ir": 0,
+        "Power_Segments": 1,
+        "Mining_LaserDamage_Physical": 0,
+        "Mining_LaserDamage_Energy": 0.8,
+        "Mining_LaserDamage_Distortion": 0,
+        "Mining_LaserDamage_Thermal": 0,
+        "Mining_LaserDamage_Biochemical": 0,
+        "Mining_LaserDamage_Stun": 0,
+        "Mining_LaserDamage": 0.8,
+        "Mining_LaserOptimalRange": 5,
+        "Mining_LaserMaxRange": 15,
+        "Mining_LaserHeat": 0,
+        "Mining_Instability": -40,
+        "Mining_ThrottleSpeed": 6.5,
+        "Mining_ThrottleMin": 0.2
+      }
     },
     {
       "id": "3a4ba1b4-a688-4c5a-ba88-e82929d384b0",
@@ -171287,18 +171321,6 @@
           ]
         }
       ],
-      "vehicleBaseStats": {
-        "Health_Maxhealth": 8000,
-        "Weapon_Damage_Physical": 0,
-        "Weapon_Damage_Energy": 2340,
-        "Weapon_Damage_Distortion": 0,
-        "Weapon_Damage": 1850,
-        "Power_Min": 1,
-        "Weapon_Em": 0,
-        "Signature_Em": 0,
-        "Signature_Ir": 0,
-        "Power_Segments": 1
-      },
       "isReward": true,
       "rewardMissions": [
         {
@@ -171673,7 +171695,42 @@
         "shubinrank2to3",
         "battaglia",
         "battaglia_rpt2"
-      ]
+      ],
+      "vehicleBaseStats": {
+        "Health_Maxhealth": 8000,
+        "Weapon_Damage": 2340,
+        "Power_Min": 1,
+        "Weapon_Em": 0,
+        "Signature_Em": 0,
+        "Signature_Ir": 0,
+        "Power_Segments": 1,
+        "Mining_LaserDamage_Physical": 0,
+        "Mining_LaserDamage_Energy": 2340,
+        "Mining_LaserDamage_Distortion": 0,
+        "Mining_LaserDamage_Thermal": 0,
+        "Mining_LaserDamage_Biochemical": 0,
+        "Mining_LaserDamage_Stun": 0,
+        "Mining_LaserDamage": 2340,
+        "Mining_LaserOptimalRange": 60,
+        "Mining_LaserMaxRange": 180,
+        "Mining_LaserHeat": 0,
+        "Mining_ExtractorDamage_Physical": 0,
+        "Mining_ExtractorDamage_Energy": 1850,
+        "Mining_ExtractorDamage_Distortion": 0,
+        "Mining_ExtractorDamage_Thermal": 0,
+        "Mining_ExtractorDamage_Biochemical": 0,
+        "Mining_ExtractorDamage_Stun": 0,
+        "Mining_ExtractorDamage": 1850,
+        "Mining_ExtractorOptimalRange": 60,
+        "Mining_ExtractorMaxRange": 180,
+        "Mining_ExtractorHeat": 0,
+        "Mining_Instability": -35,
+        "Mining_Resistance": 25,
+        "Mining_OptimalWindow": 40,
+        "Mining_Filter": 30,
+        "Mining_ThrottleSpeed": 6.5,
+        "Mining_ThrottleMin": 0.05
+      }
     },
     {
       "id": "e8e41bb2-0fd2-47a3-99ea-5dbe2abe4b92",
@@ -171764,18 +171821,6 @@
           ]
         }
       ],
-      "vehicleBaseStats": {
-        "Health_Maxhealth": 8000,
-        "Weapon_Damage_Physical": 0,
-        "Weapon_Damage_Energy": 2900,
-        "Weapon_Damage_Distortion": 0,
-        "Weapon_Damage": 2590,
-        "Power_Min": 2,
-        "Weapon_Em": 0,
-        "Signature_Em": 0,
-        "Signature_Ir": 0,
-        "Power_Segments": 2
-      },
       "isReward": true,
       "rewardMissions": [
         {
@@ -171880,7 +171925,42 @@
       ],
       "missionPools": [
         "shubinrank4"
-      ]
+      ],
+      "vehicleBaseStats": {
+        "Health_Maxhealth": 8000,
+        "Weapon_Damage": 2900,
+        "Power_Min": 2,
+        "Weapon_Em": 0,
+        "Signature_Em": 0,
+        "Signature_Ir": 0,
+        "Power_Segments": 2,
+        "Mining_LaserDamage_Physical": 0,
+        "Mining_LaserDamage_Energy": 2900,
+        "Mining_LaserDamage_Distortion": 0,
+        "Mining_LaserDamage_Thermal": 0,
+        "Mining_LaserDamage_Biochemical": 0,
+        "Mining_LaserDamage_Stun": 0,
+        "Mining_LaserDamage": 2900,
+        "Mining_LaserOptimalRange": 90,
+        "Mining_LaserMaxRange": 270,
+        "Mining_LaserHeat": 0,
+        "Mining_ExtractorDamage_Physical": 0,
+        "Mining_ExtractorDamage_Energy": 2590,
+        "Mining_ExtractorDamage_Distortion": 0,
+        "Mining_ExtractorDamage_Thermal": 0,
+        "Mining_ExtractorDamage_Biochemical": 0,
+        "Mining_ExtractorDamage_Stun": 0,
+        "Mining_ExtractorDamage": 2590,
+        "Mining_ExtractorOptimalRange": 90,
+        "Mining_ExtractorMaxRange": 270,
+        "Mining_ExtractorHeat": 0,
+        "Mining_Instability": -35,
+        "Mining_Resistance": 25,
+        "Mining_OptimalWindow": 40,
+        "Mining_Filter": 40,
+        "Mining_ThrottleSpeed": 6.5,
+        "Mining_ThrottleMin": 0.05
+      }
     },
     {
       "id": "9105536e-507d-49c8-8d90-b6d778d95ce0",
@@ -171971,18 +172051,6 @@
           ]
         }
       ],
-      "vehicleBaseStats": {
-        "Health_Maxhealth": 8000,
-        "Weapon_Damage_Physical": 0,
-        "Weapon_Damage_Energy": 3120,
-        "Weapon_Damage_Distortion": 0,
-        "Weapon_Damage": 1850,
-        "Power_Min": 1,
-        "Weapon_Em": 0,
-        "Signature_Em": 0,
-        "Signature_Ir": 0,
-        "Power_Segments": 1
-      },
       "isReward": true,
       "rewardMissions": [
         {
@@ -172127,7 +172195,42 @@
       ],
       "missionPools": [
         "shubinrank2to3"
-      ]
+      ],
+      "vehicleBaseStats": {
+        "Health_Maxhealth": 8000,
+        "Weapon_Damage": 3120,
+        "Power_Min": 1,
+        "Weapon_Em": 0,
+        "Signature_Em": 0,
+        "Signature_Ir": 0,
+        "Power_Segments": 1,
+        "Mining_LaserDamage_Physical": 0,
+        "Mining_LaserDamage_Energy": 3120,
+        "Mining_LaserDamage_Distortion": 0,
+        "Mining_LaserDamage_Thermal": 0,
+        "Mining_LaserDamage_Biochemical": 0,
+        "Mining_LaserDamage_Stun": 0,
+        "Mining_LaserDamage": 3120,
+        "Mining_LaserOptimalRange": 30,
+        "Mining_LaserMaxRange": 90,
+        "Mining_LaserHeat": 0,
+        "Mining_ExtractorDamage_Physical": 0,
+        "Mining_ExtractorDamage_Energy": 1850,
+        "Mining_ExtractorDamage_Distortion": 0,
+        "Mining_ExtractorDamage_Thermal": 0,
+        "Mining_ExtractorDamage_Biochemical": 0,
+        "Mining_ExtractorDamage_Stun": 0,
+        "Mining_ExtractorDamage": 1850,
+        "Mining_ExtractorOptimalRange": 30,
+        "Mining_ExtractorMaxRange": 90,
+        "Mining_ExtractorHeat": 0,
+        "Mining_Instability": -10,
+        "Mining_OptimalWindow": -60,
+        "Mining_OptimalWindowRate": 40,
+        "Mining_Filter": 30,
+        "Mining_ThrottleSpeed": 6.5,
+        "Mining_ThrottleMin": 0.2
+      }
     },
     {
       "id": "959c2d65-301a-4b8c-88f1-d72c617cd405",
@@ -172218,18 +172321,6 @@
           ]
         }
       ],
-      "vehicleBaseStats": {
-        "Health_Maxhealth": 8000,
-        "Weapon_Damage_Physical": 0,
-        "Weapon_Damage_Energy": 4350,
-        "Weapon_Damage_Distortion": 0,
-        "Weapon_Damage": 2590,
-        "Power_Min": 2,
-        "Weapon_Em": 0,
-        "Signature_Em": 0,
-        "Signature_Ir": 0,
-        "Power_Segments": 2
-      },
       "isReward": true,
       "rewardMissions": [
         {
@@ -172334,7 +172425,42 @@
       ],
       "missionPools": [
         "shubinrank4"
-      ]
+      ],
+      "vehicleBaseStats": {
+        "Health_Maxhealth": 8000,
+        "Weapon_Damage": 4350,
+        "Power_Min": 2,
+        "Weapon_Em": 0,
+        "Signature_Em": 0,
+        "Signature_Ir": 0,
+        "Power_Segments": 2,
+        "Mining_LaserDamage_Physical": 0,
+        "Mining_LaserDamage_Energy": 4350,
+        "Mining_LaserDamage_Distortion": 0,
+        "Mining_LaserDamage_Thermal": 0,
+        "Mining_LaserDamage_Biochemical": 0,
+        "Mining_LaserDamage_Stun": 0,
+        "Mining_LaserDamage": 4350,
+        "Mining_LaserOptimalRange": 45,
+        "Mining_LaserMaxRange": 135,
+        "Mining_LaserHeat": 0,
+        "Mining_ExtractorDamage_Physical": 0,
+        "Mining_ExtractorDamage_Energy": 2590,
+        "Mining_ExtractorDamage_Distortion": 0,
+        "Mining_ExtractorDamage_Thermal": 0,
+        "Mining_ExtractorDamage_Biochemical": 0,
+        "Mining_ExtractorDamage_Stun": 0,
+        "Mining_ExtractorDamage": 2590,
+        "Mining_ExtractorOptimalRange": 45,
+        "Mining_ExtractorMaxRange": 135,
+        "Mining_ExtractorHeat": 0,
+        "Mining_Instability": -10,
+        "Mining_OptimalWindow": -60,
+        "Mining_OptimalWindowRate": 40,
+        "Mining_Filter": 40,
+        "Mining_ThrottleSpeed": 6.5,
+        "Mining_ThrottleMin": 0.3
+      }
     },
     {
       "id": "35f1121b-c021-4230-b68d-93e2cd578320",
@@ -172425,18 +172551,6 @@
           ]
         }
       ],
-      "vehicleBaseStats": {
-        "Health_Maxhealth": 8000,
-        "Weapon_Damage_Physical": 0,
-        "Weapon_Damage_Energy": 0.8,
-        "Weapon_Damage_Distortion": 0,
-        "Weapon_Damage": 0.8,
-        "Power_Min": 1,
-        "Weapon_Em": 0,
-        "Signature_Em": 0,
-        "Signature_Ir": 0,
-        "Power_Segments": 1
-      },
       "isReward": true,
       "rewardMissions": [
         {
@@ -172735,7 +172849,32 @@
         "shubinrank0to1",
         "battaglia",
         "battaglia_rpt0"
-      ]
+      ],
+      "vehicleBaseStats": {
+        "Health_Maxhealth": 8000,
+        "Weapon_Damage": 0.8,
+        "Power_Min": 1,
+        "Weapon_Em": 0,
+        "Signature_Em": 0,
+        "Signature_Ir": 0,
+        "Power_Segments": 1,
+        "Mining_LaserDamage_Physical": 0,
+        "Mining_LaserDamage_Energy": 0.8,
+        "Mining_LaserDamage_Distortion": 0,
+        "Mining_LaserDamage_Thermal": 0,
+        "Mining_LaserDamage_Biochemical": 0,
+        "Mining_LaserDamage_Stun": 0,
+        "Mining_LaserDamage": 0.8,
+        "Mining_LaserOptimalRange": 8,
+        "Mining_LaserMaxRange": 18,
+        "Mining_LaserHeat": 0,
+        "Mining_Instability": 30,
+        "Mining_Resistance": -40,
+        "Mining_OptimalWindow": 40,
+        "Mining_OptimalWindowRate": 20,
+        "Mining_ThrottleSpeed": 6.5,
+        "Mining_ThrottleMin": 0.2
+      }
     },
     {
       "id": "ccbb801a-ad5e-4e15-a842-ad315f43dd4e",
@@ -172826,18 +172965,6 @@
           ]
         }
       ],
-      "vehicleBaseStats": {
-        "Health_Maxhealth": 8000,
-        "Weapon_Damage_Physical": 0,
-        "Weapon_Damage_Energy": 2600,
-        "Weapon_Damage_Distortion": 0,
-        "Weapon_Damage": 1295,
-        "Power_Min": 1,
-        "Weapon_Em": 0,
-        "Signature_Em": 0,
-        "Signature_Ir": 0,
-        "Power_Segments": 1
-      },
       "isReward": true,
       "rewardMissions": [
         {
@@ -173212,7 +173339,43 @@
         "shubinrank2to3",
         "battaglia",
         "battaglia_rpt2"
-      ]
+      ],
+      "vehicleBaseStats": {
+        "Health_Maxhealth": 8000,
+        "Weapon_Damage": 2600,
+        "Power_Min": 1,
+        "Weapon_Em": 0,
+        "Signature_Em": 0,
+        "Signature_Ir": 0,
+        "Power_Segments": 1,
+        "Mining_LaserDamage_Physical": 0,
+        "Mining_LaserDamage_Energy": 2600,
+        "Mining_LaserDamage_Distortion": 0,
+        "Mining_LaserDamage_Thermal": 0,
+        "Mining_LaserDamage_Biochemical": 0,
+        "Mining_LaserDamage_Stun": 0,
+        "Mining_LaserDamage": 2600,
+        "Mining_LaserOptimalRange": 45,
+        "Mining_LaserMaxRange": 135,
+        "Mining_LaserHeat": 0,
+        "Mining_ExtractorDamage_Physical": 0,
+        "Mining_ExtractorDamage_Energy": 1295,
+        "Mining_ExtractorDamage_Distortion": 0,
+        "Mining_ExtractorDamage_Thermal": 0,
+        "Mining_ExtractorDamage_Biochemical": 0,
+        "Mining_ExtractorDamage_Stun": 0,
+        "Mining_ExtractorDamage": 1295,
+        "Mining_ExtractorOptimalRange": 45,
+        "Mining_ExtractorMaxRange": 135,
+        "Mining_ExtractorHeat": 0,
+        "Mining_Instability": 10,
+        "Mining_Resistance": -30,
+        "Mining_OptimalWindow": 60,
+        "Mining_OptimalWindowRate": 20,
+        "Mining_Filter": 30,
+        "Mining_ThrottleSpeed": 6.5,
+        "Mining_ThrottleMin": 0.05
+      }
     },
     {
       "id": "0b6cf9a1-ef55-47ee-ab8d-c734d4f3b073",
@@ -173303,18 +173466,6 @@
           ]
         }
       ],
-      "vehicleBaseStats": {
-        "Health_Maxhealth": 8000,
-        "Weapon_Damage_Physical": 0,
-        "Weapon_Damage_Energy": 4060,
-        "Weapon_Damage_Distortion": 0,
-        "Weapon_Damage": 1295,
-        "Power_Min": 2,
-        "Weapon_Em": 0,
-        "Signature_Em": 0,
-        "Signature_Ir": 0,
-        "Power_Segments": 2
-      },
       "isReward": true,
       "rewardMissions": [
         {
@@ -173419,7 +173570,43 @@
       ],
       "missionPools": [
         "shubinrank4"
-      ]
+      ],
+      "vehicleBaseStats": {
+        "Health_Maxhealth": 8000,
+        "Weapon_Damage": 4060,
+        "Power_Min": 2,
+        "Weapon_Em": 0,
+        "Signature_Em": 0,
+        "Signature_Ir": 0,
+        "Power_Segments": 2,
+        "Mining_LaserDamage_Physical": 0,
+        "Mining_LaserDamage_Energy": 4060,
+        "Mining_LaserDamage_Distortion": 0,
+        "Mining_LaserDamage_Thermal": 0,
+        "Mining_LaserDamage_Biochemical": 0,
+        "Mining_LaserDamage_Stun": 0,
+        "Mining_LaserDamage": 4060,
+        "Mining_LaserOptimalRange": 60,
+        "Mining_LaserMaxRange": 180,
+        "Mining_LaserHeat": 0,
+        "Mining_ExtractorDamage_Physical": 0,
+        "Mining_ExtractorDamage_Energy": 1295,
+        "Mining_ExtractorDamage_Distortion": 0,
+        "Mining_ExtractorDamage_Thermal": 0,
+        "Mining_ExtractorDamage_Biochemical": 0,
+        "Mining_ExtractorDamage_Stun": 0,
+        "Mining_ExtractorDamage": 1295,
+        "Mining_ExtractorOptimalRange": 60,
+        "Mining_ExtractorMaxRange": 180,
+        "Mining_ExtractorHeat": 0,
+        "Mining_Instability": 10,
+        "Mining_Resistance": -30,
+        "Mining_OptimalWindow": 60,
+        "Mining_OptimalWindowRate": 20,
+        "Mining_Filter": 40,
+        "Mining_ThrottleSpeed": 6.5,
+        "Mining_ThrottleMin": 0.1
+      }
     },
     {
       "id": "1cc19fca-84a3-4e7f-8084-350e7bb31d42",
@@ -173510,18 +173697,6 @@
           ]
         }
       ],
-      "vehicleBaseStats": {
-        "Health_Maxhealth": 8000,
-        "Weapon_Damage_Physical": 0,
-        "Weapon_Damage_Energy": 0.8,
-        "Weapon_Damage_Distortion": 0,
-        "Weapon_Damage": 0.8,
-        "Power_Min": 1,
-        "Weapon_Em": 0,
-        "Signature_Em": 0,
-        "Signature_Ir": 0,
-        "Power_Segments": 1
-      },
       "isReward": true,
       "rewardMissions": [
         {
@@ -173820,7 +173995,32 @@
         "shubinrank0to1",
         "battaglia",
         "battaglia_rpt0"
-      ]
+      ],
+      "vehicleBaseStats": {
+        "Health_Maxhealth": 8000,
+        "Weapon_Damage": 0.8,
+        "Power_Min": 1,
+        "Weapon_Em": 0,
+        "Signature_Em": 0,
+        "Signature_Ir": 0,
+        "Power_Segments": 1,
+        "Mining_LaserDamage_Physical": 0,
+        "Mining_LaserDamage_Energy": 0.8,
+        "Mining_LaserDamage_Distortion": 0,
+        "Mining_LaserDamage_Thermal": 0,
+        "Mining_LaserDamage_Biochemical": 0,
+        "Mining_LaserDamage_Stun": 0,
+        "Mining_LaserDamage": 0.8,
+        "Mining_LaserOptimalRange": 5,
+        "Mining_LaserMaxRange": 15,
+        "Mining_LaserHeat": 0,
+        "Mining_Instability": 30,
+        "Mining_Resistance": -40,
+        "Mining_OptimalWindow": 40,
+        "Mining_OptimalWindowRate": 0,
+        "Mining_ThrottleSpeed": 6.5,
+        "Mining_ThrottleMin": 0.2
+      }
     },
     {
       "id": "04f1af4c-e8ed-4b99-8413-61622bdfcb30",
@@ -173911,18 +174111,6 @@
           ]
         }
       ],
-      "vehicleBaseStats": {
-        "Health_Maxhealth": 8000,
-        "Weapon_Damage_Physical": 0,
-        "Weapon_Damage_Energy": 3120,
-        "Weapon_Damage_Distortion": 0,
-        "Weapon_Damage": 2220,
-        "Power_Min": 1,
-        "Weapon_Em": 0,
-        "Signature_Em": 0,
-        "Signature_Ir": 0,
-        "Power_Segments": 1
-      },
       "isReward": true,
       "rewardMissions": [
         {
@@ -174297,7 +174485,42 @@
         "shubinrank2to3",
         "battaglia",
         "battaglia_rpt2"
-      ]
+      ],
+      "vehicleBaseStats": {
+        "Health_Maxhealth": 8000,
+        "Weapon_Damage": 3120,
+        "Power_Min": 1,
+        "Weapon_Em": 0,
+        "Signature_Em": 0,
+        "Signature_Ir": 0,
+        "Power_Segments": 1,
+        "Mining_LaserDamage_Physical": 0,
+        "Mining_LaserDamage_Energy": 3120,
+        "Mining_LaserDamage_Distortion": 0,
+        "Mining_LaserDamage_Thermal": 0,
+        "Mining_LaserDamage_Biochemical": 0,
+        "Mining_LaserDamage_Stun": 0,
+        "Mining_LaserDamage": 3120,
+        "Mining_LaserOptimalRange": 45,
+        "Mining_LaserMaxRange": 135,
+        "Mining_LaserHeat": 0,
+        "Mining_ExtractorDamage_Physical": 0,
+        "Mining_ExtractorDamage_Energy": 2220,
+        "Mining_ExtractorDamage_Distortion": 0,
+        "Mining_ExtractorDamage_Thermal": 0,
+        "Mining_ExtractorDamage_Biochemical": 0,
+        "Mining_ExtractorDamage_Stun": 0,
+        "Mining_ExtractorDamage": 2220,
+        "Mining_ExtractorOptimalRange": 45,
+        "Mining_ExtractorMaxRange": 135,
+        "Mining_ExtractorHeat": 0,
+        "Mining_Instability": 35,
+        "Mining_Resistance": -45,
+        "Mining_OptimalWindow": 20,
+        "Mining_Filter": 30,
+        "Mining_ThrottleSpeed": 6.5,
+        "Mining_ThrottleMin": 0.15
+      }
     },
     {
       "id": "6da71823-7178-4110-b8ff-79e9b22e11fa",
@@ -174388,18 +174611,6 @@
           ]
         }
       ],
-      "vehicleBaseStats": {
-        "Health_Maxhealth": 8000,
-        "Weapon_Damage_Physical": 0,
-        "Weapon_Damage_Energy": 4350,
-        "Weapon_Damage_Distortion": 0,
-        "Weapon_Damage": 2775,
-        "Power_Min": 2,
-        "Weapon_Em": 0,
-        "Signature_Em": 0,
-        "Signature_Ir": 0,
-        "Power_Segments": 2
-      },
       "isReward": true,
       "rewardMissions": [
         {
@@ -174504,7 +174715,42 @@
       ],
       "missionPools": [
         "shubinrank4"
-      ]
+      ],
+      "vehicleBaseStats": {
+        "Health_Maxhealth": 8000,
+        "Weapon_Damage": 4350,
+        "Power_Min": 2,
+        "Weapon_Em": 0,
+        "Signature_Em": 0,
+        "Signature_Ir": 0,
+        "Power_Segments": 2,
+        "Mining_LaserDamage_Physical": 0,
+        "Mining_LaserDamage_Energy": 4350,
+        "Mining_LaserDamage_Distortion": 0,
+        "Mining_LaserDamage_Thermal": 0,
+        "Mining_LaserDamage_Biochemical": 0,
+        "Mining_LaserDamage_Stun": 0,
+        "Mining_LaserDamage": 4350,
+        "Mining_LaserOptimalRange": 60,
+        "Mining_LaserMaxRange": 180,
+        "Mining_LaserHeat": 0,
+        "Mining_ExtractorDamage_Physical": 0,
+        "Mining_ExtractorDamage_Energy": 2775,
+        "Mining_ExtractorDamage_Distortion": 0,
+        "Mining_ExtractorDamage_Thermal": 0,
+        "Mining_ExtractorDamage_Biochemical": 0,
+        "Mining_ExtractorDamage_Stun": 0,
+        "Mining_ExtractorDamage": 2775,
+        "Mining_ExtractorOptimalRange": 60,
+        "Mining_ExtractorMaxRange": 180,
+        "Mining_ExtractorHeat": 0,
+        "Mining_Instability": 35,
+        "Mining_Resistance": -45,
+        "Mining_OptimalWindow": 20,
+        "Mining_Filter": 40,
+        "Mining_ThrottleSpeed": 6.5,
+        "Mining_ThrottleMin": 0.2
+      }
     },
     {
       "id": "7a37ef95-bc0f-4a3b-93a2-05b9f160ee31",
@@ -174595,18 +174841,6 @@
           ]
         }
       ],
-      "vehicleBaseStats": {
-        "Health_Maxhealth": 8000,
-        "Weapon_Damage_Physical": 0,
-        "Weapon_Damage_Energy": 1,
-        "Weapon_Damage_Distortion": 0,
-        "Weapon_Damage": 1,
-        "Power_Min": 1,
-        "Weapon_Em": 0,
-        "Signature_Em": 0,
-        "Signature_Ir": 0,
-        "Power_Segments": 1
-      },
       "isReward": true,
       "rewardMissions": [
         {
@@ -174886,7 +175120,30 @@
         "shubinrank0to1",
         "battaglia",
         "battaglia_rpt1"
-      ]
+      ],
+      "vehicleBaseStats": {
+        "Health_Maxhealth": 8000,
+        "Weapon_Damage": 1,
+        "Power_Min": 1,
+        "Weapon_Em": 0,
+        "Signature_Em": 0,
+        "Signature_Ir": 0,
+        "Power_Segments": 1,
+        "Mining_LaserDamage_Physical": 0,
+        "Mining_LaserDamage_Energy": 1,
+        "Mining_LaserDamage_Distortion": 0,
+        "Mining_LaserDamage_Thermal": 0,
+        "Mining_LaserDamage_Biochemical": 0,
+        "Mining_LaserDamage_Stun": 0,
+        "Mining_LaserDamage": 1,
+        "Mining_LaserOptimalRange": 8,
+        "Mining_LaserMaxRange": 18,
+        "Mining_LaserHeat": 0,
+        "Mining_OptimalWindow": -40,
+        "Mining_OptimalWindowRate": 20,
+        "Mining_ThrottleSpeed": 6.5,
+        "Mining_ThrottleMin": 0.15
+      }
     },
     {
       "id": "7ba597a6-b5c2-4513-b38c-62acd4cb138e",
@@ -174977,18 +175234,6 @@
           ]
         }
       ],
-      "vehicleBaseStats": {
-        "Health_Maxhealth": 8000,
-        "Weapon_Damage_Physical": 0,
-        "Weapon_Damage_Energy": 3900,
-        "Weapon_Damage_Distortion": 0,
-        "Weapon_Damage": 1850,
-        "Power_Min": 1,
-        "Weapon_Em": 0,
-        "Signature_Em": 0,
-        "Signature_Ir": 0,
-        "Power_Segments": 1
-      },
       "isReward": true,
       "rewardMissions": [
         {
@@ -175363,7 +175608,41 @@
         "shubinrank2to3",
         "battaglia",
         "battaglia_rpt2"
-      ]
+      ],
+      "vehicleBaseStats": {
+        "Health_Maxhealth": 8000,
+        "Weapon_Damage": 3900,
+        "Power_Min": 1,
+        "Weapon_Em": 0,
+        "Signature_Em": 0,
+        "Signature_Ir": 0,
+        "Power_Segments": 1,
+        "Mining_LaserDamage_Physical": 0,
+        "Mining_LaserDamage_Energy": 3900,
+        "Mining_LaserDamage_Distortion": 0,
+        "Mining_LaserDamage_Thermal": 0,
+        "Mining_LaserDamage_Biochemical": 0,
+        "Mining_LaserDamage_Stun": 0,
+        "Mining_LaserDamage": 3900,
+        "Mining_LaserOptimalRange": 15,
+        "Mining_LaserMaxRange": 45,
+        "Mining_LaserHeat": 0,
+        "Mining_ExtractorDamage_Physical": 0,
+        "Mining_ExtractorDamage_Energy": 1850,
+        "Mining_ExtractorDamage_Distortion": 0,
+        "Mining_ExtractorDamage_Thermal": 0,
+        "Mining_ExtractorDamage_Biochemical": 0,
+        "Mining_ExtractorDamage_Stun": 0,
+        "Mining_ExtractorDamage": 1850,
+        "Mining_ExtractorOptimalRange": 15,
+        "Mining_ExtractorMaxRange": 45,
+        "Mining_ExtractorHeat": 0,
+        "Mining_Resistance": -30,
+        "Mining_OptimalWindow": -40,
+        "Mining_Filter": 30,
+        "Mining_ThrottleSpeed": 6.5,
+        "Mining_ThrottleMin": 0.2
+      }
     },
     {
       "id": "18f54363-88cd-420a-9ab3-979256db55a2",
@@ -175454,18 +175733,6 @@
           ]
         }
       ],
-      "vehicleBaseStats": {
-        "Health_Maxhealth": 8000,
-        "Weapon_Damage_Physical": 0,
-        "Weapon_Damage_Energy": 4930,
-        "Weapon_Damage_Distortion": 0,
-        "Weapon_Damage": 2590,
-        "Power_Min": 2,
-        "Weapon_Em": 0,
-        "Signature_Em": 0,
-        "Signature_Ir": 0,
-        "Power_Segments": 2
-      },
       "isReward": true,
       "rewardMissions": [
         {
@@ -175570,7 +175837,41 @@
       ],
       "missionPools": [
         "shubinrank4"
-      ]
+      ],
+      "vehicleBaseStats": {
+        "Health_Maxhealth": 8000,
+        "Weapon_Damage": 4930,
+        "Power_Min": 2,
+        "Weapon_Em": 0,
+        "Signature_Em": 0,
+        "Signature_Ir": 0,
+        "Power_Segments": 2,
+        "Mining_LaserDamage_Physical": 0,
+        "Mining_LaserDamage_Energy": 4930,
+        "Mining_LaserDamage_Distortion": 0,
+        "Mining_LaserDamage_Thermal": 0,
+        "Mining_LaserDamage_Biochemical": 0,
+        "Mining_LaserDamage_Stun": 0,
+        "Mining_LaserDamage": 4930,
+        "Mining_LaserOptimalRange": 30,
+        "Mining_LaserMaxRange": 90,
+        "Mining_LaserHeat": 0,
+        "Mining_ExtractorDamage_Physical": 0,
+        "Mining_ExtractorDamage_Energy": 2590,
+        "Mining_ExtractorDamage_Distortion": 0,
+        "Mining_ExtractorDamage_Thermal": 0,
+        "Mining_ExtractorDamage_Biochemical": 0,
+        "Mining_ExtractorDamage_Stun": 0,
+        "Mining_ExtractorDamage": 2590,
+        "Mining_ExtractorOptimalRange": 30,
+        "Mining_ExtractorMaxRange": 90,
+        "Mining_ExtractorHeat": 0,
+        "Mining_Resistance": -30,
+        "Mining_OptimalWindow": -40,
+        "Mining_Filter": 40,
+        "Mining_ThrottleSpeed": 6.5,
+        "Mining_ThrottleMin": 0.3
+      }
     },
     {
       "id": "20789dfa-a83c-4e00-8c43-e5828d65dfdd",
@@ -175661,18 +175962,6 @@
           ]
         }
       ],
-      "vehicleBaseStats": {
-        "Health_Maxhealth": 8000,
-        "Weapon_Damage_Physical": 0,
-        "Weapon_Damage_Energy": 2600,
-        "Weapon_Damage_Distortion": 0,
-        "Weapon_Damage": 2775,
-        "Power_Min": 1,
-        "Weapon_Em": 0,
-        "Signature_Em": 0,
-        "Signature_Ir": 0,
-        "Power_Segments": 1
-      },
       "isReward": true,
       "rewardMissions": [
         {
@@ -176047,7 +176336,43 @@
         "shubinrank2to3",
         "battaglia",
         "battaglia_rpt2"
-      ]
+      ],
+      "vehicleBaseStats": {
+        "Health_Maxhealth": 8000,
+        "Weapon_Damage": 2600,
+        "Power_Min": 1,
+        "Weapon_Em": 0,
+        "Signature_Em": 0,
+        "Signature_Ir": 0,
+        "Power_Segments": 1,
+        "Mining_LaserDamage_Physical": 0,
+        "Mining_LaserDamage_Energy": 2600,
+        "Mining_LaserDamage_Distortion": 0,
+        "Mining_LaserDamage_Thermal": 0,
+        "Mining_LaserDamage_Biochemical": 0,
+        "Mining_LaserDamage_Stun": 0,
+        "Mining_LaserDamage": 2600,
+        "Mining_LaserOptimalRange": 45,
+        "Mining_LaserMaxRange": 135,
+        "Mining_LaserHeat": 0,
+        "Mining_ExtractorDamage_Physical": 0,
+        "Mining_ExtractorDamage_Energy": 2775,
+        "Mining_ExtractorDamage_Distortion": 0,
+        "Mining_ExtractorDamage_Thermal": 0,
+        "Mining_ExtractorDamage_Biochemical": 0,
+        "Mining_ExtractorDamage_Stun": 0,
+        "Mining_ExtractorDamage": 2775,
+        "Mining_ExtractorOptimalRange": 45,
+        "Mining_ExtractorMaxRange": 135,
+        "Mining_ExtractorHeat": 0,
+        "Mining_Instability": -10,
+        "Mining_Resistance": 10,
+        "Mining_OptimalWindow": 20,
+        "Mining_OptimalWindowRate": -40,
+        "Mining_Filter": 30,
+        "Mining_ThrottleSpeed": 6.5,
+        "Mining_ThrottleMin": 0.2
+      }
     },
     {
       "id": "46c4b9c1-b7a8-423d-af4a-2e32b199bc02",
@@ -176138,18 +176463,6 @@
           ]
         }
       ],
-      "vehicleBaseStats": {
-        "Health_Maxhealth": 8000,
-        "Weapon_Damage_Physical": 0,
-        "Weapon_Damage_Energy": 4060,
-        "Weapon_Damage_Distortion": 0,
-        "Weapon_Damage": 3145,
-        "Power_Min": 2,
-        "Weapon_Em": 0,
-        "Signature_Em": 0,
-        "Signature_Ir": 0,
-        "Power_Segments": 2
-      },
       "isReward": true,
       "rewardMissions": [
         {
@@ -176254,7 +176567,43 @@
       ],
       "missionPools": [
         "shubinrank4"
-      ]
+      ],
+      "vehicleBaseStats": {
+        "Health_Maxhealth": 8000,
+        "Weapon_Damage": 4060,
+        "Power_Min": 2,
+        "Weapon_Em": 0,
+        "Signature_Em": 0,
+        "Signature_Ir": 0,
+        "Power_Segments": 2,
+        "Mining_LaserDamage_Physical": 0,
+        "Mining_LaserDamage_Energy": 4060,
+        "Mining_LaserDamage_Distortion": 0,
+        "Mining_LaserDamage_Thermal": 0,
+        "Mining_LaserDamage_Biochemical": 0,
+        "Mining_LaserDamage_Stun": 0,
+        "Mining_LaserDamage": 4060,
+        "Mining_LaserOptimalRange": 60,
+        "Mining_LaserMaxRange": 180,
+        "Mining_LaserHeat": 0,
+        "Mining_ExtractorDamage_Physical": 0,
+        "Mining_ExtractorDamage_Energy": 3145,
+        "Mining_ExtractorDamage_Distortion": 0,
+        "Mining_ExtractorDamage_Thermal": 0,
+        "Mining_ExtractorDamage_Biochemical": 0,
+        "Mining_ExtractorDamage_Stun": 0,
+        "Mining_ExtractorDamage": 3145,
+        "Mining_ExtractorOptimalRange": 60,
+        "Mining_ExtractorMaxRange": 180,
+        "Mining_ExtractorHeat": 0,
+        "Mining_Instability": -10,
+        "Mining_Resistance": 10,
+        "Mining_OptimalWindow": 20,
+        "Mining_OptimalWindowRate": -40,
+        "Mining_Filter": 40,
+        "Mining_ThrottleSpeed": 6.5,
+        "Mining_ThrottleMin": 0.3
+      }
     },
     {
       "id": "cb32c252-45b9-43d0-b1bf-f2755c2f320f",

@@ -389,8 +389,85 @@ export function extractShipItemStats(json, options = {}) {
     if (draw > (stats.Coolant_PowerDraw || 0)) stats.Coolant_PowerDraw = draw
   })
 
+  applyMiningLaser(stats, root)
   applyWeaponCycle(stats, fireSequenceCycle(root))
   return stats
+}
+
+const MINING_DAMAGE_TYPES = [
+  ['DamagePhysical', 'Physical'],
+  ['DamageEnergy', 'Energy'],
+  ['DamageDistortion', 'Distortion'],
+  ['DamageThermal', 'Thermal'],
+  ['DamageBiochemical', 'Biochemical'],
+  ['DamageStun', 'Stun'],
+]
+
+const MINING_MODIFIERS = [
+  ['laserInstability', 'Mining_Instability'],
+  ['resistanceModifier', 'Mining_Resistance'],
+  ['optimalChargeWindowSizeModifier', 'Mining_OptimalWindow'],
+  ['optimalChargeWindowRateModifier', 'Mining_OptimalWindowRate'],
+  ['shatterdamageModifier', 'Mining_ShatterDamage'],
+  ['clusterFactorModifier', 'Mining_ClusterFactor'],
+  ['catastrophicChargeWindowRateModifier', 'Mining_CatastrophicWindowRate'],
+]
+
+/** Laser beam versus extractor beam. A mining laser carries one of each. */
+function miningBeamRole(beam) {
+  const hit = beam?.hitType
+  const tag = beam?.mannequinTag?.tag
+  if (hit === 'Extraction' || tag === 'tractor') return 'extractor'
+  if (hit === 'ElectricArc' || tag === 'laser') return 'laser'
+  return null
+}
+
+/**
+ * Records both mining beams under their own names. Weapon_Damage stays equal to
+ * the laser beam so crafting quality still scales it, and the generic weapon
+ * damage keys are removed so the extractor is not shown as Energy Damage.
+ */
+function applyMiningLaser(stats, root) {
+  const mining = firstOfType(root, 'SEntityComponentMiningLaserParams')
+  if (!mining) return false
+  const beams = { laser: null, extractor: null }
+  walk(root, (node) => {
+    if (node._Type_ !== 'SWeaponActionFireBeamParams') return
+    const role = miningBeamRole(node)
+    if (role && !beams[role]) beams[role] = node
+  })
+
+  for (const [role, beam] of Object.entries(beams)) {
+    if (!beam) continue
+    const prefix = role === 'laser' ? 'Mining_Laser' : 'Mining_Extractor'
+    const info = beam.damagePerSecond?._Type_ === 'DamageInfo' ? beam.damagePerSecond : null
+    let total
+    if (info) {
+      for (const [field, name] of MINING_DAMAGE_TYPES) {
+        const value = info[field]
+        if (typeof value !== 'number' || !Number.isFinite(value)) continue
+        stats[`${prefix}Damage_${name}`] = value
+        total = (total ?? 0) + value
+      }
+    }
+    setStat(stats, `${prefix}Damage`, total)
+    setStat(stats, `${prefix}OptimalRange`, beam.fullDamageRange)
+    setStat(stats, `${prefix}MaxRange`, beam.zeroDamageRange)
+    setStat(stats, `${prefix}Heat`, beam.heatPerSecond)
+  }
+
+  for (const [field, key] of MINING_MODIFIERS) setStat(stats, key, mining.miningLaserModifiers?.[field]?.value)
+  setStat(stats, 'Mining_Filter', mining.filterParams?.filterModifier?.value)
+  setStat(stats, 'Mining_ThrottleSpeed', mining.throttleLerpSpeed)
+  setStat(stats, 'Mining_ThrottleMin', mining.throttleMinimum)
+
+  if (typeof stats.Mining_LaserDamage === 'number') {
+    stats.Weapon_Damage = stats.Mining_LaserDamage
+    delete stats.Weapon_Damage_Physical
+    delete stats.Weapon_Damage_Energy
+    delete stats.Weapon_Damage_Distortion
+  }
+  return true
 }
 
 /** Burst damage per second. A sequenced gun uses its own shot waits before the fire rate. */
