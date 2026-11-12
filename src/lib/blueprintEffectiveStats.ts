@@ -47,7 +47,7 @@ export function mergeBlueprintBaseStats(
     ...blueprint.weaponBaseStats,
   }
   for (const [key, value] of Object.entries(allStats)) {
-    if (value !== null && value !== undefined && value !== 0) {
+    if (value !== null && value !== undefined) {
       stats[key] = value
     }
   }

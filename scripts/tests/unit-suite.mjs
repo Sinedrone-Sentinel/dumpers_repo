@@ -1699,12 +1699,12 @@ check(
 )
 
 check(
-  Object.keys(
+  JSON.stringify(
     effectiveStats.mergeBlueprintBaseStats({
-      armorBaseStats: { Armor_Temperaturemin: 0, Armor_Radiationcapacity: 0 },
+      armorBaseStats: { Armor_Temperaturemin: 0, Armor_Radiationcapacity: 0, Armor_Radiationdissipation: null },
     }),
-  ).length === 0,
-  'zero base stats are not recorded stats',
+  ) === JSON.stringify({ Armor_Temperaturemin: 0, Armor_Radiationcapacity: 0 }),
+  'a 0 from the game file is a spec; only a missing value is dropped',
 )
 check(
   effectiveStats.mergeBlueprintBaseStats({
@@ -1804,9 +1804,15 @@ check(
   `no blueprint shows an armour modifier for a stat the item lacks (${inertArmorShown.slice(0, 5).join('; ')})`,
 )
 const h4 = allBlueprints.find((bp) => bp?.entityClass === 'cds_combat_superheavy_backpack_01_01_01')
+const h4Base = h4 ? effectiveStats.mergeBlueprintBaseStats(h4) : {}
 check(
-  h4 && Object.keys(effectiveStats.mergeBlueprintBaseStats(h4)).length === 0,
-  'H4-PBF Ammo Carrier has no recorded base stats',
+  h4Base.Armor_Radiationcapacity === 0 && h4Base.Armor_Damagemitigation === undefined,
+  'H4-PBF Ammo Carrier shows its 0 radiation capacity and has no damage mitigation',
+)
+const monolithHelmet = allBlueprints.find((bp) => bp?.entityClass === 'kap_combat_heavy_helmet_01_01_01')
+check(
+  monolithHelmet && effectiveStats.mergeBlueprintBaseStats(monolithHelmet).Armor_Radiationcapacity === 0,
+  'Monolith Helmet shows Radiation Capacity 0',
 )
 
 const resourceTypesLib = await import(
@@ -2804,6 +2810,59 @@ check(
     bretonSpecs.Radar_Maxaimassistdistance === 100 &&
     quality.presentBlueprintSpecs({ Signature_Em: 40 }).Signature_Em === 40,
   'component specs: only Signature EM is the reverse of EM Signature',
+)
+
+const shipItemStatsLib = await import(pathToFileURL(path.join(root, 'scripts/lib/shipItemStats.mjs')).href)
+const plantStats = shipItemStatsLib.extractShipItemStats({
+  _RecordValue_: {
+    Components: [
+      { _Type_: 'ItemResourceSignatureParams', EMSignature: { nominalSignature: 7920 }, IRSignature: { nominalSignature: 0 } },
+      {
+        _Type_: 'SHealthComponentParams',
+        Health: 300,
+        explosion: {
+          hitType: 'explosion',
+          damage: { _Type_: 'DamageInfo', DamagePhysical: 0, DamageEnergy: 100, DamageDistortion: 0, DamageThermal: 100, DamageBiochemical: 0, DamageStun: 0 },
+        },
+      },
+    ],
+  },
+})
+check(
+  plantStats.Signature_Ir === 0 &&
+    plantStats.Explosion_Damage_Energy === 100 &&
+    plantStats.Explosion_Damage_Thermal === 100 &&
+    plantStats.Explosion_Damage_Physical === 0 &&
+    plantStats.Weapon_Damage === undefined &&
+    plantStats.Weapon_Damage_Energy === undefined &&
+    quality.getPropertyLabel('Explosion_Damage_Energy') === 'Explosion Energy Damage' &&
+    quality.getPropertyLabel('Explosion_Damage_Thermal') === 'Explosion Thermal Damage',
+  'power plant: explosion damage keeps its prefix, IR 0 is kept, no weapon damage',
+)
+const laserStats = shipItemStatsLib.extractShipItemStats({
+  _RecordValue_: {
+    Components: [
+      {
+        _Type_: 'SCItemWeaponComponentParams',
+        fireActions: [{ _Type_: 'SWeaponActionFireSingleParams', fireRate: 600, heatPerShot: 0, launchParams: { pelletCount: 1 } }],
+      },
+      { _Type_: 'Ammo', damage: { _Type_: 'DamageInfo', DamagePhysical: 0, DamageEnergy: 50, DamageDistortion: 0 } },
+    ],
+  },
+})
+check(
+  laserStats.Weapon_HeatPerShot === 0 &&
+    laserStats.Weapon_Damage === 50 &&
+    laserStats.Weapon_Damage_Physical === 0 &&
+    laserStats.Explosion_Damage_Energy === undefined &&
+    laserStats.Weapon_ChargeTime === undefined &&
+    shipShopMath.weaponBurstDps(laserStats) === 500,
+  'laser: heat per shot 0 is kept, fields not in the file stay off, DPS unchanged',
+)
+check(
+  shipShopMath.itemIsEquippable({ entityClass: 'stub', displayName: 'Stub', kind: 'radar', size: 1, stats: { Signature_Ir: 0, Explosion_Damage_Energy: 100 }, burstDps: 0 }) === false &&
+    shipShopMath.weaponBurstDps({ Weapon_Damage: 10, Weapon_Firerate: 60, Weapon_ChargeTime: 0, Weapon_Pellets: 0 }) === 10,
+  'Ship Shop: a 0 spec reads the same as a missing one',
 )
 
 const tickerLinks = await import(pathToFileURL(path.join(outDir, 'tickerLinks.mjs')).href)

@@ -18,8 +18,9 @@ function firstOfType(root, type) {
   return found
 }
 
+/** A field the game file has is kept, including 0. A missing field stays off. */
 function setStat(stats, key, value) {
-  if (typeof value !== 'number' || !Number.isFinite(value) || value === 0) return
+  if (typeof value !== 'number' || !Number.isFinite(value)) return
   stats[key] = value
 }
 
@@ -71,12 +72,17 @@ export function applyWeaponCycle(stats, cycle) {
   return stats
 }
 
+/** First positive value of a field, else the first value at all, else undefined. */
 function firstNumber(root, key) {
-  let found = 0
+  let positive
+  let any
   walk(root, (node) => {
-    if (!found && typeof node?.[key] === 'number' && node[key] > 0) found = node[key]
+    const value = node?.[key]
+    if (typeof value !== 'number') return
+    if (any === undefined) any = value
+    if (positive === undefined && value > 0) positive = value
   })
-  return found
+  return positive ?? any
 }
 
 function ammoNumber(ammoJson, key) {
@@ -95,18 +101,55 @@ function ammoJsonLifetime(ammoJson) {
   return ammoNumber(ammoJson, 'lifetime')
 }
 
+const WEAPON_DAMAGE_FIELDS = [
+  ['DamagePhysical', 'Weapon_Damage_Physical'],
+  ['DamageEnergy', 'Weapon_Damage_Energy'],
+  ['DamageDistortion', 'Weapon_Damage_Distortion'],
+]
+
+const EXPLOSION_DAMAGE_FIELDS = [
+  ['DamagePhysical', 'Explosion_Damage_Physical'],
+  ['DamageEnergy', 'Explosion_Damage_Energy'],
+  ['DamageDistortion', 'Explosion_Damage_Distortion'],
+  ['DamageThermal', 'Explosion_Damage_Thermal'],
+  ['DamageBiochemical', 'Explosion_Damage_Biochemical'],
+  ['DamageStun', 'Explosion_Damage_Stun'],
+]
+
+/** The first damage block that deals damage, else the first damage block in the file. */
 function ammoDamage(ammoJson) {
-  let found = null
+  let dealing = null
+  let first = null
   walk(ammoJson, (node) => {
-    if (found) return
-    const physical = node.DamagePhysical || 0
-    const energy = node.DamageEnergy || 0
-    const distortion = node.DamageDistortion || 0
-    if (physical > 0 || energy > 0 || distortion > 0) {
-      found = { physical, energy, distortion }
-    }
+    if (!WEAPON_DAMAGE_FIELDS.some(([field]) => typeof node[field] === 'number')) return
+    if (!first) first = node
+    if (!dealing && WEAPON_DAMAGE_FIELDS.some(([field]) => node[field] > 0)) dealing = node
   })
-  return found || { physical: 0, energy: 0, distortion: 0 }
+  return dealing || first
+}
+
+/** Sets each weapon damage type the block has, and their total. Returns the total, or undefined. */
+function setWeaponDamage(stats, info) {
+  if (!info) return undefined
+  let total
+  for (const [field, key] of WEAPON_DAMAGE_FIELDS) {
+    const value = info[field]
+    if (typeof value !== 'number' || !Number.isFinite(value)) continue
+    stats[key] = value
+    total = (total ?? 0) + value
+  }
+  setStat(stats, 'Weapon_Damage', total)
+  return total
+}
+
+const ORDNANCE_TYPES = ['SCItemMissileParams', 'SCItemBombParams', 'SCItemSpaceMineParams']
+
+function isOrdnance(root) {
+  return ORDNANCE_TYPES.some((type) => firstOfType(root, type))
+}
+
+function isArmed(root) {
+  return Boolean(firstOfType(root, 'SCItemWeaponComponentParams')) || isOrdnance(root)
 }
 
 /**
@@ -164,28 +207,29 @@ export function extractShipItemStats(json, options = {}) {
     setStat(stats, 'Weapon_RegenPerSec', regen.maxRegenPerSec)
   }
 
-  let fireRate = 0
-  let pellets = 1
-  let heat = 0
-  let spread = 0
-  let chargeTime = 0
-  let cooldownTime = 0
-  let sequenceDelay = 0
+  const isLarger = (value, current) => typeof value === 'number' && (current === undefined || value > current)
+  let fireRate
+  let pellets
+  let heat
+  let spread
+  let chargeTime
+  let cooldownTime
+  let sequenceDelay
   walk(root, (node) => {
     const type = String(node._Type_ || '')
     if (type === 'SWeaponActionFireChargedParams') {
-      if (typeof node.chargeTime === 'number' && node.chargeTime > chargeTime) chargeTime = node.chargeTime
-      if (typeof node.cooldownTime === 'number' && node.cooldownTime > cooldownTime) cooldownTime = node.cooldownTime
+      if (isLarger(node.chargeTime, chargeTime)) chargeTime = node.chargeTime
+      if (isLarger(node.cooldownTime, cooldownTime)) cooldownTime = node.cooldownTime
     }
-    if (type === 'SWeaponSequenceEntryParams' && node.unit === 'Seconds' && typeof node.delay === 'number' && node.delay > sequenceDelay) {
+    if (type === 'SWeaponSequenceEntryParams' && node.unit === 'Seconds' && isLarger(node.delay, sequenceDelay)) {
       sequenceDelay = node.delay
     }
     if (!type.startsWith('SWeaponActionFire')) return
-    if (typeof node.fireRate === 'number' && node.fireRate > fireRate) {
+    if (isLarger(node.fireRate, fireRate)) {
       fireRate = node.fireRate
-      heat = typeof node.heatPerShot === 'number' ? node.heatPerShot : heat
+      if (typeof node.heatPerShot === 'number') heat = node.heatPerShot
       const pelletCount = node.launchParams?.pelletCount
-      if (typeof pelletCount === 'number' && pelletCount > 0) pellets = pelletCount
+      if (typeof pelletCount === 'number') pellets = pelletCount
       const spreadMin = node.launchParams?.spreadParams?.min
       if (typeof spreadMin === 'number') spread = spreadMin
     }
@@ -196,7 +240,7 @@ export function extractShipItemStats(json, options = {}) {
   setStat(stats, 'Weapon_ChargeTime', chargeTime)
   setStat(stats, 'Weapon_CooldownTime', cooldownTime)
   setStat(stats, 'Weapon_SequenceDelay', sequenceDelay)
-  if (pellets > 1) setStat(stats, 'Weapon_Pellets', pellets)
+  setStat(stats, 'Weapon_Pellets', pellets)
 
   const heatParams = firstOfType(root, 'SWeaponSimplifiedHeatParams')
   if (heatParams) {
@@ -210,28 +254,32 @@ export function extractShipItemStats(json, options = {}) {
     setStat(stats, 'Weapon_Ammo', ammo.maxAmmoCount)
     if (ammo.ammoParamsRecord && options.readRef) {
       const ammoJson = options.readRef(ammo.ammoParamsRecord)
-      const damage = ammoDamage(ammoJson)
-      setStat(stats, 'Weapon_Damage_Physical', damage.physical)
-      setStat(stats, 'Weapon_Damage_Energy', damage.energy)
-      setStat(stats, 'Weapon_Damage_Distortion', damage.distortion)
-      const total = damage.physical + damage.energy + damage.distortion
-      setStat(stats, 'Weapon_Damage', total)
+      setWeaponDamage(stats, ammoDamage(ammoJson))
       const ammoRoot = ammoJson?._RecordValue_
       const speed = ammoRoot?.speed || ammoJsonSpeed(ammoJson)
       const lifetime = ammoRoot?.lifetime || ammoJsonLifetime(ammoJson)
       if (speed) setStat(stats, 'Weapon_Speed', speed)
       if (speed && lifetime) setStat(stats, 'Weapon_Range', Math.round(speed * lifetime))
       const penetration = firstNumber(ammoJson, 'basePenetrationDistance')
-      if (penetration) setStat(stats, 'Weapon_Penetration', penetration)
+      setStat(stats, 'Weapon_Penetration', penetration)
     }
   }
 
-  if (!stats.Weapon_Damage) {
+  const armed = isArmed(root)
+  if (armed && !(stats.Weapon_Damage > 0)) {
     const direct = ammoDamage(root)
-    setStat(stats, 'Weapon_Damage_Physical', direct.physical)
-    setStat(stats, 'Weapon_Damage_Energy', direct.energy)
-    setStat(stats, 'Weapon_Damage_Distortion', direct.distortion)
-    setStat(stats, 'Weapon_Damage', direct.physical + direct.energy + direct.distortion)
+    const dealsDamage = direct && WEAPON_DAMAGE_FIELDS.some(([field]) => direct[field] > 0)
+    if (dealsDamage || (isOrdnance(root) && stats.Weapon_Damage === undefined)) setWeaponDamage(stats, direct)
+  }
+
+  if (!armed) {
+    let explosion = null
+    walk(root, (node) => {
+      if (!explosion && node.hitType === 'explosion' && node.damage?._Type_ === 'DamageInfo') explosion = node.damage
+    })
+    if (explosion) {
+      for (const [field, key] of EXPLOSION_DAMAGE_FIELDS) setStat(stats, key, explosion[field])
+    }
   }
 
   if (!stats.Weapon_Speed) {
@@ -273,13 +321,13 @@ export function extractShipItemStats(json, options = {}) {
     if (typeof energy === 'number') stats.Shield_EnergyReduction = energy * 100
   }
 
-  let powerSegments = 0
+  let powerSegments
   walk(root, (node) => {
     const drawsPower = node._Type_ === 'ItemResourceDeltaConsumption' || node._Type_ === 'ItemResourceDeltaConversion'
     if (drawsPower && node.consumption?.resource === 'Power') {
       const amount = node.consumption.resourceAmountPerSecond
       if (amount?._Type_ === 'SStandardResourceUnit') setStat(stats, 'Weapon_Power', amount.standardResourceUnits)
-      if (amount?._Type_ === 'SPowerSegmentResourceUnit' && amount.units > powerSegments) {
+      if (amount?._Type_ === 'SPowerSegmentResourceUnit' && isLarger(amount.units, powerSegments)) {
         powerSegments = amount.units
       }
     }
@@ -308,7 +356,7 @@ export function extractShipItemStats(json, options = {}) {
       setStat(stats, 'Itemresource_Coolantgeneration', amount.standardResourceUnits)
     }
   })
-  if (powerSegments > 0) stats.Power_Segments = powerSegments
+  setStat(stats, 'Power_Segments', powerSegments)
 
   walk(root, (node) => {
     if (node._Type_ === 'EntityTemperature') {
