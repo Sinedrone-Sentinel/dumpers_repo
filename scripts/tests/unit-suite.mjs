@@ -2761,9 +2761,13 @@ check(
 check(
   quality.getPropertyLabel('Shield_PhysicalReduction') === 'Shield Physical Reduction' &&
     quality.getPropertyLabel('Shield_EnergyReduction') === 'Shield Energy Reduction' &&
-    quality.getPropertyLabel('Temp_IrPerDegree') === 'IR Per Degree' &&
-    quality.getPropertyLabel('Temp_IrMinimum') === 'Minimum IR Temperature' &&
-    quality.getPropertyLabel('Temp_MinCooling') === 'Minimum Cooling Temperature' &&
+    quality.getPropertyLabel('Weapon_Power') === 'Weapon Power' &&
+    quality.getPropertyLabel('Power_Segments') === 'Power Draw' &&
+    quality.getPropertyLabel('Temp_IrPerDegree') === 'Temp IR Per Degree' &&
+    quality.getPropertyLabel('Temp_IrMinimum') === 'Temp IR Minimum' &&
+    quality.getPropertyLabel('Temp_MinCooling') === 'Temp Minimum Cooling' &&
+    quality.getPropertyLabel('Temp_Overheat') === 'Temp Overheat' &&
+    quality.getPropertyLabel('Temp_Heat') === 'Temp Heat' &&
     quality.getPropertyLabel('Coolant_PowerDraw') === 'Coolant Power Draw' &&
     quality.getPropertyLabel('Signature_Em') === 'EM Signature' &&
     quality.getPropertyLabel('Radar_DistanceMax') === 'Max Aim Assist Distance' &&
@@ -2791,7 +2795,7 @@ check(
     bretonSpecs.Signature_Em == null &&
     bretonSpecs.Weapon_Damage == null &&
     bretonSpecs.Weapon_Damage_Energy === 100 &&
-    bretonSpecs.Temp_Enabled == null &&
+    bretonSpecs.Temp_Enabled === 1 &&
     bretonSpecs.Coolant_Dynamic == null &&
     bretonSpecs.Temp_IrPerDegree === 7 &&
     bretonSpecs.Radar_DistanceMin == null &&

@@ -177,7 +177,7 @@ const PROPERTY_LABELS: Record<string, string> = {
   'Power_HighMod': 'High Power Output',
   'Weapon_Penetration': 'Penetration',
   'Weapon_Speed': 'Projectile Speed',
-  'Weapon_Power': 'Power Draw',
+  'Weapon_Power': 'Weapon Power',
   'Weapon_Em': 'EM Signature',
   'Signature_CrossSection': 'Cross-Section Signature',
   'Signature_Infrared': 'Infrared Signature',
@@ -202,11 +202,12 @@ const PROPERTY_LABELS: Record<string, string> = {
   'Shield_EnergyReduction': 'Shield Energy Reduction',
   'Signature_Em': 'EM Signature',
   'Signature_Ir': 'IR Signature',
-  'Temp_IrPerDegree': 'IR Per Degree',
-  'Temp_IrMinimum': 'Minimum IR Temperature',
-  'Temp_MinCooling': 'Minimum Cooling Temperature',
-  'Temp_Overheat': 'Overheat Temperature',
-  'Temp_Heat': 'Heat Generation',
+  'Temp_Enabled': 'Temp Enabled',
+  'Temp_IrPerDegree': 'Temp IR Per Degree',
+  'Temp_IrMinimum': 'Temp IR Minimum',
+  'Temp_MinCooling': 'Temp Minimum Cooling',
+  'Temp_Overheat': 'Temp Overheat',
+  'Temp_Heat': 'Temp Heat',
   'Coolant_PowerDraw': 'Coolant Power Draw',
   'Power_Min': 'Minimum Power Pips',
   'Flight_BoostBackward': 'Reverse Boost Speed',
@@ -342,7 +343,7 @@ export function getPropertyLabel(property: string | null | undefined): string {
 }
 
 /** Presence flags. They are always 1 and are not a specification. */
-const HIDDEN_SPEC_KEYS = new Set(['temp_enabled', 'coolant_dynamic'])
+const HIDDEN_SPEC_KEYS = new Set(['coolant_dynamic'])
 
 /**
  * Same reading stored under two keys. The first key is the one members see
