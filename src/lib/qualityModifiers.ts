@@ -177,7 +177,7 @@ const PROPERTY_LABELS: Record<string, string> = {
   'Power_HighMod': 'High Power Output',
   'Weapon_Penetration': 'Penetration',
   'Weapon_Speed': 'Projectile Speed',
-  'Weapon_Power': 'Weapon Power',
+  'Weapon_Power': 'Power Draw',
   'Weapon_Em': 'EM Signature',
   'Signature_CrossSection': 'Cross-Section Signature',
   'Signature_Infrared': 'Infrared Signature',
@@ -196,33 +196,34 @@ const PROPERTY_LABELS: Record<string, string> = {
   'Quantum_Fuelrequirement': 'Fuel Requirement',
   'Radar_Minaimassistdistance': 'Min Aim Assist Distance',
   'Radar_Maxaimassistdistance': 'Max Aim Assist Distance',
-  'Radar_DistanceMin': 'Min Aim Assist Distance',
-  'Radar_DistanceMax': 'Max Aim Assist Distance',
+  'Radar_DistanceMin': 'Radar Distance Min',
+  'Radar_DistanceMax': 'Radar Distance Max',
   'Shield_PhysicalReduction': 'Shield Physical Reduction',
   'Shield_EnergyReduction': 'Shield Energy Reduction',
   'Signature_Em': 'EM Signature',
-  'Signature_Ir': 'IR Signature',
+  'Signature_Ir': 'Signature IR',
   'Temp_Enabled': 'Temp Enabled',
   'Temp_IrPerDegree': 'Temp IR Per Degree',
   'Temp_IrMinimum': 'Temp IR Minimum',
-  'Temp_MinCooling': 'Temp Minimum Cooling',
+  'Temp_MinCooling': 'Temp Min Cooling',
   'Temp_Overheat': 'Temp Overheat',
   'Temp_Heat': 'Temp Heat',
   'Coolant_PowerDraw': 'Coolant Power Draw',
-  'Power_Min': 'Minimum Power Pips',
-  'Flight_BoostBackward': 'Reverse Boost Speed',
-  'Weapon_CapacitorShots': 'Capacitor Shots',
-  'Weapon_RegenPerSec': 'Regen per Second',
-  'Weapon_ChargeTime': 'Charge Time',
-  'Weapon_CooldownTime': 'Cooldown Time',
-  'Weapon_SequenceDelay': 'Sequence Delay',
+  'Coolant_Dynamic': 'Coolant Dynamic',
+  'Power_Min': 'Power Min',
+  'Flight_BoostBackward': 'Flight Boost Backward',
+  'Weapon_CapacitorShots': 'Weapon Capacitor Shots',
+  'Weapon_RegenPerSec': 'Weapon Regen Per Sec',
+  'Weapon_ChargeTime': 'Weapon Charge Time',
+  'Weapon_CooldownTime': 'Weapon Cooldown Time',
+  'Weapon_SequenceDelay': 'Weapon Sequence Delay',
   'Weapon_Overheat': 'Weapon Overheat',
-  'Weapon_Cooling': 'Cooling per Second',
-  'Weapon_OverheatFix': 'Overheat Recovery',
-  'Weapon_CycleShots': 'Cycle Shots',
-  'Weapon_CycleSeconds': 'Cycle Seconds',
-  'Emp_Charge': 'EMP Charge Time',
-  'Emp_Damage': 'EMP Distortion',
+  'Weapon_Cooling': 'Weapon Cooling',
+  'Weapon_OverheatFix': 'Weapon Overheat Fix',
+  'Weapon_CycleShots': 'Weapon Cycle Shots',
+  'Weapon_CycleSeconds': 'Weapon Cycle Seconds',
+  'Emp_Charge': 'EMP Charge',
+  'Emp_Damage': 'EMP Damage',
   'Emp_Radius': 'EMP Radius',
   'Emp_Cooldown': 'EMP Cooldown',
   'Weapon_Hullscraping_Efficiency': 'Scraping Efficiency (%)',
@@ -342,54 +343,22 @@ export function getPropertyLabel(property: string | null | undefined): string {
   return humanizeSpecKey(property)
 }
 
-/** Presence flags. They are always 1 and are not a specification. */
-const HIDDEN_SPEC_KEYS = new Set(['coolant_dynamic'])
-
 /**
- * Same reading stored under two keys. The first key is the one members see
- * when the numbers match.
+ * The parser stores EM Signature a second time as Signature_Em. The name is the
+ * same words in reverse. Other specs stay even when the numbers match.
  */
-const SPEC_ALIASES: string[][] = [
-  ['weapon_em', 'signature_em', 'signature_electromagnetic'],
-  ['signature_ir', 'signature_infrared'],
-  ['radar_minaimassistdistance', 'radar_distancemin'],
-  ['radar_maxaimassistdistance', 'radar_distancemax'],
-  ['missile_damage', 'weapon_damage'],
-]
-
-const TYPED_DAMAGE_KEYS = ['weapon_damage_physical', 'weapon_damage_energy', 'weapon_damage_distortion']
-
-/** Member-facing base specs: readable keys, with the same reading listed once. */
 export function presentBlueprintSpecs(stats: Record<string, number>): Record<string, number> {
   const next: Record<string, number> = {}
+  let signatureEm: string | null = null
+  let weaponEm: string | null = null
   for (const [key, value] of Object.entries(stats)) {
     if (value == null || !Number.isFinite(value)) continue
-    if (HIDDEN_SPEC_KEYS.has(key.toLowerCase())) continue
+    const lower = key.toLowerCase()
+    if (lower === 'signature_em') signatureEm = key
+    if (lower === 'weapon_em') weaponEm = key
     next[key] = value
   }
-
-  const keyByLower = new Map(Object.keys(next).map((key) => [key.toLowerCase(), key]))
-  for (const group of SPEC_ALIASES) {
-    const present = group
-      .map((key) => keyByLower.get(key))
-      .filter((key): key is string => Boolean(key))
-    if (present.length < 2) continue
-    const first = next[present[0]]
-    if (!present.every((key) => next[key] === first)) continue
-    for (const key of present.slice(1)) {
-      delete next[key]
-      keyByLower.delete(key.toLowerCase())
-    }
-  }
-
-  const totalKey = keyByLower.get('weapon_damage')
-  if (totalKey != null) {
-    const typed = TYPED_DAMAGE_KEYS
-      .map((key) => keyByLower.get(key))
-      .filter((key): key is string => Boolean(key && next[key]))
-    if (typed.length === 1 && next[typed[0]] === next[totalKey]) delete next[totalKey]
-  }
-
+  if (signatureEm && weaponEm) delete next[signatureEm]
   return next
 }
 
