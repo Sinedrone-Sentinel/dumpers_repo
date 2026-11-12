@@ -263,7 +263,7 @@ export default function SiteTicker({ items, onOpenQuestionnaire }: Props) {
               <TickerTypeBadge item={current} />
               <div ref={viewportRef} className="relative min-w-0 flex-1 overflow-hidden h-5">
                 <div
-                  className={`absolute left-0 top-0 w-full ${
+                  className={`absolute inset-0 flex items-center ${
                     yPhase === 'out'
                       ? 'site-ticker-scroll-out'
                       : yPhase === 'in'
@@ -271,21 +271,23 @@ export default function SiteTicker({ items, onOpenQuestionnaire }: Props) {
                         : ''
                   }`}
                 >
-                  <SiteTooltip content={current.headline}><div
-                    ref={textRef}
-                    className="whitespace-nowrap text-xs sm:text-sm font-medium"
-                    style={{
-                      ...currentLayout.textStyle,
-                      ...(reduced
-                        ? { maxWidth: '100%', overflow: 'hidden', textOverflow: 'ellipsis' }
-                        : {
-                            transform: `translateX(${xOffset}px)`,
-                            transition: `transform ${marqueeDuration} linear`,
-                          }),
-                    }}
-                  >
-                    {current.headline}
-                  </div></SiteTooltip>
+                  <SiteTooltip className="!flex items-center min-w-0" content={current.headline}>
+                    <div
+                      ref={textRef}
+                      className="whitespace-nowrap text-xs sm:text-sm font-medium leading-none"
+                      style={{
+                        ...currentLayout.textStyle,
+                        ...(reduced
+                          ? { maxWidth: '100%', overflow: 'hidden', textOverflow: 'ellipsis' }
+                          : {
+                              transform: `translateX(${xOffset}px)`,
+                              transition: `transform ${marqueeDuration} linear`,
+                            }),
+                      }}
+                    >
+                      {current.headline}
+                    </div>
+                  </SiteTooltip>
                 </div>
               </div>
               <span
