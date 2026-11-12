@@ -163,11 +163,12 @@ function extractWeaponDamage(entityJson, entityFile, recordIndex, extractedDataR
   return firstDamageFromAmmo(readJson(ammoPath))
 }
 
-function maxNumericField(recordValue, fieldName) {
+/** Largest value of a field in the record. `keepZero` also returns 0 when that is all the file has. */
+function maxNumericField(recordValue, fieldName, { keepZero = false } = {}) {
   let max = null
   walkObjectTree(recordValue, (node) => {
     const val = node[fieldName]
-    if (typeof val === 'number' && val > 0) {
+    if (typeof val === 'number' && Number.isFinite(val) && (val > 0 || (keepZero && val === 0))) {
       max = max == null ? val : Math.max(max, val)
     }
   })
@@ -183,7 +184,7 @@ function extractFpsWeaponStats(recordValue, entityJson, entityFile, recordIndex,
     stats.Weapon_Damage = Math.round(baseDamage * damageMultiplier * 100) / 100
   }
 
-  const fireRate = maxNumericField(recordValue, 'fireRate')
+  const fireRate = maxNumericField(recordValue, 'fireRate', { keepZero: true })
   if (fireRate != null) {
     stats.Weapon_Firerate = fireRate
   }

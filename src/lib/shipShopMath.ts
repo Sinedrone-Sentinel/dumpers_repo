@@ -70,7 +70,7 @@ export function itemIsEquippable(item: ShipItemStats): boolean {
   if (item.kind === 'life') return (stats.Power_Segments || 0) > 0
   if (item.kind === 'emp') return (stats.Weapon_Power || 0) > 0 || (stats.Emp_Radius || 0) > 0
   if (item.kind === 'module') return true
-  return Object.keys(stats).length > 0
+  return Object.entries(stats).some(([key, value]) => value !== 0 && !key.startsWith('Explosion_'))
 }
 
 export interface FittedPart {
