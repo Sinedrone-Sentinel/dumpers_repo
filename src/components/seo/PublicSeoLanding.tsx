@@ -189,9 +189,10 @@ export default function PublicSeoLanding({ onBrowseOffline }: PublicSeoLandingPr
             mining tools, and community trade
           </h1>
           <p className="mx-auto mt-5 max-w-2xl text-center text-base text-slate-300 sm:text-lg">
-            Blueprints, missions, Wikelo, Resource Tracker, Mining Tracker, Fuzy&apos;s Ship Shop,
-            UEX Lookup, the Shopping Cart, and Executive Hangar. Offline Mode opens them in this
-            browser. Sign in for Smart Hauler, Smart Cracker, Flight Profile, My Hangar, and My Listings.
+            The all-in-one Star Citizen companion for ship fitting, cargo hauling, mining, crafting
+            blueprints, and Wikelo trades. Also flight profiles, shop runs, cave routes, and a member
+            marketplace. Most tools work signed out. Sign in for Smart Hauler, Smart Cracker, Flight
+            Profile, My Hangar, and My Listings.
           </p>
           {error && (
             <div className="site-banner-error mx-auto mt-6 max-w-xl" role="alert">
