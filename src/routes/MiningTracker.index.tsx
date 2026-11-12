@@ -472,7 +472,7 @@ export default function MiningTrackerRoute() {
           : viewMode === 'ledger'
             ? 'Track mining crew shares, payouts, and paid status for your runs.'
             : viewMode === 'caves'
-              ? 'Every placed cave, and a route from where you are.'
+              ? 'Find a cave nearest you.'
               : undefined
       }
       badge={isGuestPreview ? 'Local only' : undefined}
