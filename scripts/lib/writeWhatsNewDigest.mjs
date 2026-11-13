@@ -10,7 +10,7 @@ import { readFileSync, writeFileSync, existsSync, appendFileSync, unlinkSync, mk
 import { join } from 'path'
 import { createClient } from '@supabase/supabase-js'
 import { config as loadDotenv } from 'dotenv'
-import { diffGameDataFiles, isUnreleasedRecord } from './diffGameData.mjs'
+import { diffGameDataFiles, isNonPlayerFacingRecord, isUnreleasedRecord } from './diffGameData.mjs'
 import { getAppliedSpellingCorrections } from './spellingCorrections.mjs'
 import {
   buildDisplayNameResolver,
@@ -43,6 +43,13 @@ function actionVerb(action) {
 function labelOf(specLabel, rec, key, resolve) {
   const label = typeof specLabel === 'function' ? specLabel(rec) : null
   const raw = label && String(label).trim() ? String(label) : key
+  // Prefer a real display field, then resolver (entity → name), never a raw key.
+  const fromFields = [rec?.displayName, rec?.blueprintName, rec?.title, rec?.displayTitle]
+    .map((v) => (v != null ? String(v).trim() : ''))
+    .find(Boolean)
+  const cleaned = cleanDisplayLabel(fromFields || raw, resolve)
+  if (cleaned) return cleaned
+  if (resolve?.has?.(key)) return resolve(key)
   return cleanDisplayLabel(raw, resolve) || String(key)
 }
 
@@ -160,30 +167,36 @@ export function buildWhatsNewEntriesFromDiff(diffResult, options = {}) {
         : label
     }
     for (const a of col.added) {
-      if (isUnreleasedRecord(a.rec)) continue
+      if (isNonPlayerFacingRecord(a.rec, a.key) || isUnreleasedRecord(a.rec)) continue
+      const label = itemLabel(a.rec, a.key)
+      if (isNonPlayerFacingRecord({ ...a.rec, displayName: label }, a.key)) continue
       ensure(col.category, 'added').items.push({
         key: a.key,
-        label: itemLabel(a.rec, a.key),
+        label,
         summary: null,
       })
     }
     for (const r of col.removed) {
-      if (isUnreleasedRecord(r.rec)) continue
+      if (isNonPlayerFacingRecord(r.rec, r.key) || isUnreleasedRecord(r.rec)) continue
+      const label = itemLabel(r.rec, r.key)
+      if (isNonPlayerFacingRecord({ ...r.rec, displayName: label }, r.key)) continue
       ensure(col.category, 'removed').items.push({
         key: r.key,
-        label: itemLabel(r.rec, r.key),
+        label,
         summary: null,
       })
     }
     for (const c of col.changed) {
-      if (isUnreleasedRecord(c.rec)) continue
+      if (isNonPlayerFacingRecord(c.rec, c.key) || isUnreleasedRecord(c.rec)) continue
       // Internal-only churn (localization keys, schema backfill) yields no phrase;
       // drop the item instead of showing members something they cannot act on.
       const summary = describeChangedFields(c.fields, resolve, { maxParts: MAX_SUMMARY_FIELDS })
       if (!summary) continue
+      const label = itemLabel(c.rec, c.key)
+      if (isNonPlayerFacingRecord({ ...c.rec, displayName: label }, c.key)) continue
       ensure(col.category, 'changed').items.push({
         key: c.key,
-        label: itemLabel(c.rec, c.key),
+        label,
         summary,
       })
     }
@@ -199,8 +212,18 @@ export function buildWhatsNewEntriesFromDiff(diffResult, options = {}) {
       seen.add(item.key)
       unique.push(item)
     }
-    unique.sort((a, b) => a.label.localeCompare(b.label))
-    const n = unique.length
+    // Collapse quality/tint variants that resolve to the same display name.
+    const byLabel = new Map()
+    for (const item of unique) {
+      const k = String(item.label || '')
+        .toLowerCase()
+        .replace(/\s*\(blueprint\)\s*$/i, '')
+        .trim()
+      if (!k || byLabel.has(k)) continue
+      byLabel.set(k, item)
+    }
+    const deduped = [...byLabel.values()].sort((a, b) => a.label.localeCompare(b.label))
+    const n = deduped.length
     const verb = actionVerb(action)
     entries.push({
       issueKey: issueKeyFor(category, action),
@@ -209,7 +232,7 @@ export function buildWhatsNewEntriesFromDiff(diffResult, options = {}) {
       action,
       headline: `${n} ${category} ${verb} in ${shortVersion(version)}`,
       detectedAt,
-      items: unique,
+      items: deduped,
     })
   }
 
