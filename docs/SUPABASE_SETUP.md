@@ -255,6 +255,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 185 | `220_flight_gear_list_rudder.sql` | Lists T-Rudders Mk.V (`t-rudder`) so RSI-verified members can place it on External 1 or External 2. Apply after **219** |
 | 186 | `221_flight_virpil.sql` | Virpil gear rows, all unlisted, and a `base` kind. A Virpil side saves `setup`, `top`, `main`, and `base`. A VKB side keeps its seven slots. Apply after **220** |
 | 187 | `222_list_ship_shop_fraken_ships.sql` | Ship search gold names. `list_ship_shop_fraken_ship_ids` returns the published ship ids. `ship_shop_fraken_listed` mirrors those ids (select only, realtime) so an open page hears a publish or a removal. `delete_ship_shop_fraken_fit` is the owner-only way to take one down. The fit JSON stays on `get_ship_shop_fraken_fit`. Apply after **221** |
+| 188 | `223_fix_ticker_launcher_version_4_10_3.sql` | Rewrites patch-day What's New headlines/version from invented `4.10.0` to RSI Launcher `4.10.3` (`4.10.3-live.13165946`). Apply after **222** |
 
 ### pg_cron (migrations 054, 065-068, 144, 147, 178, 179, 191, 196)
 
