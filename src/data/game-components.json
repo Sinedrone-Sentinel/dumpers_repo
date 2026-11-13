@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted)",
-  "_extracted": "2026-10-10T00:43:14.381Z",
+  "_extracted": "2026-11-13T00:35:02.616Z",
   "components": [
     {
       "id": "f59a0b33-5bbe-439e-8bd5-111db00b5ff6",
@@ -223,6 +223,18 @@
       "name": "COOL_AEGS_S04_Idris_SCItem",
       "type": "cooler",
       "displayName": "Exotherm",
+      "size": 4,
+      "grade": 1,
+      "manufacturerCode": null,
+      "manufacturer": null,
+      "tags": "",
+      "typeParams": null
+    },
+    {
+      "id": "1f5be5de-b5ea-42c7-879f-289c4bf64f19",
+      "name": "COOL_AEGS_S04_Javelin_SCItem",
+      "type": "cooler",
+      "displayName": "COOL AEGS S04 Javelin SCItem",
       "size": 4,
       "grade": 1,
       "manufacturerCode": null,
@@ -687,6 +699,18 @@
       "typeParams": null
     },
     {
+      "id": "a2472bfc-17ff-461d-8d99-ec68da5d04b1",
+      "name": "COOL_RSI_S04_Bengal_SCItem",
+      "type": "cooler",
+      "displayName": "COOL RSI S04 Bengal SCItem",
+      "size": 4,
+      "grade": 1,
+      "manufacturerCode": null,
+      "manufacturer": null,
+      "tags": "",
+      "typeParams": null
+    },
+    {
       "id": "d0b4ce5b-c8ba-4a9f-90b1-c9567a6c90e9",
       "name": "COOL_RSI_S04_Polaris_SCItem",
       "type": "cooler",
@@ -695,6 +719,66 @@
       "grade": 1,
       "manufacturerCode": "RSI",
       "manufacturer": "Roberts Space Industries",
+      "tags": "",
+      "typeParams": null
+    },
+    {
+      "id": "209c4920-36d6-4e32-8cea-8865083d8906",
+      "name": "COOL_S01_Template",
+      "type": "cooler",
+      "displayName": "COOL S01 Template",
+      "size": 1,
+      "grade": 1,
+      "manufacturerCode": null,
+      "manufacturer": null,
+      "tags": "",
+      "typeParams": null
+    },
+    {
+      "id": "b4341403-9a37-435a-8aa6-92b57f76c2fd",
+      "name": "COOL_S02_Template",
+      "type": "cooler",
+      "displayName": "COOL S02 Template",
+      "size": 2,
+      "grade": 1,
+      "manufacturerCode": null,
+      "manufacturer": null,
+      "tags": "",
+      "typeParams": null
+    },
+    {
+      "id": "56c08571-e1e3-4947-90e9-ae52f90bc182",
+      "name": "COOL_S03_Template",
+      "type": "cooler",
+      "displayName": "COOL S03 Template",
+      "size": 3,
+      "grade": 1,
+      "manufacturerCode": null,
+      "manufacturer": null,
+      "tags": "",
+      "typeParams": null
+    },
+    {
+      "id": "d64ec530-c040-4272-8f9f-7ef3503e5e5f",
+      "name": "COOL_S04_Template",
+      "type": "cooler",
+      "displayName": "COOL S04 Template",
+      "size": 4,
+      "grade": 1,
+      "manufacturerCode": null,
+      "manufacturer": null,
+      "tags": "",
+      "typeParams": null
+    },
+    {
+      "id": "6206cb1d-3018-4c74-92d7-9b343f87e04d",
+      "name": "COOL_Template",
+      "type": "cooler",
+      "displayName": "COOL Template",
+      "size": 1,
+      "grade": 1,
+      "manufacturerCode": null,
+      "manufacturer": null,
       "tags": "",
       "typeParams": null
     },
@@ -1647,6 +1731,18 @@
       "typeParams": null
     },
     {
+      "id": "f330457d-df9b-4421-a522-45b407a735a7",
+      "name": "POWR_PyroOutpost",
+      "type": "powerplant",
+      "displayName": "POWR PyroOutpost",
+      "size": 0,
+      "grade": 1,
+      "manufacturerCode": null,
+      "manufacturer": null,
+      "tags": "",
+      "typeParams": null
+    },
+    {
       "id": "87bcad59-966f-4280-b651-1f9a8d92bc32",
       "name": "POWR_RSI_S04_Bengal_SCItem",
       "type": "powerplant",
@@ -1695,6 +1791,18 @@
       "typeParams": null
     },
     {
+      "id": "d74b7048-85f2-4e21-ac6f-6dbd0d817a00",
+      "name": "POWR_S01_Template",
+      "type": "powerplant",
+      "displayName": "POWR S01 Template",
+      "size": 1,
+      "grade": 1,
+      "manufacturerCode": null,
+      "manufacturer": null,
+      "tags": "",
+      "typeParams": null
+    },
+    {
       "id": "c764fc13-638e-45ec-a906-8a9503049c72",
       "name": "POWR_S02_IASI_NameA_SCItem",
       "type": "powerplant",
@@ -1719,6 +1827,18 @@
       "typeParams": null
     },
     {
+      "id": "a32c1b11-1911-48da-90af-3717c18d74c7",
+      "name": "POWR_S02_Template",
+      "type": "powerplant",
+      "displayName": "POWR S02 Template",
+      "size": 2,
+      "grade": 1,
+      "manufacturerCode": null,
+      "manufacturer": null,
+      "tags": "",
+      "typeParams": null
+    },
+    {
       "id": "f86e3f6c-2c38-47dc-bbcf-93d6201289d1",
       "name": "POWR_S03_IASI_NameA_SCItem",
       "type": "powerplant",
@@ -1739,6 +1859,30 @@
       "grade": 2,
       "manufacturerCode": "RSI",
       "manufacturer": "Roberts Space Industries",
+      "tags": "",
+      "typeParams": null
+    },
+    {
+      "id": "4d38edca-4a02-443e-8ff1-4df944ea5a6c",
+      "name": "POWR_S03_Template",
+      "type": "powerplant",
+      "displayName": "POWR S03 Template",
+      "size": 3,
+      "grade": 1,
+      "manufacturerCode": null,
+      "manufacturer": null,
+      "tags": "",
+      "typeParams": null
+    },
+    {
+      "id": "f2a7001e-c73e-4f1a-8f2f-3bae82c657a5",
+      "name": "POWR_S04_Template",
+      "type": "powerplant",
+      "displayName": "POWR S04 Template",
+      "size": 4,
+      "grade": 1,
+      "manufacturerCode": null,
+      "manufacturer": null,
       "tags": "",
       "typeParams": null
     },
@@ -6351,6 +6495,102 @@
       }
     },
     {
+      "id": "ca41d9be-bbcc-450f-ad08-1bb88c957bf8",
+      "name": "SHLD_GODI_S04_Bengal_SCItem",
+      "type": "shieldgenerator",
+      "displayName": "SHLD GODI S04 Bengal SCItem",
+      "size": 4,
+      "grade": 1,
+      "manufacturerCode": "GODI",
+      "manufacturer": "Gorgon Defender Industries",
+      "tags": "",
+      "typeParams": {
+        "type": "ShieldGenerator",
+        "_Type_": "SCItemShieldGeneratorParams",
+        "MaxShieldHealth": 3168000,
+        "MaxShieldRegen": 232320,
+        "DecayRatio": 0.25,
+        "ReservePoolInitialHealthRatio": 1,
+        "ReservePoolMaxHealthRatio": 1,
+        "ReservePoolRegenRateRatio": 1,
+        "ReservePoolDrainRateRatio": 2.5,
+        "DownedRegenDelay": 18.7,
+        "DamagedRegenDelay": 9.34,
+        "ElectricalChargeDamageResistance": 0,
+        "stunParams": {
+          "_Type_": "SShieldStunParams",
+          "minAlphaDamageRatio": 0.005,
+          "maxAlphaDamageRatio": 0.15,
+          "minStunTime": 0,
+          "maxStunTime": 12
+        },
+        "ShieldResistance": [
+          {
+            "_Type_": "SShieldResistance",
+            "Max": 0.25,
+            "Min": 0
+          },
+          {
+            "_Type_": "SShieldResistance",
+            "Max": 0,
+            "Min": 0
+          },
+          {
+            "_Type_": "SShieldResistance",
+            "Max": 0.95,
+            "Min": 0.75
+          },
+          {
+            "_Type_": "SShieldResistance",
+            "Max": 0,
+            "Min": 0
+          },
+          {
+            "_Type_": "SShieldResistance",
+            "Max": 0,
+            "Min": 0
+          },
+          {
+            "_Type_": "SShieldResistance",
+            "Max": 0,
+            "Min": 0
+          }
+        ],
+        "ShieldAbsorption": [
+          {
+            "_Type_": "SShieldAbsorption",
+            "Max": 0.45,
+            "Min": 0
+          },
+          {
+            "_Type_": "SShieldAbsorption",
+            "Max": 1,
+            "Min": 1
+          },
+          {
+            "_Type_": "SShieldAbsorption",
+            "Max": 1,
+            "Min": 1
+          },
+          {
+            "_Type_": "SShieldAbsorption",
+            "Max": 1,
+            "Min": 1
+          },
+          {
+            "_Type_": "SShieldAbsorption",
+            "Max": 1,
+            "Min": 1
+          },
+          {
+            "_Type_": "SShieldAbsorption",
+            "Max": 1,
+            "Min": 1
+          }
+        ]
+      }
+    },
+    {
       "id": "84f07b24-342d-4956-8928-25832eb4e999",
       "name": "SHLD_GODI_S04_Idris_Pirate_SCItem",
       "type": "shieldgenerator",
@@ -6543,6 +6783,102 @@
       }
     },
     {
+      "id": "9b94c0fa-476b-42bd-bebd-b1d633f149ca",
+      "name": "SHLD_GODI_S04_Javelin_SCItem",
+      "type": "shieldgenerator",
+      "displayName": "SHLD GODI S04 Javelin SCItem",
+      "size": 4,
+      "grade": 1,
+      "manufacturerCode": "GODI",
+      "manufacturer": "Gorgon Defender Industries",
+      "tags": "",
+      "typeParams": {
+        "type": "ShieldGenerator",
+        "_Type_": "SCItemShieldGeneratorParams",
+        "MaxShieldHealth": 2112000,
+        "MaxShieldRegen": 154880,
+        "DecayRatio": 0.25,
+        "ReservePoolInitialHealthRatio": 1,
+        "ReservePoolMaxHealthRatio": 1,
+        "ReservePoolRegenRateRatio": 1,
+        "ReservePoolDrainRateRatio": 2.5,
+        "DownedRegenDelay": 17,
+        "DamagedRegenDelay": 8.49,
+        "ElectricalChargeDamageResistance": 0,
+        "stunParams": {
+          "_Type_": "SShieldStunParams",
+          "minAlphaDamageRatio": 0.005,
+          "maxAlphaDamageRatio": 0.15,
+          "minStunTime": 0,
+          "maxStunTime": 12
+        },
+        "ShieldResistance": [
+          {
+            "_Type_": "SShieldResistance",
+            "Max": 0.25,
+            "Min": 0
+          },
+          {
+            "_Type_": "SShieldResistance",
+            "Max": 0,
+            "Min": 0
+          },
+          {
+            "_Type_": "SShieldResistance",
+            "Max": 0.95,
+            "Min": 0.75
+          },
+          {
+            "_Type_": "SShieldResistance",
+            "Max": 0,
+            "Min": 0
+          },
+          {
+            "_Type_": "SShieldResistance",
+            "Max": 0,
+            "Min": 0
+          },
+          {
+            "_Type_": "SShieldResistance",
+            "Max": 0,
+            "Min": 0
+          }
+        ],
+        "ShieldAbsorption": [
+          {
+            "_Type_": "SShieldAbsorption",
+            "Max": 0.45,
+            "Min": 0
+          },
+          {
+            "_Type_": "SShieldAbsorption",
+            "Max": 1,
+            "Min": 1
+          },
+          {
+            "_Type_": "SShieldAbsorption",
+            "Max": 1,
+            "Min": 1
+          },
+          {
+            "_Type_": "SShieldAbsorption",
+            "Max": 1,
+            "Min": 1
+          },
+          {
+            "_Type_": "SShieldAbsorption",
+            "Max": 1,
+            "Min": 1
+          },
+          {
+            "_Type_": "SShieldAbsorption",
+            "Max": 1,
+            "Min": 1
+          }
+        ]
+      }
+    },
+    {
       "id": "6fc982c0-2747-42b7-a628-7c76ecedf732",
       "name": "SHLD_ORIG_S04_890J_SCItem",
       "type": "shieldgenerator",
@@ -6642,7 +6978,7 @@
       "id": "d9870a05-1a66-4a9a-bec6-30eb67e3a3ce",
       "name": "SHLD_RSI_S04_Polaris_SCItem",
       "type": "shieldgenerator",
-      "displayName": "Glacis",
+      "displayName": "Deterrent",
       "size": 4,
       "grade": 1,
       "manufacturerCode": "RSI",
@@ -6660,6 +6996,390 @@
         "ReservePoolDrainRateRatio": 2.5,
         "DownedRegenDelay": 12.2,
         "DamagedRegenDelay": 6.1,
+        "ElectricalChargeDamageResistance": 0,
+        "stunParams": {
+          "_Type_": "SShieldStunParams",
+          "minAlphaDamageRatio": 0.005,
+          "maxAlphaDamageRatio": 0.15,
+          "minStunTime": 0,
+          "maxStunTime": 12
+        },
+        "ShieldResistance": [
+          {
+            "_Type_": "SShieldResistance",
+            "Max": 0.25,
+            "Min": 0
+          },
+          {
+            "_Type_": "SShieldResistance",
+            "Max": 0,
+            "Min": 0
+          },
+          {
+            "_Type_": "SShieldResistance",
+            "Max": 0.95,
+            "Min": 0.75
+          },
+          {
+            "_Type_": "SShieldResistance",
+            "Max": 0,
+            "Min": 0
+          },
+          {
+            "_Type_": "SShieldResistance",
+            "Max": 0,
+            "Min": 0
+          },
+          {
+            "_Type_": "SShieldResistance",
+            "Max": 0,
+            "Min": 0
+          }
+        ],
+        "ShieldAbsorption": [
+          {
+            "_Type_": "SShieldAbsorption",
+            "Max": 0.45,
+            "Min": 0
+          },
+          {
+            "_Type_": "SShieldAbsorption",
+            "Max": 1,
+            "Min": 1
+          },
+          {
+            "_Type_": "SShieldAbsorption",
+            "Max": 1,
+            "Min": 1
+          },
+          {
+            "_Type_": "SShieldAbsorption",
+            "Max": 1,
+            "Min": 1
+          },
+          {
+            "_Type_": "SShieldAbsorption",
+            "Max": 1,
+            "Min": 1
+          },
+          {
+            "_Type_": "SShieldAbsorption",
+            "Max": 1,
+            "Min": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "add4479d-a153-4dcb-9f3d-3ee64f7ced1b",
+      "name": "SHLD_S01_Template",
+      "type": "shieldgenerator",
+      "displayName": "SHLD S01 Template",
+      "size": 1,
+      "grade": 1,
+      "manufacturerCode": null,
+      "manufacturer": null,
+      "tags": "",
+      "typeParams": {
+        "type": "ShieldGenerator",
+        "_Type_": "SCItemShieldGeneratorParams",
+        "MaxShieldHealth": 2160,
+        "MaxShieldRegen": 475,
+        "DecayRatio": 0.25,
+        "ReservePoolInitialHealthRatio": 1,
+        "ReservePoolMaxHealthRatio": 1,
+        "ReservePoolRegenRateRatio": 1,
+        "ReservePoolDrainRateRatio": 2.5,
+        "DownedRegenDelay": 8.33,
+        "DamagedRegenDelay": 4.17,
+        "ElectricalChargeDamageResistance": 0,
+        "stunParams": {
+          "_Type_": "SShieldStunParams",
+          "minAlphaDamageRatio": 0.005,
+          "maxAlphaDamageRatio": 0.15,
+          "minStunTime": 0,
+          "maxStunTime": 12
+        },
+        "ShieldResistance": [
+          {
+            "_Type_": "SShieldResistance",
+            "Max": 0.25,
+            "Min": 0
+          },
+          {
+            "_Type_": "SShieldResistance",
+            "Max": 0,
+            "Min": 0
+          },
+          {
+            "_Type_": "SShieldResistance",
+            "Max": 0.95,
+            "Min": 0.75
+          },
+          {
+            "_Type_": "SShieldResistance",
+            "Max": 0,
+            "Min": 0
+          },
+          {
+            "_Type_": "SShieldResistance",
+            "Max": 0,
+            "Min": 0
+          },
+          {
+            "_Type_": "SShieldResistance",
+            "Max": 0,
+            "Min": 0
+          }
+        ],
+        "ShieldAbsorption": [
+          {
+            "_Type_": "SShieldAbsorption",
+            "Max": 0.45,
+            "Min": 0
+          },
+          {
+            "_Type_": "SShieldAbsorption",
+            "Max": 1,
+            "Min": 1
+          },
+          {
+            "_Type_": "SShieldAbsorption",
+            "Max": 1,
+            "Min": 1
+          },
+          {
+            "_Type_": "SShieldAbsorption",
+            "Max": 1,
+            "Min": 1
+          },
+          {
+            "_Type_": "SShieldAbsorption",
+            "Max": 1,
+            "Min": 1
+          },
+          {
+            "_Type_": "SShieldAbsorption",
+            "Max": 1,
+            "Min": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "0aa71c7e-8dcd-4e9b-a4ce-d085605b08e5",
+      "name": "SHLD_S02_Template",
+      "type": "shieldgenerator",
+      "displayName": "SHLD S02 Template",
+      "size": 2,
+      "grade": 1,
+      "manufacturerCode": null,
+      "manufacturer": null,
+      "tags": "",
+      "typeParams": {
+        "type": "ShieldGenerator",
+        "_Type_": "SCItemShieldGeneratorParams",
+        "MaxShieldHealth": 7200,
+        "MaxShieldRegen": 1584,
+        "DecayRatio": 0.25,
+        "ReservePoolInitialHealthRatio": 1,
+        "ReservePoolMaxHealthRatio": 1,
+        "ReservePoolRegenRateRatio": 1,
+        "ReservePoolDrainRateRatio": 2.5,
+        "DownedRegenDelay": 9.17,
+        "DamagedRegenDelay": 4.58,
+        "ElectricalChargeDamageResistance": 0,
+        "stunParams": {
+          "_Type_": "SShieldStunParams",
+          "minAlphaDamageRatio": 0.005,
+          "maxAlphaDamageRatio": 0.15,
+          "minStunTime": 0,
+          "maxStunTime": 12
+        },
+        "ShieldResistance": [
+          {
+            "_Type_": "SShieldResistance",
+            "Max": 0.25,
+            "Min": 0
+          },
+          {
+            "_Type_": "SShieldResistance",
+            "Max": 0,
+            "Min": 0
+          },
+          {
+            "_Type_": "SShieldResistance",
+            "Max": 0.95,
+            "Min": 0.75
+          },
+          {
+            "_Type_": "SShieldResistance",
+            "Max": 0,
+            "Min": 0
+          },
+          {
+            "_Type_": "SShieldResistance",
+            "Max": 0,
+            "Min": 0
+          },
+          {
+            "_Type_": "SShieldResistance",
+            "Max": 0,
+            "Min": 0
+          }
+        ],
+        "ShieldAbsorption": [
+          {
+            "_Type_": "SShieldAbsorption",
+            "Max": 0.45,
+            "Min": 0
+          },
+          {
+            "_Type_": "SShieldAbsorption",
+            "Max": 1,
+            "Min": 1
+          },
+          {
+            "_Type_": "SShieldAbsorption",
+            "Max": 1,
+            "Min": 1
+          },
+          {
+            "_Type_": "SShieldAbsorption",
+            "Max": 1,
+            "Min": 1
+          },
+          {
+            "_Type_": "SShieldAbsorption",
+            "Max": 1,
+            "Min": 1
+          },
+          {
+            "_Type_": "SShieldAbsorption",
+            "Max": 1,
+            "Min": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "541df132-9469-4df2-ae9c-f14eee5b2438",
+      "name": "SHLD_S03_Template",
+      "type": "shieldgenerator",
+      "displayName": "SHLD S03 Template",
+      "size": 3,
+      "grade": 1,
+      "manufacturerCode": null,
+      "manufacturer": null,
+      "tags": "",
+      "typeParams": {
+        "type": "ShieldGenerator",
+        "_Type_": "SCItemShieldGeneratorParams",
+        "MaxShieldHealth": 72000,
+        "MaxShieldRegen": 15840,
+        "DecayRatio": 0.25,
+        "ReservePoolInitialHealthRatio": 1,
+        "ReservePoolMaxHealthRatio": 1,
+        "ReservePoolRegenRateRatio": 1,
+        "ReservePoolDrainRateRatio": 2.5,
+        "DownedRegenDelay": 10.1,
+        "DamagedRegenDelay": 5.04,
+        "ElectricalChargeDamageResistance": 0,
+        "stunParams": {
+          "_Type_": "SShieldStunParams",
+          "minAlphaDamageRatio": 0.005,
+          "maxAlphaDamageRatio": 0.15,
+          "minStunTime": 0,
+          "maxStunTime": 12
+        },
+        "ShieldResistance": [
+          {
+            "_Type_": "SShieldResistance",
+            "Max": 0.25,
+            "Min": 0
+          },
+          {
+            "_Type_": "SShieldResistance",
+            "Max": 0,
+            "Min": 0
+          },
+          {
+            "_Type_": "SShieldResistance",
+            "Max": 0.95,
+            "Min": 0.75
+          },
+          {
+            "_Type_": "SShieldResistance",
+            "Max": 0,
+            "Min": 0
+          },
+          {
+            "_Type_": "SShieldResistance",
+            "Max": 0,
+            "Min": 0
+          },
+          {
+            "_Type_": "SShieldResistance",
+            "Max": 0,
+            "Min": 0
+          }
+        ],
+        "ShieldAbsorption": [
+          {
+            "_Type_": "SShieldAbsorption",
+            "Max": 0.45,
+            "Min": 0
+          },
+          {
+            "_Type_": "SShieldAbsorption",
+            "Max": 1,
+            "Min": 1
+          },
+          {
+            "_Type_": "SShieldAbsorption",
+            "Max": 1,
+            "Min": 1
+          },
+          {
+            "_Type_": "SShieldAbsorption",
+            "Max": 1,
+            "Min": 1
+          },
+          {
+            "_Type_": "SShieldAbsorption",
+            "Max": 1,
+            "Min": 1
+          },
+          {
+            "_Type_": "SShieldAbsorption",
+            "Max": 1,
+            "Min": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "6c0562e2-b40c-43bf-943d-fef049a61330",
+      "name": "SHLD_S04_Template",
+      "type": "shieldgenerator",
+      "displayName": "SHLD S04 Template",
+      "size": 4,
+      "grade": 1,
+      "manufacturerCode": null,
+      "manufacturer": null,
+      "tags": "",
+      "typeParams": {
+        "type": "ShieldGenerator",
+        "_Type_": "SCItemShieldGeneratorParams",
+        "MaxShieldHealth": 194400,
+        "MaxShieldRegen": 14256,
+        "DecayRatio": 0.25,
+        "ReservePoolInitialHealthRatio": 1,
+        "ReservePoolMaxHealthRatio": 1,
+        "ReservePoolRegenRateRatio": 1,
+        "ReservePoolDrainRateRatio": 2.5,
+        "DownedRegenDelay": 11.1,
+        "DamagedRegenDelay": 5.55,
         "ElectricalChargeDamageResistance": 0,
         "stunParams": {
           "_Type_": "SShieldStunParams",
@@ -8752,6 +9472,103 @@
         "quantumFuelRequirement": 0.00654,
         "jumpRange": 3.402823e+38,
         "disconnectRange": 34693
+      }
+    },
+    {
+      "id": "d8c217a9-531a-4b02-90bc-3cb48f169149",
+      "name": "QDRV_AEGS_S04_Javelin_SCItem",
+      "type": "quantumdrive",
+      "displayName": "QDRV AEGS S04 Javelin SCItem",
+      "size": 4,
+      "grade": 1,
+      "manufacturerCode": null,
+      "manufacturer": null,
+      "tags": "",
+      "typeParams": {
+        "type": "QuantumDrive",
+        "_Type_": "SCItemQuantumDriveParams",
+        "params": {
+          "_Type_": "SQuantumDriveParams",
+          "driveSpeed": 1136619000,
+          "cooldownTime": 26.4,
+          "stageOneAccelRate": 2289728,
+          "stageTwoAccelRate": 18810000,
+          "engageSpeed": 200000000,
+          "VFXSpoolEndVelocity": 2500000,
+          "VFXPinchEffectTime": 2.5,
+          "VFXPinchMaxVelocity": 2250000,
+          "VFXEntryFlashVelocity": 2250000,
+          "VFXTrailStartVelocity": 2000000,
+          "VFXTravelEffectStartVelocity": 2500000,
+          "VFXTravelEffectEndVelocity": 1000000,
+          "VFXExitEffectVelocity": 1000000,
+          "ShaderNodeEngageVelocity": 2500000,
+          "ShaderNodeShutdownVelocity": 1000000,
+          "ShaderNodeMaxStrengthVelocity": 4000000,
+          "interdictionEffectTime": 2.1,
+          "calibrationRate": 1000,
+          "minCalibrationRequirement": 5000,
+          "maxCalibrationRequirement": 10000,
+          "calibrationProcessAngleLimit": 5,
+          "calibrationWarningAngleLimit": 8,
+          "calibrationDelayInSeconds": 1.5,
+          "spoolUpTime": 9.5,
+          "beginQuantumTravelInteraction": null,
+          "abortQuantumTravelInteraction": null,
+          "idleState": "_PointsTo_:ptr:1",
+          "travellingState": "_PointsTo_:ptr:2",
+          "effectTags": {
+            "_Type_": "SQuantumDriveEffectTemplateRef",
+            "tagRecord": "file://./../../../../../../../libs/foundry/records/squantumdriveeffecttagstemplate/squantumdriveeffecttemplate.defaultquantumdriveeffectparams.json"
+          }
+        },
+        "splineJumpParams": {
+          "_Type_": "SQuantumDriveParams",
+          "driveSpeed": 400000,
+          "cooldownTime": 0,
+          "stageOneAccelRate": 250,
+          "stageTwoAccelRate": 50000,
+          "engageSpeed": 1500,
+          "VFXSpoolEndVelocity": 2000000,
+          "VFXPinchEffectTime": 2.5,
+          "VFXPinchMaxVelocity": 1000000,
+          "VFXEntryFlashVelocity": 1000000,
+          "VFXTrailStartVelocity": 2000000,
+          "VFXTravelEffectStartVelocity": 2500000,
+          "VFXTravelEffectEndVelocity": 1000000,
+          "VFXExitEffectVelocity": 1000000,
+          "ShaderNodeEngageVelocity": 1000000,
+          "ShaderNodeShutdownVelocity": 1000000,
+          "ShaderNodeMaxStrengthVelocity": 4000000,
+          "interdictionEffectTime": 5,
+          "calibrationRate": 1000,
+          "minCalibrationRequirement": 5000,
+          "maxCalibrationRequirement": 10000,
+          "calibrationProcessAngleLimit": 5,
+          "calibrationWarningAngleLimit": 8,
+          "calibrationDelayInSeconds": 1.5,
+          "spoolUpTime": 9,
+          "beginQuantumTravelInteraction": null,
+          "abortQuantumTravelInteraction": null,
+          "idleState": "_PointsTo_:ptr:1",
+          "travellingState": "_PointsTo_:ptr:2",
+          "effectTags": {
+            "_Type_": "SQuantumDriveEffectTemplateRef",
+            "tagRecord": "file://./../../../../../../../libs/foundry/records/squantumdriveeffecttagstemplate/squantumdriveeffecttemplate.defaultquantumdriveeffectparams.json"
+          }
+        },
+        "heatParams": {
+          "_Type_": "QuantumDriveHeatParams",
+          "preRampUpThermalEnergyDraw": 9500000,
+          "rampUpThermalEnergyDraw": 9500000,
+          "inFlightThermalEnergyDraw": 9500000,
+          "rampDownThermalEnergyDraw": 9500000,
+          "postRampDownThermalEnergyDraw": 9500000
+        },
+        "tracePoint": "",
+        "quantumFuelRequirement": 0.0613,
+        "jumpRange": 3.402823e+38,
+        "disconnectRange": 73206
       }
     },
     {
@@ -12053,6 +12870,394 @@
       }
     },
     {
+      "id": "42b4e617-9fdc-4b28-b39f-7e32f3025325",
+      "name": "QDRV_S01_Template",
+      "type": "quantumdrive",
+      "displayName": "QDRV S01 Template",
+      "size": 1,
+      "grade": 1,
+      "manufacturerCode": null,
+      "manufacturer": null,
+      "tags": "",
+      "typeParams": {
+        "type": "QuantumDrive",
+        "_Type_": "SCItemQuantumDriveParams",
+        "params": {
+          "_Type_": "SQuantumDriveParams",
+          "driveSpeed": 199272700,
+          "cooldownTime": 12,
+          "stageOneAccelRate": 8539091,
+          "stageTwoAccelRate": 22268180,
+          "engageSpeed": 1500,
+          "VFXSpoolEndVelocity": 2500000,
+          "VFXPinchEffectTime": 2.5,
+          "VFXPinchMaxVelocity": 2250000,
+          "VFXEntryFlashVelocity": 2250000,
+          "VFXTrailStartVelocity": 2000000,
+          "VFXTravelEffectStartVelocity": 2500000,
+          "VFXTravelEffectEndVelocity": 1000000,
+          "VFXExitEffectVelocity": 1000000,
+          "ShaderNodeEngageVelocity": 2500000,
+          "ShaderNodeShutdownVelocity": 1000000,
+          "ShaderNodeMaxStrengthVelocity": 4000000,
+          "interdictionEffectTime": 2.5,
+          "calibrationRate": 1000,
+          "minCalibrationRequirement": 5000,
+          "maxCalibrationRequirement": 10000,
+          "calibrationProcessAngleLimit": 5,
+          "calibrationWarningAngleLimit": 8,
+          "calibrationDelayInSeconds": 1.5,
+          "spoolUpTime": 4,
+          "beginQuantumTravelInteraction": null,
+          "abortQuantumTravelInteraction": null,
+          "idleState": "_PointsTo_:ptr:1",
+          "travellingState": "_PointsTo_:ptr:2",
+          "effectTags": {
+            "_Type_": "SQuantumDriveEffectTemplateRef",
+            "tagRecord": "file://./../../../../../../../libs/foundry/records/squantumdriveeffecttagstemplate/squantumdriveeffecttemplate.defaultquantumdriveeffectparams.json"
+          }
+        },
+        "splineJumpParams": {
+          "_Type_": "SQuantumDriveParams",
+          "driveSpeed": 500000,
+          "cooldownTime": 10,
+          "stageOneAccelRate": 250,
+          "stageTwoAccelRate": 50000,
+          "engageSpeed": 1500,
+          "VFXSpoolEndVelocity": 2000000,
+          "VFXPinchEffectTime": 2.5,
+          "VFXPinchMaxVelocity": 1000000,
+          "VFXEntryFlashVelocity": 1000000,
+          "VFXTrailStartVelocity": 2000000,
+          "VFXTravelEffectStartVelocity": 2500000,
+          "VFXTravelEffectEndVelocity": 1000000,
+          "VFXExitEffectVelocity": 1000000,
+          "ShaderNodeEngageVelocity": 1000000,
+          "ShaderNodeShutdownVelocity": 1000000,
+          "ShaderNodeMaxStrengthVelocity": 4000000,
+          "interdictionEffectTime": 5,
+          "calibrationRate": 1000,
+          "minCalibrationRequirement": 5000,
+          "maxCalibrationRequirement": 10000,
+          "calibrationProcessAngleLimit": 5,
+          "calibrationWarningAngleLimit": 8,
+          "calibrationDelayInSeconds": 1.5,
+          "spoolUpTime": 4,
+          "beginQuantumTravelInteraction": null,
+          "abortQuantumTravelInteraction": null,
+          "idleState": "_PointsTo_:ptr:1",
+          "travellingState": "_PointsTo_:ptr:2",
+          "effectTags": {
+            "_Type_": "SQuantumDriveEffectTemplateRef",
+            "tagRecord": "file://./../../../../../../../libs/foundry/records/squantumdriveeffecttagstemplate/squantumdriveeffecttemplate.defaultquantumdriveeffectparams.json"
+          }
+        },
+        "heatParams": {
+          "_Type_": "QuantumDriveHeatParams",
+          "preRampUpThermalEnergyDraw": 15000,
+          "rampUpThermalEnergyDraw": 15000,
+          "inFlightThermalEnergyDraw": 15000,
+          "rampDownThermalEnergyDraw": 15000,
+          "postRampDownThermalEnergyDraw": 15000
+        },
+        "tracePoint": "",
+        "quantumFuelRequirement": 1,
+        "jumpRange": 3.402823e+38,
+        "disconnectRange": 20001
+      }
+    },
+    {
+      "id": "f29cf188-3d83-4699-b28e-4194e27b56b5",
+      "name": "QDRV_S02_Template",
+      "type": "quantumdrive",
+      "displayName": "QDRV S02 Template",
+      "size": 2,
+      "grade": 1,
+      "manufacturerCode": null,
+      "manufacturer": null,
+      "tags": "",
+      "typeParams": {
+        "type": "QuantumDrive",
+        "_Type_": "SCItemQuantumDriveParams",
+        "params": {
+          "_Type_": "SQuantumDriveParams",
+          "driveSpeed": 250857100,
+          "cooldownTime": 15,
+          "stageOneAccelRate": 6005714,
+          "stageTwoAccelRate": 9085714,
+          "engageSpeed": 84000000,
+          "VFXSpoolEndVelocity": 2500000,
+          "VFXPinchEffectTime": 2.5,
+          "VFXPinchMaxVelocity": 2250000,
+          "VFXEntryFlashVelocity": 2250000,
+          "VFXTrailStartVelocity": 2000000,
+          "VFXTravelEffectStartVelocity": 2500000,
+          "VFXTravelEffectEndVelocity": 1000000,
+          "VFXExitEffectVelocity": 1000000,
+          "ShaderNodeEngageVelocity": 2500000,
+          "ShaderNodeShutdownVelocity": 1000000,
+          "ShaderNodeMaxStrengthVelocity": 4000000,
+          "interdictionEffectTime": 2.5,
+          "calibrationRate": 1000,
+          "minCalibrationRequirement": 5000,
+          "maxCalibrationRequirement": 10000,
+          "calibrationProcessAngleLimit": 5,
+          "calibrationWarningAngleLimit": 8,
+          "calibrationDelayInSeconds": 1.5,
+          "spoolUpTime": 6,
+          "beginQuantumTravelInteraction": null,
+          "abortQuantumTravelInteraction": null,
+          "idleState": "_PointsTo_:ptr:1",
+          "travellingState": "_PointsTo_:ptr:2",
+          "effectTags": {
+            "_Type_": "SQuantumDriveEffectTemplateRef",
+            "tagRecord": "file://./../../../../../../../libs/foundry/records/squantumdriveeffecttagstemplate/squantumdriveeffecttemplate.defaultquantumdriveeffectparams.json"
+          }
+        },
+        "splineJumpParams": {
+          "_Type_": "SQuantumDriveParams",
+          "driveSpeed": 400000,
+          "cooldownTime": 18,
+          "stageOneAccelRate": 250,
+          "stageTwoAccelRate": 50000,
+          "engageSpeed": 1500,
+          "VFXSpoolEndVelocity": 2000000,
+          "VFXPinchEffectTime": 2.5,
+          "VFXPinchMaxVelocity": 1000000,
+          "VFXEntryFlashVelocity": 1000000,
+          "VFXTrailStartVelocity": 2000000,
+          "VFXTravelEffectStartVelocity": 2500000,
+          "VFXTravelEffectEndVelocity": 1000000,
+          "VFXExitEffectVelocity": 1000000,
+          "ShaderNodeEngageVelocity": 1000000,
+          "ShaderNodeShutdownVelocity": 1000000,
+          "ShaderNodeMaxStrengthVelocity": 4000000,
+          "interdictionEffectTime": 5,
+          "calibrationRate": 1000,
+          "minCalibrationRequirement": 5000,
+          "maxCalibrationRequirement": 10000,
+          "calibrationProcessAngleLimit": 5,
+          "calibrationWarningAngleLimit": 8,
+          "calibrationDelayInSeconds": 1.5,
+          "spoolUpTime": 6,
+          "beginQuantumTravelInteraction": null,
+          "abortQuantumTravelInteraction": null,
+          "idleState": "_PointsTo_:ptr:1",
+          "travellingState": "_PointsTo_:ptr:2",
+          "effectTags": {
+            "_Type_": "SQuantumDriveEffectTemplateRef",
+            "tagRecord": "file://./../../../../../../../libs/foundry/records/squantumdriveeffecttagstemplate/squantumdriveeffecttemplate.defaultquantumdriveeffectparams.json"
+          }
+        },
+        "heatParams": {
+          "_Type_": "QuantumDriveHeatParams",
+          "preRampUpThermalEnergyDraw": 655000,
+          "rampUpThermalEnergyDraw": 655000,
+          "inFlightThermalEnergyDraw": 655000,
+          "rampDownThermalEnergyDraw": 655000,
+          "postRampDownThermalEnergyDraw": 655000
+        },
+        "tracePoint": "",
+        "quantumFuelRequirement": 1,
+        "jumpRange": 3.402823e+38,
+        "disconnectRange": 20001
+      }
+    },
+    {
+      "id": "983f60bc-bf51-40e7-b2b6-c5e5a9b1ba1c",
+      "name": "QDRV_S03_Template",
+      "type": "quantumdrive",
+      "displayName": "QDRV S03 Template",
+      "size": 3,
+      "grade": 1,
+      "manufacturerCode": null,
+      "manufacturer": null,
+      "tags": "",
+      "typeParams": {
+        "type": "QuantumDrive",
+        "_Type_": "SCItemQuantumDriveParams",
+        "params": {
+          "_Type_": "SQuantumDriveParams",
+          "driveSpeed": 484062500,
+          "cooldownTime": 20,
+          "stageOneAccelRate": 3549375,
+          "stageTwoAccelRate": 4933750,
+          "engageSpeed": 190000000,
+          "VFXSpoolEndVelocity": 2500000,
+          "VFXPinchEffectTime": 2.5,
+          "VFXPinchMaxVelocity": 2250000,
+          "VFXEntryFlashVelocity": 2250000,
+          "VFXTrailStartVelocity": 2000000,
+          "VFXTravelEffectStartVelocity": 2500000,
+          "VFXTravelEffectEndVelocity": 1000000,
+          "VFXExitEffectVelocity": 1000000,
+          "ShaderNodeEngageVelocity": 2500000,
+          "ShaderNodeShutdownVelocity": 1000000,
+          "ShaderNodeMaxStrengthVelocity": 4000000,
+          "interdictionEffectTime": 2.5,
+          "calibrationRate": 1000,
+          "minCalibrationRequirement": 5000,
+          "maxCalibrationRequirement": 10000,
+          "calibrationProcessAngleLimit": 5,
+          "calibrationWarningAngleLimit": 8,
+          "calibrationDelayInSeconds": 1.5,
+          "spoolUpTime": 7,
+          "beginQuantumTravelInteraction": null,
+          "abortQuantumTravelInteraction": null,
+          "idleState": "_PointsTo_:ptr:1",
+          "travellingState": "_PointsTo_:ptr:2",
+          "effectTags": {
+            "_Type_": "SQuantumDriveEffectTemplateRef",
+            "tagRecord": "file://./../../../../../../../libs/foundry/records/squantumdriveeffecttagstemplate/squantumdriveeffecttemplate.defaultquantumdriveeffectparams.json"
+          }
+        },
+        "splineJumpParams": {
+          "_Type_": "SQuantumDriveParams",
+          "driveSpeed": 400000,
+          "cooldownTime": 32,
+          "stageOneAccelRate": 250,
+          "stageTwoAccelRate": 50000,
+          "engageSpeed": 1500,
+          "VFXSpoolEndVelocity": 2000000,
+          "VFXPinchEffectTime": 2.5,
+          "VFXPinchMaxVelocity": 1000000,
+          "VFXEntryFlashVelocity": 1000000,
+          "VFXTrailStartVelocity": 2000000,
+          "VFXTravelEffectStartVelocity": 2500000,
+          "VFXTravelEffectEndVelocity": 1000000,
+          "VFXExitEffectVelocity": 1000000,
+          "ShaderNodeEngageVelocity": 1000000,
+          "ShaderNodeShutdownVelocity": 1000000,
+          "ShaderNodeMaxStrengthVelocity": 4000000,
+          "interdictionEffectTime": 5,
+          "calibrationRate": 1000,
+          "minCalibrationRequirement": 5000,
+          "maxCalibrationRequirement": 10000,
+          "calibrationProcessAngleLimit": 5,
+          "calibrationWarningAngleLimit": 8,
+          "calibrationDelayInSeconds": 1.5,
+          "spoolUpTime": 7,
+          "beginQuantumTravelInteraction": null,
+          "abortQuantumTravelInteraction": null,
+          "idleState": "_PointsTo_:ptr:1",
+          "travellingState": "_PointsTo_:ptr:2",
+          "effectTags": {
+            "_Type_": "SQuantumDriveEffectTemplateRef",
+            "tagRecord": "file://./../../../../../../../libs/foundry/records/squantumdriveeffecttagstemplate/squantumdriveeffecttemplate.defaultquantumdriveeffectparams.json"
+          }
+        },
+        "heatParams": {
+          "_Type_": "QuantumDriveHeatParams",
+          "preRampUpThermalEnergyDraw": 1205394,
+          "rampUpThermalEnergyDraw": 1205394,
+          "inFlightThermalEnergyDraw": 1205394,
+          "rampDownThermalEnergyDraw": 1205394,
+          "postRampDownThermalEnergyDraw": 1205394
+        },
+        "tracePoint": "",
+        "quantumFuelRequirement": 1,
+        "jumpRange": 3.402823e+38,
+        "disconnectRange": 20001
+      }
+    },
+    {
+      "id": "eef13cc2-afb4-4047-813d-f46abd5a8aea",
+      "name": "QDRV_S04_Template",
+      "type": "quantumdrive",
+      "displayName": "QDRV S04 Template",
+      "size": 4,
+      "grade": 1,
+      "manufacturerCode": null,
+      "manufacturer": null,
+      "tags": "",
+      "typeParams": {
+        "type": "QuantumDrive",
+        "_Type_": "SCItemQuantumDriveParams",
+        "params": {
+          "_Type_": "SQuantumDriveParams",
+          "driveSpeed": 1093429000,
+          "cooldownTime": 31,
+          "stageOneAccelRate": 2081571,
+          "stageTwoAccelRate": 19000000,
+          "engageSpeed": 200000000,
+          "VFXSpoolEndVelocity": 2500000,
+          "VFXPinchEffectTime": 2.5,
+          "VFXPinchMaxVelocity": 2250000,
+          "VFXEntryFlashVelocity": 2250000,
+          "VFXTrailStartVelocity": 2000000,
+          "VFXTravelEffectStartVelocity": 2500000,
+          "VFXTravelEffectEndVelocity": 1000000,
+          "VFXExitEffectVelocity": 1000000,
+          "ShaderNodeEngageVelocity": 2500000,
+          "ShaderNodeShutdownVelocity": 1000000,
+          "ShaderNodeMaxStrengthVelocity": 4000000,
+          "interdictionEffectTime": 2.5,
+          "calibrationRate": 1000,
+          "minCalibrationRequirement": 5000,
+          "maxCalibrationRequirement": 10000,
+          "calibrationProcessAngleLimit": 5,
+          "calibrationWarningAngleLimit": 8,
+          "calibrationDelayInSeconds": 1.5,
+          "spoolUpTime": 9,
+          "beginQuantumTravelInteraction": null,
+          "abortQuantumTravelInteraction": null,
+          "idleState": "_PointsTo_:ptr:1",
+          "travellingState": "_PointsTo_:ptr:2",
+          "effectTags": {
+            "_Type_": "SQuantumDriveEffectTemplateRef",
+            "tagRecord": "file://./../../../../../../../libs/foundry/records/squantumdriveeffecttagstemplate/squantumdriveeffecttemplate.defaultquantumdriveeffectparams.json"
+          }
+        },
+        "splineJumpParams": {
+          "_Type_": "SQuantumDriveParams",
+          "driveSpeed": 400000,
+          "cooldownTime": 0,
+          "stageOneAccelRate": 250,
+          "stageTwoAccelRate": 50000,
+          "engageSpeed": 1500,
+          "VFXSpoolEndVelocity": 2000000,
+          "VFXPinchEffectTime": 2.5,
+          "VFXPinchMaxVelocity": 1000000,
+          "VFXEntryFlashVelocity": 1000000,
+          "VFXTrailStartVelocity": 2000000,
+          "VFXTravelEffectStartVelocity": 2500000,
+          "VFXTravelEffectEndVelocity": 1000000,
+          "VFXExitEffectVelocity": 1000000,
+          "ShaderNodeEngageVelocity": 1000000,
+          "ShaderNodeShutdownVelocity": 1000000,
+          "ShaderNodeMaxStrengthVelocity": 4000000,
+          "interdictionEffectTime": 5,
+          "calibrationRate": 1000,
+          "minCalibrationRequirement": 5000,
+          "maxCalibrationRequirement": 10000,
+          "calibrationProcessAngleLimit": 5,
+          "calibrationWarningAngleLimit": 8,
+          "calibrationDelayInSeconds": 1.5,
+          "spoolUpTime": 9,
+          "beginQuantumTravelInteraction": null,
+          "abortQuantumTravelInteraction": null,
+          "idleState": "_PointsTo_:ptr:1",
+          "travellingState": "_PointsTo_:ptr:2",
+          "effectTags": {
+            "_Type_": "SQuantumDriveEffectTemplateRef",
+            "tagRecord": "file://./../../../../../../../libs/foundry/records/squantumdriveeffecttagstemplate/squantumdriveeffecttemplate.defaultquantumdriveeffectparams.json"
+          }
+        },
+        "heatParams": {
+          "_Type_": "QuantumDriveHeatParams",
+          "preRampUpThermalEnergyDraw": 9500000,
+          "rampUpThermalEnergyDraw": 9500000,
+          "inFlightThermalEnergyDraw": 9500000,
+          "rampDownThermalEnergyDraw": 9500000,
+          "postRampDownThermalEnergyDraw": 9500000
+        },
+        "tracePoint": "",
+        "quantumFuelRequirement": 1,
+        "jumpRange": 3.402823e+38,
+        "disconnectRange": 20001
+      }
+    },
+    {
       "id": "aa2eb7d5-6591-45ed-a4db-abbb236cf83f",
       "name": "QDRV_S04_VNCL_Mauler",
       "type": "quantumdrive",
@@ -13994,12 +15199,12 @@
     }
   ],
   "summary": {
-    "totalComponents": 286,
+    "totalComponents": 309,
     "byType": {
-      "cooler": 77,
-      "powerplant": 84,
-      "shieldgenerator": 67,
-      "quantumdrive": 58
+      "cooler": 84,
+      "powerplant": 89,
+      "shieldgenerator": 73,
+      "quantumdrive": 63
     }
   }
 }

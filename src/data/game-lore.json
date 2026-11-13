@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted localization)",
-  "_extracted": "2026-10-10T00:43:13.646Z",
+  "_extracted": "2026-11-13T00:35:00.544Z",
   "resources": {
     "audio_visual_equipment": {
       "key": "items_commodities_AudioVisualEquipment_desc",
@@ -3146,6 +3146,18 @@
       "description": "Foundation Festival is an opportunity for Citizens and Civilians to come together and strengthen the foundation of our community. Show your commitment to a better universe with this custom livery.",
       "kind": "item"
     },
+    "auroramk2_paint_green_green_red": {
+      "key": "item_DescAuroraMK2_Paint_Green_Green_Red",
+      "label": "Aurora Mk II Deck the Hull Livery",
+      "description": "Express your holiday spirit with the Deck the Hull livery, which uses the traditional Luminalia colors of green and red to celebrate the popular Banu festival that's become beloved by Humans.",
+      "kind": "item"
+    },
+    "auroramk2_paint_white_blue_white": {
+      "key": "item_DescAuroraMK2_Paint_White_Blue_White",
+      "label": "Aurora Mk II IceBreak Livery",
+      "description": "Equip your ship with a paint scheme cooler than a snowstorm. The IceBreak livery mixes crisp, cool white with a frostbitten blue for an exciting look suitable for any season.",
+      "kind": "item"
+    },
     "aurora_mk2_paint_black_black_black": {
       "key": "item_DescAurora_Mk2_Paint_Black_Black_Black",
       "label": "Aurora Mk II Shade Livery",
@@ -3584,6 +3596,12 @@
       "description": "Manufacturer: Behring Item Type: Laser Cannon Size: 1 The M3A is Behring's entry level laser autocannon. The autocannon configuration offers modest damage per projectile and a fairly low rate of fire. As the most basic offering in Behring's weapons lineup, it features low power consumption, but poor power efficiency. It makes up ground for its shortcomings by being cheap, a feature many pilots are looking for when outfitting their ships on a budget. The Defense Division edition features a gray, urban camo pattern and was given to those who assisted Alliance Aid's Defense Division during Levski's time of need.",
       "kind": "item"
     },
+    "behr_lasercannon_s1_mr02": {
+      "key": "item_DescBEHR_LaserCannon_S1_mr02",
+      "label": "M3A Cannon Raider Camo",
+      "description": "Manufacturer: Behring Item Type: Laser Cannon Size: 1 The M3A is Behring's entry level laser autocannon. The autocannon configuration offers modest damage per projectile and a fairly low rate of fire. As the most basic offering in Behring's weapons lineup, it features low power consumption, but poor power efficiency. It makes up ground for its shortcomings by being cheap, a feature many pilots are looking for when outfitting their ships on a budget. The Raider Camo edition is a combination of dark greens and browns.",
+      "kind": "item"
+    },
     "behr_lasercannon_s2": {
       "key": "item_DescBEHR_LaserCannon_S2",
       "label": "M4A Cannon",
@@ -3596,6 +3614,12 @@
       "description": "Manufacturer: Behring Item Type: Laser Cannon Size: 2 The M4A is Behring's entry level laser autocannon. The autocannon configuration offers modest damage per projectile and a fairly low rate of fire. As the most basic offering in Behring's weapons lineup, it features low power consumption, but poor power efficiency. It makes up ground for its shortcomings by being cheap, a feature many pilots are looking for when outfitting their ships on a budget. The Defense Division edition features a gray, urban camo pattern and was given to those who assisted Alliance Aid's Defense Division during Levski's time of need.",
       "kind": "item"
     },
+    "behr_lasercannon_s2_mr02": {
+      "key": "item_DescBEHR_LaserCannon_S2_mr02",
+      "label": "M4A Cannon Raider Camo",
+      "description": "Manufacturer: Behring Item Type: Laser Cannon Size: 2 The M4A is Behring's second tier laser autocannon. Its bigger size means more power consumption in exchange for packing a bigger punch. Fire rate and power efficiency are comparable to the M3A model. The Raider Camo edition is a combination of dark greens and browns.",
+      "kind": "item"
+    },
     "behr_lasercannon_s3": {
       "key": "item_DescBEHR_LaserCannon_S3",
       "label": "M5A Cannon",
@@ -3606,6 +3630,12 @@
       "key": "item_DescBEHR_LaserCannon_S3_CleanAir",
       "label": "M5A Cannon Defense Division",
       "description": "Manufacturer: Behring Item Type: Laser Cannon Size: 3 The M5A is Behring's entry level laser autocannon. The autocannon configuration offers modest damage per projectile and a fairly low rate of fire. As the most basic offering in Behring's weapons lineup, it features low power consumption, but poor power efficiency. It makes up ground for its shortcomings by being cheap, a feature many pilots are looking for when outfitting their ships on a budget. The Defense Division edition features a gray, urban camo pattern and was given to those who assisted Alliance Aid's Defense Division during Levski's time of need.",
+      "kind": "item"
+    },
+    "behr_lasercannon_s3_mr02": {
+      "key": "item_DescBEHR_LaserCannon_S3_mr02",
+      "label": "M5A Cannon Raider Camo",
+      "description": "Manufacturer: Behring Item Type: Laser Cannon Size: 3 When energy autocannons are designed, Behring's M5A provides the standard to which they are measured against, owing to its long range of engagement and low damage fallout. The Raider Camo edition is a combination of dark greens and browns.",
       "kind": "item"
     },
     "behr_lasercannon_s5": {
@@ -4454,10 +4484,40 @@
       "description": "A gilded red coin celebrating the Year of the Rat. Said to bring good fortune and prosperity in the upcoming cycle, coins like these have become a popular gift during the annual Red Festival.",
       "kind": "item"
     },
+    "carryable_1h_sq_flair_coin_iae_bis_drake_corsair_2026": {
+      "key": "item_DescCarryable_1H_SQ_Flair_Coin_IAE_BIS_Drake_Corsair_2026",
+      "label": "Corsair BIS '56 Coin",
+      "description": "In honor of Drake's cutting edge Corsair ship making it to the finals of the 2956 \"Best In Show\" event, this commemorative coin features the ship engraved front and center, surrounded by a light blue ring featuring the name and manufacturer of the ship.",
+      "kind": "item"
+    },
+    "carryable_1h_sq_flair_coin_iae_bis_ironclad_assault_2026": {
+      "key": "item_DescCarryable_1H_SQ_Flair_Coin_IAE_BIS_Ironclad_Assault_2026",
+      "label": "Ironclad Assault BIS '56 Coin",
+      "description": "A coin for those who believe the Ironclad Assault, finalist of the 2956 \"Best In Show\" event, has no equal. It shows off the vehicle's might through a highly detailed engraving of the ship trimmed in bright blue around the coin's edge.",
+      "kind": "item"
+    },
+    "carryable_1h_sq_flair_coin_iae_bis_origin_m80_2026": {
+      "key": "item_DescCarryable_1H_SQ_Flair_Coin_IAE_BIS_Origin_M80_2026",
+      "label": "Origin M80 BIS '56 Coin",
+      "description": "Celebrating the M80's finalist status in the 2956 \"Best In Show\" event, this collector's coin highlights the full magnitude of the ship. Featuring an intricate engraving of the ship in gold over blue accents, the coin captures the M80 soaring through space.",
+      "kind": "item"
+    },
+    "carryable_1h_sq_flair_coin_iae_bis_rsi_perseus_2026": {
+      "key": "item_DescCarryable_1H_SQ_Flair_Coin_IAE_BIS_RSI_Perseus_2026",
+      "label": "Perseus BIS '56 Coin",
+      "description": "This collectible coin features the Perseus, official winner of 2956's \"Best In Show\" competition, hand engraved in all its glory. The design is carved in gold and contrasted by the blue and black cosmos behind it.",
+      "kind": "item"
+    },
     "carryable_1h_sq_flair_coin_pirateweek_2026": {
       "key": "item_DescCarryable_1H_SQ_Flair_Coin_PirateWeek_2026",
       "label": "Crossed Swords '56 Coin",
       "description": "A worthy treasure for those who know where to look, this coin bears a menacing skull and a pair of cutlasses on one side making it the envy of many a pirate across the 'verse.",
+      "kind": "item"
+    },
+    "carryable_1h_sq_flair_luminalia_gift_card_1_a": {
+      "key": "item_DescCarryable_1H_SQ_Flair_Luminalia_Gift_Card_1_a",
+      "label": "Pop-Up Pico Luminalia Card",
+      "description": "Wish someone you care about a happy holiday with this festive greeting card. Delight young and old folks alike by surprising them with a pop-up Pico the Penguin, who's ready to wish them a happy Luminalia as you unfold the card and reveal him holding a candle and surrounded by gifts.",
       "kind": "item"
     },
     "carryable_2h_cy_flair_arccorp_statue_1_a": {
@@ -4502,10 +4562,22 @@
       "description": "Huggable, lovable, and thoroughly squashable, this red heart plushie will fill your heart with joy. With a firm but springy filling, this plush cushion consist of a synthetic leather casing dyed with a passionate scarlet coloring.",
       "kind": "item"
     },
+    "carryable_2h_cy_toy_plushie_penguin_1_c": {
+      "key": "item_DescCarryable_2H_CY_toy_plushie_penguin_1_c",
+      "label": "Pico the Penguin Squadron 42 Plushie",
+      "description": "Meet Squadron 42's latest member: Starman Pico the Penguin. While Pico may have more experience shredding powder than flying ships, the light blue flight suit paired with the gray helmet and backpack certainly make Pico look like an ace pilot.",
+      "kind": "item"
+    },
     "carryable_2h_fl_05x05x05_carrayblelootableitem_luminalia_box": {
       "key": "item_DescCarryable_2H_FL_05x05x05_CarraybleLootableItem_luminalia_box",
       "label": "Luminalia Gift Box",
       "description": "Wrapped in elegant sky blue paper adorned in stars and topped with a smart silk ribbon, this large gift box makes the ideal festive storage solution.",
+      "kind": "item"
+    },
+    "carryable_2h_fl_container_anim_coin_case_1_iae2956_a": {
+      "key": "item_DescCarryable_2H_FL_Container_Anim_coin_case_1_IAE2956_a",
+      "label": "IAE 2956 Coin Display Case",
+      "description": "With enough room for four decorative coins, a sleek blue trim and the IAE 2956 logo embossed on the front, you can show off your \"Best In Show\" coin collection with this display case.",
       "kind": "item"
     },
     "carryable_2h_fl_container_anim_coin_case_1_a": {
@@ -4528,8 +4600,8 @@
     },
     "carryable_2h_fl_container_anim_multitool_1_citizencon2953_1_a": {
       "key": "item_DescCarryable_2H_FL_Container_Anim_multitool_1_citizencon2953_1_a",
-      "label": "Field Medic Kit",
-      "description": "Medical emergencies can happen any time, any place. Be prepared with this Field Medic Kit from Curelife which provides convenient and portable storage for a ParaMed Medical Device, Pancea MedGel refills, and additional medicine injectors.",
+      "label": "Pyrotechnic Amalgamated Toolbox",
+      "description": "Proudly put your multi-tool on display with this toolbox reclaimed from the Pyro system that's not only withstood the star's dangerous flares but also the ravages of time.",
       "kind": "item"
     },
     "carryable_2h_fl_missionitem_prototype_ship_component_1_a": {
@@ -4618,8 +4690,14 @@
     },
     "carryable_tbo_fl_4scu_commodity_organic_vanduulcorpse": {
       "key": "item_DescCarryable_TBO_FL_4SCU_Commodity_Organic_VanduulCorpse",
-      "label": "CryoPod (Vanduul)",
-      "description": "A Vanduul corpse preserved within a CryoPod.",
+      "label": "Cryopod (Vanduul)",
+      "description": "A Vanduul corpse preserved within a Cryopod.",
+      "kind": "item"
+    },
+    "carryable_tbo_fl_4scu_commodity_organic_vanduulcorpse_blue": {
+      "key": "item_DescCarryable_TBO_FL_4SCU_Commodity_Organic_VanduulCorpse_Blue",
+      "label": "Cryopod (Living Vanduul)",
+      "description": "A living Vanduul sample preserved within a Cryopod.",
       "kind": "item"
     },
     "carryable_tbo_inventorycontainer_1scu_pirate": {
@@ -5010,6 +5088,12 @@
       "key": "item_DescCorsair_Paint_Black_Grey_Red_Pirate_Skull",
       "label": "Corsair Skullcrusher Livery",
       "description": "Exude attitude with the Skullcrusher livery for the Corsair, which features a massive skull across the top.",
+      "kind": "item"
+    },
+    "corsair_paint_black_white_gold": {
+      "key": "item_DescCorsair_Paint_Black_White_Gold",
+      "label": "Corsair 2956 Best In Show Livery",
+      "description": "Celebrate your Corsair with the exclusive 2956 Best In Show livery, which decorates the ship in white and gray with pops of gold highlighting.",
       "kind": "item"
     },
     "corsair_paint_green_black": {
@@ -5480,6 +5564,12 @@
       "description": "The Wanderer livery features crisscrossing purple and grey lines over a platinum foundation. Inspired by the sacred Xi'an gardens of R.aip?uang, famous for its trails that wander in surprising ways and encourage a focus on the journey instead of the destination.",
       "kind": "item"
     },
+    "defender_paint_green_green_red": {
+      "key": "item_DescDefender_Paint_Green_Green_Red",
+      "label": "Defender Deck the Hull Livery",
+      "description": "Express your holiday spirit with the Deck the Hull livery, which uses the traditional Luminalia colors of green and red to celebrate the popular Banu festival that's become beloved by Humans.",
+      "kind": "item"
+    },
     "defender_paint_harmony": {
       "key": "item_DescDefender_Paint_Harmony",
       "label": "Defender Harmony Livery",
@@ -5502,6 +5592,12 @@
       "key": "item_DescDefender_Paint_Platinum_Silver_Red",
       "label": "Defender Platinum Livery",
       "description": "The Platinum livery uses several shades of silver to accentuate the Defender's unique look.",
+      "kind": "item"
+    },
+    "defender_paint_white_blue_white": {
+      "key": "item_DescDefender_Paint_White_Blue_White",
+      "label": "Defender IceBreak Livery",
+      "description": "Equip your ship with a paint scheme cooler than a snowstorm. The IceBreak livery mixes crisp, cool white with a frostbitten blue for an exciting look suitable for any season.",
       "kind": "item"
     },
     "defibrillator": {
@@ -6204,6 +6300,18 @@
       "key": "item_DescFlair_Dashboard_Cockpit_Bot_1_a",
       "label": "Emoto Dashbot",
       "description": "Made to sit neatly on your dashboard, this companion Dashbot reacts during your travels with a large range of humorous facial expressions. Whether it's happy to see you or silently judging your piloting skills, the Emoto Dashbot is sure to make your next flight a little more fun.",
+      "kind": "item"
+    },
+    "flair_dashboard_cockpit_bot_luminalia_1_a": {
+      "key": "item_DescFlair_Dashboard_Cockpit_Bot_luminalia_1_a",
+      "label": "Emoto “Luminalia” Dashbot",
+      "description": "Made to sit neatly on your dashboard, this companion Dashbot reacts during your travels with a large range of humorous facial expressions. Whether it's happy to see you or silently judging your piloting skills, the Emoto Dashbot is sure to make your next flight a little more fun. The Luminalia edition brings some festive sparkle to your holiday travels with a gold finish and snowflake patterns.",
+      "kind": "item"
+    },
+    "flair_dashboard_cockpit_hologram_wallysbar_1_a": {
+      "key": "item_DescFlair_Dashboard_Cockpit_Hologram_WallysBar_1_a",
+      "label": "Wally's Bar Neon Light",
+      "description": "Featuring a neon palm tree and a holographic Wally's Bar logo, this decorative dashboard light will transport your mind to New Babbage's favorite bar while you're cruising in quantum.",
       "kind": "item"
     },
     "flair_dashboard_flag_uee_1_a": {
@@ -8042,6 +8150,12 @@
       "description": "Item Type: Magazine Capacity: 50 This magazine for the C54 SMG holds fifty 10mm rounds.",
       "kind": "item"
     },
+    "gmni_smg_ballistic_01_store01": {
+      "key": "item_DescGMNI_smg_ballistic_01_store01",
+      "label": "C54 \"Epoque\" SMG",
+      "description": "Manufacturer: Gemini Item Type: SMG Class: Ballistic Magazine Size: 50 Rate Of Fire: 1,100 rpm Effective Range: 35m Attachments: Barrel (S1), Optics (S1), Underbarrel (S1) Easy to handle and a beauty to behold, the C54 is a sleek and precisely balanced SMG from Gemini. Its lightweight polymer frame and ergonomic design makes it ideal for close quarter engagements. The C54 is capable of firing 10mm rounds on full auto to provide maximum support and target saturation to ensure that any engagement ends quick. The Epoque edition features a navy and black coloring, finished with baroque gold detailing.",
+      "kind": "item"
+    },
     "gmnt_misc_s03_pl01": {
       "key": "item_DescGMNT_MISC_S03_PL01",
       "label": "Reliant Gilroy Gimbal",
@@ -8972,6 +9086,12 @@
       "description": "Equip your Hurricane in classic camo colors and stylings with the Waylay Camo livery.",
       "kind": "item"
     },
+    "hurricane_paint_green_green_red": {
+      "key": "item_DescHurricane_Paint_Green_Green_Red",
+      "label": "Hurricane Deck the Hull Livery",
+      "description": "Express your holiday spirit with the Deck the Hull livery, which uses the traditional Luminalia colors of green and red to celebrate the popular Banu festival that's become beloved by Humans.",
+      "kind": "item"
+    },
     "hurricane_paint_iae2950_grey_blue": {
       "key": "item_DescHurricane_Paint_IAE2950_Grey_Blue",
       "label": "Hurricane Stormbringer Livery",
@@ -8982,6 +9102,12 @@
       "key": "item_DescHurricane_Paint_IAE2950_Grey_White_Camo",
       "label": "Hurricane Polar Camo Livery",
       "description": "Modify your Hurricane with this white and grey camo livery specifically designed for the 2950 IAE event on microTech.",
+      "kind": "item"
+    },
+    "hurricane_paint_white_blue_white": {
+      "key": "item_DescHurricane_Paint_White_Blue_White",
+      "label": "Hurricane IceBreak Livery",
+      "description": "Equip your ship with a paint scheme cooler than a snowstorm. The IceBreak livery mixes crisp, cool white with a frostbitten blue for an exciting look suitable for any season.",
       "kind": "item"
     },
     "intk_vncl_s04_mauler": {
@@ -9084,6 +9210,12 @@
       "key": "item_DescIronclad_Paint_Black_Black_Red_Pirate",
       "label": "Ironclad Skull and Crossbones Livery",
       "description": "This livery embraces classic pirate iconography by featuring several skull and crossbones symbols across the Ironclad's dark hull with blood red highlights.",
+      "kind": "item"
+    },
+    "ironclad_paint_black_white_gold": {
+      "key": "item_DescIronclad_Paint_Black_White_Gold",
+      "label": "Ironclad Assault 2956 Best In Show Livery",
+      "description": "Celebrate your Ironclad Assault with the exclusive 2956 Best In Show livery, which decorates the ship in white and gray with pops of gold highlighting.",
       "kind": "item"
     },
     "ironclad_beige_beige_beige": {
@@ -9776,6 +9908,36 @@
       "description": "Item Type: Power Plant Manufacturer: Lightning Power Ltd. Size: 1 Grade: C Class: Civilian Lightning Power Ltd's Powerbolt makes its living by offering the perfect blend of performance and signature masking. Lightning's proprietary Superfluid Quantum Vortex technology keeps energy emissions low while providing better output than typical stealth-oriented plants.",
       "kind": "item"
     },
+    "liberator_paint_black_black_yellow_stripe": {
+      "key": "item_DescLiberator_Paint_Black_Black_Yellow_Stripe",
+      "label": "Liberator Last Light Livery",
+      "description": "Wrap your Liberator in a black base with yellow accents with the Last Light livery.",
+      "kind": "item"
+    },
+    "liberator_paint_copper_copper_grey": {
+      "key": "item_DescLiberator_Paint_Copper_Copper_Grey",
+      "label": "Liberator Valhalla Livery",
+      "description": "The Valhalla livery melds a dazzling copper finish with gray accents to give the Liberator a truly distinct appearance.",
+      "kind": "item"
+    },
+    "liberator_paint_green_grey_red": {
+      "key": "item_DescLiberator_Paint_Green_Grey_Red",
+      "label": "Liberator Brigade Livery",
+      "description": "The military green of the Brigade livery is paired with bold red stripes to make your Liberator inspire confidence on the battlefield.",
+      "kind": "item"
+    },
+    "liberator_paint_white_black_grey": {
+      "key": "item_DescLiberator_Paint_White_Black_Grey",
+      "label": "Liberator Galahad Livery",
+      "description": "Blend into the clouds until ready to strike with the Galahad livery for the Liberator, which features a white base paint with black and grey highlights.",
+      "kind": "item"
+    },
+    "liberator_paint_white_red_red_wings": {
+      "key": "item_DescLiberator_Paint_White_Red_Red_Wings",
+      "label": "Liberator Condor Livery",
+      "description": "The unique Condor livery for the Anvil Liberator features an exquisite decorative feather pattern on the ship's wings. An eye-catching addition to a livery that dynamically blends white, black, grey, and red.",
+      "kind": "item"
+    },
     "lightning_f8c_paint_bis2954": {
       "key": "item_DescLightning_F8C_Paint_BIS2954",
       "label": "F8C Lightning 2954 Best in Show Livery",
@@ -9840,6 +10002,12 @@
       "key": "item_DescM50_Paint_Racing_Blue_Yellow_Yellow",
       "label": "M50 Murray Cup Livery",
       "description": "Slipstream into pole position with this sporty racing tint. Featuring a blue and yellow paint scheme accented by stylish chevrons, this Murray Cup themed livery highlights the sleek and piercing nature of the M50.",
+      "kind": "item"
+    },
+    "m80_paint_black_white_gold": {
+      "key": "item_DescM80_Paint_Black_White_Gold",
+      "label": "M80 2956 Best In Show Livery",
+      "description": "Celebrate your M80 with the exclusive 2956 Best In Show livery, which decorates the ship in white and gray with pops of gold highlighting.",
       "kind": "item"
     },
     "m80_paint_black_black_orange": {
@@ -10380,6 +10548,24 @@
       "key": "item_DescMODU_RSI_Apollo_Right_Tier_3",
       "label": "Apollo Tier 3 Module Right",
       "description": "This module contains 3x Tier 3 medical beds.",
+      "kind": "item"
+    },
+    "modu_rsi_galaxy_base_module": {
+      "key": "item_DescMODU_RSI_Galaxy_Base_Module",
+      "label": "Galaxy Stock Module",
+      "description": "The stock module that comes standard with the RSI Galaxy. This can be exchanged with other specialized modules to provide your ship with additional functionality.",
+      "kind": "item"
+    },
+    "modu_rsi_galaxy_cargo_module": {
+      "key": "item_DescMODU_RSI_Galaxy_Cargo_Module",
+      "label": "Galaxy Cargo Module",
+      "description": "Adding significant cargo space, and an industrial-grade lift, the Cargo module enables hauling on a massive scale, allowing near-effortless loading, unloading, and recalibration.",
+      "kind": "item"
+    },
+    "modu_rsi_galaxy_medical_module": {
+      "key": "item_DescMODU_RSI_Galaxy_Medical_Module",
+      "label": "Galaxy Med Bay Module",
+      "description": "The comprehensive Med Bay module allows you to operate a field hospital almost anywhere. Tier 1, 2, and 3 medbeds ensure that any injury can be treated, from minor scrapes and lacerations to catastrophic trauma, while the integrated LifeLift gets patients on and offboard as comfortably as possible.",
       "kind": "item"
     },
     "mole_paint_aphorite_purple": {
@@ -11126,6 +11312,30 @@
       "description": "Exude attitude with the Skullcrusher livery for the Mantis, which features a massive skull decal across the top.",
       "kind": "item"
     },
+    "marauder_paint_black_black_gold": {
+      "key": "item_DescMarauder_paint_black_black_gold",
+      "label": "Marauder Splendor Livery",
+      "description": "Featuring silky blacks with exquisite gold trim, the Splendor livery ensure you stay classy no matter what you're getting up to.",
+      "kind": "item"
+    },
+    "marauder_paint_blue_blue_yellow": {
+      "key": "item_DescMarauder_paint_blue_blue_yellow",
+      "label": "Marauder Aquamarine Livery",
+      "description": "The Aquamarine livery gives a metallic teal base with subtle yellow accents to make a statement, before you throw a punch.",
+      "kind": "item"
+    },
+    "marauder_paint_red_grey_black": {
+      "key": "item_DescMarauder_paint_red_grey_black",
+      "label": "Marauder Bloodlet Livery",
+      "description": "Dive into combat with this blood red livery for your Marauder to show everyone on the battlefield exactly what you're out for.",
+      "kind": "item"
+    },
+    "marauder_paint_yellow_black_grey": {
+      "key": "item_DescMarauder_paint_yellow_black_grey",
+      "label": "Marauder Hardstrike Livery",
+      "description": "When you want them to see you coming, the Hardstrike livery is a bold explosion of yellow to make every fight even more vibrant.",
+      "kind": "item"
+    },
     "marine_heavy_armor": {
       "key": "item_DescMarine_Heavy_Armor",
       "label": "Achilles Heavy Armor",
@@ -11288,6 +11498,12 @@
       "description": "Equip the ship livery used by ace pilot Disco in the classic children's cartoon Rory Nova. While it turns the Meteor metallic dark blue, black, and red, whether you turn into the 'dynamic, instinctive spacecraft operator' that inspired the livery's name is up to you.",
       "kind": "item"
     },
+    "meteor_paint_blue_blue_gold": {
+      "key": "item_DescMeteor_Paint_Blue_Blue_Gold",
+      "label": "Meteor Epoque Livery",
+      "description": "The Epoque livery is sure to elevate the Meteor with its navy blue coloring and bold gold detailing.",
+      "kind": "item"
+    },
     "meteor_paint_vip_black_black_gold": {
       "key": "item_DescMeteor_Paint_VIP_Black_Black_Gold",
       "label": "Meteor Shimmer Livery",
@@ -11306,10 +11522,28 @@
       "description": "The colorful Tide Pool livery makes the MOTH blue with grey and green highlights.",
       "kind": "item"
     },
+    "moth_paint_green_grey_blue": {
+      "key": "item_DescMoth_Paint_Green_Grey_Blue",
+      "label": "MOTH Braken Livery",
+      "description": "Set your MOTH apart from the rest with the colorful Braken livery, featuring a seafoam green with grey and blue highlights.",
+      "kind": "item"
+    },
     "moth_paint_grey_grey_grey": {
       "key": "item_DescMoth_Paint_Grey_Grey_Grey",
       "label": "MOTH Rockwell Livery",
       "description": "Maintain a low profile with the Rockwell livery, which covers the MOTH in subtle shades of grey.",
+      "kind": "item"
+    },
+    "moth_paint_metal_grey_grey": {
+      "key": "item_DescMoth_Paint_Metal_Grey_Grey",
+      "label": "MOTH Stargazer Livery",
+      "description": "Featuring a metallic finish with grey highlights, the Stargazer livery will fittingly reflect starlight off the MOTH.",
+      "kind": "item"
+    },
+    "moth_paint_navy_grey_orange": {
+      "key": "item_DescMoth_Paint_Navy_Grey_Orange",
+      "label": "MOTH Downrush Livery",
+      "description": "Primarily blue and grey, the Downrush livery also features colorful pops of orange on the back half of the MOTH.",
       "kind": "item"
     },
     "moth_paint_orange_grey_black": {
@@ -11322,6 +11556,12 @@
       "key": "item_DescMoth_Paint_White_Grey_Orange",
       "label": "MOTH Dolomite Livery",
       "description": "The Dolomite livery turns the MOTH white and grey with orange highlights.",
+      "kind": "item"
+    },
+    "moth_paint_yellow_grey_blue": {
+      "key": "item_DescMoth_Paint_Yellow_Grey_Blue",
+      "label": "MOTH Skylight Livery",
+      "description": "Primarily yellow with grey and blue highlights, the Skylight livery helps make the MOTH more visible.",
       "kind": "item"
     },
     "moth_paint_pink_grey_black_iridescent": {
@@ -12350,6 +12590,66 @@
       "description": "Your love of the Empire will be clear to all when you emblazon your ship in this patriotic livery, inspiring honor and dedication in those you fly with.",
       "kind": "item"
     },
+    "paint_galaxy_blue_blue_gold": {
+      "key": "item_DescPaint_Galaxy_Blue_Blue_Gold",
+      "label": "Galaxy Magnitude Livery",
+      "description": "You'll be standing out from the rest with the Magnitude livery, featuring striking blue plating over a black base coat and complemented by orange accents.",
+      "kind": "item"
+    },
+    "paint_galaxy_blue_blue_white": {
+      "key": "item_DescPaint_Galaxy_Blue_Blue_White",
+      "label": "Galaxy Candor Livery",
+      "description": "The Candor livery pairs two contrasting shades of blue together for a no-nonsense look appropriate no matter the journey ahead.",
+      "kind": "item"
+    },
+    "paint_galaxy_blue_orange_white": {
+      "key": "item_DescPaint_Galaxy_Blue_Orange_White",
+      "label": "Galaxy Bravura Livery",
+      "description": "Pairing a smokey blue hull with orange accents, the Bravura livery is more than capable of elevating the appearance of your ship.",
+      "kind": "item"
+    },
+    "paint_galaxy_blue_white_gold": {
+      "key": "item_DescPaint_Galaxy_Blue_White_Gold",
+      "label": "Galaxy Protector Livery",
+      "description": "Predominantly blue with sections of white, the Protector livery is a confident look for those ready to make a stand.",
+      "kind": "item"
+    },
+    "paint_galaxy_white_black_brown": {
+      "key": "item_DescPaint_Galaxy_White_Black_Brown",
+      "label": "Galaxy Luster Livery",
+      "description": "The Luster livery is made to be admired with an elegant white accented by tasteful brown accents.",
+      "kind": "item"
+    },
+    "paint_hyun_black_black_black": {
+      "key": "item_DescPaint_Hyun_Black_Black_Black",
+      "label": "Hyun Hyaotan Livery",
+      "description": "The Hyaotan edition features a subtle dark grey, wave-like pattern over its light grey base, with embedded blue lights unique to this edition to give off that otherworldly shine.",
+      "kind": "item"
+    },
+    "paint_hyun_blue_gold": {
+      "key": "item_DescPaint_Hyun_Blue_Gold",
+      "label": "Hyun Chui'a Livery",
+      "description": "Make your Hyun stand out from the crowd with the Chui'a livery that's blue marbled with gold accents and evokes passing waves.",
+      "kind": "item"
+    },
+    "paint_hyun_pink_purple_black": {
+      "key": "item_DescPaint_Hyun_Pink_Purple_Black",
+      "label": "Hyun Suii Livery",
+      "description": "With flowing purple and pink waves across a dark hull, the Suii livery shows that your craft is more than a transport, its a statement.",
+      "kind": "item"
+    },
+    "paint_hyun_white_grey_gold": {
+      "key": "item_DescPaint_Hyun_White_Grey_Gold",
+      "label": "Hyun Ch.iing Livery",
+      "description": "The Ch.iiing edition boasts a bold white base with eye-catching gold highlights that flow down the ship's hull.",
+      "kind": "item"
+    },
+    "paint_wolf_yellow_white_chrome": {
+      "key": "item_DescPaint_Wolf_Yellow_White_Chrome",
+      "label": "Wolf \"Liberty\" Livery",
+      "description": "With a striking yellow fuselage and white wings, the Liberty livery is perfect for the pilot who loves the exhilirating freedom of flight.",
+      "kind": "item"
+    },
     "paladin_paint_black_black_black": {
       "key": "item_DescPaladin_Paint_Black_Black_Black",
       "label": "Paladin Shadowfall Livery",
@@ -12392,16 +12692,40 @@
       "description": "Blend into the clouds until ready to strike with the Galahad livery for the Paladin, which features a white base paint with black and grey highlights.",
       "kind": "item"
     },
+    "perseus_paint_black_white_gold": {
+      "key": "item_DescPerseus_Paint_Black_White_Gold",
+      "label": "Perseus 2956 Best In Show Livery",
+      "description": "Featuring sleek white and gray paint with eye-catching gold trimming, the 2956 Best In Show livery lets you celebrate the Perseus' crowning victory over the competition.",
+      "kind": "item"
+    },
     "perseus_paint_clean_air_black_grey_grey_camo": {
       "key": "item_DescPerseus_Paint_Clean_Air_Black_Grey_Grey_Camo",
       "label": "Perseus Alliance Aid Camo Livery",
       "description": "Showcase your dedication to helping Alliance Aid assist the people of Levski during their time of need with this grey camo livery.",
       "kind": "item"
     },
+    "perseus_paint_beige_beige_beige": {
+      "key": "item_DescPerseus_Paint_beige_beige_beige",
+      "label": "Perseus Arenosa Livery",
+      "description": "The Arenosa livery for the Perseus is primarily brown with black highlights.",
+      "kind": "item"
+    },
+    "perseus_paint_beige_blue_brown": {
+      "key": "item_DescPerseus_Paint_beige_blue_brown",
+      "label": "Perseus Shoreline Camo Livery",
+      "description": "Land and sea converge with this brown and blue camo patterned Shoreline Camo livery for the Perseus.",
+      "kind": "item"
+    },
     "perseus_paint_beige_blue_red": {
       "key": "item_DescPerseus_Paint_beige_blue_red",
       "label": "Perseus Repute Livery",
       "description": "The unique Repute livery divides the Perseus into distinct sections with a tan front half and a red and blue back half.",
+      "kind": "item"
+    },
+    "perseus_paint_beige_green_red": {
+      "key": "item_DescPerseus_Paint_beige_green_red",
+      "label": "Perseus Aftermath Livery",
+      "description": "The Aftermath livery gives the Perseus a green base paint highlighted by beige and red sections.",
       "kind": "item"
     },
     "perseus_paint_black_black_red": {
@@ -12414,6 +12738,12 @@
       "key": "item_DescPerseus_Paint_black_grey_white",
       "label": "Perseus Thundercloud Livery",
       "description": "Restyle your Perseus with a dazzle camouflage inspired paint scheme using various abstract patterns and shades of black, grey, and white.",
+      "kind": "item"
+    },
+    "perseus_paint_blue_blue_black": {
+      "key": "item_DescPerseus_Paint_blue_blue_black",
+      "label": "Perseus Mariner Camo Livery",
+      "description": "The Mariner Camo livery disrupts the silhouette of the Perseus with a camo pattern of various shades of blue and black.",
       "kind": "item"
     },
     "perseus_paint_gold_marble_gold": {
@@ -12432,6 +12762,12 @@
       "key": "item_DescPerseus_Paint_grey_blue_red",
       "label": "Perseus Resilient Livery",
       "description": "The Resilient livery for the Perseus elegantly mixes grey and blue with red highlights.",
+      "kind": "item"
+    },
+    "perseus_paint_grey_grey_orange": {
+      "key": "item_DescPerseus_Paint_grey_grey_orange",
+      "label": "Perseus Adamantine Livery",
+      "description": "Orange highlights stand in contrast to the various shades of grey used in the Adamantine livery for the Perseus.",
       "kind": "item"
     },
     "perseus_paint_red_grey_black": {
@@ -12528,6 +12864,12 @@
       "key": "item_DescPlayerDeco_DoubleBed_Flair_Coramor_a",
       "label": "Heartseeker Double Bed",
       "description": "With a luxurious bedspread featuring the iconic image of a spacesuit clad pilot that can be found on the Anvil Hornet Heartseeker, this opulent bed is framed by a red velvet, heart-shaped headboard that is sure to make every night a bit more pleasurable.",
+      "kind": "item"
+    },
+    "playerdeco_flair_aegis_idris_1_a": {
+      "key": "item_DescPlayerDeco_Flair_Aegis_Idris_1_a",
+      "label": "Aegis Idris-M Model",
+      "description": "A faithful recreation of an iconic spacecraft, the Aegis Idris is lovingly recreated by Taketsu Starship Models for display on your hangar floor. One of the most favored frigates by the UEE Navy, this large-scale model highlights the Idris-M's imposing hull, wide range of turrets, and powerful engines.",
       "kind": "item"
     },
     "playerdeco_flair_banu_instrument_1_a": {
@@ -12680,6 +13022,12 @@
       "description": "Ready to rest your weary legs after a long day of hauling dangerous materials? Look no further than this unique chair upcycled from a repurposed hazardous cargo box.",
       "kind": "item"
     },
+    "playerdeco_seat_ride_hornet_1_a": {
+      "key": "item_DescPlayerDeco_Seat_Ride_Hornet_1_a",
+      "label": "Hornet Kiddie Ride",
+      "description": "Experience all the fun of flying a Hornet and none of the danger when you pilot this kiddie ride. Capturing the ship in miniature, the ride features the signature style of its full-sized counterpart while accentuating its undeniable charm.",
+      "kind": "item"
+    },
     "playerdeco_static_diorama_cargo_scavanger_a": {
       "key": "item_DescPlayerDeco_Static_Diorama_Cargo_Scavanger_a",
       "label": "Pyro Resupply Commemorative Display",
@@ -12708,6 +13056,12 @@
       "key": "item_DescPlayerDeco_Static_Hologram_ShatteredBlade_Banner_1_a",
       "label": "Shattered Blade Holographic Banner",
       "description": "Looted from one of the infamous smugglers' hideouts, this red holographic banner features the Shattered Blade's fearsome iconography that serves as warning to any who dare enter, Human and Vanduul alike.",
+      "kind": "item"
+    },
+    "playerdeco_static_hologram_vice_1_a": {
+      "key": "item_DescPlayerDeco_Static_Hologram_Vice_1_a",
+      "label": "Neonwave Hologram Display",
+      "description": "Featuring a ship flying through palm trees silhouetted against a bright sunset, the Neonwave Hologram Display brings the cool vibes of a hot tropical night into your hangar.",
       "kind": "item"
     },
     "playerdeco_static_hologram_wikelo_1_a": {
@@ -13574,10 +13928,22 @@
       "description": "The microTech livery for the RAFT features the company's logo atop a white base paint with light blue and grey highlights.",
       "kind": "item"
     },
+    "raft_paint_green_green_red": {
+      "key": "item_DescRaft_Paint_Green_Green_Red",
+      "label": "RAFT Deck the Hull Livery",
+      "description": "Express your holiday spirit with the Deck the Hull livery, which uses the traditional Luminalia colors of green and red to celebrate the popular Banu festival that's become beloved by Humans.",
+      "kind": "item"
+    },
     "raft_paint_grey_lightgrey": {
       "key": "item_DescRaft_Paint_Grey_LightGrey",
       "label": "RAFT Anchor Livery",
       "description": "The Anchor livery for the Argo RAFT gets it great look by blending various shades of grey with green undertones.",
+      "kind": "item"
+    },
+    "raft_paint_white_blue_white": {
+      "key": "item_DescRaft_Paint_White_Blue_White",
+      "label": "RAFT IceBreak Livery",
+      "description": "Equip your ship with a paint scheme cooler than a snowstorm. The IceBreak livery mixes crisp, cool white with a frostbitten blue for an exciting look suitable for any season.",
       "kind": "item"
     },
     "railen_paint_black_black_black_stencil_1": {
@@ -14028,6 +14394,12 @@
       "key": "item_DescSHLD_ORIG_S04_890J_SCItem",
       "label": "Glacis",
       "description": "Item Type: Shield Generator Manufacturer: Basilisk Size: 4 Grade: Bespoke Class: Industrial Origin turned to the experts at Basilisk to build a bespoke shield generator for the 890 Jump. The Glacis blends centuries of cutting edge innovation to produce a strong and stable shield capable of defending the valuable ship and passengers aboard.",
+      "kind": "item"
+    },
+    "shld_rsi_s04_polaris": {
+      "key": "item_DescSHLD_RSI_S04_Polaris",
+      "label": "Deterrent",
+      "description": "Item Type: Shield Generator Manufacturer: Roberts Space Industries Size: 4 This capital-class shield generator was designed specifically for the Polaris.",
       "kind": "item"
     },
     "shld_s01_civ_seco_ink": {
@@ -18290,6 +18662,12 @@
       "description": "Item Type: Radar Manufacturer: WillsOp Size: 3 Grade: B Class: Civilian For a dependable radar with above average performance, the Capsulo is a trustworthy option.",
       "kind": "item"
     },
+    "radr_wlop_s03_lephari": {
+      "key": "item_Desc_RADR_WLOP_S03_Lephari",
+      "label": "Lephari",
+      "description": "Item Type: Radar Manufacturer: WillsOp Size: 3 Grade: C Class: Civilian Fly with confidence using the Lephari radar which features WillsOp's PerfectClarity software to help ensure you're getting the full picture during your travels.",
+      "kind": "item"
+    },
     "radr_wlop_s03_socoria": {
       "key": "item_Desc_RADR_WLOP_S03_Socoria",
       "label": "Socoria",
@@ -18722,6 +19100,12 @@
       "description": "Maintain a tactile sense of the world while also keeping your hands safe and dry with the Deri fingerless gloves. Featuring a comfortable inner lining, lightweight plating on the back of the hand and slip resistant palm padding, the Deri gloves are an ideal choice for a wide variety of tasks.",
       "kind": "item"
     },
+    "_alb_gloves_01_02_01": {
+      "key": "item_Desc_alb_gloves_01_02_01",
+      "label": "Deri Gloves",
+      "description": "PH - Description for alb_gloves_01_02_01",
+      "kind": "item"
+    },
     "alb_gloves_02_01_01": {
       "key": "item_Desc_alb_gloves_02_01_01",
       "label": "Parway Gloves",
@@ -18848,6 +19232,12 @@
       "description": "Fearlessly face any weather with the Taos balaclava and goggles. An ultra-soft inner lining provides warmth and comfort while a special exterior coating repels precipitation. The adjustable headband ensures an ideal fit, and the padding of the anti-fog goggles is integrated directly into the fabric to seal out the elements.",
       "kind": "item"
     },
+    "_alb_mask_01_02_01": {
+      "key": "item_Desc_alb_mask_01_02_01",
+      "label": "Taos Balaclava and Goggles",
+      "description": "PH - Description for alb_mask_01_02_01",
+      "kind": "item"
+    },
     "alb_mask_02": {
       "key": "item_Desc_alb_mask_02",
       "label": "Katla Mask",
@@ -18966,6 +19356,12 @@
       "key": "item_Desc_alb_shoes_01",
       "label": "Nivala Shoes",
       "description": "The Alejo Brothers expertly engineered the Nivala shoes to provide high ankle support while remaining lightweight. The shoes mix the company's patented FullFlex rubber with synthetic nubuck leather for flexible yet strategic support, and feature cushioning on the heels and balls of the feet for supreme comfort.",
+      "kind": "item"
+    },
+    "_alb_shoes_01_02_01": {
+      "key": "item_Desc_alb_shoes_01_02_01",
+      "label": "Nivala Shoes",
+      "description": "PH - Description for alb_shoes_01_02_01",
       "kind": "item"
     },
     "banu_lum_gloves_01_01_01": {
@@ -19244,6 +19640,12 @@
       "description": "Show your support for the Navy and the brave souls that serve the Empire with this classic cadet hat commemorating Invictus Launch Week.",
       "kind": "item"
     },
+    "_cbd_hat_03_02_01": {
+      "key": "item_Desc_cbd_hat_03_02_01",
+      "label": "MC-DFA Hat",
+      "description": "PH - Description for cbd_hat_03_02_01",
+      "kind": "item"
+    },
     "cbd_hat_03_arccorp_01": {
       "key": "item_Desc_cbd_hat_03_ArcCorp_01",
       "label": "ArcCorp Hat",
@@ -19458,6 +19860,12 @@
       "key": "item_Desc_cbd_hat_03_iae2025_12",
       "label": "IAE 2955 Hat Black",
       "description": "The official hat of the 2955 Intergalactic Aerospace Expo features black fabric with the logo across the front.",
+      "kind": "item"
+    },
+    "cbd_hat_03_iae2026_01": {
+      "key": "item_Desc_cbd_hat_03_iae2026_01",
+      "label": "IAE 2956 Hat",
+      "description": "Celebrate the UEE's premier ship expo with the official hat of the 2956 Intergalactic Aerospace Expo. This black hat features the event's logo and year across the front.",
       "kind": "item"
     },
     "cbd_hat_03_itg_01": {
@@ -21206,6 +21614,18 @@
       "description": "During Luminalia, we're all one family. Celebrate with your loved ones in immense joy with this festive shirt from City Lights, crafted with high-quality, ultra soft fabric that's made to last.",
       "kind": "item"
     },
+    "_ctl_shirt_03_02_01": {
+      "key": "item_Desc_ctl_shirt_03_02_01",
+      "label": "Bello T-Shirt Blue",
+      "description": "PH - Description for ctl_shirt_03_02_01",
+      "kind": "item"
+    },
+    "_ctl_shirt_03_02_02": {
+      "key": "item_Desc_ctl_shirt_03_02_02",
+      "label": "Bello T-Shirt Blue",
+      "description": "PH - Description for ctl_shirt_03_02_02",
+      "kind": "item"
+    },
     "ctl_shirt_03_nvy01_01": {
       "key": "item_Desc_ctl_shirt_03_nvy01_01",
       "label": "Bello T-Shirt Navy",
@@ -21320,6 +21740,12 @@
       "description": "This version of DMC's Mercury gloves has been modified from its original form. Keep your hands warm and fingers nimble with Mercury gloves from DMC. Ideal for outdoor activities or colder work environments.",
       "kind": "item"
     },
+    "_dmc_jacket_04_02_01": {
+      "key": "item_Desc_dmc_jacket_04_02_01",
+      "label": "Mountaintop Jacket Multitone",
+      "description": "PH - Description for dmc_jacket_04_02_01",
+      "kind": "item"
+    },
     "dmc_jacket_04_600i01_01": {
       "key": "item_Desc_dmc_jacket_04_600i01_01",
       "label": "600i Flight Jacket",
@@ -21404,6 +21830,12 @@
       "description": "Carrying Capacity: 2K µSCU Associated Science and Development is a company that defines what it means to be on the bleeding edge of technology. Originally exclusive to ASD workers in the Biological Research Division, this synthetic leather has the look, feel, and smell of the real thing. The company's logo is featured on the front and back.",
       "kind": "item"
     },
+    "dmc_jacket_15_01_01": {
+      "key": "item_Desc_dmc_jacket_15_01_01",
+      "label": "2956 Best in Show Bomber Jacket",
+      "description": "Carrying Capacity: 2K µSCU Designed to commemorate this year's Best in Show winner, the RSI Perseus, this exquisitely crafted faux-leather jacket is a deep chestnut brown with a subtle glossy finish and is emblazoned both front and back with patches featuring the victorious ship.",
+      "kind": "item"
+    },
     "dmc_pants_01_01_9tails01": {
       "key": "item_Desc_dmc_pants_01_01_9tails01",
       "label": "Foundation Pants (Modified)",
@@ -21462,6 +21894,24 @@
       "key": "item_Desc_dmc_pants_08_01_01",
       "label": "Chamar Pants",
       "description": "Carrying Capacity: 1K µSCU Decades of design experience helped DMC make the Chamar pants ready for any adventure. The pants utilize a unique seam design to deliver durability while maintaining flexibility. A built-in belt ensures an ideal fit, while leather front pockets and a padded back-panel provide rugged reinforcement where needed most.",
+      "kind": "item"
+    },
+    "_dmc_pants_10_01_01": {
+      "key": "item_Desc_dmc_pants_10_01_01",
+      "label": "Foundation Pants Grey",
+      "description": "PH - Description for dmc_pants_10_01_01",
+      "kind": "item"
+    },
+    "_dmc_pants_10_01_02": {
+      "key": "item_Desc_dmc_pants_10_01_02",
+      "label": "Foundation Pants Grey",
+      "description": "PH - Description for dmc_pants_10_01_02",
+      "kind": "item"
+    },
+    "_dmc_pants_10_02_01": {
+      "key": "item_Desc_dmc_pants_10_02_01",
+      "label": "Foundation Pants Grey",
+      "description": "PH - Description for dmc_pants_10_02_01",
       "kind": "item"
     },
     "dmc_shirt_01": {
@@ -21714,6 +22164,12 @@
       "key": "item_Desc_eld_shirt_04_01_subfeb25",
       "label": "Big Winner T-Shirt",
       "description": "Featuring a stylized, neon-green X on the front and the phrase \"Big winner!\" on the back, when you wear this T-shirt, everyone will know that you're going places.",
+      "kind": "item"
+    },
+    "eld_shirt_04_01_wallysbar": {
+      "key": "item_Desc_eld_shirt_04_01_wallysbar",
+      "label": "Wally's Bar Retro T-Shirt",
+      "description": "Show your support for local businesses with the Wally's Bar Retro T-Shirt. This premium white shirt made from natural fibers showcases New Babbage's favorite bar, featuring a bright neon pink palm tree that's synonymous with Wally's décor.",
       "kind": "item"
     },
     "eld_shirt_04_aegis_dec": {
@@ -22014,6 +22470,12 @@
       "key": "item_Desc_eld_shirt_10_02_01",
       "label": "Future Navy Pilot T-Shirt",
       "description": "Are you ready to shoot for the stars? Show the 'verse that you're on the way to being the best of the best: a pilot of the UEE Navy. In addition to the message emblazoned on the front, this show-stopping t-shirt features an all-over image of a blue and white nebula, the seal of the UEE Navy, and the Invictus logo.",
+      "kind": "item"
+    },
+    "eld_shirt_10_iae2026_01": {
+      "key": "item_Desc_eld_shirt_10_iae2026_01",
+      "label": "IAE 2956 T-Shirt",
+      "description": "The official shirt of the 2956 Intergalactic Aerospace Expo. This soft and supremely comfortable dark gray cotton t-shirt features the IAE logo against a bright blue background on the front and the show name and year on the reverse.",
       "kind": "item"
     },
     "fio_bar_pants_01_01_01": {
@@ -22796,6 +23258,12 @@
       "description": "The Alban is a long sleeve shirt made from comfortable, natural fabrics. Featuring a deep V-neck, its asymmetrical patchwork design provides it with a bit of texture and a two-toned look. The Striker edition is a worn grey with dark grey patches.",
       "kind": "item"
     },
+    "_hdtc_shirt_04_01_01": {
+      "key": "item_Desc_hdtc_shirt_04_01_01",
+      "label": "PH - hdtc_shirt_03_01_01",
+      "description": "PH - Description for hdtc_shirt_04_01_01",
+      "kind": "item"
+    },
     "hdtc_undersuit_01_01_01": {
       "key": "item_Desc_hdtc_undersuit_01_01_01",
       "label": "Lamont Undersuit",
@@ -23396,6 +23864,12 @@
       "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -35 / 65 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s An ideal synthesis of strength and technology, the Geist Stealth Armor has been crafted from military-grade carbon silk sourced from the same manufacturers that protect the UEE's special forces. Hair-thin filaments woven into the fabric mask the wearer's emissions, making them undetectable via radar, and specialized tubing built into the soles of the boots dampens the sound of footsteps. Featuring a hooded shawl and a white digital camo pattern, the Snow Camo edition is perfect for stalking prey in frozen environments.",
       "kind": "item"
     },
+    "kap_combat_light_arms_02_03_01": {
+      "key": "item_Desc_kap_combat_light_arms_02_03_01",
+      "label": "Geist Armor Arms Epoque II",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -35 / 65 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s An ideal synthesis of strength and technology, the Geist Stealth Armor has been crafted from military-grade carbon silk sourced from the same manufacturers that protect the UEE's special forces. Hair-thin filaments woven into the fabric mask the wearer's emissions, making them harder to detect. The Epoque edition features a navy and black coloring, finished with baroque gold detailing.",
+      "kind": "item"
+    },
     "kap_combat_light_arms_03_01_01": {
       "key": "item_Desc_kap_combat_light_arms_03_01_01",
       "label": "Geist Armor Arms Golden Blossom",
@@ -23432,6 +23906,12 @@
       "description": "Item Type: Light Armor Damage Reduction: 20% Carrying Capacity: 8k µSCU Temp. Rating: -35 / 65 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Backpacks: Light An ideal synthesis of strength and technology, the Geist Stealth Armor has been crafted from military-grade carbon silk sourced from the same manufacturers that protect the UEE's special forces. Hair-thin filaments woven into the fabric mask the wearer's emissions, making them undetectable via radar, and specialized tubing built into the soles of the boots dampens the sound of footsteps. Featuring a hooded shawl and a white digital camo pattern, the Snow Camo edition is perfect for stalking prey in frozen environments.",
       "kind": "item"
     },
+    "kap_combat_light_core_02_03_01": {
+      "key": "item_Desc_kap_combat_light_core_02_03_01",
+      "label": "Geist Armor Core Epoque II",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Carrying Capacity: 8k µSCU Temp. Rating: -35 / 65 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Backpacks: Light An ideal synthesis of strength and technology, the Geist Stealth Armor has been crafted from military-grade carbon silk sourced from the same manufacturers that protect the UEE's special forces. Hair-thin filaments woven into the fabric mask the wearer's emissions, making them harder to detect. The Epoque edition features a navy and black coloring, finished with baroque gold detailing.",
+      "kind": "item"
+    },
     "kap_combat_light_core_03_01_01": {
       "key": "item_Desc_kap_combat_light_core_03_01_01",
       "label": "Geist Armor Core Golden Blossom",
@@ -23462,6 +23942,12 @@
       "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -35 / 65 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s An ideal synthesis of strength and technology, the Geist Stealth Armor has been crafted from military-grade carbon silk sourced from the same manufacturers that protect the UEE's special forces. Hair-thin filaments woven into the fabric mask the wearer's emissions, making them undetectable via radar, and specialized tubing built into the soles of the boots dampens the sound of footsteps. Featuring a hooded shawl and a white digital camo pattern, the Snow Camo edition is perfect for stalking prey in frozen environments.",
       "kind": "item"
     },
+    "kap_combat_light_helmet_02_03_01": {
+      "key": "item_Desc_kap_combat_light_helmet_02_03_01",
+      "label": "Geist Armor Helmet Epoque",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -35 / 65 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s An ideal synthesis of strength and technology, the Geist Helmet has been crafted from military-grade carbon silk sourced from the same manufacturers that protect the UEE's special forces. Hair-thin filaments woven into the fabric mask the wearer's emissions, making them harder to detect. Visor is AR crosshair compatible. The Epoque edition features a navy and black coloring, finished with baroque gold detailing.",
+      "kind": "item"
+    },
     "kap_combat_light_helmet_03_01_01": {
       "key": "item_Desc_kap_combat_light_helmet_03_01_01",
       "label": "Geist Armor Helmet Golden Blossom",
@@ -23490,6 +23976,12 @@
       "key": "item_Desc_kap_combat_light_legs_02_02_01",
       "label": "Geist Armor Legs Snow Camo",
       "description": "Item Type: Light Armor Damage Reduction: 20% Carrying Capacity: 2.5k µSCU Temp. Rating: -35 / 65 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s An ideal synthesis of strength and technology, the Geist Stealth Armor has been crafted from military-grade carbon silk sourced from the same manufacturers that protect the UEE's special forces. Hair-thin filaments woven into the fabric mask the wearer's emissions, making them undetectable via radar, and specialized tubing built into the soles of the boots dampens the sound of footsteps. Featuring a hooded shawl and a white digital camo pattern, the Snow Camo edition is perfect for stalking prey in frozen environments.",
+      "kind": "item"
+    },
+    "kap_combat_light_legs_02_03_01": {
+      "key": "item_Desc_kap_combat_light_legs_02_03_01",
+      "label": "Geist Armor Legs Epoque II",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Carrying Capacity: 2.5k µSCU Temp. Rating: -35 / 65 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s An ideal synthesis of strength and technology, the Geist Stealth Armor has been crafted from military-grade carbon silk sourced from the same manufacturers that protect the UEE's special forces. Hair-thin filaments woven into the fabric mask the wearer's emissions, making them harder to detect, and specialized tubing built into the soles of the boots dampens the sound of footsteps. The Epoque edition features a navy and black coloring, finished with baroque gold detailing.",
       "kind": "item"
     },
     "kap_combat_light_legs_03_01_01": {
@@ -23942,6 +24434,12 @@
       "description": "Carrying Capacity: 1K µSCU Inspired by the traditional jackets worn by Earth's early pilots, this coat provides a flattering fit thanks to its elasticated waist and cuffs, blending fashion with functionality. The RSI edition is dark gray with tasteful pops of orange piping along the seams paired with the company's logo on the upper back.",
       "kind": "item"
     },
+    "nvs_jacket_04_01_01": {
+      "key": "item_Desc_nvs_jacket_04_01_01",
+      "label": "Bobcat Varsity Jacket Cousin Crow's",
+      "description": "Carrying Capacity: 1K µSCU Up your game with this Cousin Crow's edition varsity jacket. Fitted with CC's signature graffiti inspired orange lettering, this black and teal jacket brings a modern take on a classic look.",
+      "kind": "item"
+    },
     "nvs_jumpsuit_01": {
       "key": "item_Desc_nvs_jumpsuit_01",
       "label": "Falston Jumpsuit",
@@ -24230,6 +24728,12 @@
       "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Originally designed as a strength enhancement suit to give factory workers better lifting power, CDS found wider application in utilizing its defensive capabilities. It's triple-enforced armor plating provides extreme physical protection, with deliberate placing of materials to protect the most vulnerable parts of the body. A series of pneumatic levers offer increased flexibility in the joints, alleviating pressure and weight in key areas to create an accessible and highly protective armor despite its heavy weight. The Crush edition consists of a polished black metal with brushed bronze detailing.",
       "kind": "item"
     },
+    "omc_utility_heavy_arms_01_03_01": {
+      "key": "item_Desc_omc_utility_heavy_arms_01_03_01",
+      "label": "Corbel Arms Raider Camo",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Originally designed as a strength enhancement suit to give factory workers better lifting power, CDS found wider application in utilizing its defensive capabilities. It's triple-enforced armor plating provides extreme physical protection, with deliberate placing of materials to protect the most vulnerable parts of the body. A series of pneumatic levers offer increased flexibility in the joints, alleviating pressure and weight in key areas to create an accessible and highly protective armor despite its heavy weight. The Raider Camo edition is a combination of dark greens and browns.",
+      "kind": "item"
+    },
     "omc_utility_heavy_core_01_01_01": {
       "key": "item_Desc_omc_utility_heavy_core_01_01_01",
       "label": "Corbel Core Smolder",
@@ -24258,6 +24762,12 @@
       "key": "item_Desc_omc_utility_heavy_core_01_02_01",
       "label": "Corbel Core Crush",
       "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 8.0 µSCU Backpacks: All Originally designed as a strength enhancement suit to give factory workers better lifting power, CDS found wider application in utilizing its defensive capabilities. It's triple-enforced armor plating provides extreme physical protection, with deliberate placing of materials to protect the most vulnerable parts of the body. A series of pneumatic levers offer increased flexibility in the joints, alleviating pressure and weight in key areas to create an accessible and highly protective armor despite its heavy weight. The Crush edition consists of a polished black metal with brushed bronze detailing.",
+      "kind": "item"
+    },
+    "omc_utility_heavy_core_01_03_01": {
+      "key": "item_Desc_omc_utility_heavy_core_01_03_01",
+      "label": "Corbel Core Raider Camo",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 8.0K µSCU Backpacks: All Originally designed as a strength enhancement suit to give factory workers better lifting power, CDS found wider application in utilizing its defensive capabilities. It's triple-enforced armor plating provides extreme physical protection, with deliberate placing of materials to protect the most vulnerable parts of the body. A series of pneumatic levers offer increased flexibility in the joints, alleviating pressure and weight in key areas to create an accessible and highly protective armor despite its heavy weight. The Raider Camo edition is a combination of dark greens and browns.",
       "kind": "item"
     },
     "omc_utility_heavy_helmet_01_01_01": {
@@ -24290,6 +24800,12 @@
       "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Originally designed as a strength enhancement suit to give factory workers better lifting power, CDS found wider application in utilizing its defensive capabilities. It's triple-enforced armor plating provides extreme physical protection, with deliberate placing of materials to protect the most vulnerable parts of the body. A series of pneumatic levers offer increased flexibility in the joints, alleviating pressure and weight in key areas to create an accessible and highly protective armor despite its heavy weight. The Crush edition consists of a polished black metal with brushed bronze detailing.",
       "kind": "item"
     },
+    "omc_utility_heavy_helmet_01_03_01": {
+      "key": "item_Desc_omc_utility_heavy_helmet_01_03_01",
+      "label": "Corbel Helmet Raider Camo",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Originally designed as a strength enhancement suit to give factory workers better lifting power, CDS found wider application in utilizing its defensive capabilities. It's triple-enforced armor plating provides extreme physical protection, with deliberate placing of materials to protect the most vulnerable parts of the body. A series of pneumatic levers offer increased flexibility in the joints, alleviating pressure and weight in key areas to create an accessible and highly protective armor despite its heavy weight. The Raider Camo edition is a combination of dark greens and browns.",
+      "kind": "item"
+    },
     "omc_utility_heavy_legs_01_01_01": {
       "key": "item_Desc_omc_utility_heavy_legs_01_01_01",
       "label": "Corbel Legs Smolder",
@@ -24318,6 +24834,12 @@
       "key": "item_Desc_omc_utility_heavy_legs_01_02_01",
       "label": "Corbel Legs Crush",
       "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 8.0 µSCU Originally designed as a strength enhancement suit to give factory workers better lifting power, CDS found wider application in utilizing its defensive capabilities. It's triple-enforced armor plating provides extreme physical protection, with deliberate placing of materials to protect the most vulnerable parts of the body. A series of pneumatic levers offer increased flexibility in the joints, alleviating pressure and weight in key areas to create an accessible and highly protective armor despite its heavy weight. The Crush edition consists of a polished black metal with brushed bronze detailing.",
+      "kind": "item"
+    },
+    "omc_utility_heavy_legs_01_03_01": {
+      "key": "item_Desc_omc_utility_heavy_legs_01_03_01",
+      "label": "Corbel Legs Raider Camo",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 8.0K µSCU Originally designed as a strength enhancement suit to give factory workers better lifting power, CDS found wider application in utilizing its defensive capabilities. It's triple-enforced armor plating provides extreme physical protection, with deliberate placing of materials to protect the most vulnerable parts of the body. A series of pneumatic levers offer increased flexibility in the joints, alleviating pressure and weight in key areas to create an accessible and highly protective armor despite its heavy weight. The Raider Camo edition is a combination of dark greens and browns.",
       "kind": "item"
     },
     "ops_jacket_01_01_01": {
@@ -25220,6 +25742,12 @@
       "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Elegant design meets innovation with the Palatino armor from Quirinus Tech. This armor set masterfully mixes reinforced plating with patented new materials that are light-weight and flexible, yet rated to withstand heavy damage allowing the wearer to be fashionable, light on their feet, and able to withstand serious firepower. The Shadow Gild variant is dark gray and features stylish gold highlights.",
       "kind": "item"
     },
+    "qrt_utility_heavy_arms_01_04_01": {
+      "key": "item_Desc_qrt_utility_heavy_arms_01_04_01",
+      "label": "Palatino Arms Raider Camo",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Elegant design meets innovation with the Palatino armor from Quirinus Tech. This armor set masterfully mixes reinforced plating with patented new materials that are light-weight and flexible, yet rated to withstand heavy damage allowing the wearer to be fashionable, light on their feet, and able to withstand serious firepower. The Raider Camo edition is a combination of dark greens and browns.",
+      "kind": "item"
+    },
     "qrt_utility_heavy_arms_02_01_01": {
       "key": "item_Desc_qrt_utility_heavy_arms_02_01_01",
       "label": "Palatino Arms Mark I",
@@ -25280,6 +25808,12 @@
       "description": "Item Type: Heavy Backpack Carrying Capacity: 180K µSCU Core Compatibility: Heavy Elegant design meets innovation with the Palatino armor from Quirinus Tech. The associated backpack seamlessly integrates into the armor, matching its silhouette while also providing ample storage. The Stronghold edition compliments its matching armor with gold plating around the base of the pack, with the Nine Tails logo embedded into the leather.",
       "kind": "item"
     },
+    "qrt_utility_heavy_backpack_01_05_01": {
+      "key": "item_Desc_qrt_utility_heavy_backpack_01_05_01",
+      "label": "Palatino Backpack Raider Camo",
+      "description": "Item Type: Heavy Backpack Carrying Capacity: 180K µSCU Core Compatibility: Heavy Elegant design meets innovation with the Palatino armor from Quirinus Tech. The associated backpack seamlessly integrates into the armor, matching its silhouette while also providing ample storage. The Raider Camo edition is a combination of dark greens and browns.",
+      "kind": "item"
+    },
     "qrt_utility_heavy_backpack_02_01_01": {
       "key": "item_Desc_qrt_utility_heavy_backpack_02_01_01",
       "label": "Palatino Backpack Mark I",
@@ -25332,6 +25866,12 @@
       "key": "item_Desc_qrt_utility_heavy_core_01_03_01",
       "label": "Palatino Core Shadow Gild",
       "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 8K µSCU Backpacks: All Elegant design meets innovation with the Palatino armor from Quirinus Tech. This armor set masterfully mixes reinforced plating with patented new materials that are light-weight and flexible, yet rated to withstand heavy damage allowing the wearer to be fashionable, light on their feet, and able to withstand serious firepower. The Shadow Gild variant is dark gray and features stylish gold highlights.",
+      "kind": "item"
+    },
+    "qrt_utility_heavy_core_01_04_01": {
+      "key": "item_Desc_qrt_utility_heavy_core_01_04_01",
+      "label": "Palatino Core Raider Camo",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 8K µSCU Backpacks: All Elegant design meets innovation with the Palatino armor from Quirinus Tech. This armor set masterfully mixes reinforced plating with patented new materials that are light-weight and flexible, yet rated to withstand heavy damage allowing the wearer to be fashionable, light on their feet, and able to withstand serious firepower. The Raider Camo edition is a combination of dark greens and browns.",
       "kind": "item"
     },
     "qrt_utility_heavy_core_02_01_01": {
@@ -25394,6 +25934,12 @@
       "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Elegant design meets innovation with the Palatino armor from Quirinus Tech. The fully-enclosed helmet comes equipped with a suite of sensors that connects the wearer to the wider world while providing supreme protection. Visor is AR crosshair compatible. The Shadow Gild variant is dark gray and features stylish gold highlights.",
       "kind": "item"
     },
+    "qrt_utility_heavy_helmet_01_04_01": {
+      "key": "item_Desc_qrt_utility_heavy_helmet_01_04_01",
+      "label": "Palatino Helmet Raider Camo",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Elegant design meets innovation with the Palatino armor from Quirinus Tech. The fully-enclosed helmet comes equipped with a suite of sensors that connects the wearer to the wider world while providing supreme protection. Visor is AR crosshair compatible. The Raider Camo edition is a combination of dark greens and browns.",
+      "kind": "item"
+    },
     "qrt_utility_heavy_helmet_02_01_01": {
       "key": "item_Desc_qrt_utility_heavy_helmet_02_01_01",
       "label": "Palatino Helmet Mark I",
@@ -25448,6 +25994,12 @@
       "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 8K µSCU Elegant design meets innovation with the Palatino armor from Quirinus Tech. This armor set masterfully mixes reinforced plating with patented new materials that are light-weight and flexible, yet rated to withstand heavy damage allowing the wearer to be fashionable, light on their feet, and able to withstand serious firepower. The Shadow Gild variant is dark gray and features stylish gold highlights.",
       "kind": "item"
     },
+    "qrt_utility_heavy_legs_01_04_01": {
+      "key": "item_Desc_qrt_utility_heavy_legs_01_04_01",
+      "label": "Palatino Legs Raider Camo",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 8K µSCU Elegant design meets innovation with the Palatino armor from Quirinus Tech. This armor set masterfully mixes reinforced plating with patented new materials that are light-weight and flexible, yet rated to withstand heavy damage allowing the wearer to be fashionable, light on their feet, and able to withstand serious firepower. The Raider Camo edition is a combination of dark greens and browns.",
+      "kind": "item"
+    },
     "qrt_utility_heavy_legs_02_01_01": {
       "key": "item_Desc_qrt_utility_heavy_legs_02_01_01",
       "label": "Palatino Legs Mark I",
@@ -25482,6 +26034,12 @@
       "key": "item_Desc_r6p_glasses_01_01_01",
       "label": "Yaeger Aviator Glasses",
       "description": "When the future's looking bright, reach for these aviator shades from R6 Pro. With a design that has remained an acknowledged classic for centuries, you can salute the trailblazing aviators of the past as you seek tomorrow's new horizons.",
+      "kind": "item"
+    },
+    "r6p_glasses_01_02_01": {
+      "key": "item_Desc_r6p_glasses_01_02_01",
+      "label": "Yaeger Aviator Glasses Neonwave",
+      "description": "When the future's looking bright, reach for these aviator shades from R6 Pro. With a design that has remained an acknowledged classic for centuries, you can salute the trailblazing aviators of the past as you seek tomorrow's new horizons. The Neonwave edition consists of sky blue lenses, blending into bright fuchsia, and finishing with sunset orange.",
       "kind": "item"
     },
     "r6p_gloves_01": {
@@ -26104,26 +26662,26 @@
     },
     "rsi_explorer_armor_light_arms_01_02_01": {
       "key": "item_Desc_rsi_explorer_armor_light_arms_01_02_01",
-      "label": "Venture Arms Starwalker",
-      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -38 / 68 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Robert Space Industries’ Venture Explorer Suit provides exceptional protection against the dangers of space. Designed for those who don't know where their next adventure might go, the suit combines comfort and safety without sacrificing mobility. With its gray base dotted with eye-catching orange highlights, the Starwalker edition is ready for your next grand adventure across the galaxy.",
-      "kind": "item"
-    },
-    "rsi_explorer_armor_light_arms_01_03_01": {
-      "key": "item_Desc_rsi_explorer_armor_light_arms_01_03_01",
       "label": "Venture Arms Infrared",
       "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -38 / 68 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Robert Space Industries’ Venture Explorer Suit provides exceptional protection against the dangers of space. Designed for those who don't know where their next adventure might go, the suit combines comfort and safety without sacrificing mobility. Make a statement with the exclusive Infrared edition of the already iconic Venture set, pairing an intense ruby with light gray undertones.",
       "kind": "item"
     },
+    "rsi_explorer_armor_light_arms_01_03_01": {
+      "key": "item_Desc_rsi_explorer_armor_light_arms_01_03_01",
+      "label": "Venture Arms Starwalker",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -38 / 68 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Robert Space Industries’ Venture Explorer Suit provides exceptional protection against the dangers of space. Designed for those who don't know where their next adventure might go, the suit combines comfort and safety without sacrificing mobility. With its gray base dotted with eye-catching orange highlights, the Starwalker edition is ready for your next grand adventure across the galaxy.",
+      "kind": "item"
+    },
     "rsi_explorer_armor_light_core_01_02_01": {
       "key": "item_Desc_rsi_explorer_armor_light_core_01_02_01",
-      "label": "Venture Core Starwalker",
-      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -38 / 68 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 9k µSCU Backpacks: Light Robert Space Industries’ Venture Explorer Suit provides exceptional protection against the dangers of space. Designed for those who don't know where their next adventure might go, the suit combines comfort and safety without sacrificing mobility. With its gray base dotted with eye-catching orange highlights, the XXXX edition is ready for your next grand adventure across the galaxy.",
+      "label": "Venture Core Infrared",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -38 / 68 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 9k µSCU Backpacks: Light Robert Space Industries’ Venture Explorer Suit provides exceptional protection against the dangers of space. Designed for those who don't know where their next adventure might go, the suit combines comfort and safety without sacrificing mobility. Make a statement with the exclusive Infrared edition of the already iconic Venture set, pairing an intense ruby with light gray undertones.",
       "kind": "item"
     },
     "rsi_explorer_armor_light_core_01_03_01": {
       "key": "item_Desc_rsi_explorer_armor_light_core_01_03_01",
-      "label": "Venture Core Infrared",
-      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -38 / 68 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 9k µSCU Backpacks: Light Robert Space Industries’ Venture Explorer Suit provides exceptional protection against the dangers of space. Designed for those who don't know where their next adventure might go, the suit combines comfort and safety without sacrificing mobility. Make a statement with the exclusive Infrared edition of the already iconic Venture set, pairing an intense ruby with light gray undertones.",
+      "label": "Venture Core Starwalker",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -38 / 68 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 9k µSCU Backpacks: Light Robert Space Industries’ Venture Explorer Suit provides exceptional protection against the dangers of space. Designed for those who don't know where their next adventure might go, the suit combines comfort and safety without sacrificing mobility. With its gray base dotted with eye-catching orange highlights, the Starwalker edition is ready for your next grand adventure across the galaxy.",
       "kind": "item"
     },
     "rsi_explorer_armor_light_helmet_01_01_carrack": {
@@ -26134,14 +26692,14 @@
     },
     "rsi_explorer_armor_light_helmet_01_02_01": {
       "key": "item_Desc_rsi_explorer_armor_light_helmet_01_02_01",
-      "label": "Venture Helmet Starwalker",
-      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -38 / 68 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s RSI's Venture helmet is built from impact-resistant composites and designed to weather the harshest of environments. It also features an anti-scuff laminate faceplate that offers an unparalleled upward field of view, providing unobstructed sightlines to whatever wonders you discover. With its gray base dotted with eye-catching orange highlights, the Starwalker edition is ready for your next grand adventure across the galaxy.",
+      "label": "Venture Helmet Infrared",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -38 / 68 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s RSI's Venture helmet is built from impact-resistant composites and designed to weather the harshest of environments. It also features an anti-scuff laminate faceplate that offers an unparalleled upward field of view, providing unobstructed sightlines to whatever wonders you discover. Make a statement with the exclusive Infrared edition of the already iconic Venture set, pairing an intense ruby with light gray undertones.",
       "kind": "item"
     },
     "rsi_explorer_armor_light_helmet_01_03_01": {
       "key": "item_Desc_rsi_explorer_armor_light_helmet_01_03_01",
-      "label": "Venture Helmet Infrared",
-      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -38 / 68 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s RSI's Venture helmet is built from impact-resistant composites and designed to weather the harshest of environments. It also features an anti-scuff laminate faceplate that offers an unparalleled upward field of view, providing unobstructed sightlines to whatever wonders you discover. Make a statement with the exclusive Infrared edition of the already iconic Venture set, pairing an intense ruby with light gray undertones.",
+      "label": "Venture Helmet Starwalker",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -38 / 68 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s RSI's Venture helmet is built from impact-resistant composites and designed to weather the harshest of environments. It also features an anti-scuff laminate faceplate that offers an unparalleled upward field of view, providing unobstructed sightlines to whatever wonders you discover. With its gray base dotted with eye-catching orange highlights, the Starwalker edition is ready for your next grand adventure across the galaxy.",
       "kind": "item"
     },
     "rsi_explorer_armor_light_helmet_01_iae2023_01": {
@@ -26152,14 +26710,14 @@
     },
     "rsi_explorer_armor_light_legs_01_02_01": {
       "key": "item_Desc_rsi_explorer_armor_light_legs_01_02_01",
-      "label": "Venture Legs Starwalker",
-      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -41 / 71 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2.0 µSCU Robert Space Industries’ Venture Explorer Suit provides exceptional protection against the dangers of space. Designed for those who don't know where their next adventure might go, the suit combines comfort and safety without sacrificing mobility. With its gray base dotted with eye-catching orange highlights, the Starwalker edition is ready for your next grand adventure across the galaxy.",
+      "label": "Venture Legs Infrared",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -41 / 71 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2.0 µSCU Robert Space Industries’ Venture Explorer Suit provides exceptional protection against the dangers of space. Designed for those who don't know where their next adventure might go, the suit combines comfort and safety without sacrificing mobility. Make a statement with the exclusive Infrared edition of the already iconic Venture set, pairing an intense ruby with light gray undertones.",
       "kind": "item"
     },
     "rsi_explorer_armor_light_legs_01_03_01": {
       "key": "item_Desc_rsi_explorer_armor_light_legs_01_03_01",
-      "label": "Venture Legs Infrared",
-      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -41 / 71 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2.0 µSCU Robert Space Industries’ Venture Explorer Suit provides exceptional protection against the dangers of space. Designed for those who don't know where their next adventure might go, the suit combines comfort and safety without sacrificing mobility. Make a statement with the exclusive Infrared edition of the already iconic Venture set, pairing an intense ruby with light gray undertones.",
+      "label": "Venture Legs Starwalker",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -41 / 71 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2.0 µSCU Robert Space Industries’ Venture Explorer Suit provides exceptional protection against the dangers of space. Designed for those who don't know where their next adventure might go, the suit combines comfort and safety without sacrificing mobility. With its gray base dotted with eye-catching orange highlights, the Starwalker edition is ready for your next grand adventure across the galaxy.",
       "kind": "item"
     },
     "rsi_explorer_light_armor_01_01_centurion_shared": {
@@ -26338,8 +26896,8 @@
     },
     "rsi_explorer_undersuit_01_02_01": {
       "key": "item_Desc_rsi_explorer_undersuit_01_02_01",
-      "label": "Venture Undersuit Starwalker",
-      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Whether you’re discovering bold new frontiers or simply stretching your legs after a long spaceflight, Robert Space Industries’ Venture Explorer Suit takes vacuum-safe wear to the next level with its incorporation of top-of-class safety features seamlessly blended with phenomenal freedom of movement. With its gray base dotted with eye-catching orange highlights, the Starwalker edition is ready for your next grand adventure across the galaxy.",
+      "label": "Venture Undersuit Infrared",
+      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Whether you’re discovering bold new frontiers or simply stretching your legs after a long spaceflight, Robert Space Industries’ Venture Explorer Suit takes vacuum-safe wear to the next level with its incorporation of top-of-class safety features seamlessly blended with phenomenal freedom of movement. Make a statement with the exclusive Infrared edition of the already iconic Venture set, pairing an intense ruby with light gray undertones.",
       "kind": "item"
     },
     "rsi_explorer_undersuit_01_02_coramor": {
@@ -26350,8 +26908,8 @@
     },
     "rsi_explorer_undersuit_01_03_01": {
       "key": "item_Desc_rsi_explorer_undersuit_01_03_01",
-      "label": "Venture Undersuit Infrared",
-      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Whether you’re discovering bold new frontiers or simply stretching your legs after a long spaceflight, Robert Space Industries’ Venture Explorer Suit takes vacuum-safe wear to the next level with its incorporation of top-of-class safety features seamlessly blended with phenomenal freedom of movement. Make a statement with the exclusive Infrared edition of the already iconic Venture set, pairing an intense ruby with light gray undertones.",
+      "label": "Venture Undersuit Starwalker",
+      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Whether you’re discovering bold new frontiers or simply stretching your legs after a long spaceflight, Robert Space Industries’ Venture Explorer Suit takes vacuum-safe wear to the next level with its incorporation of top-of-class safety features seamlessly blended with phenomenal freedom of movement. With its gray base dotted with eye-catching orange highlights, the Starwalker edition is ready for your next grand adventure across the galaxy.",
       "kind": "item"
     },
     "rsi_explorer_undersuit_01_03_coramor": {
@@ -28034,6 +28592,12 @@
       "description": "Item Type: Flight Suit Damage Reduction: 15% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +97.5% Taking its design cues from the early days of aviation, the Tailwind flight suit prioritizes functionality above all. Utilizing a thin layer of woolen insulation, a quilted collar, and breathable materials in key locations, this suit gives every pilot the best chance at success. The Dominion Camo edition adds a dark green camo pattern to the flight suit.",
       "kind": "item"
     },
+    "vgl_flightsuit_01_03_01": {
+      "key": "item_Desc_vgl_flightsuit_01_03_01",
+      "label": "Tailwind Flight Suit Raider Camo",
+      "description": "Item Type: Flight Suit Damage Reduction: 15% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +97.5% Taking its design cues from the early days of aviation, the Tailwind flight suit prioritizes functionality above all. Utilizing a thin layer of woolen insulation, a quilted collar, and breathable materials in key locations, this suit gives every pilot the best chance at success. The Raider Camo edition is a combination of dark greens and browns.",
+      "kind": "item"
+    },
     "vgl_flightsuit_02_01_01": {
       "key": "item_Desc_vgl_flightsuit_02_01_01",
       "label": "Tailwind Flight Suit Drake",
@@ -28116,6 +28680,12 @@
       "key": "item_Desc_vgl_flightsuit_helmet_01_10_01",
       "label": "Tailwind Flight Helmet Airwolf",
       "description": "Item Type: Flight Helmet Damage Reduction: 15% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s Styled on classic racing helmets, the Tailwind helmet offers crucial insulation and neck support from the rigors of the racing cockpit. The double layered visor provides essential protection from glare whilst ensuring the helmet remains airtight and that the wearer's vision remains unimpeded. The Airwolf edition consists of a ferocious white wolf that pops against a navy blue and crimson red helmet.",
+      "kind": "item"
+    },
+    "vgl_flightsuit_helmet_01_11_01": {
+      "key": "item_Desc_vgl_flightsuit_helmet_01_11_01",
+      "label": "Tailwind Helmet Raider Camo",
+      "description": "Item Type: Flight Helmet Damage Reduction: 15% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s Styled on classic racing helmets, the Tailwind helmet offers crucial insulation and neck support from the rigors of the racing cockpit. The double layered visor provides essential protection from glare whilst ensuring the helmet remains airtight and that the wearer's vision remains unimpeded. The Raider Camo edition is a combination of dark greens and browns.",
       "kind": "item"
     },
     "vgl_flightsuit_helmet_02_01_01": {
@@ -28266,6 +28836,12 @@
       "key": "item_Desc_vgl_utility_light_backpack_01_05_01",
       "label": "Chiron Backpack Purgatory Camo",
       "description": "Item Type: Light Backpack Carrying Capacity: 75K µSCU Core Compatibility: All Engineered with first responders in mind, the Chiron backpack provides an ideal carryall for critical supplies with quick access to the medical essentials that are stored inside. The Purgatory Camo edition features a sleek gray-on-gray pattern.",
+      "kind": "item"
+    },
+    "vgl_utility_light_backpack_01_06_01": {
+      "key": "item_Desc_vgl_utility_light_backpack_01_06_01",
+      "label": "Chiron Backpack Epoque",
+      "description": "Item Type: Light Backpack Carrying Capacity: 75K µSCU Core Compatibility: All Engineered with first responders in mind, the Chiron backpack provides an ideal carryall for critical supplies with quick access to the medical essentials that are stored inside. The Epoque edition features a navy and black coloring, finished with baroque gold detailing.",
       "kind": "item"
     },
     "vgl_utility_light_backpack_02_01_01": {
@@ -28812,6 +29388,12 @@
       "key": "item_Descbanu_melee_04",
       "label": "Eyaja Knife",
       "description": "Manufacturer: Banu Item Type: Knife Class: Melee Size: 16 cm Worthy of any celebration, this Banu-crafted knife features a subtle s-curve along its length with a layered hand-forged blade, a central spine finger-hole, and a golden-hued handle. Intricate filigree is woven throughout the piece and a vibrant blue gemstone adorns the pommel.",
+      "kind": "item"
+    },
+    "banu_melee_05": {
+      "key": "item_Descbanu_melee_05",
+      "label": "Kamba Knife",
+      "description": "Manufacturer: Banu Item Type: Knife Class: Melee Size: N/A The Kamba knife features a modified clip point blade with a notched finger-well and bejeweled handle with finger-grooves. Dark in color with a gold inlay, the texture on both the blade and handle come from the unique forging process used by the Banu craftsmen who make them.",
       "kind": "item"
     },
     "bathfloat_crusader_01": {
@@ -30002,6 +30584,12 @@
       "description": "Manufacturer: Greycat Industrial Item Type: Utility Class: Gadget Canister Size: Large Rate of Fire: N / A (Beam) Effective Range: 6m Strip salvage and make repairs with the Cambio, a dual purpose salvage and repair tool (SRT) designed to collect and convert alloys and polymers found in scrap into recycled material composite that can either be sold or used to make quick repairs. The Cambio SRT features rapid stripping speeds and an impressive battery life, making it an essential gadget for mechanics and spacefarers. The Cambio-II has been modified to increase the range of the tool, as well as the speed and efficiency of repairs. The recalibration of energy within the device causes it to be slightly less efficient when extracting salvageable materials. The Glacier edition is an arctic white offset with cold blues.",
       "kind": "item"
     },
+    "grin_salvage_01_lumi01": {
+      "key": "item_Descgrin_salvage_01_lumi01",
+      "label": "Cambio \"Piconalia\" SRT",
+      "description": "Manufacturer: Greycat Industrial Item Type: Utility Class: Gadget Canister Size: Large Rate of Fire: N / A (Beam) Effective Range: 5 m Strip salvage and make repairs with the Cambio, a dual-purpose salvage and repair tool (SRT) designed to collect and convert alloys and polymers found in scrap into recycled material composite that can either be sold or used to make quick repairs. The Cambio SRT features rapid stripping speeds and an impressive battery life, making it an essential gadget for mechanics and spacefarers. Light up the night this Luminalia with this green Piconalia edition.",
+      "kind": "item"
+    },
     "grin_salvage_01_mag": {
       "key": "item_Descgrin_salvage_01_mag",
       "label": "Cambrio SRT Battery",
@@ -30090,6 +30678,12 @@
       "key": "item_Deschdgw_rifle_ballistic_01_mag",
       "label": "Arlington Rifle Magazine (20 Cap)",
       "description": "Item Type: Magazine Capacity: 20 This magazine for the Arlington rifle comes pre-loaded with twenty-five rounds.",
+      "kind": "item"
+    },
+    "hdgw_rifle_ballistic_01_store01": {
+      "key": "item_Deschdgw_rifle_ballistic_01_store01",
+      "label": "Arlington \"Everglade\" Rifle",
+      "description": "Manufacturer: Hedeby Gunworks Item Type: Rifle Class: Ballistic Magazine Size: 20 Rate Of Fire: 320 rpm Effective Range: 50 m Attachments: Optics (S2), Barrel (S2), Underbarrel (S3) Gunsmiths at Hedeby Gunworks looked to classic ballistic designs to construct a long rifle steeped in the past and the future. The Arlington provides accurate marksmanship, an easy cycling of rounds thanks to the lever action design, and multiple fire modes. Artisans shaped the weapon's body by hand to create a piece that's equally fit for the mantle as it is on the frontier. The Everglade edition features elegant gold plating and an ivory colored stock, etched with a palm leaf design.",
       "kind": "item"
     },
     "hdgw_rifle_ballistic_01_tint01": {
@@ -30266,6 +30860,12 @@
       "description": "Manufacturer: Klaus & Werner Item Type: SMG Class: Laser Battery Size: 45 Rate Of Fire: 562.5 rpm Effective Range: 25m Attachments: Optics (S1), Barrel (S1), Underbarrel (S1) Klaus & Werner's expert craftsmanship is once again on full display to make the Lumin V laser compact energy rifle even more deadly and dependable. A new \"interval autofire\" mode blasts five-round barrages when the trigger is held down, utilizing the target saturation that comes with autofire while providing breaks to recompensate aim. Even when constantly on the attack, the gun's excellent design provides low recoil and a tight spread.",
       "kind": "item"
     },
+    "klwe_smg_energy_01_lumi01": {
+      "key": "item_Descklwe_smg_energy_01_lumi01",
+      "label": "Lumin V \"Piconalia\" SMG",
+      "description": "Manufacturer: Klaus & Werner Item Type: SMG Class: Laser Battery Size: 45 Rate Of Fire: 562.5 rpm Effective Range: 25m Attachments: Optics (S1), Barrel (S1), Underbarrel (S1) Klaus & Werner's expert craftsmanship is once again on full display to make the Lumin V laser compact energy rifle even more deadly and dependable. A new \"interval autofire\" mode blasts five-round barrages when the trigger is held down, utilizing the target saturation that comes with autofire while providing breaks to recompensate aim. Even when constantly on the attack, the gun's excellent design provides low recoil and a tight spread. Light up the night this Luminalia with a little help from Pico the Penguin who adorns the side of this blue Piconalia edition.",
+      "kind": "item"
+    },
     "klwe_smg_energy_01_mag": {
       "key": "item_Descklwe_smg_energy_01_mag",
       "label": "Lumin V SMG Battery (45 cap)",
@@ -30332,6 +30932,12 @@
       "description": "Manufacturer: Kastak Arms Item Type: Grenade Area of Effect: 7.5 m Damage Type: Plasma Kastak Arms Scorch plasma grenade is sure to be a devastating addition to your next battle. Once primed and ready, the Scorch will explode on impact, unleashing a burst of intense plasma damage on your target that leave a lingering hazard area behind.",
       "kind": "item"
     },
+    "ksar_lmg_energy_01_store01": {
+      "key": "item_Descksar_lmg_energy_01_store01",
+      "label": "Verdict \"Derivation\" LMG",
+      "description": "Decorated in deep green with raindrop damascus patterning, the Derivation edition guarantees your mark will be made on the battlefield.",
+      "kind": "item"
+    },
     "ksar_melee_01": {
       "key": "item_Descksar_melee_01",
       "label": "Sawtooth Combat Knife",
@@ -30378,6 +30984,12 @@
       "key": "item_Descksar_pistol_ballistic_01_headhunters01",
       "label": "Coda \"Nighthawk\" Pistol",
       "description": "Manufacturer: Kastak Arms Item Type: Pistol Class: Ballistic Magazine Size: 6 Rate Of Fire: 180 rpm Effective Range: 100 m Attachments: Optics (S1), Barrel (S1), Underbarrel (S1) Often called the Kastak Arms \"hand cannon,\" the Coda can end an engagement with a single .50 caliber round, although the substantial power can make the Coda's recoil hard to handle. Considering its limited magazine size and substantial kick, sustained fire is discouraged in favor of more accurate single shots. The always bold Isidro \"Nighthawk\" Renard imbued that energy into this purple and black tint design for the Legendary Bounty Hunter line.",
+      "kind": "item"
+    },
+    "ksar_pistol_ballistic_01_lumi01": {
+      "key": "item_Descksar_pistol_ballistic_01_lumi01",
+      "label": "Coda \"Piconalia\" Pistol",
+      "description": "Manufacturer: Kastak Arms Item Type: Pistol Class: Ballistic Magazine Size: 6 Rate Of Fire: 180 rpm Effective Range: 100 m Attachments: Optics (S1), Barrel (S1), Underbarrel (S1) Often called the Kastak Arms \"hand cannon,\" the Coda can end an engagement with a single .50 caliber round, although the substantial power can make the Coda's recoil hard to handle. Considering its limited magazine size and substantial kick, sustained fire is discouraged in favor of more accurate single shots. Light up the night this Luminalia with a little help from Pico the Penguin who adorns the side of this blue Piconalia edition.",
       "kind": "item"
     },
     "ksar_pistol_ballistic_01_mag": {
@@ -30614,6 +31226,30 @@
       "description": "Manufacturer: Lightning Bolt Company Type: Telescopic Attachment Point: Optic Magnification: 16x Aim Time: +0% Size: 3 Get a crystal clear view of distant targets with this powerful telescopic scope from Lightning Bolt Company. Designed specifically for the Atzkav Sniper Rifle, the Omarof uses ultra-precise laser etched lenses that are then multi-coated to allow for high light transmission, wide sight picture and crisp colors, providing strikingly sharp images across significant distances.",
       "kind": "item"
     },
+    "lbco_optics_tsco_x16_s3_acid01": {
+      "key": "item_Desclbco_optics_tsco_x16_s3_acid01",
+      "label": "Omarof \"Venom\" (16x Telescopic)",
+      "description": "Manufacturer: Lightning Bolt Company Type: Telescopic Attachment Point: Optic Magnification: 16x Aim Time: +0% Size: 3 Get a crystal clear view of distant targets with this powerful telescopic scope from Lightning Bolt Company. Designed specifically for the Atzkav Sniper Rifle, the Omarof uses ultra-precise laser etched lenses that are then multi-coated to allow for high light transmission, wide sight picture and crisp colors, providing strikingly sharp images across significant distances. The Venom edition integrates a vibrant green coating.",
+      "kind": "item"
+    },
+    "lbco_optics_tsco_x16_s3_chromic01": {
+      "key": "item_Desclbco_optics_tsco_x16_s3_chromic01",
+      "label": "Omarof \"Mirage\" (16x Telescopic)",
+      "description": "Manufacturer: Lightning Bolt Company Type: Telescopic Attachment Point: Optic Magnification: 16x Aim Time: +0% Size: 3 Get a crystal clear view of distant targets with this powerful telescopic scope from Lightning Bolt Company. Designed specifically for the Atzkav Sniper Rifle, the Omarof uses ultra-precise laser etched lenses that are then multi-coated to allow for high light transmission, wide sight picture and crisp colors, providing strikingly sharp images across significant distances. A special pearlescent coating has been applied to the Mirage edition to make it gleam a range of colors based on how you look at it.",
+      "kind": "item"
+    },
+    "lbco_optics_tsco_x16_s3_imp01": {
+      "key": "item_Desclbco_optics_tsco_x16_s3_imp01",
+      "label": "Omarof \"Deadeye\" (16x Telescopic)",
+      "description": "Manufacturer: Lightning Bolt Company Type: Telescopic Attachment Point: Optic Magnification: 16x Aim Time: +0% Size: 3 Get a crystal clear view of distant targets with this powerful telescopic scope from Lightning Bolt Company. Designed specifically for the Atzkav Sniper Rifle, the Omarof uses ultra-precise laser etched lenses that are then multi-coated to allow for high light transmission, wide sight picture and crisp colors, providing strikingly sharp images across significant distances. The exclusive Deadeye edition is black with gold highlights.",
+      "kind": "item"
+    },
+    "lbco_optics_tsco_x16_s3_sunset01": {
+      "key": "item_Desclbco_optics_tsco_x16_s3_sunset01",
+      "label": "Omarof \"Igniter\" (16x Telescopic)",
+      "description": "Manufacturer: Lightning Bolt Company Type: Telescopic Attachment Point: Optic Magnification: 16x Aim Time: +0% Size: 3 Get a crystal clear view of distant targets with this powerful telescopic scope from Lightning Bolt Company. Designed specifically for the Atzkav Sniper Rifle, the Omarof uses ultra-precise laser etched lenses that are then multi-coated to allow for high light transmission, wide sight picture and crisp colors, providing strikingly sharp images across significant distances. A lustrous orange coating makes the Igniter edition a colorful addition to any loadout.",
+      "kind": "item"
+    },
     "lbco_pistol_energy_01": {
       "key": "item_Desclbco_pistol_energy_01",
       "label": "Yubarev Pistol",
@@ -30648,6 +31284,42 @@
       "key": "item_Desclbco_pistol_energy_cen01",
       "label": "Yubarev \"Deadeye\" Pistol",
       "description": "Manufacturer: Lightning Bolt Co. Item Type: Pistol Class: Electron Battery Size: 10 Rate Of Fire: 350 rpm Effective Range: 35m Attachments: Optics (S1), Underbarrel (S1) Engineering excellence only scratches the surface of the distinct Yubarev pistol. Former merc turned weapon manufacturing mogul Irina Arkadova oversaw every aspect of the weapon, imbuing it with power, practicality, and panache. Featuring a cutting edge barrel design, the Yubarev fires a charged electron shot that impacts not only your target, amplifying the charge with each hit, but can spread to additional conductive targets in range. The exclusive Deadeye edition is black with gold highlights.",
+      "kind": "item"
+    },
+    "lbco_rifle_energy_01": {
+      "key": "item_Desclbco_rifle_energy_01",
+      "label": "Skarnov Rifle",
+      "description": "Manufacturer: Lightning Bolt Co. Item Type: Rifle Class: Electron Battery Size: 30 Rate Of Fire: 266 rpm Effective Range: 50m Attachments: Optics (S2), Barrel (S2), Underbarrel (S3) The weaponsmiths at Lightning Bolt Co., led by former merc Irina Arkadova, have dedicated themselves to crafting armaments that leave a lasting impression upon the battlefield. With a cutting-edge barrel, the Skarnov rifle not only precisely discharges powerful electron bolts, but upon hitting a second conductive target an arc of energy will form between the pair causing more havoc.",
+      "kind": "item"
+    },
+    "lbco_rifle_energy_01_mag": {
+      "key": "item_Desclbco_rifle_energy_01_mag",
+      "label": "Skarnov Rifle Battery (30 cap)",
+      "description": "Item Type: Battery Capacity: 30 This battery for the Skarnov Rifle holds enough electron energy for thirty rounds.",
+      "kind": "item"
+    },
+    "lbco_rifle_energy_01_mr01": {
+      "key": "item_Desclbco_rifle_energy_01_mr01",
+      "label": "Skarnov \"Raider Camo\" Rifle",
+      "description": "Manufacturer: Lightning Bolt Co. Item Type: Rifle Class: Electron Battery Size: 30 Rate Of Fire: 266 rpm Effective Range: 50m Attachments: Optics (S2), Barrel (S2), Underbarrel (S3) The weaponsmiths at Lightning Bolt Co., led by former merc Irina Arkadova, have dedicated themselves to crafting armaments that leave a lasting impression upon the battlefield. With a cutting-edge barrel, the Skarnov rifle not only precisely discharges powerful electron bolts, but upon hitting a second conductive target an arc of energy will form between the pair causing more havoc. The Raider Camo edition is a combination of dark greens and browns.",
+      "kind": "item"
+    },
+    "lbco_rifle_energy_01_tint01": {
+      "key": "item_Desclbco_rifle_energy_01_tint01",
+      "label": "Skarnov \"Ferrite\" Rifle",
+      "description": "Manufacturer: Lightning Bolt Co. Item Type: Rifle Class: Electron Battery Size: 30 Rate Of Fire: 266 rpm Effective Range: 50m Attachments: Optics (S2), Barrel (S2), Underbarrel (S3) The weaponsmiths at Lightning Bolt Co., led by former merc Irina Arkadova, have dedicated themselves to crafting armaments that leave a lasting impression upon the battlefield. With a cutting-edge barrel, the Skarnov rifle not only precisely discharges powerful electron bolts, but upon hitting a second conductive target an arc of energy will form between the pair causing more havoc. The Ferrite edition features a deep black stain with metal accents.",
+      "kind": "item"
+    },
+    "lbco_rifle_energy_01_tint02": {
+      "key": "item_Desclbco_rifle_energy_01_tint02",
+      "label": "Skarnov \"Relay\" Rifle",
+      "description": "Manufacturer: Lightning Bolt Co. Item Type: Rifle Class: Electron Battery Size: 30 Rate Of Fire: 266 rpm Effective Range: 50m Attachments: Optics (S2), Barrel (S2), Underbarrel (S3) The weaponsmiths at Lightning Bolt Co., led by former merc Irina Arkadova, have dedicated themselves to crafting armaments that leave a lasting impression upon the battlefield. With a cutting-edge barrel, the Skarnov rifle not only precisely discharges powerful electron bolts, but upon hitting a second conductive target an arc of energy will form between the pair causing more havoc. The Relay edition features a solid metal frame with a gray details.",
+      "kind": "item"
+    },
+    "lbco_rifle_energy_01_tint03": {
+      "key": "item_Desclbco_rifle_energy_01_tint03",
+      "label": "Skarnov \"Sparkplug\" Rifle",
+      "description": "Manufacturer: Lightning Bolt Co. Item Type: Rifle Class: Electron Battery Size: 30 Rate Of Fire: 266 rpm Effective Range: 50m Attachments: Optics (S2), Barrel (S2), Underbarrel (S3) The weaponsmiths at Lightning Bolt Co., led by former merc Irina Arkadova, have dedicated themselves to crafting armaments that leave a lasting impression upon the battlefield. With a cutting-edge barrel, the Skarnov rifle not only precisely discharges powerful electron bolts, but upon hitting a second conductive target an arc of energy will form between the pair causing more havoc. The Sparkplug edition stands out with a bright metallic yellow finish along the barrel against a black frame.",
       "kind": "item"
     },
     "lbco_sniper_energy_01": {
@@ -31121,7 +31793,7 @@
     "plushy_penguin_2_c": {
       "key": "item_Descplushy_penguin_2_c",
       "label": "Pico the Penguin Luminalia Plushie",
-      "description": "Even Pico the Penguin takes time away from shredding the slopes to celebrate Luminalia. This version of microTech's charming mascot features him in a red and green jacket and holding a Luminalia-themed snowboard.",
+      "description": "Even Pico the Penguin takes time away from shredding the slopes to celebrate Luminalia. This version of microTech's charming mascot features Pico in a red and green jacket and holding a Luminalia-themed snowboard.",
       "kind": "item"
     },
     "plushy_penguin_3_b": {
@@ -31182,6 +31854,12 @@
       "key": "item_Descsasu_pistol_toy_01_mag",
       "label": "WowBlast Desperado Toy Pistol Magazine (10 cap)",
       "description": "Item Type: Magazine Capacity: 10 This magazine for the WowBlast Desperado holds ten darts.",
+      "kind": "item"
+    },
+    "sasu_pistol_toy_01_sf01": {
+      "key": "item_Descsasu_pistol_toy_01_sf01",
+      "label": "WowBlast Desperado Toy Pistol F7C",
+      "description": "Manufacturer: Sakura Sun Item Type: Toy Pistol Class: Foam Dart Magazine Size: 10 Rate Of Fire: 450 rpm Effective Range: 35m Make friendly fire fun with the Sakura Sun WowBlast Desperado. Playfully fire foam darts at friends or fictitious foes with these ultra-colorful plastic toy pistols. Whether killing time at a landing zone or during a long-haul through the stars, the WowBlast toy line provides lighthearted excitement and entertainment for the entire family. The F7C edition features the iconic colors of Anvil's classic Hornet fighter, perfect for your next space adventure.",
       "kind": "item"
     },
     "sasu_pistol_toy_01_shared": {
@@ -32980,6 +33658,6 @@
     }
   },
   "summary": {
-    "totalDescriptions": 5496
+    "totalDescriptions": 5609
   }
 }

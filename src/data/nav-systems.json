@@ -39,7 +39,9 @@
     {
       "id": "nyx:levski",
       "name": "Levski",
-      "aliases": ["Delamar"],
+      "aliases": [
+        "Delamar"
+      ],
       "system": "nyx",
       "kind": "city",
       "surface": true,

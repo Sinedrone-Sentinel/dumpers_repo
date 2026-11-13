@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted localization)",
-  "_extracted": "2026-10-10T00:43:13.827Z",
+  "_extracted": "2026-11-13T00:35:01.978Z",
   "manufacturers": {
     "987": {
       "code": "987",
@@ -592,6 +592,11 @@
       "name": "Vanduul",
       "descKey": "manufacturer_DescVNCL"
     },
+    "VOLT": {
+      "code": "VOLT",
+      "name": "Verified Offworld Laser Technologies",
+      "descKey": "manufacturer_DescVOLT"
+    },
     "VPW": {
       "code": "VPW",
       "name": "Vaporwear",
@@ -624,6 +629,6 @@
     }
   },
   "summary": {
-    "totalManufacturers": 124
+    "totalManufacturers": 125
   }
 }

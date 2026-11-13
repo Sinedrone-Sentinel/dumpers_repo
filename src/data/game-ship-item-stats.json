@@ -8462,6 +8462,31 @@
       "exclusiveHull": "hurricane"
     },
     {
+      "entityClass": "armr_anvl_liberator",
+      "displayName": "Armr Anvl Liberator",
+      "kind": "armor",
+      "size": 5,
+      "manufacturer": "Anvil Aerospace",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 38000,
+        "Armor_Health": 38000,
+        "Armor_PhysicalReduction": 25,
+        "Armor_EnergyReduction": 40,
+        "Armor_SignalIr": 0,
+        "Armor_SignalEm": 0,
+        "Armor_SignalCs": 0,
+        "Armor_DeflectionPhysical": 450,
+        "Armor_DeflectionEnergy": 380
+      },
+      "burstDps": 0,
+      "attachType": "Armor",
+      "attachSubType": "Medium",
+      "uuid": "1070474e-9ec1-4d51-955c-915c4c9b6aca",
+      "exclusiveHull": "liberator"
+    },
+    {
       "entityClass": "armr_anvl_lightning_f8",
       "displayName": "Armr Anvl Lightning F8",
       "kind": "armor",
@@ -9254,6 +9279,32 @@
       "exclusiveHull": "ironclad_assault"
     },
     {
+      "entityClass": "armr_drak_marauder",
+      "displayName": "Armr Drak Marauder",
+      "kind": "armor",
+      "size": 1,
+      "manufacturer": "Drake Interplanetary",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 4100,
+        "Armor_Health": 4100,
+        "Armor_PhysicalReduction": 25,
+        "Armor_EnergyReduction": 40,
+        "Armor_SignalIr": 0,
+        "Armor_SignalEm": 0,
+        "Armor_SignalCs": 0,
+        "Armor_DeflectionPhysical": 22,
+        "Armor_DeflectionEnergy": 12
+      },
+      "burstDps": 0,
+      "attachType": "Armor",
+      "attachSubType": "Medium",
+      "grade": "A",
+      "uuid": "e42c6146-6a57-40a8-a2b2-4b0a2b49a76d",
+      "exclusiveHull": "marauder"
+    },
+    {
       "entityClass": "armr_drak_mule",
       "displayName": "Armr Drak Mule",
       "kind": "armor",
@@ -9413,6 +9464,32 @@
       "exclusiveHull": "talon"
     },
     {
+      "entityClass": "armr_gama_hyun",
+      "displayName": "Armr Gama Hyun",
+      "kind": "armor",
+      "size": 1,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 8500,
+        "Armor_Health": 8500,
+        "Armor_PhysicalReduction": 25,
+        "Armor_EnergyReduction": 40,
+        "Armor_SignalIr": 0,
+        "Armor_SignalEm": 0,
+        "Armor_SignalCs": 0,
+        "Armor_DeflectionPhysical": 41,
+        "Armor_DeflectionEnergy": 36
+      },
+      "burstDps": 0,
+      "attachType": "Armor",
+      "attachSubType": "Medium",
+      "grade": "A",
+      "uuid": "57379827-afe4-4c52-877d-43484f26b749",
+      "exclusiveHull": "hyun"
+    },
+    {
       "entityClass": "armr_gama_railen",
       "displayName": "Armr Gama Railen",
       "kind": "armor",
@@ -9566,6 +9643,31 @@
       "attachSubType": "Medium",
       "grade": "A",
       "uuid": "dc878cca-7e93-4530-9f71-aeed4a13ffb8"
+    },
+    {
+      "entityClass": "armr_grin_ptv",
+      "displayName": "Armr Grin Ptv",
+      "kind": "armor",
+      "size": 1,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1170,
+        "Armor_Health": 1170,
+        "Armor_PhysicalReduction": 40,
+        "Armor_EnergyReduction": 60,
+        "Armor_SignalIr": -60,
+        "Armor_SignalEm": -60,
+        "Armor_SignalCs": 0,
+        "Armor_DeflectionPhysical": 5,
+        "Armor_DeflectionEnergy": 4
+      },
+      "burstDps": 0,
+      "attachType": "Armor",
+      "attachSubType": "Medium",
+      "grade": "A",
+      "uuid": "7d6d82e1-ce7b-47b4-bec0-a826969cc501"
     },
     {
       "entityClass": "armr_grin_roc",
@@ -10326,6 +10428,32 @@
       "grade": "A",
       "uuid": "42014f8c-2b70-e411-4f1a-1c15cd36ce9f",
       "exclusiveHull": "apollo_medivac"
+    },
+    {
+      "entityClass": "armr_rsi_galaxy",
+      "displayName": "Armr Rsi Galaxy",
+      "kind": "armor",
+      "size": 1,
+      "manufacturer": "Roberts Space Industries",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 33200,
+        "Armor_Health": 33200,
+        "Armor_PhysicalReduction": 30.000000000000004,
+        "Armor_EnergyReduction": 50,
+        "Armor_SignalIr": 0,
+        "Armor_SignalEm": 0,
+        "Armor_SignalCs": 0,
+        "Armor_DeflectionPhysical": 430,
+        "Armor_DeflectionEnergy": 380
+      },
+      "burstDps": 0,
+      "attachType": "Armor",
+      "attachSubType": "Medium",
+      "grade": "A",
+      "uuid": "3eaf6a35-2cdd-4a75-b172-22d680112639",
+      "exclusiveHull": "galaxy"
     },
     {
       "entityClass": "armr_rsi_hermes",
@@ -13902,198 +14030,6 @@
       "uuid": "ad3c0368-df82-4b5c-a921-8ec6bd505c57"
     },
     {
-      "entityClass": "bengal_ballisticcannon_barrel_s7",
-      "displayName": "Bengal Ballisticcannon Barrel S7",
-      "kind": "weapon",
-      "size": 7,
-      "manufacturer": null,
-      "weaponClass": "Cannon",
-      "damageType": null,
-      "stats": {},
-      "burstDps": 0,
-      "tags": "uneditable",
-      "attachType": "WeaponAttachment",
-      "attachSubType": "Barrel",
-      "grade": "A",
-      "uuid": "3989a72a-0104-4c8e-ba00-209740b078f4"
-    },
-    {
-      "entityClass": "bengal_ballisticcannon_barrel_s8",
-      "displayName": "Bengal Ballisticcannon Barrel S8",
-      "kind": "weapon",
-      "size": 8,
-      "manufacturer": null,
-      "weaponClass": "Cannon",
-      "damageType": null,
-      "stats": {},
-      "burstDps": 0,
-      "tags": "uneditable",
-      "attachType": "WeaponAttachment",
-      "attachSubType": "Barrel",
-      "grade": "A",
-      "uuid": "3592665f-ba6f-494e-8364-483210ab42d1"
-    },
-    {
-      "entityClass": "bengal_ballisticcannon_firingmechanism_s7",
-      "displayName": "Bengal Ballisticcannon Firingmechanism S7",
-      "kind": "weapon",
-      "size": 7,
-      "manufacturer": null,
-      "weaponClass": "Cannon",
-      "damageType": null,
-      "stats": {},
-      "burstDps": 0,
-      "tags": "uneditable",
-      "attachType": "WeaponAttachment",
-      "attachSubType": "FiringMechanism",
-      "grade": "A",
-      "uuid": "443d5e57-bc52-49a0-872e-e81f664b7be1"
-    },
-    {
-      "entityClass": "bengal_ballisticcannon_firingmechanism_s8",
-      "displayName": "Bengal Ballisticcannon Firingmechanism S8",
-      "kind": "weapon",
-      "size": 8,
-      "manufacturer": null,
-      "weaponClass": "Cannon",
-      "damageType": null,
-      "stats": {},
-      "burstDps": 0,
-      "tags": "uneditable",
-      "attachType": "WeaponAttachment",
-      "attachSubType": "FiringMechanism",
-      "grade": "A",
-      "uuid": "69808bb3-78c5-447e-85d4-798a7a664683"
-    },
-    {
-      "entityClass": "bengal_ballisticcannon_powerarray_s7",
-      "displayName": "Bengal Ballisticcannon Powerarray S7",
-      "kind": "weapon",
-      "size": 7,
-      "manufacturer": null,
-      "weaponClass": "Cannon",
-      "damageType": null,
-      "stats": {},
-      "burstDps": 0,
-      "tags": "uneditable",
-      "attachType": "WeaponAttachment",
-      "attachSubType": "PowerArray",
-      "grade": "C",
-      "uuid": "02ae318b-de85-4ac1-bf81-266ea7f251d4"
-    },
-    {
-      "entityClass": "bengal_ballisticcannon_powerarray_s8",
-      "displayName": "Bengal Ballisticcannon Powerarray S8",
-      "kind": "weapon",
-      "size": 8,
-      "manufacturer": null,
-      "weaponClass": "Cannon",
-      "damageType": null,
-      "stats": {},
-      "burstDps": 0,
-      "tags": "uneditable",
-      "attachType": "WeaponAttachment",
-      "attachSubType": "PowerArray",
-      "grade": "C",
-      "uuid": "06732dbd-e347-4eb9-aca8-13db45debb14"
-    },
-    {
-      "entityClass": "bengal_ballisticcannon_ventilation_s7",
-      "displayName": "Bengal Ballisticcannon Ventilation S7",
-      "kind": "weapon",
-      "size": 7,
-      "manufacturer": null,
-      "weaponClass": "Cannon",
-      "damageType": null,
-      "stats": {},
-      "burstDps": 0,
-      "tags": "uneditable",
-      "attachType": "WeaponAttachment",
-      "attachSubType": "Ventilation",
-      "grade": "A",
-      "uuid": "a7167416-0fce-4482-af7e-0e108e5a8469"
-    },
-    {
-      "entityClass": "bengal_ballisticcannon_ventilation_s8",
-      "displayName": "Bengal Ballisticcannon Ventilation S8",
-      "kind": "weapon",
-      "size": 8,
-      "manufacturer": null,
-      "weaponClass": "Cannon",
-      "damageType": null,
-      "stats": {},
-      "burstDps": 0,
-      "tags": "uneditable",
-      "attachType": "WeaponAttachment",
-      "attachSubType": "Ventilation",
-      "grade": "A",
-      "uuid": "6324de5d-9a51-43fe-a6c9-48075e02d676"
-    },
-    {
-      "entityClass": "bengal_ballisticgatling_barrel_s6",
-      "displayName": "Bengal Ballisticgatling Barrel S6",
-      "kind": "weapon",
-      "size": 6,
-      "manufacturer": "Behring",
-      "weaponClass": "Gatling",
-      "damageType": null,
-      "stats": {},
-      "burstDps": 0,
-      "tags": "uneditable",
-      "attachType": "WeaponAttachment",
-      "attachSubType": "Barrel",
-      "grade": "A",
-      "uuid": "a4da0ade-47dd-4a9d-b1b6-3d66a1db67b9"
-    },
-    {
-      "entityClass": "bengal_ballisticgatling_firingmechanism_s6",
-      "displayName": "Bengal Ballisticgatling Firingmechanism S6",
-      "kind": "weapon",
-      "size": 6,
-      "manufacturer": "Behring",
-      "weaponClass": "Gatling",
-      "damageType": null,
-      "stats": {},
-      "burstDps": 0,
-      "tags": "uneditable",
-      "attachType": "WeaponAttachment",
-      "attachSubType": "FiringMechanism",
-      "grade": "A",
-      "uuid": "cf7b01ad-9a1d-4fa7-88c2-1090072e9921"
-    },
-    {
-      "entityClass": "bengal_ballisticgatling_powerarray_s6",
-      "displayName": "Bengal Ballisticgatling Powerarray S6",
-      "kind": "weapon",
-      "size": 6,
-      "manufacturer": "Behring",
-      "weaponClass": "Gatling",
-      "damageType": null,
-      "stats": {},
-      "burstDps": 0,
-      "tags": "uneditable",
-      "attachType": "WeaponAttachment",
-      "attachSubType": "PowerArray",
-      "grade": "A",
-      "uuid": "d0f8adfb-acb4-4704-b6d0-a587ed3cce40"
-    },
-    {
-      "entityClass": "bengal_ballisticgatling_ventilation_s6",
-      "displayName": "Bengal Ballisticgatling Ventilation S6",
-      "kind": "weapon",
-      "size": 6,
-      "manufacturer": "Behring",
-      "weaponClass": "Gatling",
-      "damageType": null,
-      "stats": {},
-      "burstDps": 0,
-      "tags": "uneditable",
-      "attachType": "WeaponAttachment",
-      "attachSubType": "Ventilation",
-      "grade": "A",
-      "uuid": "68cde8c8-3b09-496c-b9c6-4153a18f4a7e"
-    },
-    {
       "entityClass": "cool_wcpr_s01_berian_scitem",
       "displayName": "Berian",
       "kind": "cooler",
@@ -14378,6 +14314,894 @@
       "itemClass": "Stealth",
       "grade": "B",
       "uuid": "d6dac840-51e4-4872-b731-2072f3bcfda9"
+    },
+    {
+      "entityClass": "bmbrck_crus_starl_s03_left",
+      "displayName": "Bomb Rack Crus Starl S03 Left",
+      "kind": "missileRack",
+      "size": 10,
+      "manufacturer": "Behring",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 200,
+        "Weapon_Em": 0,
+        "Signature_Em": 0,
+        "Signature_Ir": 0
+      },
+      "burstDps": 0,
+      "tags": "flightReady $Starlifter_A2_Bomb_Rack_Left",
+      "requiredTags": "Starlifter_A2_Bomb_Rack_Left",
+      "attachType": "BombLauncher",
+      "attachSubType": "BombRack",
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "missile_01_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_02_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_03_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_04_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_05_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_06_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_07_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_08_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_09_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_10_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_11_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_12_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_13_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_14_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_15_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_16_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_17_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_18_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_19_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_20_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_21_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_22_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_23_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_24_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_25_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_26_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_27_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_28_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_29_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_30_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        }
+      ],
+      "uuid": "f5947322-f3aa-4a79-b2d2-5d29a342699b"
+    },
+    {
+      "entityClass": "bmbrck_crus_starl_s03_right",
+      "displayName": "Bomb Rack Crus Starl S03 Right",
+      "kind": "missileRack",
+      "size": 10,
+      "manufacturer": "Behring",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 200,
+        "Weapon_Em": 0,
+        "Signature_Em": 0,
+        "Signature_Ir": 0
+      },
+      "burstDps": 0,
+      "tags": "flightReady $Starlifter_A2_Bomb_Rack_Right",
+      "requiredTags": "Starlifter_A2_Bomb_Rack_Right",
+      "attachType": "BombLauncher",
+      "attachSubType": "BombRack",
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "missile_01_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_02_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_03_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_04_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_05_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_06_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_07_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_08_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_09_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_10_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_11_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_12_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_13_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_14_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_15_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_16_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_17_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_18_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_19_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_20_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_21_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_22_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_23_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_24_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_25_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_26_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_27_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_28_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_29_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_30_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        }
+      ],
+      "uuid": "4d81cb3e-3b87-436e-a036-45bee557b4bf"
     },
     {
       "entityClass": "cool_aegs_s02_boreal_scitem",
@@ -17053,15 +17877,15 @@
       "weaponClass": null,
       "damageType": null,
       "stats": {
-        "Health_Maxhealth": 25740,
-        "Armor_Health": 25740,
+        "Health_Maxhealth": 30740,
+        "Armor_Health": 30740,
         "Armor_PhysicalReduction": 30.000000000000004,
         "Armor_EnergyReduction": 50,
         "Armor_SignalIr": 0,
         "Armor_SignalEm": 0,
         "Armor_SignalCs": 0,
-        "Armor_DeflectionPhysical": 531,
-        "Armor_DeflectionEnergy": 380
+        "Armor_DeflectionPhysical": 390,
+        "Armor_DeflectionEnergy": 330
       },
       "burstDps": 0,
       "tags": "RSI_Constellation_Mk5",
@@ -17080,8 +17904,8 @@
       "weaponClass": null,
       "damageType": null,
       "stats": {
-        "Health_Maxhealth": 25740,
-        "Armor_Health": 25740,
+        "Health_Maxhealth": 30740,
+        "Armor_Health": 30740,
         "Armor_PhysicalReduction": 30.000000000000004,
         "Armor_EnergyReduction": 50,
         "Armor_SignalIr": 0,
@@ -19197,6 +20021,52 @@
       "attachSubType": "Gun",
       "grade": "A",
       "uuid": "26298097-2f16-4f25-b652-9c72170b5529"
+    },
+    {
+      "entityClass": "shld_rsi_s04_polaris_scitem",
+      "displayName": "Deterrent",
+      "kind": "shield",
+      "size": 4,
+      "manufacturer": "Roberts Space Industries",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Shield_Maxhealth": 648000,
+        "Shield_Regen": 47520,
+        "Shield_DamagedRegenDelay": 6.1,
+        "Shield_DownedRegenDelay": 12.2,
+        "Shield_DistortionHealth": 20500,
+        "Signature_CrossSection": 0,
+        "Signature_Infrared": 10,
+        "Signature_Electromagnetic": 0,
+        "Component_PowerSegments": 6,
+        "Power_MedStart": 1,
+        "Power_MedMod": 0.85,
+        "Power_HighStart": 6,
+        "Power_HighMod": 1,
+        "Health_Maxhealth": 13000,
+        "Shield_PhysicalReduction": 25,
+        "Shield_EnergyReduction": 0,
+        "Power_Min": 5,
+        "Weapon_Em": 2970,
+        "Signature_Em": 2970,
+        "Signature_Ir": 0,
+        "Power_Segments": 6,
+        "Temp_Enabled": 1,
+        "Temp_IrPerDegree": 10,
+        "Temp_IrMinimum": 323,
+        "Temp_MinCooling": 303,
+        "Temp_Overheat": 417,
+        "Temp_Heat": 0.59,
+        "Coolant_Dynamic": 1,
+        "Coolant_PowerDraw": 6
+      },
+      "burstDps": 0,
+      "attachType": "Shield",
+      "attachSubType": "UNDEFINED",
+      "grade": "A",
+      "uuid": "d9870a05-1a66-4a9a-bec6-30eb67e3a3ce",
+      "exclusiveHull": "polaris"
     },
     {
       "entityClass": "radr_grnp_s03_devoue",
@@ -23893,6 +24763,93 @@
       "uuid": "7427f9d0-17c1-40b5-a031-9dc94c466dc9"
     },
     {
+      "entityClass": "controller_flight_anvl_liberator",
+      "displayName": "Flight Blade",
+      "kind": "flight",
+      "size": 1,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Power_Min": 1,
+        "Weapon_Em": 0,
+        "Signature_Em": 0,
+        "Signature_Ir": 0,
+        "Power_Segments": 4,
+        "Flight_Pitch": 9,
+        "Flight_Yaw": 9,
+        "Flight_Roll": 16,
+        "Flight_ScmSpeed": 115,
+        "Flight_BoostSpeed": 270,
+        "Flight_BoostBackward": 250,
+        "Flight_MaxSpeed": 950
+      },
+      "burstDps": 0,
+      "attachType": "FlightController",
+      "attachSubType": "UNDEFINED",
+      "grade": "A",
+      "uuid": "7ae0ffd5-2766-4ea8-a2d0-0fd926f2e6e9",
+      "exclusiveHull": "liberator"
+    },
+    {
+      "entityClass": "controller_flight_anvl_liberator_blade_hnd",
+      "displayName": "Flight Blade",
+      "kind": "flight",
+      "size": 1,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Power_Min": 1,
+        "Weapon_Em": 0,
+        "Signature_Em": 0,
+        "Signature_Ir": 0,
+        "Power_Segments": 4,
+        "Flight_Pitch": 9,
+        "Flight_Yaw": 9,
+        "Flight_Roll": 16,
+        "Flight_ScmSpeed": 115,
+        "Flight_BoostSpeed": 270,
+        "Flight_BoostBackward": 250,
+        "Flight_MaxSpeed": 950
+      },
+      "burstDps": 0,
+      "attachType": "FlightController",
+      "attachSubType": "UNDEFINED",
+      "grade": "A",
+      "uuid": "cadeb778-dc87-40a2-9f92-c90c8f166dc9",
+      "exclusiveHull": "liberator"
+    },
+    {
+      "entityClass": "controller_flight_anvl_liberator_blade_spd",
+      "displayName": "Flight Blade",
+      "kind": "flight",
+      "size": 1,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Power_Min": 1,
+        "Weapon_Em": 0,
+        "Signature_Em": 0,
+        "Signature_Ir": 0,
+        "Power_Segments": 4,
+        "Flight_Pitch": 9,
+        "Flight_Yaw": 9,
+        "Flight_Roll": 16,
+        "Flight_ScmSpeed": 115,
+        "Flight_BoostSpeed": 270,
+        "Flight_BoostBackward": 250,
+        "Flight_MaxSpeed": 950
+      },
+      "burstDps": 0,
+      "attachType": "FlightController",
+      "attachSubType": "UNDEFINED",
+      "grade": "A",
+      "uuid": "b71205f0-d335-4358-b910-533e378201c6",
+      "exclusiveHull": "liberator"
+    },
+    {
       "entityClass": "controller_flight_anvl_lightning_f8",
       "displayName": "Flight Blade",
       "kind": "flight",
@@ -25154,6 +26111,35 @@
       "exclusiveHull": "ironclad_assault"
     },
     {
+      "entityClass": "controller_flight_drak_marauder",
+      "displayName": "Flight Blade",
+      "kind": "flight",
+      "size": 1,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Power_Min": 1,
+        "Weapon_Em": 0,
+        "Signature_Em": 0,
+        "Signature_Ir": 0,
+        "Power_Segments": 4,
+        "Flight_Pitch": 52,
+        "Flight_Yaw": 40,
+        "Flight_Roll": 160,
+        "Flight_ScmSpeed": 223,
+        "Flight_BoostSpeed": 490,
+        "Flight_BoostBackward": 250,
+        "Flight_MaxSpeed": 1220
+      },
+      "burstDps": 0,
+      "attachType": "FlightController",
+      "attachSubType": "UNDEFINED",
+      "grade": "A",
+      "uuid": "2abc38ed-3985-42fb-81ee-012a67e7fcc8",
+      "exclusiveHull": "marauder"
+    },
+    {
       "entityClass": "controller_flight_drak_pitbull",
       "displayName": "Flight Blade",
       "kind": "flight",
@@ -25332,6 +26318,36 @@
       "attachSubType": "UNDEFINED",
       "grade": "A",
       "uuid": "6c5e6aae-0357-42ae-95d2-027609962ead"
+    },
+    {
+      "entityClass": "controller_flight_gama_hyun",
+      "displayName": "Flight Blade",
+      "kind": "flight",
+      "size": 1,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Power_Min": 1,
+        "Weapon_Em": 0,
+        "Signature_Em": 0,
+        "Signature_Ir": 0,
+        "Power_Segments": 4,
+        "Flight_Pitch": 27,
+        "Flight_Yaw": 27,
+        "Flight_Roll": 65,
+        "Flight_ScmSpeed": 160,
+        "Flight_BoostSpeed": 340,
+        "Flight_BoostBackward": 170,
+        "Flight_MaxSpeed": 965
+      },
+      "burstDps": 0,
+      "tags": "GAMA_Hyun_Blade",
+      "requiredTags": "GAMA_Hyun_Blade",
+      "attachType": "FlightController",
+      "attachSubType": "UNDEFINED",
+      "grade": "A",
+      "uuid": "a5d2ffa6-f49b-46fc-9912-68f47b8331ca"
     },
     {
       "entityClass": "controller_flight_gama_railen",
@@ -27118,6 +28134,35 @@
       "grade": "A",
       "uuid": "43b7da35-5b99-4c80-81f3-1ad7602dcf43",
       "exclusiveHull": "constellation_mk5"
+    },
+    {
+      "entityClass": "controller_flight_rsi_galaxy",
+      "displayName": "Flight Blade",
+      "kind": "flight",
+      "size": 1,
+      "manufacturer": "Roberts Space Industries",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Power_Min": 1,
+        "Weapon_Em": 0,
+        "Signature_Em": 0,
+        "Signature_Ir": 0,
+        "Power_Segments": 10,
+        "Flight_Pitch": 14,
+        "Flight_Yaw": 14,
+        "Flight_Roll": 23,
+        "Flight_ScmSpeed": 145,
+        "Flight_BoostSpeed": 315,
+        "Flight_BoostBackward": 160,
+        "Flight_MaxSpeed": 950
+      },
+      "burstDps": 0,
+      "attachType": "FlightController",
+      "attachSubType": "UNDEFINED",
+      "grade": "A",
+      "uuid": "9faef5f2-2193-4f83-bf4a-fb9f4d244383",
+      "exclusiveHull": "galaxy"
     },
     {
       "entityClass": "controller_flight_rsi_hermes",
@@ -29003,6 +30048,64 @@
       "uuid": "924e275a-d449-44f5-a8a8-6e0e93a9661e"
     },
     {
+      "entityClass": "rsi_galaxy_module_cargo",
+      "displayName": "Galaxy Cargo Module",
+      "kind": "module",
+      "size": 3,
+      "manufacturer": "Roberts Space Industries",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 20000
+      },
+      "burstDps": 0,
+      "tags": "$RSI_Galaxy_Module",
+      "requiredTags": "RSI_Galaxy_Module",
+      "attachType": "Module",
+      "attachSubType": "UNDEFINED",
+      "grade": "C",
+      "feature": "+500 SCU cargo",
+      "uuid": "c3af722a-daf9-4cf8-9721-6d0bc6781297"
+    },
+    {
+      "entityClass": "rsi_galaxy_module_medical",
+      "displayName": "Galaxy Med Bay Module",
+      "kind": "module",
+      "size": 3,
+      "manufacturer": "Roberts Space Industries",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 20000
+      },
+      "burstDps": 0,
+      "tags": "$RSI_Galaxy_Module",
+      "requiredTags": "RSI_Galaxy_Module",
+      "attachType": "Module",
+      "attachSubType": "UNDEFINED",
+      "grade": "C",
+      "uuid": "6055f0a5-bd7a-4e60-baa5-f689801629a2"
+    },
+    {
+      "entityClass": "rsi_galaxy_module_base",
+      "displayName": "Galaxy Stock Module",
+      "kind": "module",
+      "size": 3,
+      "manufacturer": "Roberts Space Industries",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 20000
+      },
+      "burstDps": 0,
+      "tags": "$RSI_Galaxy_Module",
+      "requiredTags": "RSI_Galaxy_Module",
+      "attachType": "Module",
+      "attachSubType": "UNDEFINED",
+      "grade": "C",
+      "uuid": "43afd277-989d-453a-85cc-334a4a3064c1"
+    },
+    {
       "entityClass": "cool_aegs_s03_galinstan_scitem",
       "displayName": "Galinstan",
       "kind": "cooler",
@@ -30024,53 +31127,6 @@
       "itemClass": "Industrial",
       "grade": "B",
       "uuid": "6fc982c0-2747-42b7-a628-7c76ecedf732"
-    },
-    {
-      "entityClass": "shld_rsi_s04_polaris_scitem",
-      "displayName": "Glacis",
-      "kind": "shield",
-      "size": 4,
-      "manufacturer": "Roberts Space Industries",
-      "weaponClass": null,
-      "damageType": null,
-      "stats": {
-        "Shield_Maxhealth": 648000,
-        "Shield_Regen": 47520,
-        "Shield_DamagedRegenDelay": 6.1,
-        "Shield_DownedRegenDelay": 12.2,
-        "Shield_DistortionHealth": 20500,
-        "Signature_CrossSection": 0,
-        "Signature_Infrared": 10,
-        "Signature_Electromagnetic": 0,
-        "Component_PowerSegments": 6,
-        "Power_MedStart": 1,
-        "Power_MedMod": 0.85,
-        "Power_HighStart": 6,
-        "Power_HighMod": 1,
-        "Health_Maxhealth": 13000,
-        "Shield_PhysicalReduction": 25,
-        "Shield_EnergyReduction": 0,
-        "Power_Min": 5,
-        "Weapon_Em": 2970,
-        "Signature_Em": 2970,
-        "Signature_Ir": 0,
-        "Power_Segments": 6,
-        "Temp_Enabled": 1,
-        "Temp_IrPerDegree": 10,
-        "Temp_IrMinimum": 323,
-        "Temp_MinCooling": 303,
-        "Temp_Overheat": 417,
-        "Temp_Heat": 0.59,
-        "Coolant_Dynamic": 1,
-        "Coolant_PowerDraw": 6
-      },
-      "burstDps": 0,
-      "attachType": "Shield",
-      "attachSubType": "UNDEFINED",
-      "itemClass": "Industrial",
-      "grade": "B",
-      "uuid": "d9870a05-1a66-4a9a-bec6-30eb67e3a3ce",
-      "exclusiveHull": "polaris"
     },
     {
       "entityClass": "armr_anvl_c8r_pisces",
@@ -37231,6 +38287,46 @@
       "uuid": "2f92d27a-f04f-47f9-aeb5-96ad4fad15ea"
     },
     {
+      "entityClass": "radr_wlop_s03_lephari",
+      "displayName": "Lephari",
+      "kind": "radar",
+      "size": 3,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Signature_CrossSection": 0,
+        "Signature_Infrared": 0,
+        "Signature_Electromagnetic": 0,
+        "Component_PowerSegments": 1,
+        "Power_HighStart": 1,
+        "Power_HighMod": 1,
+        "Radar_DistanceMin": 1860,
+        "Radar_DistanceMax": 2990,
+        "Health_Maxhealth": 3000,
+        "Power_Min": 2,
+        "Weapon_Em": 3200,
+        "Signature_Em": 3200,
+        "Signature_Ir": 0,
+        "Power_Segments": 8,
+        "Temp_Enabled": 1,
+        "Temp_IrPerDegree": 10,
+        "Temp_IrMinimum": 318,
+        "Temp_MinCooling": 303,
+        "Temp_Overheat": 405,
+        "Temp_Heat": 0.72,
+        "Coolant_Dynamic": 1,
+        "Coolant_PowerDraw": 8
+      },
+      "burstDps": 0,
+      "tags": "flightReady",
+      "attachType": "Radar",
+      "attachSubType": "MidRangeRadar",
+      "itemClass": "Civilian",
+      "grade": "C",
+      "uuid": "462c1e37-6259-4942-91e1-9c4de47ef0e4"
+    },
+    {
       "entityClass": "rpod_s1_thcn_4x_s2",
       "displayName": "Liberator",
       "kind": "weapon",
@@ -37259,7 +38355,8 @@
       "attachType": "WeaponGun",
       "attachSubType": "Rocket",
       "grade": "A",
-      "uuid": "065e4a72-1226-42d7-8be0-62865c8b6ebc"
+      "uuid": "065e4a72-1226-42d7-8be0-62865c8b6ebc",
+      "exclusiveHull": "liberator"
     },
     {
       "entityClass": "rpod_s2_thcn_8x_s2",
@@ -37290,7 +38387,8 @@
       "attachType": "WeaponGun",
       "attachSubType": "Rocket",
       "grade": "A",
-      "uuid": "5ed1f1ec-6ebc-463b-9529-83382e20624d"
+      "uuid": "5ed1f1ec-6ebc-463b-9529-83382e20624d",
+      "exclusiveHull": "liberator"
     },
     {
       "entityClass": "rpod_s3_thcn_12x_s2",
@@ -37321,7 +38419,8 @@
       "attachType": "WeaponGun",
       "attachSubType": "Rocket",
       "grade": "A",
-      "uuid": "de76d4a8-c71c-4368-8b57-1474b4a4a3a6"
+      "uuid": "de76d4a8-c71c-4368-8b57-1474b4a4a3a6",
+      "exclusiveHull": "liberator"
     },
     {
       "entityClass": "powr_sasu_s01_lightblossom_scitem",
@@ -37911,6 +39010,42 @@
       "uuid": "871d4786-d443-493f-b2b9-d610b4108c6a"
     },
     {
+      "entityClass": "behr_lasercannon_s1_mr02",
+      "displayName": "M3A Cannon Raider Camo",
+      "kind": "weapon",
+      "size": 1,
+      "manufacturer": "Behring",
+      "weaponClass": "Cannon",
+      "damageType": "Energy",
+      "stats": {
+        "Weapon_CapacitorShots": 25,
+        "Weapon_RegenPerSec": 3,
+        "Weapon_Firerate": 100,
+        "Weapon_HeatPerShot": 0,
+        "Weapon_Spread": 0.4,
+        "Weapon_Pellets": 1,
+        "Weapon_Ammo": 0,
+        "Weapon_Damage_Physical": 0,
+        "Weapon_Damage_Energy": 182.25,
+        "Weapon_Damage_Distortion": 0,
+        "Weapon_Damage": 182.25,
+        "Weapon_Speed": 1200,
+        "Weapon_Range": 2004,
+        "Weapon_Penetration": 0.0595,
+        "Health_Maxhealth": 550,
+        "Weapon_Power": 0.704,
+        "Weapon_Em": 348,
+        "Signature_Em": 348,
+        "Signature_Ir": 0
+      },
+      "burstDps": 304,
+      "tags": "BEHR LaserCannon flightReady weaponMountUsable",
+      "attachType": "WeaponGun",
+      "attachSubType": "Gun",
+      "grade": "A",
+      "uuid": "36db47ca-d33b-484e-a2cc-fdf51b7bd549"
+    },
+    {
       "entityClass": "behr_lasercannon_s2",
       "displayName": "M4A Cannon",
       "kind": "weapon",
@@ -37981,6 +39116,42 @@
       "attachSubType": "Gun",
       "grade": "A",
       "uuid": "31629f0f-3324-4ec1-8da2-4a6ead6a62b2"
+    },
+    {
+      "entityClass": "behr_lasercannon_s2_mr02",
+      "displayName": "M4A Cannon Raider Camo",
+      "kind": "weapon",
+      "size": 2,
+      "manufacturer": "Behring",
+      "weaponClass": "Cannon",
+      "damageType": "Energy",
+      "stats": {
+        "Weapon_CapacitorShots": 25,
+        "Weapon_RegenPerSec": 3,
+        "Weapon_Firerate": 100,
+        "Weapon_HeatPerShot": 0,
+        "Weapon_Spread": 0.4,
+        "Weapon_Pellets": 1,
+        "Weapon_Ammo": 0,
+        "Weapon_Damage_Physical": 0,
+        "Weapon_Damage_Energy": 273.375,
+        "Weapon_Damage_Distortion": 0,
+        "Weapon_Damage": 273.375,
+        "Weapon_Speed": 1196,
+        "Weapon_Range": 2165,
+        "Weapon_Penetration": 0.06375,
+        "Health_Maxhealth": 850,
+        "Weapon_Power": 1,
+        "Weapon_Em": 495,
+        "Signature_Em": 495,
+        "Signature_Ir": 0
+      },
+      "burstDps": 456,
+      "tags": "BEHR LaserCannon flightReady weaponMountUsable",
+      "attachType": "WeaponGun",
+      "attachSubType": "Gun",
+      "grade": "A",
+      "uuid": "b0ff21c6-312f-4196-88fb-c24d883ca003"
     },
     {
       "entityClass": "armr_orig_m50",
@@ -38107,6 +39278,42 @@
       "attachSubType": "Gun",
       "grade": "A",
       "uuid": "c3cb8de9-dbd1-43c5-bc65-4dadc5f3ecee"
+    },
+    {
+      "entityClass": "behr_lasercannon_s3_mr02",
+      "displayName": "M5A Cannon Raider Camo",
+      "kind": "weapon",
+      "size": 3,
+      "manufacturer": "Behring",
+      "weaponClass": "Cannon",
+      "damageType": "Energy",
+      "stats": {
+        "Weapon_CapacitorShots": 25,
+        "Weapon_RegenPerSec": 3,
+        "Weapon_Firerate": 100,
+        "Weapon_HeatPerShot": 0,
+        "Weapon_Spread": 0.4,
+        "Weapon_Pellets": 1,
+        "Weapon_Ammo": 0,
+        "Weapon_Damage_Physical": 0,
+        "Weapon_Damage_Energy": 410.184,
+        "Weapon_Damage_Distortion": 0,
+        "Weapon_Damage": 410.184,
+        "Weapon_Speed": 1184,
+        "Weapon_Range": 2404,
+        "Weapon_Penetration": 0.07225,
+        "Health_Maxhealth": 1024,
+        "Weapon_Power": 1.3,
+        "Weapon_Em": 644,
+        "Signature_Em": 644,
+        "Signature_Ir": 0
+      },
+      "burstDps": 684,
+      "tags": "BEHR LaserCannon flightReady weaponMountUsable",
+      "attachType": "WeaponGun",
+      "attachSubType": "Gun",
+      "grade": "A",
+      "uuid": "9fd5d7b0-0a54-40b5-a36e-dca802cd3aaa"
     },
     {
       "entityClass": "behr_lasercannon_s4",
@@ -39593,6 +40800,58 @@
       "uuid": "8f5a16f2-5a4d-4a7f-b625-94bae1d16506"
     },
     {
+      "entityClass": "mining_laser_gama_hyun_s1",
+      "displayName": "Mining Laser Gama Hyun S1",
+      "kind": "weapon",
+      "size": 1,
+      "manufacturer": null,
+      "weaponClass": "Gun",
+      "damageType": null,
+      "stats": {
+        "Weapon_Damage": 3150,
+        "Health_Maxhealth": 8000,
+        "Power_Min": 1,
+        "Weapon_Em": 0,
+        "Signature_Em": 0,
+        "Signature_Ir": 0,
+        "Power_Segments": 1,
+        "Mining_LaserDamage_Physical": 0,
+        "Mining_LaserDamage_Energy": 3150,
+        "Mining_LaserDamage_Distortion": 0,
+        "Mining_LaserDamage_Thermal": 0,
+        "Mining_LaserDamage_Biochemical": 0,
+        "Mining_LaserDamage_Stun": 0,
+        "Mining_LaserDamage": 3150,
+        "Mining_LaserOptimalRange": 40,
+        "Mining_LaserMaxRange": 45,
+        "Mining_LaserHeat": 0,
+        "Mining_ExtractorDamage_Physical": 0,
+        "Mining_ExtractorDamage_Energy": 1295,
+        "Mining_ExtractorDamage_Distortion": 0,
+        "Mining_ExtractorDamage_Thermal": 0,
+        "Mining_ExtractorDamage_Biochemical": 0,
+        "Mining_ExtractorDamage_Stun": 0,
+        "Mining_ExtractorDamage": 1295,
+        "Mining_ExtractorOptimalRange": 40,
+        "Mining_ExtractorMaxRange": 45,
+        "Mining_ExtractorHeat": 0,
+        "Mining_Instability": 35,
+        "Mining_Resistance": 25,
+        "Mining_OptimalWindow": 40,
+        "Mining_OptimalWindowRate": -40,
+        "Mining_Filter": 40,
+        "Mining_ThrottleSpeed": 7,
+        "Mining_ThrottleMin": 0.2
+      },
+      "burstDps": 0,
+      "tags": "flightReady weaponMountUsable miningMount",
+      "requiredTags": "GAMA_Hyun miningMount",
+      "attachType": "WeaponMining",
+      "attachSubType": "Gun",
+      "grade": "A",
+      "uuid": "b4da575a-64cc-45c5-8936-a8ca4f62f181"
+    },
+    {
       "entityClass": "shld_asas_s01_mirage_scitem",
       "displayName": "Mirage",
       "kind": "shield",
@@ -40682,6 +41941,23 @@
       "attachType": "UtilityTurret",
       "attachSubType": "GunTurret",
       "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_mining_laser",
+          "minSize": 1,
+          "maxSize": 1,
+          "portTags": "miningMount",
+          "requiredTags": "miningMount",
+          "accepts": [
+            {
+              "type": "WeaponMining",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ]
+        }
+      ],
       "uuid": "24122aa8-495b-4b2f-9d81-9b7a87e51c8d"
     },
     {
@@ -40701,6 +41977,29 @@
       "attachType": "UtilityTurret",
       "attachSubType": "GunTurret",
       "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_mining_laser",
+          "minSize": 1,
+          "maxSize": 1,
+          "portTags": "miningMount DRAK_Golem",
+          "requiredTags": "$miningMount",
+          "accepts": [
+            {
+              "type": "WeaponMining",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "WeaponMining",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ]
+        }
+      ],
       "uuid": "2c7b13dc-5539-4b0f-9437-419bf98bce90"
     },
     {
@@ -40720,6 +42019,23 @@
       "attachType": "UtilityTurret",
       "attachSubType": "GunTurret",
       "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_mining_laser",
+          "minSize": 1,
+          "maxSize": 1,
+          "portTags": "miningMount",
+          "requiredTags": "miningMount",
+          "accepts": [
+            {
+              "type": "WeaponMining",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ]
+        }
+      ],
       "uuid": "6a9f2832-d96e-4929-bdd3-d83ba1d90003"
     },
     {
@@ -40758,6 +42074,23 @@
       "attachType": "Turret",
       "attachSubType": "GunTurret",
       "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_salvage_laser",
+          "minSize": 1,
+          "maxSize": 1,
+          "portTags": "salvageMount",
+          "requiredTags": "salvageMount",
+          "accepts": [
+            {
+              "type": "WeaponMining",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ]
+        }
+      ],
       "uuid": "78136407-7c2e-4ec4-ad13-6dd73b3e227f"
     },
     {
@@ -45844,6 +47177,278 @@
         }
       ],
       "uuid": "31a7dd73-e9e4-419b-85ab-43a489d0e02b"
+    },
+    {
+      "entityClass": "mrck_s05_gama_hyun_octo_s02",
+      "displayName": "MSD-582 Missile Rack",
+      "kind": "missileRack",
+      "size": 5,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 200,
+        "Weapon_Em": 0,
+        "Signature_Em": 0,
+        "Signature_Ir": 0
+      },
+      "burstDps": 0,
+      "tags": "flightReady",
+      "attachType": "MissileLauncher",
+      "attachSubType": "MissileRack",
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "missile_01_attach",
+          "minSize": 2,
+          "maxSize": 2,
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "kind": "missile"
+        },
+        {
+          "name": "missile_02_attach",
+          "minSize": 2,
+          "maxSize": 2,
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "kind": "missile"
+        },
+        {
+          "name": "missile_03_attach",
+          "minSize": 2,
+          "maxSize": 2,
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "kind": "missile"
+        },
+        {
+          "name": "missile_04_attach",
+          "minSize": 2,
+          "maxSize": 2,
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "kind": "missile"
+        },
+        {
+          "name": "missile_05_attach",
+          "minSize": 2,
+          "maxSize": 2,
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "kind": "missile"
+        },
+        {
+          "name": "missile_06_attach",
+          "minSize": 2,
+          "maxSize": 2,
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "kind": "missile"
+        },
+        {
+          "name": "missile_07_attach",
+          "minSize": 2,
+          "maxSize": 2,
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "kind": "missile"
+        },
+        {
+          "name": "missile_08_attach",
+          "minSize": 2,
+          "maxSize": 2,
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "kind": "missile"
+        }
+      ],
+      "uuid": "fef1982a-c28d-490f-b4e3-01bb849cb049",
+      "exclusiveHull": "hyun"
+    },
+    {
+      "entityClass": "mrck_s05_rsi_galaxy",
+      "displayName": "MSD-582 Missile Rack",
+      "kind": "missileRack",
+      "size": 5,
+      "manufacturer": "Roberts Space Industries",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 200,
+        "Weapon_Em": 0,
+        "Signature_Em": 0,
+        "Signature_Ir": 0
+      },
+      "burstDps": 0,
+      "tags": "flightReady $RSI_Galaxy",
+      "requiredTags": "RSI_Galaxy",
+      "attachType": "MissileLauncher",
+      "attachSubType": "MissileRack",
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "missile_01_attach",
+          "minSize": 2,
+          "maxSize": 2,
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "kind": "missile"
+        },
+        {
+          "name": "missile_02_attach",
+          "minSize": 2,
+          "maxSize": 2,
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "kind": "missile"
+        },
+        {
+          "name": "missile_03_attach",
+          "minSize": 2,
+          "maxSize": 2,
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "kind": "missile"
+        },
+        {
+          "name": "missile_04_attach",
+          "minSize": 2,
+          "maxSize": 2,
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "kind": "missile"
+        },
+        {
+          "name": "missile_05_attach",
+          "minSize": 2,
+          "maxSize": 2,
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "kind": "missile"
+        },
+        {
+          "name": "missile_06_attach",
+          "minSize": 2,
+          "maxSize": 2,
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "kind": "missile"
+        },
+        {
+          "name": "missile_07_attach",
+          "minSize": 2,
+          "maxSize": 2,
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "kind": "missile"
+        },
+        {
+          "name": "missile_08_attach",
+          "minSize": 2,
+          "maxSize": 2,
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "kind": "missile"
+        }
+      ],
+      "uuid": "ed604875-756b-4a94-ad77-9ec1512bdfda"
     },
     {
       "entityClass": "mrck_s05_rsi_scorpius_turret_octo_s2_left",
@@ -51154,45 +52759,6 @@
       "uuid": "2a6bcd31-8dcb-423f-9dd4-cb25ede14344"
     },
     {
-      "entityClass": "radr_wlop_s03_lephari",
-      "displayName": "Radr Wlop S03 Lephari",
-      "kind": "radar",
-      "size": 3,
-      "manufacturer": null,
-      "weaponClass": null,
-      "damageType": null,
-      "stats": {
-        "Signature_CrossSection": 0,
-        "Signature_Infrared": 0,
-        "Signature_Electromagnetic": 0,
-        "Component_PowerSegments": 1,
-        "Power_HighStart": 1,
-        "Power_HighMod": 1,
-        "Radar_DistanceMin": 1860,
-        "Radar_DistanceMax": 2990,
-        "Health_Maxhealth": 3000,
-        "Power_Min": 2,
-        "Weapon_Em": 3200,
-        "Signature_Em": 3200,
-        "Signature_Ir": 0,
-        "Power_Segments": 8,
-        "Temp_Enabled": 1,
-        "Temp_IrPerDegree": 10,
-        "Temp_IrMinimum": 318,
-        "Temp_MinCooling": 303,
-        "Temp_Overheat": 405,
-        "Temp_Heat": 0.72,
-        "Coolant_Dynamic": 1,
-        "Coolant_PowerDraw": 8
-      },
-      "burstDps": 0,
-      "tags": "flightReady",
-      "attachType": "Radar",
-      "attachSubType": "MidRangeRadar",
-      "grade": "C",
-      "uuid": "462c1e37-6259-4942-91e1-9c4de47ef0e4"
-    },
-    {
       "entityClass": "vncl_missilerack_blade",
       "displayName": "Ramming Blade",
       "kind": "missileRack",
@@ -53099,6 +54665,189 @@
       "attachSubType": "TopTurret",
       "grade": "A",
       "uuid": "1c509508-fa56-47ee-91b7-b449b7fe7143"
+    },
+    {
+      "entityClass": "rsi_galaxy_remote_turret_s5_front",
+      "displayName": "Remote Turret",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": "Roberts Space Industries",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 12000
+      },
+      "burstDps": 0,
+      "tags": "RSI_Galaxy_Remote_Turret_Front",
+      "requiredTags": "RSI_Galaxy_Remote_Turret_Front",
+      "attachType": "Turret",
+      "attachSubType": "BottomTurret",
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_gimbal_left",
+          "minSize": 5,
+          "maxSize": 5,
+          "locked": true,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hardpoint_gimbal_right",
+          "minSize": 5,
+          "maxSize": 5,
+          "locked": true,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ]
+        }
+      ],
+      "uuid": "b11d32d5-eb27-41c5-bcbb-1b61f446deb3"
+    },
+    {
+      "entityClass": "rsi_galaxy_remote_turret_s5_left",
+      "displayName": "Remote Turret",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": "Roberts Space Industries",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 12000
+      },
+      "burstDps": 0,
+      "tags": "RSI_Galaxy_Remote_Turret_Left",
+      "requiredTags": "RSI_Galaxy_Remote_Turret_Left",
+      "attachType": "Turret",
+      "attachSubType": "BottomTurret",
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_gimbal_left",
+          "minSize": 5,
+          "maxSize": 5,
+          "locked": true,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hardpoint_gimbal_right",
+          "minSize": 5,
+          "maxSize": 5,
+          "locked": true,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ]
+        }
+      ],
+      "uuid": "de1abd68-ba0f-4421-8c0e-f9f04860176e"
+    },
+    {
+      "entityClass": "rsi_galaxy_remote_turret_s5_right",
+      "displayName": "Remote Turret",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": "Roberts Space Industries",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 12000
+      },
+      "burstDps": 0,
+      "tags": "$RSI_Galaxy_Remote_Turret_Right",
+      "requiredTags": "RSI_Galaxy_Remote_Turret_Right",
+      "attachType": "Turret",
+      "attachSubType": "BottomTurret",
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_gimbal_left",
+          "minSize": 5,
+          "maxSize": 5,
+          "locked": true,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "hardpoint_gimbal_right",
+          "minSize": 5,
+          "maxSize": 5,
+          "locked": true,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ]
+        }
+      ],
+      "uuid": "1bba15cd-9279-47f6-8d75-6a61b54420e6"
     },
     {
       "entityClass": "rsi_perseus_remote_turret_bottom_s3",
@@ -56571,8 +58320,8 @@
         "Armor_SignalIr": -20,
         "Armor_SignalEm": -20,
         "Armor_SignalCs": -20,
-        "Armor_DeflectionPhysical": 495,
-        "Armor_DeflectionEnergy": 418
+        "Armor_DeflectionPhysical": 525,
+        "Armor_DeflectionEnergy": 460
       },
       "burstDps": 0,
       "tags": "RSI_Polaris_Base",
@@ -57801,6 +59550,44 @@
       "attachSubType": "UNDEFINED",
       "grade": "A",
       "uuid": "fd3625ad-6dce-4a48-ac86-3c7f8f09e11f"
+    },
+    {
+      "entityClass": "gama_hyun_salvage_arm_left",
+      "displayName": "Salvage Arm Left",
+      "kind": "weaponMount",
+      "size": 1,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 5000
+      },
+      "burstDps": 0,
+      "tags": "salvageMount",
+      "requiredTags": "salvageMount GAMA_Hyun",
+      "attachType": "ToolArm",
+      "attachSubType": "UNDEFINED",
+      "grade": "A",
+      "uuid": "497e08f1-79e3-4842-8dc2-707e141fe851"
+    },
+    {
+      "entityClass": "gama_hyun_salvage_arm_right",
+      "displayName": "Salvage Arm Right",
+      "kind": "weaponMount",
+      "size": 1,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 5000
+      },
+      "burstDps": 0,
+      "tags": "salvageMount",
+      "requiredTags": "salvageMount GAMA_Hyun",
+      "attachType": "ToolArm",
+      "attachSubType": "UNDEFINED",
+      "grade": "A",
+      "uuid": "2cc7d1e1-937a-4f75-8f8e-7f85b2952b26"
     },
     {
       "entityClass": "prar_distortionscattergun_s4",
@@ -61668,6 +63455,7 @@
       },
       "burstDps": 0,
       "tags": "flightReady $Starlifter_A2_Bomb_Rack_Left",
+      "requiredTags": "Starlifter_A2_Bomb_Rack_Left",
       "attachType": "BombLauncher",
       "attachSubType": "BombRack",
       "grade": "A",
@@ -61701,8 +63489,7 @@
           "kind": "bomb"
         }
       ],
-      "uuid": "4394a178-7e74-4943-9538-2139f65839fd",
-      "exclusiveHull": "starlancer"
+      "uuid": "4394a178-7e74-4943-9538-2139f65839fd"
     },
     {
       "entityClass": "bmbrck_crus_starl_right",
@@ -61720,6 +63507,7 @@
       },
       "burstDps": 0,
       "tags": "flightReady $Starlifter_A2_Bomb_Rack_Right",
+      "requiredTags": "Starlifter_A2_Bomb_Rack_Right",
       "attachType": "BombLauncher",
       "attachSubType": "BombRack",
       "grade": "A",
@@ -61753,8 +63541,7 @@
           "kind": "bomb"
         }
       ],
-      "uuid": "8352da44-4b63-4a4b-8397-734dfb11698b",
-      "exclusiveHull": "starlancer"
+      "uuid": "8352da44-4b63-4a4b-8397-734dfb11698b"
     },
     {
       "entityClass": "powr_just_s00_steadfast_scitem",
@@ -65165,9 +66952,9 @@
         "Weapon_Range": 8004,
         "Weapon_Penetration": 0.77,
         "Weapon_Damage_Physical": 0,
-        "Weapon_Damage_Energy": 15000,
+        "Weapon_Damage_Energy": 200000,
         "Weapon_Damage_Distortion": 0,
-        "Weapon_Damage": 15000,
+        "Weapon_Damage": 200000,
         "Health_Maxhealth": 1670,
         "Weapon_Power": 0.25,
         "Weapon_Em": 0,
@@ -65233,9 +67020,9 @@
         "Weapon_Range": 7924,
         "Weapon_Penetration": 0.4095,
         "Weapon_Damage_Physical": 0,
-        "Weapon_Damage_Energy": 15000,
+        "Weapon_Damage_Energy": 27500,
         "Weapon_Damage_Distortion": 0,
-        "Weapon_Damage": 15000,
+        "Weapon_Damage": 27500,
         "Health_Maxhealth": 466,
         "Weapon_Power": 1,
         "Weapon_Em": 0,
@@ -65302,9 +67089,9 @@
         "Weapon_Pellets": 1,
         "Weapon_Ammo": 0,
         "Weapon_Damage_Physical": 0,
-        "Weapon_Damage_Energy": 64,
+        "Weapon_Damage_Energy": 250,
         "Weapon_Damage_Distortion": 0,
-        "Weapon_Damage": 64,
+        "Weapon_Damage": 250,
         "Weapon_Speed": 1350,
         "Weapon_Range": 4806,
         "Weapon_Penetration": 0.27,
@@ -65314,7 +67101,7 @@
         "Signature_Em": 446,
         "Signature_Ir": 0
       },
-      "burstDps": 800,
+      "burstDps": 3125,
       "tags": "flightReady weaponMountUsable",
       "attachType": "WeaponGun",
       "attachSubType": "Gun",
@@ -65803,6 +67590,21 @@
       "attachType": "UtilityTurret",
       "attachSubType": "GunTurret",
       "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 2,
+          "maxSize": 2,
+          "accepts": [
+            {
+              "type": "WeaponMining",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ]
+        }
+      ],
       "uuid": "6b756217-01c9-44cd-89be-1d5d6c87673b"
     },
     {
@@ -66218,6 +68020,39 @@
       "uuid": "7a642c58-090a-4480-af2b-25fda4201630"
     },
     {
+      "entityClass": "mount_gimbal_s3_rn",
+      "displayName": "VariPuck S3 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1024
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "attachType": "Turret",
+      "attachSubType": "GunTurret",
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ]
+        }
+      ],
+      "uuid": "9beec807-f739-456c-a91c-e4e156f70b2d"
+    },
+    {
       "entityClass": "mount_gimbal_s3_sabre_raven_ex",
       "displayName": "VariPuck S3 Gimbal Mount",
       "kind": "weaponMount",
@@ -66250,6 +68085,46 @@
         }
       ],
       "uuid": "1b9fdffb-35d4-4c33-9d66-e2af571117b5"
+    },
+    {
+      "entityClass": "mount_gimbal_s3_vanguard_harbinger",
+      "displayName": "VariPuck S3 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1024
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "requiredTags": "AEGS_Vanguard_Harbinger",
+      "attachType": "Turret",
+      "attachSubType": "GunTurret",
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Rocket"
+              ]
+            }
+          ]
+        }
+      ],
+      "uuid": "ac78f033-341f-47d0-95bb-6b5a63865e84"
     },
     {
       "entityClass": "mount_gimbal_s3_vncl_blade",

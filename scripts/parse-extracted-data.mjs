@@ -4405,15 +4405,26 @@ function parseMiningLasers(localization = {}) {
     const extractionMatch = content.match(/"extractionEfficiency":\s*([\d.]+)/)
     const fromBeam = (value, match) => (typeof value === 'number' ? value : (match ? parseFloat(match[1]) : 0))
     
-    // Extract and resolve display name
+    // Extract and resolve display name. Unlocalized CIG keys stay as @item_… —
+    // humanize the record name so members never see the raw key.
     const rawDisplayName = attachParams?.AttachDef?.Localization?.Name || recordName.replace('EntityClassDefinition.', '')
-    const displayName = resolveLocalization(rawDisplayName, localization) || rawDisplayName
+    const resolvedName = resolveLocalization(rawDisplayName, localization)
+    const recordShort = recordName.replace('EntityClassDefinition.', '')
+    const displayName =
+      resolvedName && !String(resolvedName).startsWith('@')
+        ? resolvedName
+        : recordShort
+            .replace(/^Mining_Laser_/i, '')
+            .replace(/_/g, ' ')
+            .replace(/([a-z])([A-Z])/g, '$1 $2')
+            .replace(/\b\w/g, (c) => c.toUpperCase())
+            .trim() || recordShort
     
     const size = attachParams?.AttachDef?.Size || 0
     
     lasers.push({
       id: json._RecordId_,
-      name: recordName.replace('EntityClassDefinition.', ''),
+      name: recordShort,
       displayName,
       size,
       moduleSlotCount: countMiningModulePorts(itemPortParams),

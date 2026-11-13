@@ -1,11 +1,11 @@
 {
   "_source": "Generated from game-blueprints.json + contract data",
-  "_extracted": "2026-10-10T00:45:11.161Z",
+  "_extracted": "2026-11-13T00:35:02.593Z",
   "stats": {
-    "internalNames": 1618,
-    "displayNames": 1607,
-    "ambiguousDisplayNames": 11,
-    "contractDefinitions": 1982
+    "internalNames": 1634,
+    "displayNames": 1624,
+    "ambiguousDisplayNames": 10,
+    "contractDefinitions": 2007
   },
   "byInternalName": {
     "behr_lmg_ballistic_01_mag": {
@@ -70,6 +70,10 @@
     },
     "lbco_pistol_energy_01_mag": {
       "blueprintName": "Yubarev Pistol Battery (10 cap)",
+      "categoryName": "Ammo"
+    },
+    "lbco_rifle_energy_01_mag": {
+      "blueprintName": "Skarnov Rifle Battery (30 cap)",
       "categoryName": "Ammo"
     },
     "lbco_sniper_energy_01_mag": {
@@ -778,6 +782,10 @@
     },
     "outlaw_legacy_armor_heavy_legs_01_01_13": {
       "blueprintName": "Citadel Legs Dark Red",
+      "categoryName": "FPSArmours"
+    },
+    "qrt_utility_heavy_backpack_01_05_01": {
+      "blueprintName": "Palatino Backpack Raider Camo",
       "categoryName": "FPSArmours"
     },
     "slaver_armor_heavy_arms_01_01_01": {
@@ -2120,6 +2128,10 @@
       "blueprintName": "Corbel Arms Crush",
       "categoryName": "FPSArmours"
     },
+    "omc_utility_heavy_arms_01_03_01": {
+      "blueprintName": "Corbel Arms Raider Camo",
+      "categoryName": "FPSArmours"
+    },
     "omc_utility_heavy_core_01_01_01": {
       "blueprintName": "Corbel Core Smolder",
       "categoryName": "FPSArmours"
@@ -2138,6 +2150,10 @@
     },
     "omc_utility_heavy_core_01_02_01": {
       "blueprintName": "Corbel Core Crush",
+      "categoryName": "FPSArmours"
+    },
+    "omc_utility_heavy_core_01_03_01": {
+      "blueprintName": "Corbel Core Raider Camo",
       "categoryName": "FPSArmours"
     },
     "omc_utility_heavy_helmet_01_01_01": {
@@ -2160,6 +2176,10 @@
       "blueprintName": "Corbel Helmet Crush",
       "categoryName": "FPSArmours"
     },
+    "omc_utility_heavy_helmet_01_03_01": {
+      "blueprintName": "Corbel Helmet Raider Camo",
+      "categoryName": "FPSArmours"
+    },
     "omc_utility_heavy_legs_01_01_01": {
       "blueprintName": "Corbel Legs Smolder",
       "categoryName": "FPSArmours"
@@ -2178,6 +2198,10 @@
     },
     "omc_utility_heavy_legs_01_02_01": {
       "blueprintName": "Corbel Legs Crush",
+      "categoryName": "FPSArmours"
+    },
+    "omc_utility_heavy_legs_01_03_01": {
+      "blueprintName": "Corbel Legs Raider Camo",
       "categoryName": "FPSArmours"
     },
     "qrt_utility_heavy_arms_01_01_01": {
@@ -2204,6 +2228,10 @@
       "blueprintName": "Palatino Arms Metropolis",
       "categoryName": "FPSArmours"
     },
+    "qrt_utility_heavy_arms_01_04_01": {
+      "blueprintName": "Palatino Arms Raider Camo",
+      "categoryName": "FPSArmours"
+    },
     "qrt_utility_heavy_core_01_01_01": {
       "blueprintName": "Palatino Core",
       "categoryName": "FPSArmours"
@@ -2228,6 +2256,10 @@
       "blueprintName": "Palatino Core Metropolis",
       "categoryName": "FPSArmours"
     },
+    "qrt_utility_heavy_core_01_04_01": {
+      "blueprintName": "Palatino Core Raider Camo",
+      "categoryName": "FPSArmours"
+    },
     "qrt_utility_heavy_helmet_01_01_01": {
       "blueprintName": "Palatino Helmet",
       "categoryName": "FPSArmours"
@@ -2246,6 +2278,10 @@
     },
     "qrt_utility_heavy_helmet_01_01_17": {
       "blueprintName": "Palatino Helmet Metropolis",
+      "categoryName": "FPSArmours"
+    },
+    "qrt_utility_heavy_helmet_01_04_01": {
+      "blueprintName": "Palatino Helmet Raider Camo",
       "categoryName": "FPSArmours"
     },
     "qrt_utility_heavy_legs_01_01_01": {
@@ -2270,6 +2306,10 @@
     },
     "qrt_utility_heavy_legs_01_01_17": {
       "blueprintName": "Palatino Legs Metropolis",
+      "categoryName": "FPSArmours"
+    },
+    "qrt_utility_heavy_legs_01_04_01": {
+      "blueprintName": "Palatino Legs Raider Camo",
       "categoryName": "FPSArmours"
     },
     "outlaw_legacy_armor_light_arms_01_01_01": {
@@ -2752,6 +2792,10 @@
       "blueprintName": "Tailwind Flight Suit Dominion Camo",
       "categoryName": "FPSArmours"
     },
+    "vgl_flightsuit_01_03_01": {
+      "blueprintName": "Tailwind Flight Suit Raider Camo",
+      "categoryName": "FPSArmours"
+    },
     "vgl_flightsuit_helmet_01_02_01": {
       "blueprintName": "Tailwind Flight Helmet Dominion Camo",
       "categoryName": "FPSArmours"
@@ -2786,6 +2830,10 @@
     },
     "vgl_flightsuit_helmet_01_10_01": {
       "blueprintName": "Tailwind Flight Helmet Airwolf",
+      "categoryName": "FPSArmours"
+    },
+    "vgl_flightsuit_helmet_01_11_01": {
+      "blueprintName": "Tailwind Helmet Raider Camo",
       "categoryName": "FPSArmours"
     },
     "qrt_specialist_heavy_arms_01_01_01": {
@@ -4192,6 +4240,10 @@
       "blueprintName": "Karna \"Alpine Sunset\" Rifle",
       "categoryName": "FPSWeapons"
     },
+    "lbco_rifle_energy_01_mr01": {
+      "blueprintName": "Skarnov \"Raider Camo\" Rifle",
+      "categoryName": "FPSWeapons"
+    },
     "none_rifle_multi_01": {
       "blueprintName": "Killshot Rifle",
       "categoryName": "FPSWeapons"
@@ -4574,43 +4626,43 @@
     },
     "cargo_shipmining_pod_golem": {
       "blueprintName": "Drake Ore Pod",
-      "categoryName": "Veh. Comp. S0"
+      "categoryName": "Ind. Comp. S0"
     },
     "cargo_shipmining_pod_golem_btgl": {
       "blueprintName": "GOLEM MC-4 Ore Pod",
-      "categoryName": "Veh. Comp. S0"
+      "categoryName": "Ind. Comp. S0"
     },
     "cargo_shipmining_pod_mole": {
       "blueprintName": "Argo Ore Pod",
-      "categoryName": "Veh. Comp. S0"
+      "categoryName": "Ind. Comp. S0"
     },
     "cargo_shipmining_pod_moleprospector_btgl": {
       "blueprintName": "MISC Enhanced Ore Pod",
-      "categoryName": "Veh. Comp. S0"
+      "categoryName": "Ind. Comp. S0"
     },
     "cargo_shipmining_pod_prospector": {
       "blueprintName": "MISC Ore Pod",
-      "categoryName": "Veh. Comp. S0"
+      "categoryName": "Ind. Comp. S0"
     },
     "mining_modules_active_clearcut": {
       "blueprintName": "Clearcut Module",
-      "categoryName": "Veh. Comp. S0"
+      "categoryName": "Ind. Comp. S0"
     },
     "mining_modules_active_stampede": {
       "blueprintName": "Stampede Module",
-      "categoryName": "Veh. Comp. S0"
+      "categoryName": "Ind. Comp. S0"
     },
     "mining_modules_passive_deluge": {
       "blueprintName": "Deluge Module",
-      "categoryName": "Veh. Comp. S0"
+      "categoryName": "Ind. Comp. S0"
     },
     "mining_modules_passive_overrun": {
       "blueprintName": "Overrun Module",
-      "categoryName": "Veh. Comp. S0"
+      "categoryName": "Ind. Comp. S0"
     },
     "mining_modules_passive_torrent_mk3": {
       "blueprintName": "Torrent III Module",
-      "categoryName": "Veh. Comp. S0"
+      "categoryName": "Ind. Comp. S0"
     },
     "cool_acom_s01_iceplunge": {
       "blueprintName": "IcePlunge",
@@ -4914,71 +4966,71 @@
     },
     "mining_laser_drak_golem_s1": {
       "blueprintName": "Pitman Mining Laser",
-      "categoryName": "Veh. Comp. S1"
+      "categoryName": "Ind. Comp. S1"
     },
     "mining_laser_grin_arbor_s0": {
       "blueprintName": "Arbor MHV Mining Laser",
-      "categoryName": "Veh. Comp. S0"
+      "categoryName": "Ind. Comp. S0"
     },
     "mining_laser_grin_arbor_s1": {
       "blueprintName": "Arbor MH1 Mining Laser",
-      "categoryName": "Veh. Comp. S1"
+      "categoryName": "Ind. Comp. S1"
     },
     "mining_laser_grin_arbor_s2": {
       "blueprintName": "Arbor MH2 Mining Laser",
-      "categoryName": "Veh. Comp. S2"
+      "categoryName": "Ind. Comp. S2"
     },
     "mining_laser_grin_lancet_s1": {
       "blueprintName": "Lancet MH1 Mining Laser",
-      "categoryName": "Veh. Comp. S1"
+      "categoryName": "Ind. Comp. S1"
     },
     "mining_laser_grin_lancet_s2": {
       "blueprintName": "Lancet MH2 Mining Laser",
-      "categoryName": "Veh. Comp. S2"
+      "categoryName": "Ind. Comp. S2"
     },
     "mining_laser_shin_hofstede_s0": {
       "blueprintName": "S00 Hofstede",
-      "categoryName": "Veh. Comp. S0"
+      "categoryName": "Ind. Comp. S0"
     },
     "mining_laser_shin_hofstede_s1": {
       "blueprintName": "Hofstede-S1 Mining Laser",
-      "categoryName": "Veh. Comp. S1"
+      "categoryName": "Ind. Comp. S1"
     },
     "mining_laser_shin_hofstede_s2": {
       "blueprintName": "Hofstede-S2 Mining Laser",
-      "categoryName": "Veh. Comp. S2"
+      "categoryName": "Ind. Comp. S2"
     },
     "mining_laser_shin_klein_s0": {
       "blueprintName": "Lawson Mining Laser",
-      "categoryName": "Veh. Comp. S0"
+      "categoryName": "Ind. Comp. S0"
     },
     "mining_laser_shin_klein_s1": {
       "blueprintName": "Klein-S1 Mining Laser",
-      "categoryName": "Veh. Comp. S1"
+      "categoryName": "Ind. Comp. S1"
     },
     "mining_laser_shin_klein_s2": {
       "blueprintName": "Klein-S2 Mining Laser",
-      "categoryName": "Veh. Comp. S2"
+      "categoryName": "Ind. Comp. S2"
     },
     "mining_laser_thcn_helix_s0": {
       "blueprintName": "S0 Helix",
-      "categoryName": "Veh. Comp. S0"
+      "categoryName": "Ind. Comp. S0"
     },
     "mining_laser_thcn_helix_s1": {
       "blueprintName": "Helix I Mining Laser",
-      "categoryName": "Veh. Comp. S1"
+      "categoryName": "Ind. Comp. S1"
     },
     "mining_laser_thcn_helix_s2": {
       "blueprintName": "Helix II Mining Laser",
-      "categoryName": "Veh. Comp. S2"
+      "categoryName": "Ind. Comp. S2"
     },
     "mining_laser_thcn_impact_s1": {
       "blueprintName": "Impact I Mining Laser",
-      "categoryName": "Veh. Comp. S1"
+      "categoryName": "Ind. Comp. S1"
     },
     "mining_laser_thcn_impact_s2": {
       "blueprintName": "Impact II Mining Laser",
-      "categoryName": "Veh. Comp. S2"
+      "categoryName": "Ind. Comp. S2"
     },
     "powr_acom_s01_lumacore": {
       "blueprintName": "LumaCore",
@@ -5750,55 +5802,55 @@
     },
     "nozzle_fuelgiver_grin_nozzlefast": {
       "blueprintName": "Norfield",
-      "categoryName": "Veh. Comp. S0"
+      "categoryName": "Ind. Comp. S0"
     },
     "nozzle_fuelgiver_grin_nozzlesecure": {
       "blueprintName": "Marlin",
-      "categoryName": "Veh. Comp. S0"
+      "categoryName": "Ind. Comp. S0"
     },
     "nozzle_fuelgiver_grin_nozzleveryfast": {
       "blueprintName": "Lindstrom",
-      "categoryName": "Veh. Comp. S0"
+      "categoryName": "Ind. Comp. S0"
     },
     "nozzle_fuelgiver_grin_nozzleverysecure": {
       "blueprintName": "Harkin",
-      "categoryName": "Veh. Comp. S0"
+      "categoryName": "Ind. Comp. S0"
     },
     "nozzle_fuelgiver_misc_nozzlestandard": {
       "blueprintName": "RN-7s",
-      "categoryName": "Veh. Comp. S0"
+      "categoryName": "Ind. Comp. S0"
     },
     "nozzle_fuelgiver_shin_nozzleexpensivefast": {
       "blueprintName": "Bendix",
-      "categoryName": "Veh. Comp. S0"
+      "categoryName": "Ind. Comp. S0"
     },
     "nozzle_fuelgiver_shin_nozzleexpensivesecure": {
       "blueprintName": "Torrez",
-      "categoryName": "Veh. Comp. S0"
+      "categoryName": "Ind. Comp. S0"
     },
     "nozzle_fuelgiver_shin_nozzlemostexpensive": {
       "blueprintName": "Ezra",
-      "categoryName": "Veh. Comp. S0"
+      "categoryName": "Ind. Comp. S0"
     },
     "salvage_modifier_scraper_large": {
       "blueprintName": "Trawler Scraper Module",
-      "categoryName": "Veh. Comp. S1"
+      "categoryName": "Ind. Comp. S1"
     },
     "salvage_modifier_scraper_medium": {
       "blueprintName": "Abrade Scraper Module",
-      "categoryName": "Veh. Comp. S1"
+      "categoryName": "Ind. Comp. S1"
     },
     "salvage_modifier_scraper_salvation_medium": {
       "blueprintName": "Comer Scraper Module",
-      "categoryName": "Veh. Comp. S1"
+      "categoryName": "Ind. Comp. S1"
     },
     "salvage_modifier_scraper_salvation_small": {
       "blueprintName": "Hart Scraper Module",
-      "categoryName": "Veh. Comp. S1"
+      "categoryName": "Ind. Comp. S1"
     },
     "salvage_modifier_scraper_small": {
       "blueprintName": "Cinch Scraper Module",
-      "categoryName": "Veh. Comp. S1"
+      "categoryName": "Ind. Comp. S1"
     },
     "shld_aegs_s04_reclaimer": {
       "blueprintName": "RS-Barrier",
@@ -5981,7 +6033,7 @@
       "categoryName": "Veh. Comp. S4"
     },
     "shld_rsi_s04_polaris": {
-      "blueprintName": "Glacis",
+      "blueprintName": "Deterrent",
       "categoryName": "Veh. Comp. S4"
     },
     "shld_seco_s00_pin": {
@@ -6050,51 +6102,51 @@
     },
     "grin_tractorbeam_s1": {
       "blueprintName": "SureGrip S1 Tractor Beam",
-      "categoryName": "Veh. Comp. S1"
+      "categoryName": "Ind. Comp. S1"
     },
     "grin_tractorbeam_s2": {
       "blueprintName": "SureGrip S2 Tractor Beam",
-      "categoryName": "Veh. Comp. S2"
+      "categoryName": "Ind. Comp. S2"
     },
     "grin_tractorbeam_s3": {
       "blueprintName": "SureGrip S3 Tractor Beam",
-      "categoryName": "Veh. Comp. S3"
+      "categoryName": "Ind. Comp. S3"
     },
     "wep_tractorbeam_s1_military_1": {
       "blueprintName": "ViseLock S1 Tractor Beam",
-      "categoryName": "Veh. Comp. S1"
+      "categoryName": "Ind. Comp. S1"
     },
     "wep_tractorbeam_s1_utility_1": {
       "blueprintName": "SureGrip HV-S1 Tractor Beam",
-      "categoryName": "Veh. Comp. S1"
+      "categoryName": "Ind. Comp. S1"
     },
     "wep_tractorbeam_s1_utility_2": {
       "blueprintName": "SureGrip PR-S1 Tractor Beam",
-      "categoryName": "Veh. Comp. S1"
+      "categoryName": "Ind. Comp. S1"
     },
     "wep_tractorbeam_s2_military_1": {
       "blueprintName": "ViseLock S2 Tractor Beam",
-      "categoryName": "Veh. Comp. S2"
+      "categoryName": "Ind. Comp. S2"
     },
     "wep_tractorbeam_s2_utility_1": {
       "blueprintName": "SureGrip HV-S2 Tractor Beam",
-      "categoryName": "Veh. Comp. S2"
+      "categoryName": "Ind. Comp. S2"
     },
     "wep_tractorbeam_s2_utility_2": {
       "blueprintName": "SureGrip PR-S2 Tractor Beam",
-      "categoryName": "Veh. Comp. S2"
+      "categoryName": "Ind. Comp. S2"
     },
     "wep_tractorbeam_s3_military_1": {
       "blueprintName": "ViseLock S3 Tractor Beam",
-      "categoryName": "Veh. Comp. S3"
+      "categoryName": "Ind. Comp. S3"
     },
     "wep_tractorbeam_s3_utility_1": {
       "blueprintName": "SureGrip HV-S3 Tractor Beam",
-      "categoryName": "Veh. Comp. S3"
+      "categoryName": "Ind. Comp. S3"
     },
     "wep_tractorbeam_s3_utility_2": {
       "blueprintName": "SureGrip PR-S3 Tractor Beam",
-      "categoryName": "Veh. Comp. S3"
+      "categoryName": "Ind. Comp. S3"
     },
     "banu_tachyoncannon_s1": {
       "blueprintName": "Singe Cannon (S1)",
@@ -6332,12 +6384,24 @@
       "blueprintName": "M3A Cannon",
       "categoryName": "Veh. Weapons S1"
     },
+    "behr_lasercannon_s1_mr02": {
+      "blueprintName": "M3A Cannon Raider Camo",
+      "categoryName": "Veh. Weapons S1"
+    },
     "behr_lasercannon_s2": {
       "blueprintName": "M4A Cannon",
       "categoryName": "Veh. Weapons S2"
     },
+    "behr_lasercannon_s2_mr02": {
+      "blueprintName": "M4A Cannon Raider Camo",
+      "categoryName": "Veh. Weapons S2"
+    },
     "behr_lasercannon_s3": {
       "blueprintName": "M5A Cannon",
+      "categoryName": "Veh. Weapons S3"
+    },
+    "behr_lasercannon_s3_mr02": {
+      "blueprintName": "M5A Cannon Raider Camo",
       "categoryName": "Veh. Weapons S3"
     },
     "behr_lasercannon_s4": {
@@ -6545,6 +6609,10 @@
     "yubarev pistol battery (10 cap)": {
       "internalName": "lbco_pistol_energy_01_mag",
       "blueprintName": "Yubarev Pistol Battery (10 cap)"
+    },
+    "skarnov rifle battery (30 cap)": {
+      "internalName": "lbco_rifle_energy_01_mag",
+      "blueprintName": "Skarnov Rifle Battery (30 cap)"
     },
     "atzkav sniper rifle battery (8 cap)": {
       "internalName": "lbco_sniper_energy_01_mag",
@@ -7253,6 +7321,10 @@
     "citadel legs dark red": {
       "internalName": "outlaw_legacy_armor_heavy_legs_01_01_13",
       "blueprintName": "Citadel Legs Dark Red"
+    },
+    "palatino backpack raider camo": {
+      "internalName": "qrt_utility_heavy_backpack_01_05_01",
+      "blueprintName": "Palatino Backpack Raider Camo"
     },
     "defiance arms tactical": {
       "internalName": "slaver_armor_heavy_arms_01_01_01",
@@ -8602,6 +8674,10 @@
       "internalName": "omc_utility_heavy_arms_01_02_01",
       "blueprintName": "Corbel Arms Crush"
     },
+    "corbel arms raider camo": {
+      "internalName": "omc_utility_heavy_arms_01_03_01",
+      "blueprintName": "Corbel Arms Raider Camo"
+    },
     "corbel core smolder": {
       "internalName": "omc_utility_heavy_core_01_01_01",
       "blueprintName": "Corbel Core Smolder"
@@ -8621,6 +8697,10 @@
     "corbel core crush": {
       "internalName": "omc_utility_heavy_core_01_02_01",
       "blueprintName": "Corbel Core Crush"
+    },
+    "corbel core raider camo": {
+      "internalName": "omc_utility_heavy_core_01_03_01",
+      "blueprintName": "Corbel Core Raider Camo"
     },
     "corbel helmet smolder": {
       "internalName": "omc_utility_heavy_helmet_01_01_01",
@@ -8642,6 +8722,10 @@
       "internalName": "omc_utility_heavy_helmet_01_02_01",
       "blueprintName": "Corbel Helmet Crush"
     },
+    "corbel helmet raider camo": {
+      "internalName": "omc_utility_heavy_helmet_01_03_01",
+      "blueprintName": "Corbel Helmet Raider Camo"
+    },
     "corbel legs smolder": {
       "internalName": "omc_utility_heavy_legs_01_01_01",
       "blueprintName": "Corbel Legs Smolder"
@@ -8661,6 +8745,10 @@
     "corbel legs crush": {
       "internalName": "omc_utility_heavy_legs_01_02_01",
       "blueprintName": "Corbel Legs Crush"
+    },
+    "corbel legs raider camo": {
+      "internalName": "omc_utility_heavy_legs_01_03_01",
+      "blueprintName": "Corbel Legs Raider Camo"
     },
     "palatino arms": {
       "internalName": "qrt_utility_heavy_arms_01_01_01",
@@ -8686,6 +8774,10 @@
       "internalName": "qrt_utility_heavy_arms_01_01_17",
       "blueprintName": "Palatino Arms Metropolis"
     },
+    "palatino arms raider camo": {
+      "internalName": "qrt_utility_heavy_arms_01_04_01",
+      "blueprintName": "Palatino Arms Raider Camo"
+    },
     "palatino core": {
       "internalName": "qrt_utility_heavy_core_01_01_01",
       "blueprintName": "Palatino Core"
@@ -8710,6 +8802,10 @@
       "internalName": "qrt_utility_heavy_core_01_01_17",
       "blueprintName": "Palatino Core Metropolis"
     },
+    "palatino core raider camo": {
+      "internalName": "qrt_utility_heavy_core_01_04_01",
+      "blueprintName": "Palatino Core Raider Camo"
+    },
     "palatino helmet": {
       "internalName": "qrt_utility_heavy_helmet_01_01_01",
       "blueprintName": "Palatino Helmet"
@@ -8729,6 +8825,10 @@
     "palatino helmet metropolis": {
       "internalName": "qrt_utility_heavy_helmet_01_01_17",
       "blueprintName": "Palatino Helmet Metropolis"
+    },
+    "palatino helmet raider camo": {
+      "internalName": "qrt_utility_heavy_helmet_01_04_01",
+      "blueprintName": "Palatino Helmet Raider Camo"
     },
     "palatino legs": {
       "internalName": "qrt_utility_heavy_legs_01_01_01",
@@ -8753,6 +8853,10 @@
     "palatino legs metropolis": {
       "internalName": "qrt_utility_heavy_legs_01_01_17",
       "blueprintName": "Palatino Legs Metropolis"
+    },
+    "palatino legs raider camo": {
+      "internalName": "qrt_utility_heavy_legs_01_04_01",
+      "blueprintName": "Palatino Legs Raider Camo"
     },
     "lynx arms": {
       "internalName": "outlaw_legacy_armor_light_arms_01_01_01",
@@ -9266,6 +9370,10 @@
       "internalName": "vgl_flightsuit_01_02_01",
       "blueprintName": "Tailwind Flight Suit Dominion Camo"
     },
+    "tailwind flight suit raider camo": {
+      "internalName": "vgl_flightsuit_01_03_01",
+      "blueprintName": "Tailwind Flight Suit Raider Camo"
+    },
     "tailwind flight helmet dominion camo": {
       "internalName": "vgl_flightsuit_helmet_01_02_01",
       "blueprintName": "Tailwind Flight Helmet Dominion Camo"
@@ -9301,6 +9409,10 @@
     "tailwind flight helmet airwolf": {
       "internalName": "vgl_flightsuit_helmet_01_10_01",
       "blueprintName": "Tailwind Flight Helmet Airwolf"
+    },
+    "tailwind helmet raider camo": {
+      "internalName": "vgl_flightsuit_helmet_01_11_01",
+      "blueprintName": "Tailwind Helmet Raider Camo"
     },
     "antium arms": {
       "internalName": "qrt_specialist_heavy_arms_01_01_01",
@@ -10713,6 +10825,10 @@
     "karna \"alpine sunset\" rifle": {
       "internalName": "ksar_rifle_energy_01_red_green01",
       "blueprintName": "Karna \"Alpine Sunset\" Rifle"
+    },
+    "skarnov \"raider camo\" rifle": {
+      "internalName": "lbco_rifle_energy_01_mr01",
+      "blueprintName": "Skarnov \"Raider Camo\" Rifle"
     },
     "killshot rifle": {
       "internalName": "none_rifle_multi_01",
@@ -12531,20 +12647,12 @@
       "blueprintName": "Holdstrong"
     },
     "glacis": {
-      "ambiguous": true,
-      "displayName": "Glacis",
-      "candidates": [
-        {
-          "internalName": "shld_orig_s04_890j",
-          "blueprintName": "Glacis",
-          "categoryName": "Veh. Comp. S4"
-        },
-        {
-          "internalName": "shld_rsi_s04_polaris",
-          "blueprintName": "Glacis",
-          "categoryName": "Veh. Comp. S4"
-        }
-      ]
+      "internalName": "shld_orig_s04_890j",
+      "blueprintName": "Glacis"
+    },
+    "deterrent": {
+      "internalName": "shld_rsi_s04_polaris",
+      "blueprintName": "Deterrent"
     },
     "pin": {
       "internalName": "shld_seco_s00_pin",
@@ -12894,13 +13002,25 @@
       "internalName": "behr_lasercannon_s1",
       "blueprintName": "M3A Cannon"
     },
+    "m3a cannon raider camo": {
+      "internalName": "behr_lasercannon_s1_mr02",
+      "blueprintName": "M3A Cannon Raider Camo"
+    },
     "m4a cannon": {
       "internalName": "behr_lasercannon_s2",
       "blueprintName": "M4A Cannon"
     },
+    "m4a cannon raider camo": {
+      "internalName": "behr_lasercannon_s2_mr02",
+      "blueprintName": "M4A Cannon Raider Camo"
+    },
     "m5a cannon": {
       "internalName": "behr_lasercannon_s3",
       "blueprintName": "M5A Cannon"
+    },
+    "m5a cannon raider camo": {
+      "internalName": "behr_lasercannon_s3_mr02",
+      "blueprintName": "M5A Cannon Raider Camo"
     },
     "m6a cannon": {
       "internalName": "behr_lasercannon_s4",
@@ -21614,6 +21734,22 @@
       "volt_pistol_energy_01_mag",
       "qrt_combat_medium_backpack_01_01_02"
     ],
+    "4c391efe-5591-404b-8da9-45a32c6e483a": [
+      "lbco_rifle_energy_01_mr01",
+      "lbco_rifle_energy_01_mag"
+    ],
+    "intersec_eliminatespecific_rank1": [
+      "lbco_rifle_energy_01_mr01",
+      "lbco_rifle_energy_01_mag"
+    ],
+    "target shattered blade: [target]": [
+      "lbco_rifle_energy_01_mr01",
+      "lbco_rifle_energy_01_mag"
+    ],
+    "target shattered blade: ~mission(targetname)": [
+      "lbco_rifle_energy_01_mr01",
+      "lbco_rifle_energy_01_mag"
+    ],
     "1850226f-16e3-4160-9172-698e5397ed18": [
       "gmni_shotgun_ballistic_01",
       "kap_combat_heavy_arms_02_01_01",
@@ -22180,6 +22316,111 @@
       "qrt_combat_medium_helmet_01_01_15",
       "volt_pistol_energy_01_mag",
       "qrt_combat_medium_backpack_01_01_15"
+    ],
+    "3b3d142f-d487-4cf8-ac93-ca7c8599a7d8": [
+      "volt_pistol_energy_01",
+      "qrt_combat_medium_arms_01_01_15",
+      "qrt_combat_medium_core_01_01_15",
+      "qrt_combat_medium_legs_01_01_15",
+      "qrt_combat_medium_helmet_01_01_15",
+      "volt_pistol_energy_01_mag",
+      "qrt_combat_medium_backpack_01_01_15"
+    ],
+    "ids_resourcegathering_cryop_blue": [
+      "volt_pistol_energy_01",
+      "qrt_combat_medium_arms_01_01_15",
+      "qrt_combat_medium_core_01_01_15",
+      "qrt_combat_medium_legs_01_01_15",
+      "qrt_combat_medium_helmet_01_01_15",
+      "volt_pistol_energy_01_mag",
+      "qrt_combat_medium_backpack_01_01_15"
+    ],
+    "living vanduul sample": [
+      "volt_pistol_energy_01",
+      "qrt_combat_medium_arms_01_01_15",
+      "qrt_combat_medium_core_01_01_15",
+      "qrt_combat_medium_legs_01_01_15",
+      "qrt_combat_medium_helmet_01_01_15",
+      "volt_pistol_energy_01_mag",
+      "qrt_combat_medium_backpack_01_01_15"
+    ],
+    "b4570e85-55f9-4723-bf40-c01fe7aa3be2": [
+      "vgl_flightsuit_01_03_01",
+      "vgl_flightsuit_helmet_01_11_01"
+    ],
+    "intersec_drawoutboss_nyx_veryhard_van": [
+      "vgl_flightsuit_01_03_01",
+      "vgl_flightsuit_helmet_01_11_01"
+    ],
+    "interdict vanduul maulers": [
+      "vgl_flightsuit_01_03_01",
+      "vgl_flightsuit_helmet_01_11_01"
+    ],
+    "22afc3c3-5a36-4da9-8877-5d1b717622b5": [
+      "behr_lasercannon_s2_mr02",
+      "behr_lasercannon_s1_mr02",
+      "behr_lasercannon_s3_mr02"
+    ],
+    "intersec_drawoutboss_nyx_super_van": [
+      "behr_lasercannon_s2_mr02",
+      "behr_lasercannon_s1_mr02",
+      "behr_lasercannon_s3_mr02"
+    ],
+    "draw out maulers": [
+      "behr_lasercannon_s2_mr02",
+      "behr_lasercannon_s1_mr02",
+      "behr_lasercannon_s3_mr02"
+    ],
+    "30794445-0de4-4e9d-9cee-db908a0b34e0": [
+      "omc_utility_heavy_legs_01_03_01",
+      "omc_utility_heavy_arms_01_03_01"
+    ],
+    "intersec_shipwaveattack_nyx_veryhard_van": [
+      "omc_utility_heavy_legs_01_03_01",
+      "omc_utility_heavy_arms_01_03_01"
+    ],
+    "counterstrike against vanduul raiders": [
+      "omc_utility_heavy_legs_01_03_01",
+      "omc_utility_heavy_arms_01_03_01"
+    ],
+    "8bd22dab-578e-4673-9aa2-01b8ea6a30ba": [
+      "omc_utility_heavy_helmet_01_03_01",
+      "omc_utility_heavy_core_01_03_01"
+    ],
+    "intersec_shipwaveattack_nyx_super_van": [
+      "omc_utility_heavy_helmet_01_03_01",
+      "omc_utility_heavy_core_01_03_01"
+    ],
+    "intercept vanduul fleet": [
+      "omc_utility_heavy_helmet_01_03_01",
+      "omc_utility_heavy_core_01_03_01"
+    ],
+    "79741482-555e-4e17-b6cf-c08268cd89d7": [
+      "qrt_utility_heavy_arms_01_04_01",
+      "qrt_utility_heavy_legs_01_04_01"
+    ],
+    "intersec_3way_nyx_veryhard_van": [
+      "qrt_utility_heavy_arms_01_04_01",
+      "qrt_utility_heavy_legs_01_04_01"
+    ],
+    "neutralize vanduul and shattered blade threat": [
+      "qrt_utility_heavy_arms_01_04_01",
+      "qrt_utility_heavy_legs_01_04_01"
+    ],
+    "745884a9-e99a-499c-bb8c-1c359207e590": [
+      "qrt_utility_heavy_core_01_04_01",
+      "qrt_utility_heavy_backpack_01_05_01",
+      "qrt_utility_heavy_helmet_01_04_01"
+    ],
+    "intersec_3way_nyx_super_van": [
+      "qrt_utility_heavy_core_01_04_01",
+      "qrt_utility_heavy_backpack_01_05_01",
+      "qrt_utility_heavy_helmet_01_04_01"
+    ],
+    "stop vanduul and shattered blade hostilities": [
+      "qrt_utility_heavy_core_01_04_01",
+      "qrt_utility_heavy_backpack_01_05_01",
+      "qrt_utility_heavy_helmet_01_04_01"
     ],
     "24ac3c24-ed16-43f5-bb1c-626f0261fcb5": [
       "mrai_flightsuit_01_07_02",

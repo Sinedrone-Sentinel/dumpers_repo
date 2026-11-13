@@ -8,7 +8,9 @@ import { basename, join } from 'node:path'
 import { extractShipItemStats, weaponBurstDps } from './shipItemStats.mjs'
 import { applyShipPartRules } from './shipPartRules.mjs'
 
-const SKIP_SHIP = /(?:^|_)(?:pu(?:_|$)|ai(?:_|$)|unmanned|template|display|showdown|gamemaster|fleetweek|tutorial|hijacked|teach|boarded|nointerior|swarm|defendship|collector|lowpoly|invictus|restoration|ninetails|temp(?:_|$)|test(?:_|$)|gs(?:_|$)|ea(?:_|$)|exec(?:_|$)|plat(?:_|$)|bis\d|eaobjective|derelict)/i
+// Trailing `_gs` alone is the player ship for some hulls (Andromeda, Aquila, Hammerhead).
+// Still skip `_gs_…` AI/PU/template variants via the `gs_` token below.
+const SKIP_SHIP = /(?:^|_)(?:pu(?:_|$)|ai(?:_|$)|unmanned|template|display|showdown|gamemaster|fleetweek|tutorial|hijacked|teach|boarded|nointerior|swarm|defendship|collector|lowpoly|invictus|restoration|ninetails|temp(?:_|$)|test(?:_|$)|gs_|ea(?:_|$)|exec(?:_|$)|plat(?:_|$)|bis\d|eaobjective|derelict)/i
 
 const INDEX_DIRS = [
   'entities/scitem/ships/weapons',
@@ -530,6 +532,14 @@ function vehicleXml(extractedRoot, vehicle) {
   return text.includes('<Vehicle') ? text : ''
 }
 
+/** Hull-wide tags every hardpoint on this ship also provides (e.g. GAMA_Hyun). */
+function vehicleItemPortTags(text) {
+  if (!text) return ''
+  const match = text.match(/<Vehicle\b[^>]*>/i)
+  if (!match) return ''
+  return attrValue(match[0], 'itemPortTags').trim()
+}
+
 /** Hull HP is the sum of structural damageMax values in the vehicle XML. */
 function hullHpFromXml(text) {
   if (!text) return null
@@ -837,7 +847,7 @@ function weaponMountPorts(json) {
   for (const port of container?.Ports || []) {
     const types = Array.isArray(port.Types) ? port.Types : []
     const typeNames = types.map((entry) => String(entry?.Type || '').toLowerCase())
-    const gun = typeNames.includes('weapongun') || typeNames.includes('turret')
+    const gun = typeNames.includes('weapongun') || typeNames.includes('turret') || typeNames.includes('weaponmining')
     const missile = typeNames.includes('missilelauncher')
     if (!gun && !missile) continue
     const name = port.Name || port.AttachmentImplementation?.Helper?.Helper?.Name
@@ -871,6 +881,23 @@ function itemPortLocks(json) {
     if (mount.locked) locks.set(String(mount.name).toLowerCase(), mount)
   }
   return locks
+}
+
+/** Every child ItemPort on a parent part (ToolArm, gimbal, rack) — carries PortTags the vehicle XML omits. */
+function itemChildPorts(json) {
+  const container = firstComponent(json, 'SItemPortContainerComponentParams')
+  const mounts = new Map()
+  for (const port of container?.Ports || []) {
+    const name = port.Name || port.AttachmentImplementation?.Helper?.Helper?.Name
+    if (!name) continue
+    const maxSize = Number(port.MaxSize) || 0
+    const minSize = Number(port.MinSize) || maxSize
+    const row = { name, minSize: minSize || maxSize, maxSize: maxSize || minSize }
+    if (/uneditable/i.test(String(port.Flags || ''))) row.locked = true
+    copyPortRules(row, port)
+    mounts.set(String(name).toLowerCase(), row)
+  }
+  return mounts
 }
 
 function countermeasureCounts(json) {
@@ -1047,15 +1074,21 @@ export function parseShipShop({ extractedRoot, localization }) {
     if (!vehicle || vehicle.movementClass !== 'Spaceship') continue
     const displayName = resolveName(vehicle.vehicleName, localization)
     if (!usableName(displayName)) continue
-    const id = basename(filePath, '.json').toLowerCase()
+    const rawId = basename(filePath, '.json').toLowerCase()
+    const fromGsSuffix = /_gs$/i.test(rawId)
+    // Keep stable shop ids when CIG only ships the `*_gs` entity (Andromeda / Aquila / Hammerhead).
+    const id = fromGsSuffix ? rawId.replace(/_gs$/i, '') : rawId
     const previous = seenNames.get(displayName.toLowerCase())
-    if (previous && previous.length <= id.length) continue
+    // Prefer the non-_gs record when both exist; never let a _gs overwrite a bare id.
+    if (previous && fromGsSuffix) continue
+    if (previous && previous.length < id.length) continue
 
     const manufacturer = vehicle.manufacturer?.match(/scitemmanufacturer\.(\w+)\.json/i)?.[1]?.toUpperCase() || null
     const role = resolveName(vehicle.vehicleRole, localization)
     const career = resolveName(vehicle.vehicleCareer, localization)
     const xml = vehicleXml(extractedRoot, vehicle)
     const hullHp = hullHpFromXml(xml)
+    const shipPortTags = vehicleItemPortTags(xml)
     const portDefs = portDefsFromXml(xml)
     for (const [name, def] of pdcPortDefs(json)) {
       if (!portDefs.has(name)) portDefs.set(name, def)
@@ -1067,6 +1100,7 @@ export function parseShipShop({ extractedRoot, localization }) {
     walkEntries(loadout?.loadout, '', entries)
     const entryByPath = new Map(entries.map((entry) => [entry.path, entry]))
     const parentLocks = new Map()
+    const parentChildPorts = new Map()
     function locksFor(entityKey) {
       const key = String(entityKey || '').toLowerCase()
       if (!key) return null
@@ -1075,6 +1109,19 @@ export function parseShipShop({ extractedRoot, localization }) {
       const locks = loadedParent?.json ? itemPortLocks(loadedParent.json) : new Map()
       parentLocks.set(key, locks)
       return locks
+    }
+    function childPortsFor(entityKey, parentEntry) {
+      const key = String(entityKey || '').toLowerCase()
+      if (!key && !parentEntry?.entityClassReference) return null
+      const cacheKey = key || String(parentEntry?.entityClassReference || '')
+      if (parentChildPorts.has(cacheKey)) return parentChildPorts.get(cacheKey)
+      let json = key ? loadKey(key)?.json : null
+      if (!json && parentEntry?.entityClassReference) {
+        json = readRef(parentEntry.entityClassReference, filePath)
+      }
+      const ports = json ? itemChildPorts(json) : new Map()
+      parentChildPorts.set(cacheKey, ports)
+      return ports
     }
 
     let flight = { pitch: null, yaw: null, roll: null, scmSpeed: null, boostSpeed: null, maxSpeed: null }
@@ -1134,8 +1181,28 @@ export function parseShipShop({ extractedRoot, localization }) {
       }
       const parentPath = entry.path.includes('/') ? entry.path.slice(0, entry.path.lastIndexOf('/')) : ''
       const parent = parentPath ? entryByPath.get(parentPath) : null
-      const parentLock = parent ? locksFor(entityKeyFromEntry(parent.entry))?.get(entry.name.toLowerCase()) : null
-      if (parentLock?.locked && shaped.kind !== 'flight') shaped.locked = true
+      const parentKey = parent ? entityKeyFromEntry(parent.entry) : ''
+      const parentLock = parentKey ? locksFor(parentKey)?.get(entry.name.toLowerCase()) : null
+      const parentPort = parent
+        ? childPortsFor(parentKey, parent.entry)?.get(entry.name.toLowerCase())
+        : null
+      if ((parentLock?.locked || parentPort?.locked) && shaped.kind !== 'flight') shaped.locked = true
+      if (parentPort) {
+        const mergedTags = `${parentPort.portTags || ''} ${shaped.portTags || ''}`.trim()
+        if (mergedTags) shaped.portTags = mergedTags
+        if (!shaped.requiredTags && parentPort.requiredTags) shaped.requiredTags = parentPort.requiredTags
+        if ((!shaped.accepts || shaped.accepts.length === 0) && parentPort.accepts?.length) {
+          shaped.accepts = parentPort.accepts
+        }
+        if (parentPort.minSize) shaped.minSize = parentPort.minSize
+        if (parentPort.maxSize) {
+          shaped.maxSize = parentPort.maxSize
+          shaped.size = parentPort.maxSize
+        }
+      }
+      if (shipPortTags) {
+        shaped.portTags = `${shipPortTags} ${shaped.portTags || ''}`.trim()
+      }
       if (shaped) ports.push(shaped)
     }
 

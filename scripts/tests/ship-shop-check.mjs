@@ -471,11 +471,18 @@ const foreignPort = foreign.ports.find(takesSize4Turret)
 const foreignMounts = shop.partsForPort(foreignPort, shop.getShip(foreign.id))
 assert.equal(foreignMounts.some((item) => item.entityClass === 'aegs_idris_lower_camera_mount' || item.entityClass === 'aegs_idris_upper_camera_mount'), false)
 assert.equal(new Set(foreignMounts.filter((item) => item.displayName.startsWith('VariPuck ')).map((item) => item.displayName)).size, foreignMounts.filter((item) => item.displayName.startsWith('VariPuck ')).length)
+// LIVE stocks AI turrets with uneditable WeaponGun gimbals; camera hardpoints are uneditable too.
 const idrisGimbal = idris.ports.find((port) => port.id === 'hardpoint_front_left_turret/turret_left')
+assert.equal(idrisGimbal?.locked, true)
 const idrisGimbals = shop.partsForPort(idrisGimbal, idrisShip)
-assert.ok(idrisGimbals.some((item) => item.entityClass === 'aegs_idris_lower_camera_mount'))
-assert.ok(idrisGimbals.some((item) => item.entityClass === 'aegs_idris_upper_camera_mount'))
+assert.equal(idrisGimbals.some((item) => item.entityClass === 'aegs_idris_lower_camera_mount'), false)
 assert.equal(idrisGimbals.filter((item) => item.displayName === 'VariPuck S4 Gimbal Mount').length, 1)
+const idrisCamLower = idris.ports.find((port) => port.id === 'hardpoint_camera_turret_lower')
+const idrisCamUpper = idris.ports.find((port) => port.id === 'hardpoint_camera_turret_upper')
+assert.equal(idrisCamLower?.locked, true)
+assert.equal(idrisCamUpper?.locked, true)
+assert.ok(items.some((item) => item.entityClass === 'aegs_idris_lower_camera_mount' && item.exclusiveHull === 'idris'))
+assert.ok(items.some((item) => item.entityClass === 'aegs_idris_upper_camera_mount' && item.exclusiveHull === 'idris'))
 
 const torpedoFit = {
   [idrisNose.id]: { entityClass: 'mrck_s10_aegs_idris_nose_s12_torpedo', source: 'stock' },
@@ -642,7 +649,8 @@ await esbuild.build({
   packages: 'external',
 })
 const shops = await import(`${pathToFileURL(path.resolve(shopsOut)).href}?t=${Date.now()}`)
-assert.equal(shops.showPartWhereToBuy(items.find((item) => item.entityClass === 'turret_pdc_behr_a')), false)
+// UEX now lists the Behr PDC turret for sale; unsold PDC-tagged parts still hide Where to Buy.
+assert.equal(shops.showPartWhereToBuy(items.find((item) => item.entityClass === 'turret_pdc_behr_a')), true)
 assert.equal(shops.showPartWhereToBuy(items.find((item) => item.entityClass === 'behr_ballisticgatling_pdc_s1')), false)
 assert.equal(shops.showPartWhereToBuy(items.find((item) => item.entityClass === 'behr_laserrepeater_pdc_s1')), true)
 assert.equal(shops.showPartWhereToBuy(items.find((item) => item.entityClass === 'mrck_s05_behr_pdc_missile_16_s1')), true)
