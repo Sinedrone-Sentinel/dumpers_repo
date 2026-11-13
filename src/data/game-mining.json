@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted)",
-  "_extracted": "2026-10-10T00:43:14.381Z",
+  "_extracted": "2026-11-13T00:06:00.941Z",
   "mineableElements": [
     {
       "id": "d61d6c33-e428-4014-9326-0b06034de16a",
@@ -684,6 +684,28 @@
       "size": 1,
       "moduleSlotCount": 2,
       "laserPower": 3900,
+      "optimalRange": 40,
+      "maxRange": 45,
+      "extractionEfficiency": 1,
+      "instabilityModifier": 35,
+      "resistanceModifier": 25,
+      "optimalWindowModifier": 40,
+      "optimalWindowRateModifier": -40,
+      "filterModifier": 40,
+      "shatterDamageModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0,
+      "throttleLerpSpeed": 7,
+      "throttleMinimum": 0.2,
+      "tags": "flightReady weaponMountUsable miningMount"
+    },
+    {
+      "id": "b4da575a-64cc-45c5-8936-a8ca4f62f181",
+      "name": "Mining_Laser_GAMA_Hyun_S1",
+      "displayName": "GAMA Hyun S1",
+      "size": 1,
+      "moduleSlotCount": 2,
+      "laserPower": 3150,
       "optimalRange": 40,
       "maxRange": 45,
       "extractionEfficiency": 1,
@@ -1706,7 +1728,7 @@
   "summary": {
     "elements": 43,
     "signatureOres": 26,
-    "lasers": 21,
+    "lasers": 22,
     "modules": 29,
     "gadgets": 6
   }

@@ -37,9 +37,12 @@ async function pace() {
 
 async function fetchUex(endpoint, attempt = 1) {
   await pace()
+  const ac = new AbortController()
+  const timer = setTimeout(() => ac.abort(), 20000)
   try {
     const res = await fetch(`${UEX}/${endpoint}`, {
       headers: { Accept: 'application/json', 'User-Agent': 'DumpersRepo-ShipShopShops' },
+      signal: ac.signal,
     })
     if (res.status === 429) throw new Error('UEX rate limit')
     if (!res.ok) throw new Error(`UEX ${endpoint} failed: ${res.status}`)
@@ -49,6 +52,8 @@ async function fetchUex(endpoint, attempt = 1) {
     if (attempt >= 4) throw err
     await sleep(attempt * 1500)
     return fetchUex(endpoint, attempt + 1)
+  } finally {
+    clearTimeout(timer)
   }
 }
 
@@ -204,12 +209,17 @@ async function main() {
   console.log(`Matched parts: ${matchedItems.length}. Matched ships: ${matchedShips.length}.`)
 
   const jobs = [...matchedItems, ...matchedShips]
-  console.log(`Fetching prices for ${jobs.length} rows...`)
+  console.log(`Fetching prices for ${jobs.length} rows (~${Math.ceil((jobs.length * 520) / 60000)} min at UEX pace)...`)
+  let done = 0
   const priced = await mapLimit(jobs, 4, async (job) => {
     const endpoint = job.kind === 'ship'
       ? `vehicles_purchases_prices?id_vehicle=${job.uexId}`
       : `items_prices?id_item=${job.uexId}`
     const rows = await fetchUex(endpoint)
+    done += 1
+    if (done === jobs.length || done % 50 === 0) {
+      console.log(`  prices ${done}/${jobs.length}`)
+    }
     return { job, rows: Array.isArray(rows) ? rows : [] }
   })
 

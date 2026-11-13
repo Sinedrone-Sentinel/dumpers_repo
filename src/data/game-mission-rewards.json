@@ -1,7 +1,7 @@
 {
   "_source": "Star Citizen Game Files (contract generators)",
-  "_extracted": "2026-10-13T22:50:30.054Z",
-  "gameBuild": "4.10.2-live.12913470",
+  "_extracted": "2026-11-13T00:06:00.993Z",
+  "gameBuild": "4.10.0-live.13165946",
   "byId": {
     "e870c6b4-9632-4ff9-ab2e-bb8ba72a25aa": {
       "rep": [
@@ -3411,7 +3411,7 @@
       "rep": [
         {
           "faction": "Bounty Hunters Guild",
-          "amount": 2000
+          "amount": 4000
         }
       ]
     },
@@ -3467,7 +3467,7 @@
       "rep": [
         {
           "faction": "Bounty Hunters Guild",
-          "amount": 2000
+          "amount": 4000
         }
       ]
     },
@@ -3523,7 +3523,7 @@
       "rep": [
         {
           "faction": "Bounty Hunters Guild",
-          "amount": 2000
+          "amount": 4000
         }
       ]
     },
@@ -8723,6 +8723,22 @@
         }
       ]
     },
+    "e7bc7028-6275-4a3a-8fca-706ffa20e546": {
+      "rep": [
+        {
+          "faction": "InterSec Defense Solutions",
+          "amount": 300
+        }
+      ]
+    },
+    "b3956ae1-de0c-4c09-8364-0b7389836548": {
+      "rep": [
+        {
+          "faction": "InterSec Defense Solutions",
+          "amount": 200
+        }
+      ]
+    },
     "af4ffb08-954a-4f75-9493-e3cd102af48d": {
       "rep": [
         {
@@ -8760,6 +8776,14 @@
         {
           "faction": "InterSec Defense Solutions",
           "amount": 300
+        }
+      ]
+    },
+    "4c391efe-5591-404b-8da9-45a32c6e483a": {
+      "rep": [
+        {
+          "faction": "InterSec Defense Solutions",
+          "amount": 150
         }
       ]
     },
@@ -8860,6 +8884,78 @@
       ]
     },
     "1c9a3435-06c4-4612-a510-08361ffb2c61": {
+      "rep": [
+        {
+          "faction": "InterSec Defense Solutions",
+          "amount": 300
+        }
+      ]
+    },
+    "a81a232c-2cfa-4273-a147-6d987539fadd": {
+      "rep": [
+        {
+          "faction": "InterSec Defense Solutions",
+          "amount": 300
+        }
+      ]
+    },
+    "b4570e85-55f9-4723-bf40-c01fe7aa3be2": {
+      "rep": [
+        {
+          "faction": "InterSec Defense Solutions",
+          "amount": 300
+        }
+      ]
+    },
+    "22afc3c3-5a36-4da9-8877-5d1b717622b5": {
+      "rep": [
+        {
+          "faction": "InterSec Defense Solutions",
+          "amount": 300
+        }
+      ]
+    },
+    "429623f3-d500-4797-a071-0d2bee1299e6": {
+      "rep": [
+        {
+          "faction": "InterSec Defense Solutions",
+          "amount": 300
+        }
+      ]
+    },
+    "30794445-0de4-4e9d-9cee-db908a0b34e0": {
+      "rep": [
+        {
+          "faction": "InterSec Defense Solutions",
+          "amount": 300
+        }
+      ]
+    },
+    "8bd22dab-578e-4673-9aa2-01b8ea6a30ba": {
+      "rep": [
+        {
+          "faction": "InterSec Defense Solutions",
+          "amount": 300
+        }
+      ]
+    },
+    "090ce95e-08fc-4288-bb1d-eb855ccff52b": {
+      "rep": [
+        {
+          "faction": "InterSec Defense Solutions",
+          "amount": 300
+        }
+      ]
+    },
+    "79741482-555e-4e17-b6cf-c08268cd89d7": {
+      "rep": [
+        {
+          "faction": "InterSec Defense Solutions",
+          "amount": 300
+        }
+      ]
+    },
+    "745884a9-e99a-499c-bb8c-1c359207e590": {
       "rep": [
         {
           "faction": "InterSec Defense Solutions",

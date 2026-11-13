@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted)",
-  "_extracted": "2026-10-10T00:43:14.424Z",
+  "_extracted": "2026-11-13T00:06:00.998Z",
   "weapons": [
     {
       "id": "e302c7ae-b850-412d-983e-36dbf04f98fe",
@@ -19,6 +19,19 @@
       "id": "2445465a-d906-4e06-9a02-7eaead122bf7",
       "name": "apar_hmg_ballistic_01_collector01",
       "displayName": "Vendetta \"Snow Camo\" HMG",
+      "type": "Large",
+      "size": 5,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "heavyhip hip hmg apar_hmg_ballistic_01 SM_RestrictedWep"
+    },
+    {
+      "id": "01397e02-9e1a-4a9a-ad6b-4c867c6b427d",
+      "name": "apar_hmg_ballistic_01_lr01",
+      "displayName": "Apar Hmg Ballistic 01 Lr01",
       "type": "Large",
       "size": 5,
       "fireRate": 0,
@@ -157,6 +170,71 @@
       "damageMultiplier": 1,
       "combatRangeCategory": "Unknown",
       "tags": "shouldered SM_RestrictedWep"
+    },
+    {
+      "id": "20995f83-5951-4111-a5cb-e0ab16f54697",
+      "name": "asad_rifle_energy_01",
+      "displayName": "Asad Rifle Energy 01",
+      "type": "Medium",
+      "size": 2,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked asad_rifle_energy_01 rifle"
+    },
+    {
+      "id": "99d099b3-dc15-438e-abc4-91246fd06f8a",
+      "name": "asad_rifle_energy_01_tint01",
+      "displayName": "Asad Rifle Energy 01 Tint01",
+      "type": "Medium",
+      "size": 2,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked asad_rifle_energy_01 rifle"
+    },
+    {
+      "id": "4ce5f4ec-73ff-4849-897d-1d58836c8bf8",
+      "name": "asad_rifle_energy_01_tint02",
+      "displayName": "Asad Rifle Energy 01 Tint02",
+      "type": "Medium",
+      "size": 2,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked asad_rifle_energy_01 rifle"
+    },
+    {
+      "id": "f5414051-c354-416d-b7d3-b6970f4eeb8b",
+      "name": "asad_rifle_energy_01_tint03",
+      "displayName": "Asad Rifle Energy 01 Tint03",
+      "type": "Medium",
+      "size": 2,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked asad_rifle_energy_01 rifle"
+    },
+    {
+      "id": "9dadec2c-f0a1-4daf-96cf-db0ca1e148af",
+      "name": "asad_rifle_energy_01_tint04",
+      "displayName": "Asad Rifle Energy 01 Tint04",
+      "type": "Medium",
+      "size": 2,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked asad_rifle_energy_01 rifle"
     },
     {
       "id": "08124949-6620-431c-96e3-65107e22dc9d",
@@ -302,6 +380,19 @@
       "tags": "stocked lmg behr_lmg_ballistic_01"
     },
     {
+      "id": "03dc84a0-ddb6-4683-9650-340ad0edda46",
+      "name": "behr_lmg_ballistic_01_lr01",
+      "displayName": "Behr Lmg Ballistic 01 Lr01",
+      "type": "Medium",
+      "size": 4,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked lmg behr_lmg_ballistic_01"
+    },
+    {
       "id": "19c405b8-8b59-44fa-9bf9-a378aeb6e3bd",
       "name": "behr_lmg_ballistic_01_tint01",
       "displayName": "FS-9 \"Blacklist\" LMG",
@@ -380,6 +471,19 @@
       "tags": "pistol"
     },
     {
+      "id": "0f833b65-64ae-4bd3-9ae6-32a510f3f1ae",
+      "name": "behr_pistol_ballistic_01_lr01",
+      "displayName": "Behr Pistol Ballistic 01 Lr01",
+      "type": "Small",
+      "size": 1,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "pistol"
+    },
+    {
       "id": "c8c2e14b-5263-44f4-add3-bf70055976a3",
       "name": "behr_pistol_ballistic_01_mr01",
       "displayName": "S-38 \"SecondWind\" Pistol",
@@ -409,6 +513,19 @@
       "id": "5d6c1c28-1589-4c72-8cc3-ff90f998dca3",
       "name": "behr_rifle_ballistic_01_contestedzonereward",
       "displayName": "P4-AR Rifle",
+      "type": "Medium",
+      "size": 2,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked behr_rifle_ballistic_01 rifle"
+    },
+    {
+      "id": "b8a2a818-819d-4e13-8e4f-685abd56d21b",
+      "name": "behr_rifle_ballistic_01_lr01",
+      "displayName": "Behr Rifle Ballistic 01 Lr01",
       "type": "Medium",
       "size": 2,
       "fireRate": 0,
@@ -536,9 +653,48 @@
       "tags": "stocked behr_rifle_ballistic_02_civilian behr_rifle_ballistic_02"
     },
     {
+      "id": "1cf53a24-41a6-4c9c-abc8-91ca75fbd513",
+      "name": "behr_rifle_ballistic_02_civilian_lr01",
+      "displayName": "Behr Rifle Ballistic 02 Civilian Lr01",
+      "type": "Medium",
+      "size": 2,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked behr_rifle_ballistic_02_civilian behr_rifle_ballistic_02"
+    },
+    {
       "id": "adb5c353-7685-461c-9c3c-32ad182430b1",
       "name": "behr_rifle_ballistic_03",
       "displayName": "CQ7 Rifle",
+      "type": "Medium",
+      "size": 2,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked behr_rifle_ballistic_01 rifle"
+    },
+    {
+      "id": "2a8eae81-442b-4005-a2b7-18b3684e13d8",
+      "name": "behr_rifle_ballistic_03_lr01",
+      "displayName": "Behr Rifle Ballistic 03 Lr01",
+      "type": "Medium",
+      "size": 2,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked behr_rifle_ballistic_01 rifle"
+    },
+    {
+      "id": "09ca39f1-ebc5-49d2-9683-14cafc2724a5",
+      "name": "behr_rifle_ballistic_03_mr01",
+      "displayName": "Behr Rifle Ballistic 03 Mr01",
       "type": "Medium",
       "size": 2,
       "fireRate": 0,
@@ -617,6 +773,19 @@
       "id": "6c39587a-f569-4093-9cdc-bb0b63636642",
       "name": "behr_shotgun_ballistic_01_blue_white01",
       "displayName": "BR-2 \"Permafrost\" Shotgun",
+      "type": "Medium",
+      "size": 3,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked shotgun"
+    },
+    {
+      "id": "3f7f41df-fd95-45be-a339-18c70651a8e3",
+      "name": "behr_shotgun_ballistic_01_lr01",
+      "displayName": "Behr Shotgun Ballistic 01 Lr01",
       "type": "Medium",
       "size": 3,
       "fireRate": 0,
@@ -718,6 +887,19 @@
       "tags": "stocked behr_smg_ballistic_01 smg"
     },
     {
+      "id": "3d2ff7b6-5066-403c-a2cb-0d08b3ac5290",
+      "name": "behr_smg_ballistic_01_lr01",
+      "displayName": "Behr Smg Ballistic 01 Lr01",
+      "type": "Medium",
+      "size": 2,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked behr_smg_ballistic_01 smg"
+    },
+    {
       "id": "1c3b69e0-3162-40ba-afab-f9d48da6b1dc",
       "name": "behr_smg_ballistic_01_tan01",
       "displayName": "P8-SC \"Desert Shadow\" SMG",
@@ -794,6 +976,19 @@
       "damageMultiplier": 1,
       "combatRangeCategory": "Unknown",
       "tags": "stocked behr_sniper_ballistic_01 sniper Color_arctic"
+    },
+    {
+      "id": "37307d28-1104-4363-9ef9-9df8f8dcf4f3",
+      "name": "behr_sniper_ballistic_01_lr01",
+      "displayName": "Behr Sniper Ballistic 01 Lr01",
+      "type": "Medium",
+      "size": 3,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked behr_sniper_ballistic_01 sniper"
     },
     {
       "id": "0c53417e-eb43-40da-b6c2-edc045bd2e23",
@@ -1448,7 +1643,7 @@
     {
       "id": "992f3584-e14e-436c-9c08-235427f846f9",
       "name": "grin_cutter_01",
-      "displayName": "@item_Namegrin_cutter_01",
+      "displayName": "Grin Cutter 01",
       "type": "Medium",
       "size": 2,
       "fireRate": 0,
@@ -1745,6 +1940,19 @@
       "tags": "stocked grin_salvage_01"
     },
     {
+      "id": "cec69bf9-9a96-4d46-99f0-b90c2e19957e",
+      "name": "grin_salvage_repair_01_lumi01",
+      "displayName": "Cambio \"Piconalia\" SRT",
+      "type": "Gadget",
+      "size": 2,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked grin_salvage_01"
+    },
+    {
       "id": "0e259726-3ea6-4b0d-98da-afad3eeccff6",
       "name": "grin_salvage_repair_IASI",
       "displayName": "Cambio-II \"Glacier\" SRT",
@@ -1862,6 +2070,32 @@
       "tags": "stocked hdgw_rifle_ballistic_01 rifle"
     },
     {
+      "id": "f9c81fd3-51bd-46f3-98e3-c9e28fba2de1",
+      "name": "hdgw_rifle_ballistic_01_lr01",
+      "displayName": "Hdgw Rifle Ballistic 01 Lr01",
+      "type": "Medium",
+      "size": 2,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked hdgw_rifle_ballistic_01 rifle"
+    },
+    {
+      "id": "c7ddf56c-13b2-4f0f-ae56-cfe624668c76",
+      "name": "hdgw_rifle_ballistic_01_sf01",
+      "displayName": "Hdgw Rifle Ballistic 01 Sf01",
+      "type": "Medium",
+      "size": 2,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked hdgw_rifle_ballistic_01 rifle"
+    },
+    {
       "id": "47403176-45ef-4424-b3ee-07555e019ad4",
       "name": "hdgw_rifle_ballistic_01_tint01",
       "displayName": "Arlington \"Gamekeeper\" Rifle",
@@ -1953,6 +2187,19 @@
       "tags": "stocked lmg klwe_lmg_energy_01 iae2022"
     },
     {
+      "id": "a07c385e-2c58-46e4-b19d-e3cdd9790c04",
+      "name": "klwe_lmg_energy_01_lr01",
+      "displayName": "Klwe Lmg Energy 01 Lr01",
+      "type": "Medium",
+      "size": 4,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked lmg klwe_lmg_energy_01"
+    },
+    {
       "id": "656afe86-dc53-4b83-8121-4084992d13df",
       "name": "klwe_lmg_energy_01_mr01",
       "displayName": "Demeco \"Purgatory Camo\" LMG",
@@ -2021,6 +2268,19 @@
       "id": "1955753f-3472-4f04-ab9e-044af04a22f4",
       "name": "klwe_pistol_energy_01_gold01",
       "displayName": "Arclight \"Executive Edition\" Pistol",
+      "type": "Small",
+      "size": 1,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "pistol"
+    },
+    {
+      "id": "b6a78af6-ad42-4a0a-9bd7-73506d3ed9f0",
+      "name": "klwe_pistol_energy_01_lr01",
+      "displayName": "Klwe Pistol Energy 01 Lr01",
       "type": "Small",
       "size": 1,
       "fireRate": 0,
@@ -2107,6 +2367,19 @@
       "damageMultiplier": 1,
       "combatRangeCategory": "Unknown",
       "tags": "stocked klwe_rifle_energy_01 rifle iae2022"
+    },
+    {
+      "id": "7ee40ea0-0d5a-43c9-84c1-ef4936684bb7",
+      "name": "klwe_rifle_energy_01_lr01",
+      "displayName": "Klwe Rifle Energy 01 Lr01",
+      "type": "Medium",
+      "size": 2,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked klwe_rifle_energy_01 rifle"
     },
     {
       "id": "06ac384d-ba69-4e1d-9778-08acb5f8d9d4",
@@ -2200,6 +2473,32 @@
       "tags": "stocked smg klwe_smg_energy_01"
     },
     {
+      "id": "a0f76a6b-95be-4a12-a8a1-58e7f999751f",
+      "name": "klwe_smg_energy_01_lr01",
+      "displayName": "Klwe Smg Energy 01 Lr01",
+      "type": "Medium",
+      "size": 2,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked smg klwe_smg_energy_01"
+    },
+    {
+      "id": "1c5c81de-cf50-4c3a-967b-044f4c19ca1b",
+      "name": "klwe_smg_energy_01_lumi01",
+      "displayName": "Lumin V \"Piconalia\" SMG",
+      "type": "Medium",
+      "size": 2,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked smg klwe_smg_energy_01"
+    },
+    {
       "id": "da14a7b1-daa4-4109-8684-54be0d13bb61",
       "name": "klwe_smg_energy_01_mr01",
       "displayName": "Lumin V \"SecondWind\" SMG",
@@ -2265,6 +2564,19 @@
       "tags": "stocked klwe_sniper_energy_01 sniper"
     },
     {
+      "id": "90f96e82-8c3f-481a-bdd8-ae80ed1ca41d",
+      "name": "klwe_sniper_energy_01_lr01",
+      "displayName": "Klwe Sniper Energy 01 Lr01",
+      "type": "Medium",
+      "size": 3,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked klwe_sniper_energy_01 sniper"
+    },
+    {
       "id": "acc2a73d-8492-4492-89f4-fb1dacd84fd5",
       "name": "klwe_sniper_energy_01_Luminalia_red01",
       "displayName": "Arrowhead \"Lamplighter\" Sniper Rifle",
@@ -2317,6 +2629,58 @@
       "tags": "stocked klwe_sniper_energy_01 sniper"
     },
     {
+      "id": "9eacc20a-8a7a-4600-8e88-b48237141363",
+      "name": "ksar_lmg_energy_01",
+      "displayName": "Ksar Lmg Energy 01",
+      "type": "Medium",
+      "size": 4,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked lmg ksar_lmg_energy_01"
+    },
+    {
+      "id": "ca3e2306-ecb6-4eae-a6f6-42bc7224c839",
+      "name": "ksar_lmg_energy_01_tint01",
+      "displayName": "Ksar Lmg Energy 01 Tint01",
+      "type": "Medium",
+      "size": 4,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked lmg ksar_lmg_energy_01"
+    },
+    {
+      "id": "c84438ce-c2b2-4aa8-86de-b7a60eca97bf",
+      "name": "ksar_lmg_energy_01_tint02",
+      "displayName": "Ksar Lmg Energy 01 Tint02",
+      "type": "Medium",
+      "size": 4,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked lmg ksar_lmg_energy_01"
+    },
+    {
+      "id": "c1a93154-135d-4cee-807e-7ceca1adbe35",
+      "name": "ksar_lmg_energy_01_tint03",
+      "displayName": "Ksar Lmg Energy 01 Tint03",
+      "type": "Medium",
+      "size": 4,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked lmg ksar_lmg_energy_01"
+    },
+    {
       "id": "b97279f7-b795-4f17-9458-022068edd98f",
       "name": "ksar_pistol_ballistic_01",
       "displayName": "Coda Pistol",
@@ -2356,6 +2720,19 @@
       "tags": "pistol ksar_pistol_ballistic_01_iae2023"
     },
     {
+      "id": "79bd15fa-82fb-436c-a82d-ef739f571f4a",
+      "name": "ksar_pistol_ballistic_01_lumi01",
+      "displayName": "Coda \"Piconalia\" Pistol",
+      "type": "Small",
+      "size": 1,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "pistol"
+    },
+    {
       "id": "0338e1a7-10a6-4397-99a8-d9f214380612",
       "name": "ksar_pistol_ballistic_01_purple_pink01",
       "displayName": "Coda \"Ultraviolet\" Pistol",
@@ -2372,6 +2749,58 @@
       "id": "052b79e7-6c1d-4aee-96f6-e6d92559892f",
       "name": "ksar_pistol_ballistic_01_spc",
       "displayName": "Coda Pistol (Modified)",
+      "type": "Small",
+      "size": 1,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "pistol"
+    },
+    {
+      "id": "7aa3ab5f-d8b3-4bdc-97e7-3461c8db3de8",
+      "name": "ksar_pistol_energy_01",
+      "displayName": "Ksar Pistol Energy 01",
+      "type": "Small",
+      "size": 1,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "pistol"
+    },
+    {
+      "id": "cce44b1c-416c-43bb-ad34-1946d231fe34",
+      "name": "ksar_pistol_energy_01_tint01",
+      "displayName": "Ksar Pistol Energy 01 Tint01",
+      "type": "Small",
+      "size": 1,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "pistol"
+    },
+    {
+      "id": "9ce0cf5e-a83d-4c57-9b99-cbd050185204",
+      "name": "ksar_pistol_energy_01_tint02",
+      "displayName": "Ksar Pistol Energy 01 Tint02",
+      "type": "Small",
+      "size": 1,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "pistol"
+    },
+    {
+      "id": "9cb50ad8-eabf-4055-83e8-f7e41d830158",
+      "name": "ksar_pistol_energy_01_tint03",
+      "displayName": "Ksar Pistol Energy 01 Tint03",
       "type": "Small",
       "size": 1,
       "fireRate": 0,
@@ -2800,7 +3229,7 @@
     {
       "id": "9bce2684-8971-4134-821b-4182bc7a5e27",
       "name": "ksar_sniper_ballistic_01_sf01",
-      "displayName": "@item_Nameksar_sniper_ballistic_01_sf01",
+      "displayName": "Ksar Sniper Ballistic 01 Sf01",
       "type": "Medium",
       "size": 3,
       "fireRate": 0,
@@ -2889,6 +3318,71 @@
       "tags": "pistol"
     },
     {
+      "id": "84f56d17-9a02-4c3b-98b9-ac4d3b082078",
+      "name": "lbco_rifle_energy_01",
+      "displayName": "Skarnov Rifle",
+      "type": "Medium",
+      "size": 2,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked lbco_rifle_energy_01 rifle"
+    },
+    {
+      "id": "ce5baed0-3269-495e-b38b-f7af7b3bd9c6",
+      "name": "lbco_rifle_energy_01_mr01",
+      "displayName": "Skarnov \"Raider Camo\" Rifle",
+      "type": "Medium",
+      "size": 2,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked lbco_rifle_energy_01 rifle"
+    },
+    {
+      "id": "bf4cba71-35cd-4933-b5f1-c3da2479d985",
+      "name": "lbco_rifle_energy_01_tint01",
+      "displayName": "Skarnov \"Ferrite\" Rifle",
+      "type": "Medium",
+      "size": 2,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked lbco_rifle_energy_01 rifle"
+    },
+    {
+      "id": "b279764d-2ac4-4aa5-8cae-efc72eff4c9e",
+      "name": "lbco_rifle_energy_01_tint02",
+      "displayName": "Skarnov \"Relay\" Rifle",
+      "type": "Medium",
+      "size": 2,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked lbco_rifle_energy_01 rifle"
+    },
+    {
+      "id": "317e3453-e798-4d57-b36e-adc4bdd26a22",
+      "name": "lbco_rifle_energy_01_tint03",
+      "displayName": "Skarnov \"Sparkplug\" Rifle",
+      "type": "Medium",
+      "size": 2,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked lbco_rifle_energy_01 rifle"
+    },
+    {
       "id": "7623e7fa-3be9-4e9d-891c-597482c448b5",
       "name": "lbco_sniper_energy_01",
       "displayName": "Atzkav Sniper Rifle",
@@ -2969,7 +3463,7 @@
     {
       "id": "ee891d64-c65a-47fb-97d2-a5658e16fa85",
       "name": "none_lmg_ballistic_01_collector01",
-      "displayName": "@item_Namenone_lmg_ballistic_01_collector01",
+      "displayName": "None Lmg Ballistic 01 Collector01",
       "type": "Medium",
       "size": 4,
       "fireRate": 0,
@@ -3344,9 +3838,35 @@
       "tags": "pistol toy"
     },
     {
+      "id": "78bff944-e77c-4528-a147-ad206faef285",
+      "name": "sasu_pistol_toy_01_sf01",
+      "displayName": "WowBlast Desperado Toy Pistol F7C",
+      "type": "Small",
+      "size": 1,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "pistol toy"
+    },
+    {
       "id": "cb57dee1-c2f2-4328-bd7f-8ff1c8481008",
       "name": "utfl_crossbow_ballistic_01",
       "displayName": "Novian Crossbow",
+      "type": "Medium",
+      "size": 3,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked utfl_crossbow_ballistic_01"
+    },
+    {
+      "id": "0db3898a-1954-4e7d-a072-3366785406e2",
+      "name": "utfl_crossbow_ballistic_01_lr01",
+      "displayName": "Utfl Crossbow Ballistic 01 Lr01",
       "type": "Medium",
       "size": 3,
       "fireRate": 0,
@@ -4151,6 +4671,6 @@
     }
   ],
   "summary": {
-    "totalWeapons": 319
+    "totalWeapons": 359
   }
 }

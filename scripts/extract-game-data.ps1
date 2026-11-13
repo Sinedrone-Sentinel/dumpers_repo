@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Extracts Star Citizen game data using StarBreaker CLI.
     
@@ -196,7 +196,7 @@ catch {
 }
 
 Write-Host ""
-Write-Host "[3/4] Extracting star system containers..." -ForegroundColor Green
+Write-Host "[3/5] Extracting star system containers..." -ForegroundColor Green
 Write-Host "      Planets, moons, stations, and jump gateways for the nav map..." -ForegroundColor Gray
 Write-Host ""
 
@@ -216,9 +216,44 @@ catch {
     exit 1
 }
 
+Write-Host ""
+Write-Host "[4/5] Extracting vehicle XML (ship hardpoints for Fuzy's Ship Shop)..." -ForegroundColor Green
+Write-Host "      Scripts/Entities/Vehicles/Implementations/Xml → vehicle-xml/..." -ForegroundColor Gray
+Write-Host ""
+
+try {
+    $vehicleXmlStaging = Join-Path $OutputPath "_tmp-vehicle-xml"
+    $vehicleXmlOut = Join-Path $OutputPath "vehicle-xml"
+    if (Test-Path $vehicleXmlStaging) {
+        Remove-Item -Path $vehicleXmlStaging -Recurse -Force
+    }
+    New-Item -ItemType Directory -Path $vehicleXmlOut -Force | Out-Null
+
+    & $StarBreakerPath p4k extract `
+        --p4k $DataP4kPath `
+        --output $vehicleXmlStaging `
+        --filter "Data/Scripts/Entities/Vehicles/Implementations/Xml/**" `
+        --convert cryxml
+
+    if ($LASTEXITCODE -ne 0) {
+        throw "Vehicle XML extraction exited with code $LASTEXITCODE"
+    }
+
+    Get-ChildItem -Path $vehicleXmlStaging -Recurse -Filter *.xml | ForEach-Object {
+        Copy-Item -Path $_.FullName -Destination (Join-Path $vehicleXmlOut $_.Name) -Force
+    }
+    Remove-Item -Path $vehicleXmlStaging -Recurse -Force
+    $vehicleCount = (Get-ChildItem -Path $vehicleXmlOut -Filter *.xml).Count
+    Write-Host "  Copied $vehicleCount vehicle XML files into vehicle-xml/" -ForegroundColor Gray
+}
+catch {
+    Write-Host "ERROR: Vehicle XML extraction failed: $_" -ForegroundColor Red
+    exit 1
+}
+
 if ($IncludeShopData) {
     Write-Host ""
-    Write-Host "[4/4] Extracting shop socpaks + inventory JSON (optional)..." -ForegroundColor Green
+    Write-Host "[5/5] Extracting shop socpaks + inventory JSON (optional)..." -ForegroundColor Green
     Write-Host ""
 
     try {
@@ -250,7 +285,7 @@ if ($IncludeShopData) {
 }
 else {
     Write-Host ""
-    Write-Host "[4/4] Skipping shop socpaks + ShopInventories (not used by this app)." -ForegroundColor Green
+    Write-Host "[5/5] Skipping shop socpaks + ShopInventories (not used by this app)." -ForegroundColor Green
     Write-Host "      Pass -IncludeShopData if you need them for a separate project." -ForegroundColor Gray
 }
 

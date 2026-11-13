@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (contract generators)",
-  "_extracted": "2026-10-10T00:43:14.405Z",
+  "_extracted": "2026-11-13T00:06:00.971Z",
   "missionBlueprints": {
     "adagioresourcegatheringshipsalvage": [
       {
@@ -3976,6 +3976,118 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/flightsuit/bp_craft_vgl_flightsuit_helmet_01_02_01.json"
       }
     ],
+    "bp_reward_behr_lasercannon_s1_mr02": [
+      {
+        "name": "behr_lasercannon_s1_mr02",
+        "weight": 1,
+        "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/vehiclegear/weapons/laser/cannon/bp_craft_behr_lasercannon_s1_mr02.json"
+      }
+    ],
+    "bp_reward_behr_lasercannon_s2_mr02": [
+      {
+        "name": "behr_lasercannon_s2_mr02",
+        "weight": 1,
+        "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/vehiclegear/weapons/laser/cannon/bp_craft_behr_lasercannon_s2_mr02.json"
+      }
+    ],
+    "bp_reward_behr_lasercannon_s3_mr02": [
+      {
+        "name": "behr_lasercannon_s3_mr02",
+        "weight": 1,
+        "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/vehiclegear/weapons/laser/cannon/bp_craft_behr_lasercannon_s3_mr02.json"
+      }
+    ],
+    "bp_reward_lbco_rifle_energy_01_mag": [
+      {
+        "name": "lbco_rifle_energy_01_mag",
+        "weight": 1,
+        "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/electron/bp_craft_lbco_rifle_energy_01_mag.json"
+      }
+    ],
+    "bp_reward_lbco_rifle_energy_01_mr01": [
+      {
+        "name": "lbco_rifle_energy_01_mr01",
+        "weight": 1,
+        "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/weapons/rifle/bp_craft_lbco_rifle_energy_01_mr01.json"
+      }
+    ],
+    "bp_reward_omc_utility_heavy_arms_01_03_01": [
+      {
+        "name": "omc_utility_heavy_arms_01_03_01",
+        "weight": 1,
+        "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/engineer/heavy/bp_craft_omc_utility_heavy_arms_01_03_01.json"
+      }
+    ],
+    "bp_reward_omc_utility_heavy_core_01_03_01": [
+      {
+        "name": "omc_utility_heavy_core_01_03_01",
+        "weight": 1,
+        "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/engineer/heavy/bp_craft_omc_utility_heavy_core_01_03_01.json"
+      }
+    ],
+    "bp_reward_omc_utility_heavy_helmet_01_03_01": [
+      {
+        "name": "omc_utility_heavy_helmet_01_03_01",
+        "weight": 1,
+        "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/engineer/heavy/bp_craft_omc_utility_heavy_helmet_01_03_01.json"
+      }
+    ],
+    "bp_reward_omc_utility_heavy_legs_01_03_01": [
+      {
+        "name": "omc_utility_heavy_legs_01_03_01",
+        "weight": 1,
+        "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/engineer/heavy/bp_craft_omc_utility_heavy_legs_01_03_01.json"
+      }
+    ],
+    "bp_reward_qrt_utility_heavy_arms_01_04_01": [
+      {
+        "name": "qrt_utility_heavy_arms_01_04_01",
+        "weight": 1,
+        "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/engineer/heavy/bp_craft_qrt_utility_heavy_arms_01_04_01.json"
+      }
+    ],
+    "bp_reward_qrt_utility_heavy_backpack_01_05_01": [
+      {
+        "name": "qrt_utility_heavy_backpack_01_05_01",
+        "weight": 1,
+        "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/combat/heavy/bp_craft_qrt_utility_heavy_backpack_01_05_01.json"
+      }
+    ],
+    "bp_reward_qrt_utility_heavy_core_01_04_01": [
+      {
+        "name": "qrt_utility_heavy_core_01_04_01",
+        "weight": 1,
+        "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/engineer/heavy/bp_craft_qrt_utility_heavy_core_01_04_01.json"
+      }
+    ],
+    "bp_reward_qrt_utility_heavy_helmet_01_04_01": [
+      {
+        "name": "qrt_utility_heavy_helmet_01_04_01",
+        "weight": 1,
+        "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/engineer/heavy/bp_craft_qrt_utility_heavy_helmet_01_04_01.json"
+      }
+    ],
+    "bp_reward_qrt_utility_heavy_legs_01_04_01": [
+      {
+        "name": "qrt_utility_heavy_legs_01_04_01",
+        "weight": 1,
+        "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/engineer/heavy/bp_craft_qrt_utility_heavy_legs_01_04_01.json"
+      }
+    ],
+    "bp_reward_vgl_flightsuit_01_03_01": [
+      {
+        "name": "vgl_flightsuit_01_03_01",
+        "weight": 1,
+        "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/flightsuit/bp_craft_vgl_flightsuit_01_03_01.json"
+      }
+    ],
+    "bp_reward_vgl_flightsuit_helmet_01_11_01": [
+      {
+        "name": "vgl_flightsuit_helmet_01_11_01",
+        "weight": 1,
+        "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/flightsuit/bp_craft_vgl_flightsuit_helmet_01_11_01.json"
+      }
+    ],
     "xenothreat2_100_01": [
       {
         "name": "mxox_neutronrepeater_s1",
@@ -6315,6 +6427,54 @@
     "vgl_flightsuit_helmet_01_02_01": [
       "bp_reward_vgl_flightsuit_helmet_01_02_01"
     ],
+    "behr_lasercannon_s1_mr02": [
+      "bp_reward_behr_lasercannon_s1_mr02"
+    ],
+    "behr_lasercannon_s2_mr02": [
+      "bp_reward_behr_lasercannon_s2_mr02"
+    ],
+    "behr_lasercannon_s3_mr02": [
+      "bp_reward_behr_lasercannon_s3_mr02"
+    ],
+    "lbco_rifle_energy_01_mag": [
+      "bp_reward_lbco_rifle_energy_01_mag"
+    ],
+    "lbco_rifle_energy_01_mr01": [
+      "bp_reward_lbco_rifle_energy_01_mr01"
+    ],
+    "omc_utility_heavy_arms_01_03_01": [
+      "bp_reward_omc_utility_heavy_arms_01_03_01"
+    ],
+    "omc_utility_heavy_core_01_03_01": [
+      "bp_reward_omc_utility_heavy_core_01_03_01"
+    ],
+    "omc_utility_heavy_helmet_01_03_01": [
+      "bp_reward_omc_utility_heavy_helmet_01_03_01"
+    ],
+    "omc_utility_heavy_legs_01_03_01": [
+      "bp_reward_omc_utility_heavy_legs_01_03_01"
+    ],
+    "qrt_utility_heavy_arms_01_04_01": [
+      "bp_reward_qrt_utility_heavy_arms_01_04_01"
+    ],
+    "qrt_utility_heavy_backpack_01_05_01": [
+      "bp_reward_qrt_utility_heavy_backpack_01_05_01"
+    ],
+    "qrt_utility_heavy_core_01_04_01": [
+      "bp_reward_qrt_utility_heavy_core_01_04_01"
+    ],
+    "qrt_utility_heavy_helmet_01_04_01": [
+      "bp_reward_qrt_utility_heavy_helmet_01_04_01"
+    ],
+    "qrt_utility_heavy_legs_01_04_01": [
+      "bp_reward_qrt_utility_heavy_legs_01_04_01"
+    ],
+    "vgl_flightsuit_01_03_01": [
+      "bp_reward_vgl_flightsuit_01_03_01"
+    ],
+    "vgl_flightsuit_helmet_01_11_01": [
+      "bp_reward_vgl_flightsuit_helmet_01_11_01"
+    ],
     "mxox_neutronrepeater_s1": [
       "xenothreat2_100_01"
     ],
@@ -6398,7 +6558,7 @@
       "title": "Reduce Valakkar Breaker Station Population",
       "displayTitle": "Reduce Valakkar Breaker Station Population",
       "titleKey": "@Highpoint_KillAnimals_rockcracker_title_E_001",
-      "description": "If you have any work that's going to be bringing you to one of those old QV Breaker Stations in the Keeger Belt, we have something else that we could use your help on while you're there.\n \nWe've recently been contacted by the People's Alliance to assist with an initiative to help prepare these abandoned stations for repairs. Unfortunately, a Valakkar infestation is creating serious problems for not only the stations' infrastructure, but also for the chances of them being brought back online one day. Due to Valakkar's status as an invasive species, we have decided that culling them is the only viable option.\n \nReduce the Valakkar numbers at any of the old QV Breaker Stations and we will offer you payment.\n \nBest,\n \nWanda Werkheiser\n\nContract Manager\n\nHighpoint Wilderness Specialists",
+      "description": "If you have any work that's going to be bringing you to one of those old <EM4>QV Breaker Stations</EM4> in the Keeger Belt, we have something else that we could use your help on while you're there.\n \nWe've recently been contacted by the People's Alliance to assist with an initiative to help prepare these abandoned stations for repairs. Unfortunately, a <EM4>Valakkar infestation</EM4> is creating serious problems for not only the stations' infrastructure, but also for the chances of them being brought back online one day. Due to Valakkar's status as an invasive species, we have decided that culling them is the only viable option.\n \nReduce the Valakkar numbers at any of the old QV Breaker Stations and we will offer you payment.\n \nBest,\n \nWanda Werkheiser\nContract Manager\nHighpoint Wilderness Specialists",
       "descriptionKey": "@Highpoint_KillAnimals_rockcracker_desc_E_001",
       "faction": "Highpoint Wilderness Specialists",
       "factionKey": "lawful_highpointwildernessspecialists",
@@ -12321,8 +12481,7 @@
           ],
           "totalEmitters": 1
         }
-      ],
-      "repCareerLabel": "Bounty Hunting"
+      ]
     },
     {
       "id": "811dbf1b-f021-4809-96ff-77fe8002b8e5",
@@ -12462,8 +12621,7 @@
           ],
           "totalEmitters": 2
         }
-      ],
-      "repCareerLabel": "Bounty Hunting"
+      ]
     },
     {
       "id": "ccdb8a76-4772-4292-ab9f-ac5696d3d483",
@@ -12603,8 +12761,7 @@
           ],
           "totalEmitters": 2
         }
-      ],
-      "repCareerLabel": "Bounty Hunting"
+      ]
     },
     {
       "id": "128d40e5-6bcb-4503-bb60-45ac58c634fb",
@@ -13660,12 +13817,12 @@
         "name": "Guild Steward",
         "minReputation": 480000
       },
-      "repPoints": 2000,
+      "repPoints": 4000,
       "repEffects": [
         {
           "factionKey": "lawful_bountyhuntersguild",
           "faction": "Bounty Hunters Guild",
-          "amount": 2000
+          "amount": 4000
         }
       ],
       "locality": {
@@ -17679,6 +17836,8 @@
       "title": "<= UNINITIALIZED =>",
       "displayTitle": "Cfp Pyro Region B H Hhoutpost Hhxsoutpost Multi Sabotage",
       "titleKey": "@LOC_UNINITIALIZED",
+      "description": "",
+      "descriptionKey": null,
       "faction": "Citizens For Prosperity",
       "factionKey": "lawful_citizensforprosperity",
       "system": "Pyro",
@@ -26959,6 +27118,8 @@
       "title": "@cfp_EliminateAllFF_Title_001",
       "displayTitle": "Foxwell Enforcement Eliminate All Frontier Fighters",
       "titleKey": "@cfp_EliminateAllFF_Title_001",
+      "description": "",
+      "descriptionKey": null,
       "faction": "Foxwell Enforcement",
       "factionKey": "lawful_foxwellenforcement",
       "system": "Stanton",
@@ -36859,8 +37020,7 @@
           ],
           "totalEmitters": 8
         }
-      ],
-      "repCareerLabel": "Standing"
+      ]
     },
     {
       "id": "3d0693fd-b4e4-4dc8-a42d-7e9acff7fd42",
@@ -37174,8 +37334,7 @@
           ],
           "totalEmitters": 7
         }
-      ],
-      "repCareerLabel": "Standing"
+      ]
     },
     {
       "id": "fe6ba414-1375-4442-816e-30c4fe36e6f1",
@@ -37489,8 +37648,7 @@
           ],
           "totalEmitters": 7
         }
-      ],
-      "repCareerLabel": "Standing"
+      ]
     },
     {
       "id": "89376110-728c-40f1-b489-8ef4ff95e4f9",
@@ -37804,8 +37962,7 @@
           ],
           "totalEmitters": 7
         }
-      ],
-      "repCareerLabel": "Standing"
+      ]
     },
     {
       "id": "80dd4f7d-b3f4-46dd-ae44-ce679e0705df",
@@ -38119,8 +38276,7 @@
           ],
           "totalEmitters": 7
         }
-      ],
-      "repCareerLabel": "Standing"
+      ]
     },
     {
       "id": "af4ffb08-954a-4f75-9493-e3cd102af48d",
@@ -38752,12 +38908,82 @@
       "repCareerLabel": "Standing"
     },
     {
+      "id": "4c391efe-5591-404b-8da9-45a32c6e483a",
+      "debugName": "Intersec_EliminateSpecific_Rank1",
+      "title": "Target Shattered Blade: ~mission(TargetName)",
+      "displayTitle": "Target Shattered Blade: [Target]",
+      "titleKey": "@Intersec_ElimAux_ShatteredBlade_Med_Title_001",
+      "description": "MISSION SPECS\n\nArea of Operation: Nyx System \nHostile Forces: Shattered Blade\nEquipment Specs: Combat Ready\nBriefing: \n\nLooking for operatives to raid a recently-located Shattered Blade base at <EM4>~mission(Location|Address)</EM4> and target one of their key members, <EM4>~mission(TargetName)</EM4>. Shattered Blade have been using this auxiliary base as a launch pad for numerous missions and it is hoped that strikes against this critical target will limit their ability to launch future criminal operations.\n\nRespectfully,   \n\nDeacon Tobin \nOperations Manager \nInterSec Defense Solutions  \n\nThis communication consists of confidential information solely intended for the recipient. Please disregard if received in error and notify the sender. All operations are conducted at the contractor’s own personal risk and must adhere to UEE and system law where applicable.",
+      "descriptionKey": "@Intersec_ElimAux_ShatteredBlade_Med_Desc_001",
+      "faction": "InterSec Defense Solutions",
+      "factionKey": "lawful_intersecdefensesolutions",
+      "system": "Nyx",
+      "region": null,
+      "category": "Mercenary",
+      "blueprintPools": [
+        {
+          "key": "bp_reward_lbco_rifle_energy_01_mr01",
+          "chance": 1,
+          "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/vanduulincursion/bp_reward_lbco_rifle_energy_01_mr01.json"
+        },
+        {
+          "key": "bp_reward_lbco_rifle_energy_01_mag",
+          "chance": 1,
+          "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/vanduulincursion/bp_reward_lbco_rifle_energy_01_mag.json"
+        }
+      ],
+      "minStanding": {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
+      "repPoints": 150,
+      "repEffects": [
+        {
+          "factionKey": "lawful_intersecdefensesolutions",
+          "faction": "InterSec Defense Solutions",
+          "amount": 150
+        }
+      ],
+      "locality": {
+        "key": "nyx",
+        "label": "Anywhere in Nyx",
+        "systems": [
+          "Nyx"
+        ]
+      },
+      "frequency": {
+        "maxInstances": -1,
+        "maxInstancesPerPlayer": 1,
+        "respawnTimeMinutes": 5,
+        "respawnTimeVariationMinutes": 2,
+        "instanceLifeTimeMinutes": 5,
+        "instanceLifeTimeVariationMinutes": 2,
+        "hasPersonalCooldown": false,
+        "personalCooldownSeconds": 1,
+        "personalCooldownVariationSeconds": 1,
+        "abandonedCooldownSeconds": 1,
+        "abandonedCooldownVariationSeconds": 1,
+        "onceOnly": false,
+        "canReacceptAfterAbandoning": true,
+        "canReacceptAfterFailing": false,
+        "canBeShared": true
+      },
+      "notForRelease": false,
+      "isLawful": true,
+      "repScopeKey": "FactionReputationScope",
+      "repCareerLabel": "Standing"
+    },
+    {
       "id": "1850226f-16e3-4160-9172-698e5397ed18",
       "debugName": "InterSec_Bounty_Nyx_Intro",
       "title": "New Defense Contract: ~mission(TargetName) Elimination",
       "displayTitle": "New Defense Contract: [Target] Elimination",
       "titleKey": "@Intersec_KillShip_Title_Intro_001",
-      "description": "MISSION SPECS\n\nArea of Operation: Nyx System\nHostile Forces: Outlaws\nEquipment Specs: Combat-rated Ships\nBriefing: InterSec has been hired to combat the rising number of outlaws using Nyx as a staging ground for their operations, with the intention of attacking neighboring UEE systems.\n\nAs a preventative measure, we require you to travel to <EM4>~mission(Location|Address)</EM4> and eliminate the ringleader <EM4>~mission(TargetName)</EM4> to deter their planned attack on Stanton. They and their crew are highly dangerous and you are <EM4>advised  to bring a wingman</EM4> for support.\n\nContractors who can prove themselves reliable and competent in executing operations will be eligible for future missions with InterSec.\n\nRespectfully,\n\nDeacon Tobin\nOperations Manager\nInterSec Defense Solutions\n\nThis communication consists of a non-binding offer that upon acceptance may be immediately terminated by either party without any given notice. All operations are conducted at the contractor’s own personal risk and must adhere to system law where applicable.",
+      "description": "MISSION SPECS\n\nArea of Operation: Nyx System\nHostile Forces: Outlaws\nEquipment Specs: Combat-rated Ships\nBriefing: InterSec has been hired to combat the rising number of outlaws using Nyx as a staging ground for their operations, with the intention of attacking neighboring UEE systems.\n\nAs a preventative measure, we require you to travel to <EM4>~mission(Location|Address)</EM4> and eliminate the ringleader <EM4>~mission(TargetName)</EM4> to deter their planned attack on Stanton. They and their crew are highly dangerous and you are <EM4>advised to bring a wingman</EM4> for support.\n\nContractors who can prove themselves reliable and competent in executing operations will be eligible for future missions with InterSec.\n\nRespectfully,\n\nDeacon Tobin\nOperations Manager\nInterSec Defense Solutions\n\nThis communication consists of a non-binding offer that upon acceptance may be immediately terminated by either party without any given notice. All operations are conducted at the contractor’s own personal risk and must adhere to system law where applicable.",
       "descriptionKey": "@Intersec_KillShip_Desc_Intro_001",
       "faction": "InterSec Defense Solutions",
       "factionKey": "lawful_intersecdefensesolutions",
@@ -40052,8 +40278,7 @@
           ],
           "totalEmitters": 1
         }
-      ],
-      "repCareerLabel": "Standing"
+      ]
     },
     {
       "id": "0a3c40b0-f0e7-473f-bf75-fc7f4f0b5ffc",
@@ -40151,7 +40376,495 @@
           ],
           "totalEmitters": 1
         }
+      ]
+    },
+    {
+      "id": "3b3d142f-d487-4cf8-ac93-ca7c8599a7d8",
+      "debugName": "IDS_ResourceGathering_CryoP_Blue",
+      "title": "Living Vanduul Sample",
+      "displayTitle": "Living Vanduul Sample",
+      "titleKey": "@Intersec_BlueCryo_Title_001",
+      "description": "MISSION SPECS\n\nArea of Operation: Nyx System \nHostile Forces: Shattered Blade\nEquipment Specs: Combat Ready\nBriefing: \n\nIntel has been received that Shattered Blade have possession of a cryopod believed to contain a living Vanduul sample. Reports say that this pod is marked out by having blue trim on its casing.\n\nAny Intersec contractor that locates one of these cryopods should consider its acquisition a vital priority and adjust their mission parameters accordingly.\n\nOnce secured, the cryopod should be delivered with all due haste to <EM4>~mission(Destination|Address)</EM4>.\n\nRespectfully,   \n\nDeacon Tobin \nOperations Manager \nInterSec Defense Solutions  \n\nThis communication consists of confidential information solely intended for the recipient. Please disregard if received in error and notify the sender. All operations are conducted at the contractor’s own personal risk and must adhere to UEE and system law where applicable.",
+      "descriptionKey": "@Intersec_BlueCryo_Desc_001",
+      "faction": "InterSec Defense Solutions",
+      "factionKey": "lawful_intersecdefensesolutions",
+      "system": "Nyx",
+      "region": null,
+      "category": "Mercenary",
+      "blueprintPools": [
+        {
+          "key": "intersec_resourcegathering",
+          "chance": 1,
+          "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/blueprintmissionpools/bp_missionreward_intersec_resourcegathering.json"
+        }
       ],
+      "minStanding": {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
+      "repPoints": 0,
+      "repEffects": [],
+      "locality": {
+        "key": "nyx",
+        "label": "Anywhere in Nyx",
+        "systems": [
+          "Nyx"
+        ]
+      },
+      "frequency": {
+        "maxInstances": -1,
+        "maxInstancesPerPlayer": 1,
+        "respawnTimeMinutes": 5,
+        "respawnTimeVariationMinutes": 2,
+        "instanceLifeTimeMinutes": null,
+        "instanceLifeTimeVariationMinutes": null,
+        "hasPersonalCooldown": false,
+        "personalCooldownSeconds": 1,
+        "personalCooldownVariationSeconds": 1,
+        "abandonedCooldownSeconds": 1,
+        "abandonedCooldownVariationSeconds": 1,
+        "onceOnly": false,
+        "canReacceptAfterAbandoning": false,
+        "canReacceptAfterFailing": false,
+        "canBeShared": false
+      },
+      "notForRelease": false,
+      "isLawful": true,
+      "repScopeKey": "FactionReputationScope",
+      "repCareerLabel": "Standing"
+    },
+    {
+      "id": "b4570e85-55f9-4723-bf40-c01fe7aa3be2",
+      "debugName": "Intersec_DrawOutBoss_Nyx_VeryHard_Van",
+      "title": "Interdict Vanduul Maulers",
+      "displayTitle": "Interdict Vanduul Maulers",
+      "titleKey": "@Intersec_ShipWaveAttack_DrawOutBoss_VH_Van_Title_001",
+      "description": "MISSION SPECS\n\nArea of Operation: Nyx System \nHostile Forces: Vanduul\nEquipment Specs: Combat-rated ship\nBriefing:\n\nIntersec are looking for experienced pilots to join a Mauler-hunting operation being at  <EM4>~mission(location|Address)</EM4>. The Vanduul ship has been spotted in the area and it poses too large a threat to leave it to its own devices. As such, pilots will be tasked with drawing the Mauler into combat by attacking Vanduul fighters in the area. \n\nGiven the risks, Intersec highly recommends assembling a team of experienced pilots with well-armed ships.\n\nRespectfully,   \n\nDeacon Tobin \nOperations Manager \nInterSec Defense Solutions  \n\nThis communication consists of confidential information solely intended for the recipient. Please disregard if received in error and notify the sender. All operations are conducted at the contractor’s own personal risk and must adhere to UEE and system law where applicable.",
+      "descriptionKey": "@Intersec_ShipWaveAttack_DrawOutBoss_VH_Van_Desc_001",
+      "faction": "InterSec Defense Solutions",
+      "factionKey": "lawful_intersecdefensesolutions",
+      "system": "Nyx",
+      "region": null,
+      "category": "Mercenary",
+      "blueprintPools": [
+        {
+          "key": "bp_reward_vgl_flightsuit_01_03_01",
+          "chance": 1,
+          "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/vanduulincursion/bp_reward_vgl_flightsuit_01_03_01.json"
+        },
+        {
+          "key": "bp_reward_vgl_flightsuit_helmet_01_11_01",
+          "chance": 1,
+          "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/vanduulincursion/bp_reward_vgl_flightsuit_helmet_01_11_01.json"
+        }
+      ],
+      "minStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
+      "repPoints": 300,
+      "repEffects": [
+        {
+          "factionKey": "lawful_intersecdefensesolutions",
+          "faction": "InterSec Defense Solutions",
+          "amount": 300
+        }
+      ],
+      "locality": {
+        "key": "nyx",
+        "label": "Anywhere in Nyx",
+        "systems": [
+          "Nyx"
+        ]
+      },
+      "frequency": {
+        "maxInstances": -1,
+        "maxInstancesPerPlayer": 1,
+        "respawnTimeMinutes": 15,
+        "respawnTimeVariationMinutes": 2,
+        "instanceLifeTimeMinutes": 5,
+        "instanceLifeTimeVariationMinutes": 2,
+        "hasPersonalCooldown": false,
+        "personalCooldownSeconds": 1,
+        "personalCooldownVariationSeconds": 1,
+        "abandonedCooldownSeconds": 1,
+        "abandonedCooldownVariationSeconds": 1,
+        "onceOnly": false,
+        "canReacceptAfterAbandoning": false,
+        "canReacceptAfterFailing": false,
+        "canBeShared": true
+      },
+      "notForRelease": false,
+      "isLawful": true,
+      "repScopeKey": "FactionReputationScope",
+      "repCareerLabel": "Standing"
+    },
+    {
+      "id": "22afc3c3-5a36-4da9-8877-5d1b717622b5",
+      "debugName": "Intersec_DrawOutBoss_Nyx_Super_Van",
+      "title": "Draw Out Maulers",
+      "displayTitle": "Draw Out Maulers",
+      "titleKey": "@Intersec_ShipWaveAttack_DrawOutBoss_S_Van_Title_001",
+      "description": "MISSION SPECS\n\nArea of Operation: Nyx System \nHostile Forces: Vanduul\nEquipment Specs: Combat-rated ship\nBriefing:\n\nLong-range scans indicate the presence of an extremely dangerous Mauler-led strike group at <EM4>~mission(Location|Address)</EM4>. Intersec are looking for highly-experienced combat pilots with fully combat-ready ships to take part in an operation to draw out and eliminate the Mauler.\n\nIt goes without saying that this commission should only be attempted with substantial back-up. Rewards will reflect the high-risk nature of this contract.\n\nRespectfully,   \n\nDeacon Tobin \nOperations Manager \nInterSec Defense Solutions  \n\nThis communication consists of confidential information solely intended for the recipient. Please disregard if received in error and notify the sender. All operations are conducted at the contractor’s own personal risk and must adhere to UEE and system law where applicable.",
+      "descriptionKey": "@Intersec_ShipWaveAttack_DrawOutBoss_S_Van_Desc_001",
+      "faction": "InterSec Defense Solutions",
+      "factionKey": "lawful_intersecdefensesolutions",
+      "system": "Nyx",
+      "region": null,
+      "category": "Mercenary",
+      "blueprintPools": [
+        {
+          "key": "bp_reward_behr_lasercannon_s2_mr02",
+          "chance": 1,
+          "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/vanduulincursion/bp_reward_behr_lasercannon_s2_mr02.json"
+        },
+        {
+          "key": "bp_reward_behr_lasercannon_s1_mr02",
+          "chance": 1,
+          "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/vanduulincursion/bp_reward_behr_lasercannon_s1_mr02.json"
+        },
+        {
+          "key": "bp_reward_behr_lasercannon_s3_mr02",
+          "chance": 1,
+          "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/vanduulincursion/bp_reward_behr_lasercannon_s3_mr02.json"
+        }
+      ],
+      "minStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
+      "repPoints": 300,
+      "repEffects": [
+        {
+          "factionKey": "lawful_intersecdefensesolutions",
+          "faction": "InterSec Defense Solutions",
+          "amount": 300
+        }
+      ],
+      "locality": {
+        "key": "nyx",
+        "label": "Anywhere in Nyx",
+        "systems": [
+          "Nyx"
+        ]
+      },
+      "frequency": {
+        "maxInstances": -1,
+        "maxInstancesPerPlayer": 1,
+        "respawnTimeMinutes": 15,
+        "respawnTimeVariationMinutes": 2,
+        "instanceLifeTimeMinutes": 5,
+        "instanceLifeTimeVariationMinutes": 2,
+        "hasPersonalCooldown": false,
+        "personalCooldownSeconds": 1,
+        "personalCooldownVariationSeconds": 1,
+        "abandonedCooldownSeconds": 1,
+        "abandonedCooldownVariationSeconds": 1,
+        "onceOnly": false,
+        "canReacceptAfterAbandoning": false,
+        "canReacceptAfterFailing": false,
+        "canBeShared": true
+      },
+      "notForRelease": false,
+      "isLawful": true,
+      "repScopeKey": "FactionReputationScope",
+      "repCareerLabel": "Standing"
+    },
+    {
+      "id": "30794445-0de4-4e9d-9cee-db908a0b34e0",
+      "debugName": "Intersec_ShipWaveAttack_Nyx_VeryHard_Van",
+      "title": "Counterstrike Against Vanduul Raiders",
+      "displayTitle": "Counterstrike Against Vanduul Raiders",
+      "titleKey": "@Intersec_ShipWaveAttack_VH_Van_Title_001",
+      "description": "MISSION SPECS\n\nArea of Operation: Nyx System \nHostile Forces: Vanduul\nEquipment Specs: Combat-rated ship\nBriefing:\n\nIntersec has been tasked with organizing a counterstrike at <EM4>~mission(Location|Address)</EM4> against Vanduul raiders responsible for a number of fast-strike attacks on commercial convoys. \n\nScanner intel suggests the Vanduul have yet to reveal the true size of their attack wing. Be prepared to face  reinforcements after your initial contact.\n\nRespectfully,   \n\nDeacon Tobin \nOperations Manager \nInterSec Defense Solutions  \n\nThis communication consists of confidential information solely intended for the recipient. Please disregard if received in error and notify the sender. All operations are conducted at the contractor’s own personal risk and must adhere to UEE and system law where applicable.",
+      "descriptionKey": "@Intersec_ShipWaveAttack_VH_Van_Desc_001",
+      "faction": "InterSec Defense Solutions",
+      "factionKey": "lawful_intersecdefensesolutions",
+      "system": "Nyx",
+      "region": null,
+      "category": "Mercenary",
+      "blueprintPools": [
+        {
+          "key": "bp_reward_omc_utility_heavy_legs_01_03_01",
+          "chance": 1,
+          "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/vanduulincursion/bp_reward_omc_utility_heavy_legs_01_03_01.json"
+        },
+        {
+          "key": "bp_reward_omc_utility_heavy_arms_01_03_01",
+          "chance": 1,
+          "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/vanduulincursion/bp_reward_omc_utility_heavy_arms_01_03_01.json"
+        }
+      ],
+      "minStanding": {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
+      "repPoints": 300,
+      "repEffects": [
+        {
+          "factionKey": "lawful_intersecdefensesolutions",
+          "faction": "InterSec Defense Solutions",
+          "amount": 300
+        }
+      ],
+      "locality": {
+        "key": "nyx",
+        "label": "Anywhere in Nyx",
+        "systems": [
+          "Nyx"
+        ]
+      },
+      "frequency": {
+        "maxInstances": -1,
+        "maxInstancesPerPlayer": 1,
+        "respawnTimeMinutes": 15,
+        "respawnTimeVariationMinutes": 2,
+        "instanceLifeTimeMinutes": 5,
+        "instanceLifeTimeVariationMinutes": 2,
+        "hasPersonalCooldown": false,
+        "personalCooldownSeconds": 1,
+        "personalCooldownVariationSeconds": 1,
+        "abandonedCooldownSeconds": 1,
+        "abandonedCooldownVariationSeconds": 1,
+        "onceOnly": false,
+        "canReacceptAfterAbandoning": false,
+        "canReacceptAfterFailing": false,
+        "canBeShared": true
+      },
+      "notForRelease": false,
+      "isLawful": true,
+      "repScopeKey": "FactionReputationScope",
+      "repCareerLabel": "Standing"
+    },
+    {
+      "id": "8bd22dab-578e-4673-9aa2-01b8ea6a30ba",
+      "debugName": "Intersec_ShipWaveAttack_Nyx_Super_Van",
+      "title": "Intercept Vanduul Fleet",
+      "displayTitle": "Intercept Vanduul Fleet",
+      "titleKey": "@Intersec_ShipWaveAttack_S_Van_Title_001",
+      "description": "MISSION SPECS\n\nArea of Operation: Nyx System \nHostile Forces: Vanduul\nEquipment Specs: Combat-rated ship\nBriefing:\n\nA clan-sized fleet of Vanduul vessels has been detected at <EM4>~mission(Location|Address)</EM4>, threatening the integrity of vital commercial routes. Intersec is assembling a counterforce of experienced pilots with combat-ready ships. \n\nGiven the size of the Vanduul fleet, pilots should expect to encounter support waves in response to their initial action.\n\nPut together a team and head to the co-ordinates with all due speed. The commercial crews are counting on you to keep the routes open.\n\nRespectfully,   \n\nDeacon Tobin \nOperations Manager \nInterSec Defense Solutions  \n\nThis communication consists of confidential information solely intended for the recipient. Please disregard if received in error and notify the sender. All operations are conducted at the contractor’s own personal risk and must adhere to UEE and system law where applicable.",
+      "descriptionKey": "@Intersec_ShipWaveAttack_S_Van_Desc_001",
+      "faction": "InterSec Defense Solutions",
+      "factionKey": "lawful_intersecdefensesolutions",
+      "system": "Nyx",
+      "region": null,
+      "category": "Mercenary",
+      "blueprintPools": [
+        {
+          "key": "bp_reward_omc_utility_heavy_helmet_01_03_01",
+          "chance": 1,
+          "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/vanduulincursion/bp_reward_omc_utility_heavy_helmet_01_03_01.json"
+        },
+        {
+          "key": "bp_reward_omc_utility_heavy_core_01_03_01",
+          "chance": 1,
+          "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/vanduulincursion/bp_reward_omc_utility_heavy_core_01_03_01.json"
+        }
+      ],
+      "minStanding": {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
+      "repPoints": 300,
+      "repEffects": [
+        {
+          "factionKey": "lawful_intersecdefensesolutions",
+          "faction": "InterSec Defense Solutions",
+          "amount": 300
+        }
+      ],
+      "locality": {
+        "key": "nyx",
+        "label": "Anywhere in Nyx",
+        "systems": [
+          "Nyx"
+        ]
+      },
+      "frequency": {
+        "maxInstances": -1,
+        "maxInstancesPerPlayer": 1,
+        "respawnTimeMinutes": 15,
+        "respawnTimeVariationMinutes": 2,
+        "instanceLifeTimeMinutes": 5,
+        "instanceLifeTimeVariationMinutes": 2,
+        "hasPersonalCooldown": false,
+        "personalCooldownSeconds": 1,
+        "personalCooldownVariationSeconds": 1,
+        "abandonedCooldownSeconds": 1,
+        "abandonedCooldownVariationSeconds": 1,
+        "onceOnly": false,
+        "canReacceptAfterAbandoning": false,
+        "canReacceptAfterFailing": false,
+        "canBeShared": true
+      },
+      "notForRelease": false,
+      "isLawful": true,
+      "repScopeKey": "FactionReputationScope",
+      "repCareerLabel": "Standing"
+    },
+    {
+      "id": "79741482-555e-4e17-b6cf-c08268cd89d7",
+      "debugName": "Intersec_3Way_Nyx_VeryHard_Van",
+      "title": "Neutralize Vanduul and Shattered Blade Threat",
+      "displayTitle": "Neutralize Vanduul and Shattered Blade Threat",
+      "titleKey": "@Intersec_3Way_Title_VeryHard_001",
+      "description": "MISSION SPECS\n\nArea of Operation: Nyx System \nHostile Forces: Shattered Blade, Vanduul\nEquipment Specs: Combat-rated ship\nBriefing:\n\nIncreasing Vanduul and Shattered Blade activity is beginning to negatively impact the ability of People's Alliance shipping to safely navigate <EM4>~mission(Location|Address)</EM4>.\n\nIntersec is recruiting pilots with combat experience to neutralize the threat and allow for the safe flow of shipping traffic again.\n\nRespectfully,   \n\nDeacon Tobin \nOperations Manager \nInterSec Defense Solutions  \n\nThis communication consists of confidential information solely intended for the recipient. Please disregard if received in error and notify the sender. All operations are conducted at the contractor’s own personal risk and must adhere to UEE and system law where applicable.",
+      "descriptionKey": "@Intersec_3Way_Desc_VeryHard_001",
+      "faction": "InterSec Defense Solutions",
+      "factionKey": "lawful_intersecdefensesolutions",
+      "system": "Nyx",
+      "region": null,
+      "category": "Mercenary",
+      "blueprintPools": [
+        {
+          "key": "bp_reward_qrt_utility_heavy_arms_01_04_01",
+          "chance": 1,
+          "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/vanduulincursion/bp_reward_qrt_utility_heavy_arms_01_04_01.json"
+        },
+        {
+          "key": "bp_reward_qrt_utility_heavy_legs_01_04_01",
+          "chance": 1,
+          "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/vanduulincursion/bp_reward_qrt_utility_heavy_legs_01_04_01.json"
+        }
+      ],
+      "minStanding": {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
+      "repPoints": 300,
+      "repEffects": [
+        {
+          "factionKey": "lawful_intersecdefensesolutions",
+          "faction": "InterSec Defense Solutions",
+          "amount": 300
+        }
+      ],
+      "locality": {
+        "key": "nyx",
+        "label": "Anywhere in Nyx",
+        "systems": [
+          "Nyx"
+        ]
+      },
+      "frequency": {
+        "maxInstances": -1,
+        "maxInstancesPerPlayer": 1,
+        "respawnTimeMinutes": 15,
+        "respawnTimeVariationMinutes": 2,
+        "instanceLifeTimeMinutes": 5,
+        "instanceLifeTimeVariationMinutes": 2,
+        "hasPersonalCooldown": false,
+        "personalCooldownSeconds": 1,
+        "personalCooldownVariationSeconds": 1,
+        "abandonedCooldownSeconds": 1,
+        "abandonedCooldownVariationSeconds": 1,
+        "onceOnly": false,
+        "canReacceptAfterAbandoning": false,
+        "canReacceptAfterFailing": false,
+        "canBeShared": true
+      },
+      "notForRelease": false,
+      "isLawful": true,
+      "repScopeKey": "FactionReputationScope",
+      "repCareerLabel": "Standing"
+    },
+    {
+      "id": "745884a9-e99a-499c-bb8c-1c359207e590",
+      "debugName": "Intersec_3Way_Nyx_Super_Van",
+      "title": "Stop Vanduul and Shattered Blade Hostilities",
+      "displayTitle": "Stop Vanduul and Shattered Blade Hostilities",
+      "titleKey": "@Intersec_3Way_Title_Super_001",
+      "description": "MISSION SPECS\n\nArea of Operation: Nyx System \nHostile Forces: Shattered Blade, Vanduul\nEquipment Specs: Combat-rated ship\nBriefing:\n\n<EM4>~mission(Location|Address)</EM4> has become impassable due to a severe escalation in hostilities between Vanduul and Shattered Blade vessels. Intersec has been tasked with recruiting experienced combat-rated pilots to neutralize the threat.\n\nPut together a capable fleet and then proceed with all due haste. It is unacceptable that this has become a no-go zone for commerical shipping.\n\nRespectfully,   \n\nDeacon Tobin \nOperations Manager \nInterSec Defense Solutions  \n\nThis communication consists of confidential information solely intended for the recipient. Please disregard if received in error and notify the sender. All operations are conducted at the contractor’s own personal risk and must adhere to UEE and system law where applicable.",
+      "descriptionKey": "@Intersec_3Way_Desc_Super_001",
+      "faction": "InterSec Defense Solutions",
+      "factionKey": "lawful_intersecdefensesolutions",
+      "system": "Nyx",
+      "region": null,
+      "category": "Mercenary",
+      "blueprintPools": [
+        {
+          "key": "bp_reward_qrt_utility_heavy_core_01_04_01",
+          "chance": 1,
+          "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/vanduulincursion/bp_reward_qrt_utility_heavy_core_01_04_01.json"
+        },
+        {
+          "key": "bp_reward_qrt_utility_heavy_backpack_01_05_01",
+          "chance": 1,
+          "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/vanduulincursion/bp_reward_qrt_utility_heavy_backpack_01_05_01.json"
+        },
+        {
+          "key": "bp_reward_qrt_utility_heavy_helmet_01_04_01",
+          "chance": 1,
+          "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/vanduulincursion/bp_reward_qrt_utility_heavy_helmet_01_04_01.json"
+        }
+      ],
+      "minStanding": {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
+      "repPoints": 300,
+      "repEffects": [
+        {
+          "factionKey": "lawful_intersecdefensesolutions",
+          "faction": "InterSec Defense Solutions",
+          "amount": 300
+        }
+      ],
+      "locality": {
+        "key": "nyx",
+        "label": "Anywhere in Nyx",
+        "systems": [
+          "Nyx"
+        ]
+      },
+      "frequency": {
+        "maxInstances": -1,
+        "maxInstancesPerPlayer": 1,
+        "respawnTimeMinutes": 15,
+        "respawnTimeVariationMinutes": 2,
+        "instanceLifeTimeMinutes": 5,
+        "instanceLifeTimeVariationMinutes": 2,
+        "hasPersonalCooldown": false,
+        "personalCooldownSeconds": 1,
+        "personalCooldownVariationSeconds": 1,
+        "abandonedCooldownSeconds": 1,
+        "abandonedCooldownVariationSeconds": 1,
+        "onceOnly": false,
+        "canReacceptAfterAbandoning": false,
+        "canReacceptAfterFailing": false,
+        "canBeShared": true
+      },
+      "notForRelease": false,
+      "isLawful": true,
+      "repScopeKey": "FactionReputationScope",
       "repCareerLabel": "Standing"
     },
     {
@@ -40884,8 +41597,7 @@
       "isLawful": true,
       "__minStandingPath": null,
       "__maxStandingPath": null,
-      "__repScopePath": null,
-      "repCareerLabel": "Standing"
+      "__repScopePath": null
     },
     {
       "id": "67623fed-550c-4b1a-a451-e670c260f1d9",
@@ -41217,8 +41929,7 @@
           ],
           "totalEmitters": 1
         }
-      ],
-      "repCareerLabel": "Standing"
+      ]
     },
     {
       "id": "230aa1eb-2dd3-43e6-85e3-7775efabb143",
@@ -41976,8 +42687,7 @@
           ],
           "totalEmitters": 1
         }
-      ],
-      "repCareerLabel": "Standing"
+      ]
     },
     {
       "id": "decd5427-168b-4afc-8f0a-692284ab63c0",
@@ -42735,8 +43445,7 @@
           ],
           "totalEmitters": 1
         }
-      ],
-      "repCareerLabel": "Standing"
+      ]
     },
     {
       "id": "48c283cc-ab8f-45a8-ba52-20913315b90c",
@@ -44418,8 +45127,7 @@
           ],
           "totalEmitters": 1
         }
-      ],
-      "repCareerLabel": "Barter & Trade"
+      ]
     },
     {
       "id": "dcc744eb-e9c5-4364-a1d2-9b39864baecf",
@@ -44511,8 +45219,7 @@
           ],
           "totalEmitters": 1
         }
-      ],
-      "repCareerLabel": "Barter & Trade"
+      ]
     },
     {
       "id": "a026b45d-6726-4a86-898c-e0207f2880c4",
@@ -44604,8 +45311,7 @@
           ],
           "totalEmitters": 1
         }
-      ],
-      "repCareerLabel": "Barter & Trade"
+      ]
     },
     {
       "id": "88bb3702-e20a-42e3-8ba3-328f2333e30c",
@@ -44707,8 +45413,7 @@
           ],
           "totalEmitters": 1
         }
-      ],
-      "repCareerLabel": "Barter & Trade"
+      ]
     },
     {
       "id": "b46612e0-4eae-4827-8038-e460e00f8967",
@@ -44800,8 +45505,7 @@
           ],
           "totalEmitters": 1
         }
-      ],
-      "repCareerLabel": "Barter & Trade"
+      ]
     },
     {
       "id": "c99e22e9-643c-4822-9f06-8c119722caee",
@@ -44913,8 +45617,7 @@
           ],
           "totalEmitters": 1
         }
-      ],
-      "repCareerLabel": "Barter & Trade"
+      ]
     },
     {
       "id": "d4d26850-d4f4-4549-a0af-a478ee0be480",
@@ -45000,8 +45703,7 @@
           ],
           "totalEmitters": 1
         }
-      ],
-      "repCareerLabel": "Barter & Trade"
+      ]
     },
     {
       "id": "41231c57-f186-4c5e-ae51-524fc1e1d9a3",
@@ -45087,8 +45789,7 @@
           ],
           "totalEmitters": 1
         }
-      ],
-      "repCareerLabel": "Barter & Trade"
+      ]
     },
     {
       "id": "6c88a1b4-493c-47f7-bfde-bbd7fcde8d2a",
@@ -52778,6 +53479,8 @@
       "title": "@Headhunters_EliminateAllFF_Title_001",
       "displayTitle": "Hh Pyro Eliminate All Frontier Fighters",
       "titleKey": "@Headhunters_EliminateAllFF_Title_001",
+      "description": "",
+      "descriptionKey": null,
       "faction": "Headhunters",
       "factionKey": "unlawful_headhunters",
       "system": "Pyro",
@@ -79870,6 +80573,8 @@
       "title": "Return of XenoThreat — 18,000 pts",
       "displayTitle": "Return of XenoThreat — 18,000 pts",
       "titleKey": "",
+      "description": "The terrorist group XenoThreat have returned to Stanton seeking to violently impose their intolerant values on the system. Their well-armed members are harassing not only the alien residents, but anyone they have deemed a traitor to Humanity, specifically Human pilots of alien-made spacecraft.\n\nIt is clear that they will not stop attempting to spread their hatred unless we stop them.\n\nJoin us. Do your part.",
+      "descriptionKey": "@X2_JournalTracker_Content",
       "faction": "Foxwell Enforcement",
       "factionKey": "lawful_foxwellenforcement",
       "system": "Stanton",
@@ -79914,9 +80619,7 @@
       "repPoints": 0,
       "repEffects": [],
       "isLawful": true,
-      "source": "contractScenario",
-      "description": "The terrorist group XenoThreat have returned to Stanton seeking to violently impose their intolerant values on the system. Their well-armed members are harassing not only the alien residents, but anyone they have deemed a traitor to Humanity, specifically Human pilots of alien-made spacecraft.\n\nIt is clear that they will not stop attempting to spread their hatred unless we stop them.\n\nJoin us. Do your part.",
-      "descriptionKey": "@X2_JournalTracker_Content"
+      "source": "contractScenario"
     },
     {
       "id": "RoX_ScenarioProgress_tier_30000",
@@ -79924,6 +80627,8 @@
       "title": "Return of XenoThreat — 30,000 pts",
       "displayTitle": "Return of XenoThreat — 30,000 pts",
       "titleKey": "",
+      "description": "The terrorist group XenoThreat have returned to Stanton seeking to violently impose their intolerant values on the system. Their well-armed members are harassing not only the alien residents, but anyone they have deemed a traitor to Humanity, specifically Human pilots of alien-made spacecraft.\n\nIt is clear that they will not stop attempting to spread their hatred unless we stop them.\n\nJoin us. Do your part.",
+      "descriptionKey": "@X2_JournalTracker_Content",
       "faction": "Foxwell Enforcement",
       "factionKey": "lawful_foxwellenforcement",
       "system": "Stanton",
@@ -79968,9 +80673,7 @@
       "repPoints": 0,
       "repEffects": [],
       "isLawful": true,
-      "source": "contractScenario",
-      "description": "The terrorist group XenoThreat have returned to Stanton seeking to violently impose their intolerant values on the system. Their well-armed members are harassing not only the alien residents, but anyone they have deemed a traitor to Humanity, specifically Human pilots of alien-made spacecraft.\n\nIt is clear that they will not stop attempting to spread their hatred unless we stop them.\n\nJoin us. Do your part.",
-      "descriptionKey": "@X2_JournalTracker_Content"
+      "source": "contractScenario"
     },
     {
       "id": "RoX_ScenarioProgress_tier_60000",
@@ -79978,6 +80681,8 @@
       "title": "Return of XenoThreat — 60,000 pts",
       "displayTitle": "Return of XenoThreat — 60,000 pts",
       "titleKey": "",
+      "description": "The terrorist group XenoThreat have returned to Stanton seeking to violently impose their intolerant values on the system. Their well-armed members are harassing not only the alien residents, but anyone they have deemed a traitor to Humanity, specifically Human pilots of alien-made spacecraft.\n\nIt is clear that they will not stop attempting to spread their hatred unless we stop them.\n\nJoin us. Do your part.",
+      "descriptionKey": "@X2_JournalTracker_Content",
       "faction": "Foxwell Enforcement",
       "factionKey": "lawful_foxwellenforcement",
       "system": "Stanton",
@@ -80022,9 +80727,7 @@
       "repPoints": 0,
       "repEffects": [],
       "isLawful": true,
-      "source": "contractScenario",
-      "description": "The terrorist group XenoThreat have returned to Stanton seeking to violently impose their intolerant values on the system. Their well-armed members are harassing not only the alien residents, but anyone they have deemed a traitor to Humanity, specifically Human pilots of alien-made spacecraft.\n\nIt is clear that they will not stop attempting to spread their hatred unless we stop them.\n\nJoin us. Do your part.",
-      "descriptionKey": "@X2_JournalTracker_Content"
+      "source": "contractScenario"
     },
     {
       "id": "RoX_ScenarioProgress_tier_72000",
@@ -80032,6 +80735,8 @@
       "title": "Return of XenoThreat — 72,000 pts",
       "displayTitle": "Return of XenoThreat — 72,000 pts",
       "titleKey": "",
+      "description": "The terrorist group XenoThreat have returned to Stanton seeking to violently impose their intolerant values on the system. Their well-armed members are harassing not only the alien residents, but anyone they have deemed a traitor to Humanity, specifically Human pilots of alien-made spacecraft.\n\nIt is clear that they will not stop attempting to spread their hatred unless we stop them.\n\nJoin us. Do your part.",
+      "descriptionKey": "@X2_JournalTracker_Content",
       "faction": "Foxwell Enforcement",
       "factionKey": "lawful_foxwellenforcement",
       "system": "Stanton",
@@ -80056,9 +80761,7 @@
       "repPoints": 0,
       "repEffects": [],
       "isLawful": true,
-      "source": "contractScenario",
-      "description": "The terrorist group XenoThreat have returned to Stanton seeking to violently impose their intolerant values on the system. Their well-armed members are harassing not only the alien residents, but anyone they have deemed a traitor to Humanity, specifically Human pilots of alien-made spacecraft.\n\nIt is clear that they will not stop attempting to spread their hatred unless we stop them.\n\nJoin us. Do your part.",
-      "descriptionKey": "@X2_JournalTracker_Content"
+      "source": "contractScenario"
     },
     {
       "id": "RoX_ScenarioProgress_tier_102000",
@@ -80066,6 +80769,8 @@
       "title": "Return of XenoThreat — 102,000 pts",
       "displayTitle": "Return of XenoThreat — 102,000 pts",
       "titleKey": "",
+      "description": "The terrorist group XenoThreat have returned to Stanton seeking to violently impose their intolerant values on the system. Their well-armed members are harassing not only the alien residents, but anyone they have deemed a traitor to Humanity, specifically Human pilots of alien-made spacecraft.\n\nIt is clear that they will not stop attempting to spread their hatred unless we stop them.\n\nJoin us. Do your part.",
+      "descriptionKey": "@X2_JournalTracker_Content",
       "faction": "Foxwell Enforcement",
       "factionKey": "lawful_foxwellenforcement",
       "system": "Stanton",
@@ -80090,9 +80795,7 @@
       "repPoints": 0,
       "repEffects": [],
       "isLawful": true,
-      "source": "contractScenario",
-      "description": "The terrorist group XenoThreat have returned to Stanton seeking to violently impose their intolerant values on the system. Their well-armed members are harassing not only the alien residents, but anyone they have deemed a traitor to Humanity, specifically Human pilots of alien-made spacecraft.\n\nIt is clear that they will not stop attempting to spread their hatred unless we stop them.\n\nJoin us. Do your part.",
-      "descriptionKey": "@X2_JournalTracker_Content"
+      "source": "contractScenario"
     },
     {
       "id": "RoX_ScenarioProgress_tier_120000",
@@ -80100,6 +80803,8 @@
       "title": "Return of XenoThreat — 120,000 pts",
       "displayTitle": "Return of XenoThreat — 120,000 pts",
       "titleKey": "",
+      "description": "The terrorist group XenoThreat have returned to Stanton seeking to violently impose their intolerant values on the system. Their well-armed members are harassing not only the alien residents, but anyone they have deemed a traitor to Humanity, specifically Human pilots of alien-made spacecraft.\n\nIt is clear that they will not stop attempting to spread their hatred unless we stop them.\n\nJoin us. Do your part.",
+      "descriptionKey": "@X2_JournalTracker_Content",
       "faction": "Foxwell Enforcement",
       "factionKey": "lawful_foxwellenforcement",
       "system": "Stanton",
@@ -80129,9 +80834,7 @@
       "repPoints": 0,
       "repEffects": [],
       "isLawful": true,
-      "source": "contractScenario",
-      "description": "The terrorist group XenoThreat have returned to Stanton seeking to violently impose their intolerant values on the system. Their well-armed members are harassing not only the alien residents, but anyone they have deemed a traitor to Humanity, specifically Human pilots of alien-made spacecraft.\n\nIt is clear that they will not stop attempting to spread their hatred unless we stop them.\n\nJoin us. Do your part.",
-      "descriptionKey": "@X2_JournalTracker_Content"
+      "source": "contractScenario"
     },
     {
       "id": "bridged_redwind_hauling",
@@ -80139,6 +80842,8 @@
       "title": "Red Wind Interstellar Hauling",
       "displayTitle": "Red Wind Interstellar Hauling",
       "titleKey": "@RedWind_HaulCargo_SingleToMulti_title_01",
+      "description": "RED WIND LINEHAUL\n'YOUR GOODS IN GOOD HANDS'\n----------------------------   \n\nOne of the folks over at <EM4>~mission(Location|Address)</EM4> just hit me up about a pile of cargo, <EM4>~mission(MissionMaxSCUSize)</EM4> or smaller, that needs to be hauled out to a few different spots.   \n\nDROP OFF LOCATIONS (ANY ORDER)  \n~mission(SingleToMultiToken)  \n\nI'm trusting you to set your own route here, so don't mess it up. And try to stay away from anywhere too dangerous. And don't forget to pack a <EM4>handheld tractor beam</EM4> to bring along.",
+      "descriptionKey": "@RedWind_HaulCargo_SingleToMulti_desc_01",
       "faction": "Red Wind Linehaul",
       "factionKey": "lawful_redwindlinehaul",
       "system": "Stanton",
@@ -80168,11 +80873,7 @@
         }
       ],
       "isLawful": true,
-      "source": "orphanPoolBridge",
-      "repCareerLabel": "Hauling",
-      "description": "RED WIND LINEHAUL\n'YOUR GOODS IN GOOD HANDS'\n----------------------------   \n\nOne of the folks over at <EM4>~mission(Location|Address)</EM4> just hit me up about a pile of cargo, <EM4>~mission(MissionMaxSCUSize)</EM4> or smaller, that needs to be hauled out to a few different spots.   \n\nDROP OFF LOCATIONS (ANY ORDER)  \n~mission(SingleToMultiToken)  \n\nI'm trusting you to set your own route here, so don't mess it up. And try to stay away from anywhere too dangerous. And don't forget to pack a <EM4>handheld tractor beam</EM4> to bring along.",
-      "descriptionKey": "@RedWind_HaulCargo_SingleToMulti_desc_01",
-      "repScopeKey": "ReputationScope_Hauling"
+      "source": "orphanPoolBridge"
     },
     {
       "id": "bridged_redwind_recovercargo",
@@ -80180,6 +80881,8 @@
       "title": "Red Wind Easy Cargo Recovery",
       "displayTitle": "Red Wind Easy Cargo Recovery",
       "titleKey": "@RedWind_RecoverCargo_Easy_Title",
+      "description": "RED WIND LINEHAUL\n'YOUR GOODS IN GOOD HANDS'\n----------------------------\n\nOne of our haulers ran into some engine trouble whilst transporting some cargo for us and was forced to abandon their ship. Looking for a contractor who can recover the cargo and complete the delivery. You’ll need to bring your own <EM4>heavy-duty tractor beam</EM4> to transport the cargo to your ship. Details below.\n\nRECOVERY LOCATION\n     · <EM4>~mission(Location|Address)</EM4>\n\nDROP OFF LOCATION\n     · Freight elevator at <EM4>~mission(Destination|Address)</EM4>\n\nBe advised, the recovery location hasn’t been verified as safe. You might find an opportunistic outlaw trying to take the cargo for themselves, so be on alert.\n\nTAKE PRIDE IN YOUR WORK – Even as a contractor you are representing Red Wind Linehaul. Do not intentionally do anything to harm the company’s reputation.",
+      "descriptionKey": "@RedWind_RecoverCargo_Easy_Description",
       "faction": "Red Wind Linehaul",
       "factionKey": "lawful_redwindlinehaul",
       "system": "Nyx",
@@ -80209,11 +80912,7 @@
         }
       ],
       "isLawful": true,
-      "source": "orphanPoolBridge",
-      "repCareerLabel": "Hauling",
-      "description": "RED WIND LINEHAUL\n'YOUR GOODS IN GOOD HANDS'\n----------------------------\n\nOne of our haulers ran into some engine trouble whilst transporting some cargo for us and was forced to abandon their ship. Looking for a contractor who can recover the cargo and complete the delivery. You’ll need to bring your own <EM4>heavy-duty tractor beam</EM4> to transport the cargo to your ship. Details below.\n\nRECOVERY LOCATION\n     · <EM4>~mission(Location|Address)</EM4>\n\nDROP OFF LOCATION\n     · Freight elevator at <EM4>~mission(Destination|Address)</EM4>\n\nBe advised, the recovery location hasn’t been verified as safe. You might find an opportunistic outlaw trying to take the cargo for themselves, so be on alert.\n\nTAKE PRIDE IN YOUR WORK – Even as a contractor you are representing Red Wind Linehaul. Do not intentionally do anything to harm the company’s reputation.",
-      "descriptionKey": "@RedWind_RecoverCargo_Easy_Description",
-      "repScopeKey": "ReputationScope_Hauling"
+      "source": "orphanPoolBridge"
     },
     {
       "id": "bridged_redwind_recoveritem",
@@ -80221,6 +80920,8 @@
       "title": "Red Wind Package Recovery",
       "displayTitle": "Red Wind Package Recovery",
       "titleKey": "@spacecollect_cargo_title_intro_01",
+      "description": "RED WIND LINEHAUL\n'YOUR GOODS IN GOOD HANDS'\n----------------------------\n\nA contractor of ours has run into some trouble and abandoned their ship over at <EM4>~mission(Location|Address)</EM4>. We need someone to head to their ship, pick up the package they left there, and finish the job.\n\nPACKAGES TO RECOVER\n     · <EM4>1x ~mission(Item1)</EM4>\n\nDROP OFF LOCATION\n     · Deliver to <EM4>~mission(Destination|Target|Address)</EM4>\n\nWe’re currently uncertain as to why they failed to complete the contract, so be cautious when approaching the ship.\n\nTAKE PRIDE IN YOUR WORK – Even as a contractor you are representing Red Wind Linehaul. Do not intentionally do anything to harm the company’s reputation.",
+      "descriptionKey": "@RedWind_RecoverItem_VE_desc_001",
       "faction": "Red Wind Linehaul",
       "factionKey": "lawful_redwindlinehaul",
       "system": "Stanton",
@@ -80250,11 +80951,7 @@
         }
       ],
       "isLawful": true,
-      "source": "orphanPoolBridge",
-      "repCareerLabel": "Standing",
-      "description": "RED WIND LINEHAUL\n'YOUR GOODS IN GOOD HANDS'\n----------------------------\n\nA contractor of ours has run into some trouble and abandoned their ship over at <EM4>~mission(Location|Address)</EM4>. We need someone to head to their ship, pick up the package they left there, and finish the job.\n\nPACKAGES TO RECOVER\n     · <EM4>1x ~mission(Item1)</EM4>\n\nDROP OFF LOCATION\n     · Deliver to <EM4>~mission(Destination|Target|Address)</EM4>\n\nWe’re currently uncertain as to why they failed to complete the contract, so be cautious when approaching the ship.\n\nTAKE PRIDE IN YOUR WORK – Even as a contractor you are representing Red Wind Linehaul. Do not intentionally do anything to harm the company’s reputation.",
-      "descriptionKey": "@RedWind_RecoverItem_VE_Desc_001",
-      "repScopeKey": "FactionReputationScope"
+      "source": "orphanPoolBridge"
     }
   ],
   "missionsByPool": {
@@ -80654,12 +81351,12 @@
           "name": "Guild Steward",
           "minReputation": 480000
         },
-        "repPoints": 2000,
+        "repPoints": 4000,
         "repEffects": [
           {
             "factionKey": "lawful_bountyhuntersguild",
             "faction": "Bounty Hunters Guild",
-            "amount": 2000
+            "amount": 4000
           }
         ],
         "repCareerLabel": null,
@@ -82064,7 +82761,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": "Bounty Hunting",
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": -1,
@@ -84368,7 +85066,8 @@
             "amount": 50
           }
         ],
-        "repCareerLabel": "Bounty Hunting",
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": -1,
@@ -84410,7 +85109,8 @@
             "amount": 50
           }
         ],
-        "repCareerLabel": "Bounty Hunting",
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": -1,
@@ -91481,6 +92181,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": -1,
@@ -91514,6 +92216,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": -1,
@@ -91547,6 +92251,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": {
           "maxInstances": 1,
           "maxInstancesPerPlayer": -1,
@@ -95168,7 +95874,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": "Standing",
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -95204,7 +95911,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": "Standing",
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -95240,7 +95948,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": "Standing",
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -95276,7 +95985,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": "Standing",
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -95312,7 +96022,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": "Standing",
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -95348,7 +96059,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": "Standing",
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -95593,6 +96305,104 @@
           "respawnTimeVariationMinutes": 2,
           "instanceLifeTimeMinutes": null,
           "instanceLifeTimeVariationMinutes": null,
+          "hasPersonalCooldown": false,
+          "personalCooldownSeconds": 1,
+          "personalCooldownVariationSeconds": 1,
+          "abandonedCooldownSeconds": 1,
+          "abandonedCooldownVariationSeconds": 1,
+          "onceOnly": false,
+          "canReacceptAfterAbandoning": true,
+          "canReacceptAfterFailing": false,
+          "canBeShared": true
+        }
+      }
+    ],
+    "bp_reward_lbco_rifle_energy_01_mr01": [
+      {
+        "title": "Target Shattered Blade: ~mission(TargetName)",
+        "displayTitle": "Target Shattered Blade: [Target]",
+        "titleKey": "@Intersec_ElimAux_ShatteredBlade_Med_Title_001",
+        "faction": "InterSec Defense Solutions",
+        "factionKey": "lawful_intersecdefensesolutions",
+        "debugName": "Intersec_EliminateSpecific_Rank1",
+        "isLawful": true,
+        "system": "Nyx",
+        "region": null,
+        "category": "Mercenary",
+        "minStanding": {
+          "name": "Jr. Contractor",
+          "minReputation": 800
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
+        "repPoints": 150,
+        "repEffects": [
+          {
+            "factionKey": "lawful_intersecdefensesolutions",
+            "faction": "InterSec Defense Solutions",
+            "amount": 150
+          }
+        ],
+        "repCareerLabel": "Standing",
+        "repScopeKey": "FactionReputationScope",
+        "frequency": {
+          "maxInstances": -1,
+          "maxInstancesPerPlayer": 1,
+          "respawnTimeMinutes": 5,
+          "respawnTimeVariationMinutes": 2,
+          "instanceLifeTimeMinutes": 5,
+          "instanceLifeTimeVariationMinutes": 2,
+          "hasPersonalCooldown": false,
+          "personalCooldownSeconds": 1,
+          "personalCooldownVariationSeconds": 1,
+          "abandonedCooldownSeconds": 1,
+          "abandonedCooldownVariationSeconds": 1,
+          "onceOnly": false,
+          "canReacceptAfterAbandoning": true,
+          "canReacceptAfterFailing": false,
+          "canBeShared": true
+        }
+      }
+    ],
+    "bp_reward_lbco_rifle_energy_01_mag": [
+      {
+        "title": "Target Shattered Blade: ~mission(TargetName)",
+        "displayTitle": "Target Shattered Blade: [Target]",
+        "titleKey": "@Intersec_ElimAux_ShatteredBlade_Med_Title_001",
+        "faction": "InterSec Defense Solutions",
+        "factionKey": "lawful_intersecdefensesolutions",
+        "debugName": "Intersec_EliminateSpecific_Rank1",
+        "isLawful": true,
+        "system": "Nyx",
+        "region": null,
+        "category": "Mercenary",
+        "minStanding": {
+          "name": "Jr. Contractor",
+          "minReputation": 800
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
+        "repPoints": 150,
+        "repEffects": [
+          {
+            "factionKey": "lawful_intersecdefensesolutions",
+            "faction": "InterSec Defense Solutions",
+            "amount": 150
+          }
+        ],
+        "repCareerLabel": "Standing",
+        "repScopeKey": "FactionReputationScope",
+        "frequency": {
+          "maxInstances": -1,
+          "maxInstancesPerPlayer": 1,
+          "respawnTimeMinutes": 5,
+          "respawnTimeVariationMinutes": 2,
+          "instanceLifeTimeMinutes": 5,
+          "instanceLifeTimeVariationMinutes": 2,
           "hasPersonalCooldown": false,
           "personalCooldownSeconds": 1,
           "personalCooldownVariationSeconds": 1,
@@ -95956,7 +96766,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": "Standing",
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -95990,7 +96801,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": "Standing",
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -96007,6 +96819,733 @@
           "canReacceptAfterAbandoning": false,
           "canReacceptAfterFailing": false,
           "canBeShared": false
+        }
+      },
+      {
+        "title": "Living Vanduul Sample",
+        "displayTitle": "Living Vanduul Sample",
+        "titleKey": "@Intersec_BlueCryo_Title_001",
+        "faction": "InterSec Defense Solutions",
+        "factionKey": "lawful_intersecdefensesolutions",
+        "debugName": "IDS_ResourceGathering_CryoP_Blue",
+        "isLawful": true,
+        "system": "Nyx",
+        "region": null,
+        "category": "Mercenary",
+        "minStanding": {
+          "name": "Jr. Contractor",
+          "minReputation": 800
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
+        "repPoints": 0,
+        "repEffects": [],
+        "repCareerLabel": "Standing",
+        "repScopeKey": "FactionReputationScope",
+        "frequency": {
+          "maxInstances": -1,
+          "maxInstancesPerPlayer": 1,
+          "respawnTimeMinutes": 5,
+          "respawnTimeVariationMinutes": 2,
+          "instanceLifeTimeMinutes": null,
+          "instanceLifeTimeVariationMinutes": null,
+          "hasPersonalCooldown": false,
+          "personalCooldownSeconds": 1,
+          "personalCooldownVariationSeconds": 1,
+          "abandonedCooldownSeconds": 1,
+          "abandonedCooldownVariationSeconds": 1,
+          "onceOnly": false,
+          "canReacceptAfterAbandoning": false,
+          "canReacceptAfterFailing": false,
+          "canBeShared": false
+        }
+      }
+    ],
+    "bp_reward_vgl_flightsuit_01_03_01": [
+      {
+        "title": "Interdict Vanduul Maulers",
+        "displayTitle": "Interdict Vanduul Maulers",
+        "titleKey": "@Intersec_ShipWaveAttack_DrawOutBoss_VH_Van_Title_001",
+        "faction": "InterSec Defense Solutions",
+        "factionKey": "lawful_intersecdefensesolutions",
+        "debugName": "Intersec_DrawOutBoss_Nyx_VeryHard_Van",
+        "isLawful": true,
+        "system": "Nyx",
+        "region": null,
+        "category": "Mercenary",
+        "minStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
+        "repPoints": 300,
+        "repEffects": [
+          {
+            "factionKey": "lawful_intersecdefensesolutions",
+            "faction": "InterSec Defense Solutions",
+            "amount": 300
+          }
+        ],
+        "repCareerLabel": "Standing",
+        "repScopeKey": "FactionReputationScope",
+        "frequency": {
+          "maxInstances": -1,
+          "maxInstancesPerPlayer": 1,
+          "respawnTimeMinutes": 15,
+          "respawnTimeVariationMinutes": 2,
+          "instanceLifeTimeMinutes": 5,
+          "instanceLifeTimeVariationMinutes": 2,
+          "hasPersonalCooldown": false,
+          "personalCooldownSeconds": 1,
+          "personalCooldownVariationSeconds": 1,
+          "abandonedCooldownSeconds": 1,
+          "abandonedCooldownVariationSeconds": 1,
+          "onceOnly": false,
+          "canReacceptAfterAbandoning": false,
+          "canReacceptAfterFailing": false,
+          "canBeShared": true
+        }
+      }
+    ],
+    "bp_reward_vgl_flightsuit_helmet_01_11_01": [
+      {
+        "title": "Interdict Vanduul Maulers",
+        "displayTitle": "Interdict Vanduul Maulers",
+        "titleKey": "@Intersec_ShipWaveAttack_DrawOutBoss_VH_Van_Title_001",
+        "faction": "InterSec Defense Solutions",
+        "factionKey": "lawful_intersecdefensesolutions",
+        "debugName": "Intersec_DrawOutBoss_Nyx_VeryHard_Van",
+        "isLawful": true,
+        "system": "Nyx",
+        "region": null,
+        "category": "Mercenary",
+        "minStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
+        "repPoints": 300,
+        "repEffects": [
+          {
+            "factionKey": "lawful_intersecdefensesolutions",
+            "faction": "InterSec Defense Solutions",
+            "amount": 300
+          }
+        ],
+        "repCareerLabel": "Standing",
+        "repScopeKey": "FactionReputationScope",
+        "frequency": {
+          "maxInstances": -1,
+          "maxInstancesPerPlayer": 1,
+          "respawnTimeMinutes": 15,
+          "respawnTimeVariationMinutes": 2,
+          "instanceLifeTimeMinutes": 5,
+          "instanceLifeTimeVariationMinutes": 2,
+          "hasPersonalCooldown": false,
+          "personalCooldownSeconds": 1,
+          "personalCooldownVariationSeconds": 1,
+          "abandonedCooldownSeconds": 1,
+          "abandonedCooldownVariationSeconds": 1,
+          "onceOnly": false,
+          "canReacceptAfterAbandoning": false,
+          "canReacceptAfterFailing": false,
+          "canBeShared": true
+        }
+      }
+    ],
+    "bp_reward_behr_lasercannon_s2_mr02": [
+      {
+        "title": "Draw Out Maulers",
+        "displayTitle": "Draw Out Maulers",
+        "titleKey": "@Intersec_ShipWaveAttack_DrawOutBoss_S_Van_Title_001",
+        "faction": "InterSec Defense Solutions",
+        "factionKey": "lawful_intersecdefensesolutions",
+        "debugName": "Intersec_DrawOutBoss_Nyx_Super_Van",
+        "isLawful": true,
+        "system": "Nyx",
+        "region": null,
+        "category": "Mercenary",
+        "minStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
+        "repPoints": 300,
+        "repEffects": [
+          {
+            "factionKey": "lawful_intersecdefensesolutions",
+            "faction": "InterSec Defense Solutions",
+            "amount": 300
+          }
+        ],
+        "repCareerLabel": "Standing",
+        "repScopeKey": "FactionReputationScope",
+        "frequency": {
+          "maxInstances": -1,
+          "maxInstancesPerPlayer": 1,
+          "respawnTimeMinutes": 15,
+          "respawnTimeVariationMinutes": 2,
+          "instanceLifeTimeMinutes": 5,
+          "instanceLifeTimeVariationMinutes": 2,
+          "hasPersonalCooldown": false,
+          "personalCooldownSeconds": 1,
+          "personalCooldownVariationSeconds": 1,
+          "abandonedCooldownSeconds": 1,
+          "abandonedCooldownVariationSeconds": 1,
+          "onceOnly": false,
+          "canReacceptAfterAbandoning": false,
+          "canReacceptAfterFailing": false,
+          "canBeShared": true
+        }
+      }
+    ],
+    "bp_reward_behr_lasercannon_s1_mr02": [
+      {
+        "title": "Draw Out Maulers",
+        "displayTitle": "Draw Out Maulers",
+        "titleKey": "@Intersec_ShipWaveAttack_DrawOutBoss_S_Van_Title_001",
+        "faction": "InterSec Defense Solutions",
+        "factionKey": "lawful_intersecdefensesolutions",
+        "debugName": "Intersec_DrawOutBoss_Nyx_Super_Van",
+        "isLawful": true,
+        "system": "Nyx",
+        "region": null,
+        "category": "Mercenary",
+        "minStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
+        "repPoints": 300,
+        "repEffects": [
+          {
+            "factionKey": "lawful_intersecdefensesolutions",
+            "faction": "InterSec Defense Solutions",
+            "amount": 300
+          }
+        ],
+        "repCareerLabel": "Standing",
+        "repScopeKey": "FactionReputationScope",
+        "frequency": {
+          "maxInstances": -1,
+          "maxInstancesPerPlayer": 1,
+          "respawnTimeMinutes": 15,
+          "respawnTimeVariationMinutes": 2,
+          "instanceLifeTimeMinutes": 5,
+          "instanceLifeTimeVariationMinutes": 2,
+          "hasPersonalCooldown": false,
+          "personalCooldownSeconds": 1,
+          "personalCooldownVariationSeconds": 1,
+          "abandonedCooldownSeconds": 1,
+          "abandonedCooldownVariationSeconds": 1,
+          "onceOnly": false,
+          "canReacceptAfterAbandoning": false,
+          "canReacceptAfterFailing": false,
+          "canBeShared": true
+        }
+      }
+    ],
+    "bp_reward_behr_lasercannon_s3_mr02": [
+      {
+        "title": "Draw Out Maulers",
+        "displayTitle": "Draw Out Maulers",
+        "titleKey": "@Intersec_ShipWaveAttack_DrawOutBoss_S_Van_Title_001",
+        "faction": "InterSec Defense Solutions",
+        "factionKey": "lawful_intersecdefensesolutions",
+        "debugName": "Intersec_DrawOutBoss_Nyx_Super_Van",
+        "isLawful": true,
+        "system": "Nyx",
+        "region": null,
+        "category": "Mercenary",
+        "minStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
+        "repPoints": 300,
+        "repEffects": [
+          {
+            "factionKey": "lawful_intersecdefensesolutions",
+            "faction": "InterSec Defense Solutions",
+            "amount": 300
+          }
+        ],
+        "repCareerLabel": "Standing",
+        "repScopeKey": "FactionReputationScope",
+        "frequency": {
+          "maxInstances": -1,
+          "maxInstancesPerPlayer": 1,
+          "respawnTimeMinutes": 15,
+          "respawnTimeVariationMinutes": 2,
+          "instanceLifeTimeMinutes": 5,
+          "instanceLifeTimeVariationMinutes": 2,
+          "hasPersonalCooldown": false,
+          "personalCooldownSeconds": 1,
+          "personalCooldownVariationSeconds": 1,
+          "abandonedCooldownSeconds": 1,
+          "abandonedCooldownVariationSeconds": 1,
+          "onceOnly": false,
+          "canReacceptAfterAbandoning": false,
+          "canReacceptAfterFailing": false,
+          "canBeShared": true
+        }
+      }
+    ],
+    "bp_reward_omc_utility_heavy_legs_01_03_01": [
+      {
+        "title": "Counterstrike Against Vanduul Raiders",
+        "displayTitle": "Counterstrike Against Vanduul Raiders",
+        "titleKey": "@Intersec_ShipWaveAttack_VH_Van_Title_001",
+        "faction": "InterSec Defense Solutions",
+        "factionKey": "lawful_intersecdefensesolutions",
+        "debugName": "Intersec_ShipWaveAttack_Nyx_VeryHard_Van",
+        "isLawful": true,
+        "system": "Nyx",
+        "region": null,
+        "category": "Mercenary",
+        "minStanding": {
+          "name": "Veteran Contractor",
+          "minReputation": 15000
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
+        "repPoints": 300,
+        "repEffects": [
+          {
+            "factionKey": "lawful_intersecdefensesolutions",
+            "faction": "InterSec Defense Solutions",
+            "amount": 300
+          }
+        ],
+        "repCareerLabel": "Standing",
+        "repScopeKey": "FactionReputationScope",
+        "frequency": {
+          "maxInstances": -1,
+          "maxInstancesPerPlayer": 1,
+          "respawnTimeMinutes": 15,
+          "respawnTimeVariationMinutes": 2,
+          "instanceLifeTimeMinutes": 5,
+          "instanceLifeTimeVariationMinutes": 2,
+          "hasPersonalCooldown": false,
+          "personalCooldownSeconds": 1,
+          "personalCooldownVariationSeconds": 1,
+          "abandonedCooldownSeconds": 1,
+          "abandonedCooldownVariationSeconds": 1,
+          "onceOnly": false,
+          "canReacceptAfterAbandoning": false,
+          "canReacceptAfterFailing": false,
+          "canBeShared": true
+        }
+      }
+    ],
+    "bp_reward_omc_utility_heavy_arms_01_03_01": [
+      {
+        "title": "Counterstrike Against Vanduul Raiders",
+        "displayTitle": "Counterstrike Against Vanduul Raiders",
+        "titleKey": "@Intersec_ShipWaveAttack_VH_Van_Title_001",
+        "faction": "InterSec Defense Solutions",
+        "factionKey": "lawful_intersecdefensesolutions",
+        "debugName": "Intersec_ShipWaveAttack_Nyx_VeryHard_Van",
+        "isLawful": true,
+        "system": "Nyx",
+        "region": null,
+        "category": "Mercenary",
+        "minStanding": {
+          "name": "Veteran Contractor",
+          "minReputation": 15000
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
+        "repPoints": 300,
+        "repEffects": [
+          {
+            "factionKey": "lawful_intersecdefensesolutions",
+            "faction": "InterSec Defense Solutions",
+            "amount": 300
+          }
+        ],
+        "repCareerLabel": "Standing",
+        "repScopeKey": "FactionReputationScope",
+        "frequency": {
+          "maxInstances": -1,
+          "maxInstancesPerPlayer": 1,
+          "respawnTimeMinutes": 15,
+          "respawnTimeVariationMinutes": 2,
+          "instanceLifeTimeMinutes": 5,
+          "instanceLifeTimeVariationMinutes": 2,
+          "hasPersonalCooldown": false,
+          "personalCooldownSeconds": 1,
+          "personalCooldownVariationSeconds": 1,
+          "abandonedCooldownSeconds": 1,
+          "abandonedCooldownVariationSeconds": 1,
+          "onceOnly": false,
+          "canReacceptAfterAbandoning": false,
+          "canReacceptAfterFailing": false,
+          "canBeShared": true
+        }
+      }
+    ],
+    "bp_reward_omc_utility_heavy_helmet_01_03_01": [
+      {
+        "title": "Intercept Vanduul Fleet",
+        "displayTitle": "Intercept Vanduul Fleet",
+        "titleKey": "@Intersec_ShipWaveAttack_S_Van_Title_001",
+        "faction": "InterSec Defense Solutions",
+        "factionKey": "lawful_intersecdefensesolutions",
+        "debugName": "Intersec_ShipWaveAttack_Nyx_Super_Van",
+        "isLawful": true,
+        "system": "Nyx",
+        "region": null,
+        "category": "Mercenary",
+        "minStanding": {
+          "name": "Veteran Contractor",
+          "minReputation": 15000
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
+        "repPoints": 300,
+        "repEffects": [
+          {
+            "factionKey": "lawful_intersecdefensesolutions",
+            "faction": "InterSec Defense Solutions",
+            "amount": 300
+          }
+        ],
+        "repCareerLabel": "Standing",
+        "repScopeKey": "FactionReputationScope",
+        "frequency": {
+          "maxInstances": -1,
+          "maxInstancesPerPlayer": 1,
+          "respawnTimeMinutes": 15,
+          "respawnTimeVariationMinutes": 2,
+          "instanceLifeTimeMinutes": 5,
+          "instanceLifeTimeVariationMinutes": 2,
+          "hasPersonalCooldown": false,
+          "personalCooldownSeconds": 1,
+          "personalCooldownVariationSeconds": 1,
+          "abandonedCooldownSeconds": 1,
+          "abandonedCooldownVariationSeconds": 1,
+          "onceOnly": false,
+          "canReacceptAfterAbandoning": false,
+          "canReacceptAfterFailing": false,
+          "canBeShared": true
+        }
+      }
+    ],
+    "bp_reward_omc_utility_heavy_core_01_03_01": [
+      {
+        "title": "Intercept Vanduul Fleet",
+        "displayTitle": "Intercept Vanduul Fleet",
+        "titleKey": "@Intersec_ShipWaveAttack_S_Van_Title_001",
+        "faction": "InterSec Defense Solutions",
+        "factionKey": "lawful_intersecdefensesolutions",
+        "debugName": "Intersec_ShipWaveAttack_Nyx_Super_Van",
+        "isLawful": true,
+        "system": "Nyx",
+        "region": null,
+        "category": "Mercenary",
+        "minStanding": {
+          "name": "Veteran Contractor",
+          "minReputation": 15000
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
+        "repPoints": 300,
+        "repEffects": [
+          {
+            "factionKey": "lawful_intersecdefensesolutions",
+            "faction": "InterSec Defense Solutions",
+            "amount": 300
+          }
+        ],
+        "repCareerLabel": "Standing",
+        "repScopeKey": "FactionReputationScope",
+        "frequency": {
+          "maxInstances": -1,
+          "maxInstancesPerPlayer": 1,
+          "respawnTimeMinutes": 15,
+          "respawnTimeVariationMinutes": 2,
+          "instanceLifeTimeMinutes": 5,
+          "instanceLifeTimeVariationMinutes": 2,
+          "hasPersonalCooldown": false,
+          "personalCooldownSeconds": 1,
+          "personalCooldownVariationSeconds": 1,
+          "abandonedCooldownSeconds": 1,
+          "abandonedCooldownVariationSeconds": 1,
+          "onceOnly": false,
+          "canReacceptAfterAbandoning": false,
+          "canReacceptAfterFailing": false,
+          "canBeShared": true
+        }
+      }
+    ],
+    "bp_reward_qrt_utility_heavy_arms_01_04_01": [
+      {
+        "title": "Neutralize Vanduul and Shattered Blade Threat",
+        "displayTitle": "Neutralize Vanduul and Shattered Blade Threat",
+        "titleKey": "@Intersec_3Way_Title_VeryHard_001",
+        "faction": "InterSec Defense Solutions",
+        "factionKey": "lawful_intersecdefensesolutions",
+        "debugName": "Intersec_3Way_Nyx_VeryHard_Van",
+        "isLawful": true,
+        "system": "Nyx",
+        "region": null,
+        "category": "Mercenary",
+        "minStanding": {
+          "name": "Veteran Contractor",
+          "minReputation": 15000
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
+        "repPoints": 300,
+        "repEffects": [
+          {
+            "factionKey": "lawful_intersecdefensesolutions",
+            "faction": "InterSec Defense Solutions",
+            "amount": 300
+          }
+        ],
+        "repCareerLabel": "Standing",
+        "repScopeKey": "FactionReputationScope",
+        "frequency": {
+          "maxInstances": -1,
+          "maxInstancesPerPlayer": 1,
+          "respawnTimeMinutes": 15,
+          "respawnTimeVariationMinutes": 2,
+          "instanceLifeTimeMinutes": 5,
+          "instanceLifeTimeVariationMinutes": 2,
+          "hasPersonalCooldown": false,
+          "personalCooldownSeconds": 1,
+          "personalCooldownVariationSeconds": 1,
+          "abandonedCooldownSeconds": 1,
+          "abandonedCooldownVariationSeconds": 1,
+          "onceOnly": false,
+          "canReacceptAfterAbandoning": false,
+          "canReacceptAfterFailing": false,
+          "canBeShared": true
+        }
+      }
+    ],
+    "bp_reward_qrt_utility_heavy_legs_01_04_01": [
+      {
+        "title": "Neutralize Vanduul and Shattered Blade Threat",
+        "displayTitle": "Neutralize Vanduul and Shattered Blade Threat",
+        "titleKey": "@Intersec_3Way_Title_VeryHard_001",
+        "faction": "InterSec Defense Solutions",
+        "factionKey": "lawful_intersecdefensesolutions",
+        "debugName": "Intersec_3Way_Nyx_VeryHard_Van",
+        "isLawful": true,
+        "system": "Nyx",
+        "region": null,
+        "category": "Mercenary",
+        "minStanding": {
+          "name": "Veteran Contractor",
+          "minReputation": 15000
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
+        "repPoints": 300,
+        "repEffects": [
+          {
+            "factionKey": "lawful_intersecdefensesolutions",
+            "faction": "InterSec Defense Solutions",
+            "amount": 300
+          }
+        ],
+        "repCareerLabel": "Standing",
+        "repScopeKey": "FactionReputationScope",
+        "frequency": {
+          "maxInstances": -1,
+          "maxInstancesPerPlayer": 1,
+          "respawnTimeMinutes": 15,
+          "respawnTimeVariationMinutes": 2,
+          "instanceLifeTimeMinutes": 5,
+          "instanceLifeTimeVariationMinutes": 2,
+          "hasPersonalCooldown": false,
+          "personalCooldownSeconds": 1,
+          "personalCooldownVariationSeconds": 1,
+          "abandonedCooldownSeconds": 1,
+          "abandonedCooldownVariationSeconds": 1,
+          "onceOnly": false,
+          "canReacceptAfterAbandoning": false,
+          "canReacceptAfterFailing": false,
+          "canBeShared": true
+        }
+      }
+    ],
+    "bp_reward_qrt_utility_heavy_core_01_04_01": [
+      {
+        "title": "Stop Vanduul and Shattered Blade Hostilities",
+        "displayTitle": "Stop Vanduul and Shattered Blade Hostilities",
+        "titleKey": "@Intersec_3Way_Title_Super_001",
+        "faction": "InterSec Defense Solutions",
+        "factionKey": "lawful_intersecdefensesolutions",
+        "debugName": "Intersec_3Way_Nyx_Super_Van",
+        "isLawful": true,
+        "system": "Nyx",
+        "region": null,
+        "category": "Mercenary",
+        "minStanding": {
+          "name": "Veteran Contractor",
+          "minReputation": 15000
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
+        "repPoints": 300,
+        "repEffects": [
+          {
+            "factionKey": "lawful_intersecdefensesolutions",
+            "faction": "InterSec Defense Solutions",
+            "amount": 300
+          }
+        ],
+        "repCareerLabel": "Standing",
+        "repScopeKey": "FactionReputationScope",
+        "frequency": {
+          "maxInstances": -1,
+          "maxInstancesPerPlayer": 1,
+          "respawnTimeMinutes": 15,
+          "respawnTimeVariationMinutes": 2,
+          "instanceLifeTimeMinutes": 5,
+          "instanceLifeTimeVariationMinutes": 2,
+          "hasPersonalCooldown": false,
+          "personalCooldownSeconds": 1,
+          "personalCooldownVariationSeconds": 1,
+          "abandonedCooldownSeconds": 1,
+          "abandonedCooldownVariationSeconds": 1,
+          "onceOnly": false,
+          "canReacceptAfterAbandoning": false,
+          "canReacceptAfterFailing": false,
+          "canBeShared": true
+        }
+      }
+    ],
+    "bp_reward_qrt_utility_heavy_backpack_01_05_01": [
+      {
+        "title": "Stop Vanduul and Shattered Blade Hostilities",
+        "displayTitle": "Stop Vanduul and Shattered Blade Hostilities",
+        "titleKey": "@Intersec_3Way_Title_Super_001",
+        "faction": "InterSec Defense Solutions",
+        "factionKey": "lawful_intersecdefensesolutions",
+        "debugName": "Intersec_3Way_Nyx_Super_Van",
+        "isLawful": true,
+        "system": "Nyx",
+        "region": null,
+        "category": "Mercenary",
+        "minStanding": {
+          "name": "Veteran Contractor",
+          "minReputation": 15000
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
+        "repPoints": 300,
+        "repEffects": [
+          {
+            "factionKey": "lawful_intersecdefensesolutions",
+            "faction": "InterSec Defense Solutions",
+            "amount": 300
+          }
+        ],
+        "repCareerLabel": "Standing",
+        "repScopeKey": "FactionReputationScope",
+        "frequency": {
+          "maxInstances": -1,
+          "maxInstancesPerPlayer": 1,
+          "respawnTimeMinutes": 15,
+          "respawnTimeVariationMinutes": 2,
+          "instanceLifeTimeMinutes": 5,
+          "instanceLifeTimeVariationMinutes": 2,
+          "hasPersonalCooldown": false,
+          "personalCooldownSeconds": 1,
+          "personalCooldownVariationSeconds": 1,
+          "abandonedCooldownSeconds": 1,
+          "abandonedCooldownVariationSeconds": 1,
+          "onceOnly": false,
+          "canReacceptAfterAbandoning": false,
+          "canReacceptAfterFailing": false,
+          "canBeShared": true
+        }
+      }
+    ],
+    "bp_reward_qrt_utility_heavy_helmet_01_04_01": [
+      {
+        "title": "Stop Vanduul and Shattered Blade Hostilities",
+        "displayTitle": "Stop Vanduul and Shattered Blade Hostilities",
+        "titleKey": "@Intersec_3Way_Title_Super_001",
+        "faction": "InterSec Defense Solutions",
+        "factionKey": "lawful_intersecdefensesolutions",
+        "debugName": "Intersec_3Way_Nyx_Super_Van",
+        "isLawful": true,
+        "system": "Nyx",
+        "region": null,
+        "category": "Mercenary",
+        "minStanding": {
+          "name": "Veteran Contractor",
+          "minReputation": 15000
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
+        "repPoints": 300,
+        "repEffects": [
+          {
+            "factionKey": "lawful_intersecdefensesolutions",
+            "faction": "InterSec Defense Solutions",
+            "amount": 300
+          }
+        ],
+        "repCareerLabel": "Standing",
+        "repScopeKey": "FactionReputationScope",
+        "frequency": {
+          "maxInstances": -1,
+          "maxInstancesPerPlayer": 1,
+          "respawnTimeMinutes": 15,
+          "respawnTimeVariationMinutes": 2,
+          "instanceLifeTimeMinutes": 5,
+          "instanceLifeTimeVariationMinutes": 2,
+          "hasPersonalCooldown": false,
+          "personalCooldownSeconds": 1,
+          "personalCooldownVariationSeconds": 1,
+          "abandonedCooldownSeconds": 1,
+          "abandonedCooldownVariationSeconds": 1,
+          "onceOnly": false,
+          "canReacceptAfterAbandoning": false,
+          "canReacceptAfterFailing": false,
+          "canBeShared": true
         }
       }
     ],
@@ -96512,6 +98051,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": {
           "maxInstances": 0,
           "maxInstancesPerPlayer": 0,
@@ -96545,6 +98086,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -96586,7 +98129,8 @@
             "amount": 800
           }
         ],
-        "repCareerLabel": "Standing",
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -96824,7 +98368,8 @@
             "amount": 200
           }
         ],
-        "repCareerLabel": "Standing",
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -96958,7 +98503,8 @@
             "amount": 200
           }
         ],
-        "repCareerLabel": "Standing",
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -97092,7 +98638,8 @@
             "amount": 300
           }
         ],
-        "repCareerLabel": "Standing",
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -98215,6 +99762,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -98256,7 +99805,8 @@
             "amount": 10
           }
         ],
-        "repCareerLabel": "Barter & Trade",
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -98298,7 +99848,8 @@
             "amount": 10
           }
         ],
-        "repCareerLabel": "Barter & Trade",
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -98340,7 +99891,8 @@
             "amount": 10
           }
         ],
-        "repCareerLabel": "Barter & Trade",
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -98382,7 +99934,8 @@
             "amount": 10
           }
         ],
-        "repCareerLabel": "Barter & Trade",
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -98424,7 +99977,8 @@
             "amount": 10
           }
         ],
-        "repCareerLabel": "Barter & Trade",
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -98466,7 +100020,8 @@
             "amount": 10
           }
         ],
-        "repCareerLabel": "Barter & Trade",
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -98508,7 +100063,8 @@
             "amount": 10
           }
         ],
-        "repCareerLabel": "Barter & Trade",
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -98550,7 +100106,8 @@
             "amount": 10
           }
         ],
-        "repCareerLabel": "Barter & Trade",
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -98592,7 +100149,8 @@
             "amount": 10
           }
         ],
-        "repCareerLabel": "Barter & Trade",
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -98634,7 +100192,8 @@
             "amount": 10
           }
         ],
-        "repCareerLabel": "Barter & Trade",
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -98676,7 +100235,8 @@
             "amount": 10
           }
         ],
-        "repCareerLabel": "Barter & Trade",
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -98718,7 +100278,8 @@
             "amount": 10
           }
         ],
-        "repCareerLabel": "Barter & Trade",
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -98760,7 +100321,8 @@
             "amount": 10
           }
         ],
-        "repCareerLabel": "Barter & Trade",
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -98796,7 +100358,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": "Barter & Trade",
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -98832,7 +100395,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
-        "repCareerLabel": "Barter & Trade",
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -128884,6 +130448,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -128903,6 +130469,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -128922,6 +130490,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -128941,6 +130511,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -128960,6 +130532,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -128979,6 +130553,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -128998,6 +130574,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129017,6 +130595,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129036,6 +130616,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129055,6 +130637,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129074,6 +130658,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129093,6 +130679,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129112,6 +130700,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129131,6 +130721,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129150,6 +130742,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129169,6 +130763,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129188,6 +130784,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129207,6 +130805,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129226,6 +130826,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129245,6 +130847,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129264,6 +130868,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129283,6 +130889,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129302,6 +130910,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129321,6 +130931,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129340,6 +130952,8 @@
         "maxStanding": null,
         "repPoints": 0,
         "repEffects": [],
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": null
       }
     ],
@@ -129371,8 +130985,8 @@
             "amount": 200
           }
         ],
-        "repCareerLabel": "Hauling",
-        "repScopeKey": "ReputationScope_Hauling",
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": null
       },
       {
@@ -129402,8 +131016,8 @@
             "amount": 100
           }
         ],
-        "repCareerLabel": "Hauling",
-        "repScopeKey": "ReputationScope_Hauling",
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": null
       },
       {
@@ -129433,16 +131047,16 @@
             "amount": 100
           }
         ],
-        "repCareerLabel": "Standing",
-        "repScopeKey": "FactionReputationScope",
+        "repCareerLabel": null,
+        "repScopeKey": null,
         "frequency": null
       }
     ]
   },
   "summary": {
-    "totalPools": 137,
-    "totalBlueprints": 718,
-    "contractsWithBlueprints": 797,
-    "poolsWithMissionData": 137
+    "totalPools": 153,
+    "totalBlueprints": 734,
+    "contractsWithBlueprints": 805,
+    "poolsWithMissionData": 153
   }
 }

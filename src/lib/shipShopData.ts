@@ -160,6 +160,21 @@ function humanMountName(name: string): string {
   return name.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase())
 }
 
+/** Mount + stock tags both count — hull tags (e.g. GAMA_Hyun) live on stock. */
+function mergePortTags(...parts: Array<string | undefined | null>): string | undefined {
+  const seen = new Set<string>()
+  const out: string[] = []
+  for (const part of parts) {
+    for (const tag of String(part || '').split(/\s+/)) {
+      const key = tag.trim()
+      if (!key || seen.has(key.toLowerCase())) continue
+      seen.add(key.toLowerCase())
+      out.push(key)
+    }
+  }
+  return out.length ? out.join(' ') : undefined
+}
+
 function ordnanceSlotKind(mount: MissileMount): 'missile' | 'torpedo' | 'bomb' | null {
   if (mount.kind === 'bomb' || mount.kind === 'torpedo' || mount.kind === 'missile') return mount.kind
   return null
@@ -187,7 +202,7 @@ function slotFromMount(ship: GameShip, parentId: string, mount: MissileMount, fi
     defaultEntityClass: mount.defaultEntityClass || stock?.defaultEntityClass || null,
     locked: Boolean(mount.locked || stock?.locked),
     requiredTags: mount.requiredTags || stock?.requiredTags,
-    portTags: mount.portTags || stock?.portTags,
+    portTags: mergePortTags(mount.portTags, stock?.portTags),
     accepts: mount.accepts?.length ? mount.accepts : stock?.accepts,
   }
 }
@@ -881,7 +896,7 @@ export function missileSlotsForRack(ship: GameShip, rack: ShipPort, fitted: Fitt
       maxSize,
       defaultEntityClass: stock?.defaultEntityClass ?? mount.defaultEntityClass ?? null,
       requiredTags: mount.requiredTags || stock?.requiredTags,
-      portTags: mount.portTags || stock?.portTags,
+      portTags: mergePortTags(mount.portTags, stock?.portTags),
       accepts: mount.accepts?.length ? mount.accepts : stock?.accepts,
     }
   })
