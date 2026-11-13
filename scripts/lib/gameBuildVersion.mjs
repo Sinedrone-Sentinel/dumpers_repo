@@ -45,9 +45,65 @@ export function formatGameBuildVersion(manifestData) {
   return null
 }
 
+/** major.minor.x from a launcher label like 4.10.3-live.13165946 */
+export function versionFloorFromLauncherLabel(label) {
+  if (typeof label !== 'string' || !label.trim()) return null
+  const m = label.trim().match(/^(\d+)\.(\d+)\.\d+-(?:live|ptu|eptu|hotfix)\.\d+$/i)
+  if (!m) return null
+  return `${m[1]}.${m[2]}.x`
+}
+
 /**
- * RSI launcher channel label, e.g. "4.9.0-live.12344265".
- * Built from branch semver + channel + RequestedP4ChangeNum.
+ * Default RSI Launcher log path (%APPDATA%\rsilauncher\logs\log.log).
+ */
+export function defaultRsiLauncherLogPath() {
+  const appData = process.env.APPDATA
+  if (!appData) return null
+  return join(appData, 'rsilauncher', 'logs', 'log.log')
+}
+
+/**
+ * ALWAYS pull the public install label from the RSI Launcher log.
+ * This is what the launcher UI shows (e.g. "4.10.3-live.13165946").
+ * Never invent the patch digit from build_manifest Data.Version / Branch.
+ */
+export function readRsiLauncherVersionLabel(options = {}) {
+  const channel = String(options.channel || 'live').toLowerCase()
+  const channelToken = channel.toUpperCase()
+  const logPath = options.logPath || defaultRsiLauncherLogPath()
+  if (!logPath || !existsSync(logPath)) return null
+
+  let text
+  try {
+    text = readFileSync(logPath, 'utf8')
+  } catch {
+    return null
+  }
+
+  // Installing Star Citizen LIVE 4.10.3-live.13165946 at ...
+  // Delta update completed (SC LIVE 4.10.3-live.13165946) in ...
+  const re = new RegExp(
+    String.raw`\b${channelToken}\s+(\d+\.\d+\.\d+-${channel}\.\d+)\b`,
+    'gi',
+  )
+  let last = null
+  for (const m of text.matchAll(re)) {
+    last = m[1]
+  }
+  return last
+}
+
+function looksLikeLauncherLabel(raw) {
+  return (
+    typeof raw === 'string' &&
+    /^\d+\.\d+\.\d+-(?:live|ptu|eptu|hotfix)\.\d+$/i.test(raw.trim())
+  )
+}
+
+/**
+ * Last-resort label from build_manifest only when the launcher log is missing.
+ * Uses Branch (sc-alpha-X.Y.Z) + P4 — never invents a patch from Data.Version
+ * (CIG Version like 4.10.200.58746 is NOT the public 4.10.3).
  */
 export function formatLauncherVersionLabel(manifestData, options = {}) {
   const channel = String(options.channel || 'live').toLowerCase()
@@ -96,6 +152,29 @@ export function toMinGameVersionSecret(version) {
 }
 
 /**
+ * Resolve launcherVersion: RSI Launcher log first, then baked label, then
+ * weak build_manifest fallback.
+ */
+export function resolveLauncherVersionLabel(options = {}) {
+  const channel = options.channel || 'live'
+  const fromLauncher = readRsiLauncherVersionLabel({
+    channel,
+    logPath: options.logPath,
+  })
+  if (fromLauncher) return fromLauncher
+
+  if (looksLikeLauncherLabel(options.fallbackLabel)) {
+    return options.fallbackLabel.trim()
+  }
+
+  if (options.manifestData) {
+    return formatLauncherVersionLabel(options.manifestData, { channel })
+  }
+
+  return null
+}
+
+/**
  * Read build metadata from extracted game-build.json or LIVE build_manifest.id.
  */
 export function readGameBuildInfo(options = {}) {
@@ -106,31 +185,32 @@ export function readGameBuildInfo(options = {}) {
 
   const buildFile = readJson(gameBuildFile)
   if (buildFile) {
-    let version = null
+    const launcherVersion = resolveLauncherVersionLabel({
+      channel,
+      logPath: options.logPath,
+      fallbackLabel: buildFile.launcherVersion,
+      manifestData: {
+        Branch: buildFile.branch,
+        RequestedP4ChangeNum: buildFile.p4Change,
+        Version: buildFile.internalVersion,
+      },
+    })
+
+    let version = versionFloorFromLauncherLabel(launcherVersion)
     if (
+      !version &&
       typeof buildFile.version === 'string' &&
       /^\d+\.\d+\.x$/.test(buildFile.version) &&
       !isEngineInternalVersion(buildFile.version)
     ) {
       version = buildFile.version
-    } else {
+    }
+    if (!version) {
       version = formatGameBuildVersion({
         Version: buildFile.internalVersion ?? buildFile.version,
         Branch: buildFile.branch,
       })
     }
-
-    let launcherVersion =
-      typeof buildFile.launcherVersion === 'string' && buildFile.launcherVersion.trim()
-        ? buildFile.launcherVersion.trim()
-        : formatLauncherVersionLabel(
-            {
-              Branch: buildFile.branch,
-              RequestedP4ChangeNum: buildFile.p4Change,
-              Version: buildFile.internalVersion,
-            },
-            { channel }
-          )
 
     if (version || launcherVersion) {
       return { version, launcherVersion }
@@ -141,8 +221,13 @@ export function readGameBuildInfo(options = {}) {
   if (existsSync(manifestPath)) {
     const manifest = readJson(manifestPath)
     const data = manifest?.Data
-    const version = formatGameBuildVersion(data)
-    const launcherVersion = formatLauncherVersionLabel(data, { channel })
+    const launcherVersion = resolveLauncherVersionLabel({
+      channel,
+      logPath: options.logPath,
+      manifestData: data,
+    })
+    const version =
+      versionFloorFromLauncherLabel(launcherVersion) || formatGameBuildVersion(data)
     if (version || launcherVersion) {
       return { version, launcherVersion }
     }
