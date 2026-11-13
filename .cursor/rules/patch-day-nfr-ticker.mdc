@@ -13,13 +13,16 @@ Game-data parse still **keeps** NFR / unwired records in JSON (UI shows the NFR 
 2. **Unimplemented last patch that ships this patch is added, not changed.** Same id/key that was NFR or had a null/empty `entityClass` last parse, and is live now, goes in **added**. Example: Wikelo **Heavy and Bright** was NFR in 4.9, live in 4.10 with super-heavy armour -- that is added, not "3 Wikelo changed".
 3. **Still-unreleased churn is silent.** Tweaking costs/rewards on an NFR row, or flipping only the NFR flag without going live, is not a member-facing change.
 4. **Live pulled back to NFR is removed**, not changed.
+5. **Non-player fixtures are silent.** Crafting/component **templates**, capital-only hull parts (Javelin/Bengal/Idris/…), outpost fixtures, and rows whose label is still just a humanized internal id must never appear on the ticker — even when they are new in the parse JSON.
+6. **Display names only.** Every ticker item label must be the in-game display name (with parent localization fallback for quality/tint variants). Never ship humanized entity classes like `Apar Hmg Ballistic 01 Lr01`.
 
 "Unreleased" means `notForRelease === true` **or** a record that has an `entityClass` field which is still null/empty (WIP blueprint not wired to an SCItem). Parse still stores those rows.
 
 ## Where this is enforced
 
-- `scripts/lib/diffGameData.mjs` -- `isUnreleasedRecord()` + `diffKeyedCollection()`
-- `scripts/lib/writeWhatsNewDigest.mjs` -- digest skips any leftover NFR rows
+- `scripts/lib/diffGameData.mjs` -- `isUnreleasedRecord()` + `isNonPlayerFacingRecord()` + `diffKeyedCollection()`
+- `scripts/lib/writeWhatsNewDigest.mjs` -- digest skips NFR / non-player rows; collapses duplicate display labels
+- `scripts/lib/tickerLanguage.mjs` -- display-name resolver + parent-key fallback
 - `npm test` unit suite covers NFR to live as added
 
 Do **not** hand-edit ticker JSON to paper over a miss. Fix the classifier, then re-parse / re-run the digest.

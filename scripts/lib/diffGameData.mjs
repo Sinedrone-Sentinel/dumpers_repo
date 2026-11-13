@@ -109,15 +109,16 @@ export const COLLECTIONS = {
  * Build a member-facing label that separates those variants.
  */
 export function formatMissionTickerLabel(r) {
-  const title = r?.displayTitle || r?.title || r?.debugName || r?.id || 'Mission'
+  // Display title + system + rank only — never humanized debugName variants.
+  const title = r?.displayTitle || r?.title || r?.id || 'Mission'
   const parts = [String(title)]
   if (r?.system) parts.push(String(r.system))
   const debugName = String(r?.debugName || '')
   const rank = debugName.match(/_Rank(\d+)/i)?.[1]
   if (rank) parts.push(`Rank ${rank}`)
-  const variant = missionVariantHint(debugName, r?.system)
-  if (variant) parts.push(variant)
-  else if (r?.faction) parts.push(String(r.faction))
+  else if (r?.faction && String(r.faction).toLowerCase() !== 'unknown') {
+    parts.push(String(r.faction))
+  }
   return parts.join(' · ')
 }
 
@@ -188,6 +189,73 @@ export function isUnreleasedRecord(rec) {
     const v = rec.entityClass
     if (v == null || String(v).trim() === '') return true
   }
+  return false
+}
+
+/** Dev / capital / station fixtures — in game files but not player loot or shops. */
+const NON_PLAYER_NAME_RE =
+  /(?:^|_)(?:template|outpost|pyrooutpost)(?:_|$)|_(?:javelin|bengal|idris|kraken|perseus|hull_?c)(?:_|$)|_scitem$/i
+
+/**
+ * True when a label is still just a humanized internal id / type code, not a
+ * real in-game display name members would recognize.
+ */
+export function isUnresolvedMemberLabel(displayName, internalKey) {
+  const label = String(displayName ?? '').trim()
+  if (!label || label.startsWith('@')) return true
+  if (/placeholder|uninitialized|^unknown$/i.test(label)) return true
+  if (/\btemplate\b/i.test(label)) return true
+  // Broken loc keys that leak as "… Name"
+  if (/\bname$/i.test(label) && /^(mining|item|entity)\b/i.test(label)) return true
+  // Type-code leftovers: "COOL S01 Template", "POWR PyroOutpost"
+  if (/^(cool|powr|qdrv|shld|radr|wepn|misl|torp)\b/i.test(label) && /(?:template|scitem|outpost|\bs\d+\b)/i.test(label)) {
+    return true
+  }
+  const key = String(internalKey ?? '').trim()
+  if (!key) return false
+  const norm = (s) =>
+    String(s)
+      .toLowerCase()
+      .replace(/^entityclassdefinition\./, '')
+      .replace(/^(?:mining[_\s-]*laser[_\s-]*|item[_\s-]*name)/i, '')
+      .replace(/[_\s.-]+/g, '')
+  const shortKey = key
+    .replace(/^EntityClassDefinition\./, '')
+    .replace(/^Mining_Laser_/i, '')
+  const humanized = shortKey
+    .replace(/_/g, ' ')
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .replace(/\b\w/g, (c) => c.toUpperCase())
+    .trim()
+  if (
+    norm(label) === norm(key) ||
+    norm(label) === norm(shortKey) ||
+    norm(label) === norm(humanized)
+  ) {
+    return true
+  }
+  return false
+}
+
+/**
+ * Records that must not appear on the member What's New ticker: NFR/WIP,
+ * crafting templates, capital-only hull parts, outpost fixtures, or anything
+ * still wearing an unresolved internal label.
+ */
+export function isNonPlayerFacingRecord(rec, key = null) {
+  if (isUnreleasedRecord(rec)) return true
+  const id = String(
+    key ?? rec?.name ?? rec?.internalName ?? rec?.internalId ?? rec?.entityClass ?? '',
+  ).trim()
+  const label = String(
+    rec?.displayName ?? rec?.blueprintName ?? rec?.title ?? rec?.displayTitle ?? '',
+  ).trim()
+  if (id && NON_PLAYER_NAME_RE.test(id)) return true
+  if (label && /\btemplate\b/i.test(label)) return true
+  if (label && isUnresolvedMemberLabel(label, id || label)) return true
+  // No usable member-facing name at all
+  if (!label && id && NON_PLAYER_NAME_RE.test(id)) return true
+  if (!label && id && isUnresolvedMemberLabel(id.replace(/_/g, ' '), id)) return true
   return false
 }
 
@@ -296,10 +364,10 @@ export function diffKeyedCollection(spec, oldData, newData, options = {}) {
   const changed = []
 
   for (const [key, rec] of newByKey) {
-    if (!oldByKey.has(key) && !isUnreleasedRecord(rec)) added.push({ key, rec })
+    if (!oldByKey.has(key) && !isNonPlayerFacingRecord(rec, key)) added.push({ key, rec })
   }
   for (const [key, rec] of oldByKey) {
-    if (!newByKey.has(key) && !isUnreleasedRecord(rec)) removed.push({ key, rec })
+    if (!newByKey.has(key) && !isNonPlayerFacingRecord(rec, key)) removed.push({ key, rec })
   }
 
   const renamed = []
@@ -343,14 +411,14 @@ export function diffKeyedCollection(spec, oldData, newData, options = {}) {
   for (const [key, newRec] of newByKey) {
     const oldRec = oldByKey.get(key)
     if (!oldRec) continue
-    const wasUnreleased = isUnreleasedRecord(oldRec)
-    const nowUnreleased = isUnreleasedRecord(newRec)
-    if (wasUnreleased && !nowUnreleased) {
+    const wasHidden = isNonPlayerFacingRecord(oldRec, key)
+    const nowHidden = isNonPlayerFacingRecord(newRec, key)
+    if (wasHidden && !nowHidden) {
       added.push({ key, rec: newRec })
       continue
     }
-    if (nowUnreleased) {
-      if (!wasUnreleased) removed.push({ key, rec: oldRec })
+    if (nowHidden) {
+      if (!wasHidden) removed.push({ key, rec: oldRec })
       continue
     }
     pushChanged(key, oldRec, newRec)
@@ -361,13 +429,13 @@ export function diffKeyedCollection(spec, oldData, newData, options = {}) {
   const renameOmit = new Set([spec.key])
   for (const r of renamed) {
     if (!r.oldRec || !r.newRec) continue
-    const wasUnreleased = isUnreleasedRecord(r.oldRec)
-    const nowUnreleased = isUnreleasedRecord(r.newRec)
-    if (wasUnreleased && !nowUnreleased) {
+    const wasHidden = isNonPlayerFacingRecord(r.oldRec, r.oldKey)
+    const nowHidden = isNonPlayerFacingRecord(r.newRec, r.newKey)
+    if (wasHidden && !nowHidden) {
       added.push({ key: r.newKey, rec: r.newRec })
       continue
     }
-    if (nowUnreleased) continue
+    if (nowHidden) continue
     pushChanged(r.newKey, r.oldRec, r.newRec, renameOmit)
   }
 

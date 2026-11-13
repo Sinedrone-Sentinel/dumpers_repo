@@ -287,8 +287,56 @@ function resolveSlotDisplayName(displayKey, debugName, localization) {
   return debug.toLowerCase().replace(/\b[a-z]/g, (c) => c.toUpperCase())
 }
 
+/**
+ * Quality / skin / store suffixes CIG appends to entity classes without always
+ * shipping a matching item_Name* localization key. Strip these and retry the
+ * parent key (e.g. apar_hmg_ballistic_01_lr01 → Vendetta HMG).
+ */
+const ITEM_VARIANT_SUFFIX_RE =
+  /_(?:lr|mr|hr|sf|tint|lumi|collector|store|immortal|gold|ed|custom|hot|ice|green|black|white|blue|red|camo)\d+$/i
+
+function localizationLookup(localization, key) {
+  if (!key || !localization) return null
+  if (localization[key]) return localization[key]
+  const lower = key.toLowerCase()
+  if (localization[lower]) return localization[lower]
+  return null
+}
+
+function itemLocalizationCandidates(rawDisplayName, recordName) {
+  const keys = []
+  const push = (k) => {
+    const s = String(k || '').trim()
+    if (!s || keys.includes(s)) return
+    keys.push(s)
+  }
+  if (typeof rawDisplayName === 'string' && rawDisplayName.startsWith('@')) {
+    push(rawDisplayName.slice(1))
+  }
+  const short = String(recordName || '')
+    .replace(/^EntityClassDefinition\./, '')
+    .trim()
+  if (short) {
+    push(`item_Name${short}`)
+    push(`item_Name_${short}`)
+    let base = short
+    for (let i = 0; i < 4; i++) {
+      const next = base.replace(ITEM_VARIANT_SUFFIX_RE, '')
+      if (next === base) break
+      base = next
+      push(`item_Name${base}`)
+      push(`item_Name_${base}`)
+    }
+  }
+  return keys
+}
+
 /** Localized item name, or the record name title-cased when CIG left a placeholder. */
 function itemDisplayName(rawDisplayName, recordName, localization) {
+  for (const key of itemLocalizationCandidates(rawDisplayName, recordName)) {
+    const hit = localizationLookup(localization, key)
+    if (hit && !isUnresolvedDisplayName(hit)) return hit
+  }
   const resolved = resolveLocalization(rawDisplayName, localization) || rawDisplayName
   if (!isUnresolvedDisplayName(resolved)) return resolved
   return String(recordName || '')
@@ -4475,6 +4523,11 @@ function parseShipComponents(localization = {}) {
     const files = readdirSync(compPath).filter(f => f.endsWith('.json'))
     
     for (const file of files) {
+      // Dev templates and capital hull fixtures are not player components.
+      if (/template/i.test(file)) continue
+      if (/_(?:javelin|bengal|idris|kraken|perseus|hull_?c)_/i.test(file)) continue
+      if (/outpost/i.test(file)) continue
+
       const filePath = join(compPath, file)
       const content = readFileSync(filePath, 'utf-8')
       const json = JSON.parse(content)

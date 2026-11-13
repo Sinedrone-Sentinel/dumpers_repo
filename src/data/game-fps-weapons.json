@@ -31,7 +31,7 @@
     {
       "id": "01397e02-9e1a-4a9a-ad6b-4c867c6b427d",
       "name": "apar_hmg_ballistic_01_lr01",
-      "displayName": "Apar Hmg Ballistic 01 Lr01",
+      "displayName": "Vendetta HMG",
       "type": "Large",
       "size": 5,
       "fireRate": 0,
@@ -382,7 +382,7 @@
     {
       "id": "03dc84a0-ddb6-4683-9650-340ad0edda46",
       "name": "behr_lmg_ballistic_01_lr01",
-      "displayName": "Behr Lmg Ballistic 01 Lr01",
+      "displayName": "FS-9 LMG",
       "type": "Medium",
       "size": 4,
       "fireRate": 0,
@@ -473,7 +473,7 @@
     {
       "id": "0f833b65-64ae-4bd3-9ae6-32a510f3f1ae",
       "name": "behr_pistol_ballistic_01_lr01",
-      "displayName": "Behr Pistol Ballistic 01 Lr01",
+      "displayName": "S-38 Pistol",
       "type": "Small",
       "size": 1,
       "fireRate": 0,
@@ -525,7 +525,7 @@
     {
       "id": "b8a2a818-819d-4e13-8e4f-685abd56d21b",
       "name": "behr_rifle_ballistic_01_lr01",
-      "displayName": "Behr Rifle Ballistic 01 Lr01",
+      "displayName": "P4-AR Rifle",
       "type": "Medium",
       "size": 2,
       "fireRate": 0,
@@ -655,7 +655,7 @@
     {
       "id": "1cf53a24-41a6-4c9c-abc8-91ca75fbd513",
       "name": "behr_rifle_ballistic_02_civilian_lr01",
-      "displayName": "Behr Rifle Ballistic 02 Civilian Lr01",
+      "displayName": "P8-AR Rifle",
       "type": "Medium",
       "size": 2,
       "fireRate": 0,
@@ -681,7 +681,7 @@
     {
       "id": "2a8eae81-442b-4005-a2b7-18b3684e13d8",
       "name": "behr_rifle_ballistic_03_lr01",
-      "displayName": "Behr Rifle Ballistic 03 Lr01",
+      "displayName": "CQ7 Rifle",
       "type": "Medium",
       "size": 2,
       "fireRate": 0,
@@ -694,7 +694,7 @@
     {
       "id": "09ca39f1-ebc5-49d2-9683-14cafc2724a5",
       "name": "behr_rifle_ballistic_03_mr01",
-      "displayName": "Behr Rifle Ballistic 03 Mr01",
+      "displayName": "CQ7 Rifle",
       "type": "Medium",
       "size": 2,
       "fireRate": 0,
@@ -785,7 +785,7 @@
     {
       "id": "3f7f41df-fd95-45be-a339-18c70651a8e3",
       "name": "behr_shotgun_ballistic_01_lr01",
-      "displayName": "Behr Shotgun Ballistic 01 Lr01",
+      "displayName": "BR-2 Shotgun",
       "type": "Medium",
       "size": 3,
       "fireRate": 0,
@@ -889,7 +889,7 @@
     {
       "id": "3d2ff7b6-5066-403c-a2cb-0d08b3ac5290",
       "name": "behr_smg_ballistic_01_lr01",
-      "displayName": "Behr Smg Ballistic 01 Lr01",
+      "displayName": "P8-SC SMG",
       "type": "Medium",
       "size": 2,
       "fireRate": 0,
@@ -980,7 +980,7 @@
     {
       "id": "37307d28-1104-4363-9ef9-9df8f8dcf4f3",
       "name": "behr_sniper_ballistic_01_lr01",
-      "displayName": "Behr Sniper Ballistic 01 Lr01",
+      "displayName": "P6-LR Sniper Rifle",
       "type": "Medium",
       "size": 3,
       "fireRate": 0,
@@ -2072,7 +2072,7 @@
     {
       "id": "f9c81fd3-51bd-46f3-98e3-c9e28fba2de1",
       "name": "hdgw_rifle_ballistic_01_lr01",
-      "displayName": "Hdgw Rifle Ballistic 01 Lr01",
+      "displayName": "Arlington Rifle",
       "type": "Medium",
       "size": 2,
       "fireRate": 0,
@@ -2085,7 +2085,7 @@
     {
       "id": "c7ddf56c-13b2-4f0f-ae56-cfe624668c76",
       "name": "hdgw_rifle_ballistic_01_sf01",
-      "displayName": "Hdgw Rifle Ballistic 01 Sf01",
+      "displayName": "Arlington Rifle",
       "type": "Medium",
       "size": 2,
       "fireRate": 0,
@@ -2189,7 +2189,7 @@
     {
       "id": "a07c385e-2c58-46e4-b19d-e3cdd9790c04",
       "name": "klwe_lmg_energy_01_lr01",
-      "displayName": "Klwe Lmg Energy 01 Lr01",
+      "displayName": "Demeco LMG",
       "type": "Medium",
       "size": 4,
       "fireRate": 0,
@@ -2280,7 +2280,7 @@
     {
       "id": "b6a78af6-ad42-4a0a-9bd7-73506d3ed9f0",
       "name": "klwe_pistol_energy_01_lr01",
-      "displayName": "Klwe Pistol Energy 01 Lr01",
+      "displayName": "Arclight Pistol",
       "type": "Small",
       "size": 1,
       "fireRate": 0,
@@ -2371,7 +2371,7 @@
     {
       "id": "7ee40ea0-0d5a-43c9-84c1-ef4936684bb7",
       "name": "klwe_rifle_energy_01_lr01",
-      "displayName": "Klwe Rifle Energy 01 Lr01",
+      "displayName": "Gallant Rifle",
       "type": "Medium",
       "size": 2,
       "fireRate": 0,
@@ -2475,7 +2475,7 @@
     {
       "id": "a0f76a6b-95be-4a12-a8a1-58e7f999751f",
       "name": "klwe_smg_energy_01_lr01",
-      "displayName": "Klwe Smg Energy 01 Lr01",
+      "displayName": "Lumin V SMG",
       "type": "Medium",
       "size": 2,
       "fireRate": 0,
@@ -2566,7 +2566,7 @@
     {
       "id": "90f96e82-8c3f-481a-bdd8-ae80ed1ca41d",
       "name": "klwe_sniper_energy_01_lr01",
-      "displayName": "Klwe Sniper Energy 01 Lr01",
+      "displayName": "Arrowhead Sniper Rifle",
       "type": "Medium",
       "size": 3,
       "fireRate": 0,
@@ -3229,7 +3229,7 @@
     {
       "id": "9bce2684-8971-4134-821b-4182bc7a5e27",
       "name": "ksar_sniper_ballistic_01_sf01",
-      "displayName": "Ksar Sniper Ballistic 01 Sf01",
+      "displayName": "Scalpel Sniper Rifle",
       "type": "Medium",
       "size": 3,
       "fireRate": 0,
@@ -3463,7 +3463,7 @@
     {
       "id": "ee891d64-c65a-47fb-97d2-a5658e16fa85",
       "name": "none_lmg_ballistic_01_collector01",
-      "displayName": "None Lmg Ballistic 01 Collector01",
+      "displayName": "Pulverizer LMG",
       "type": "Medium",
       "size": 4,
       "fireRate": 0,
@@ -3866,7 +3866,7 @@
     {
       "id": "0db3898a-1954-4e7d-a072-3366785406e2",
       "name": "utfl_crossbow_ballistic_01_lr01",
-      "displayName": "Utfl Crossbow Ballistic 01 Lr01",
+      "displayName": "Novian Crossbow",
       "type": "Medium",
       "size": 3,
       "fireRate": 0,

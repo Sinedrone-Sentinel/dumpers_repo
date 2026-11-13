@@ -180,6 +180,9 @@ function isAllZero(v) {
   return values.length > 0 && values.every((x) => x === 0 || x === null || x === undefined)
 }
 
+const VARIANT_SUFFIX_RE =
+  /_(?:lr|mr|hr|sf|tint|lumi|collector|store|immortal|gold|ed|custom|hot|ice|green|black|white|blue|red|camo)\d+$/i
+
 /**
  * entityClass / internal name -> display name, built from parsed game data.
  * Wikelo costs and rewards already carry a `name`, so they are the richest
@@ -194,6 +197,11 @@ export function buildDisplayNameResolver(options = {}) {
     const k = String(key).trim()
     const n = String(name).trim()
     if (!k || !n || n.startsWith('@') || k === n) return
+    // Never index a humanized internal token as if it were a display name —
+    // that poisons ticker labels (e.g. "Apar Hmg Ballistic 01 Lr01").
+    const humanized = humanizeToken(k)
+    const norm = (s) => s.toLowerCase().replace(/[_\s.-]+/g, '')
+    if (norm(n) === norm(k) || norm(n) === norm(humanized)) return
     if (!map.has(k)) map.set(k, n)
   }
 
@@ -232,11 +240,45 @@ export function buildDisplayNameResolver(options = {}) {
   const resolve = (id) => {
     if (id == null) return ''
     const k = String(id).trim()
-    return map.get(k) ?? humanizeToken(k)
+    if (map.has(k)) return map.get(k)
+    let base = k
+    for (let i = 0; i < 4; i++) {
+      const next = base.replace(VARIANT_SUFFIX_RE, '')
+      if (next === base) break
+      base = next
+      if (map.has(base)) return map.get(base)
+    }
+    return humanizeToken(k)
   }
   resolve.size = map.size
-  resolve.has = (id) => map.has(String(id ?? '').trim())
+  resolve.has = (id) => {
+    const k = String(id ?? '').trim()
+    if (map.has(k)) return true
+    let base = k
+    for (let i = 0; i < 4; i++) {
+      const next = base.replace(VARIANT_SUFFIX_RE, '')
+      if (next === base) break
+      base = next
+      if (map.has(base)) return true
+    }
+    return false
+  }
   return resolve
+}
+
+function resolveWithParentKeys(id, resolve) {
+  if (!resolve || id == null) return ''
+  const k = String(id).trim()
+  if (!k) return ''
+  if (resolve.has?.(k)) return resolve(k)
+  let base = k
+  for (let i = 0; i < 4; i++) {
+    const next = base.replace(VARIANT_SUFFIX_RE, '')
+    if (next === base) break
+    base = next
+    if (resolve.has?.(base)) return resolve(base)
+  }
+  return ''
 }
 
 /** Never let an internal token or localization key reach a ticker label. */
@@ -248,9 +290,13 @@ export function cleanDisplayLabel(label, resolve) {
     (/^[a-z0-9_]+$/.test(raw) && raw.includes('_')) ||
     // Single camelCase token is a debugName fallback, never a real title.
     (!/\s/.test(raw) && /[a-z][A-Z]/.test(raw))
-  if (!looksInternal) return raw
+  if (!looksInternal) {
+    // Still prefer a resolver hit when the "display" is only a humanized key.
+    return raw
+  }
   const stripped = raw.replace(/^@/, '').replace(/^item_Name/i, '')
-  if (resolve?.has?.(stripped)) return resolve(stripped)
+  const fromMap = resolveWithParentKeys(stripped, resolve)
+  if (fromMap) return fromMap
   return humanizeToken(raw)
 }
 
