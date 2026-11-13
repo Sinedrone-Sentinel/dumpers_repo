@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-13T00:28:20.093Z",
+  "generatedAt": "2026-11-13T00:33:19.527Z",
   "source": "api.star-citizen.wiki",
   "blueprints": {
     "cool_acom_s01_iceplunge": {
@@ -291,6 +291,57 @@
     },
     "cool_wcpr_s03_kragen": {
       "itemClass": "civilian",
+      "grade": "A"
+    },
+    "mining_laser_drak_golem_s1": {
+      "grade": "A"
+    },
+    "mining_laser_grin_arbor_s0": {
+      "grade": "A"
+    },
+    "mining_laser_grin_arbor_s1": {
+      "grade": "A"
+    },
+    "mining_laser_grin_arbor_s2": {
+      "grade": "A"
+    },
+    "mining_laser_grin_lancet_s1": {
+      "grade": "A"
+    },
+    "mining_laser_grin_lancet_s2": {
+      "grade": "A"
+    },
+    "mining_laser_shin_hofstede_s0": {
+      "grade": "A"
+    },
+    "mining_laser_shin_hofstede_s1": {
+      "grade": "A"
+    },
+    "mining_laser_shin_hofstede_s2": {
+      "grade": "A"
+    },
+    "mining_laser_shin_klein_s0": {
+      "grade": "A"
+    },
+    "mining_laser_shin_klein_s1": {
+      "grade": "A"
+    },
+    "mining_laser_shin_klein_s2": {
+      "grade": "A"
+    },
+    "mining_laser_thcn_helix_s0": {
+      "grade": "A"
+    },
+    "mining_laser_thcn_helix_s1": {
+      "grade": "A"
+    },
+    "mining_laser_thcn_helix_s2": {
+      "grade": "A"
+    },
+    "mining_laser_thcn_impact_s1": {
+      "grade": "A"
+    },
+    "mining_laser_thcn_impact_s2": {
       "grade": "A"
     },
     "powr_acom_s01_lumacore": {
@@ -1295,6 +1346,42 @@
     "shld_yorm_s02_trenta": {
       "itemClass": "competition",
       "grade": "C"
+    },
+    "grin_tractorbeam_s1": {
+      "grade": "A"
+    },
+    "grin_tractorbeam_s2": {
+      "grade": "A"
+    },
+    "grin_tractorbeam_s3": {
+      "grade": "A"
+    },
+    "wep_tractorbeam_s1_military_1": {
+      "grade": "A"
+    },
+    "wep_tractorbeam_s1_utility_1": {
+      "grade": "A"
+    },
+    "wep_tractorbeam_s1_utility_2": {
+      "grade": "A"
+    },
+    "wep_tractorbeam_s2_military_1": {
+      "grade": "A"
+    },
+    "wep_tractorbeam_s2_utility_1": {
+      "grade": "A"
+    },
+    "wep_tractorbeam_s2_utility_2": {
+      "grade": "A"
+    },
+    "wep_tractorbeam_s3_military_1": {
+      "grade": "A"
+    },
+    "wep_tractorbeam_s3_utility_1": {
+      "grade": "A"
+    },
+    "wep_tractorbeam_s3_utility_2": {
+      "grade": "A"
     },
     "banu_tachyoncannon_s1": {
       "grade": "A"

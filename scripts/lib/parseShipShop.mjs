@@ -8,7 +8,9 @@ import { basename, join } from 'node:path'
 import { extractShipItemStats, weaponBurstDps } from './shipItemStats.mjs'
 import { applyShipPartRules } from './shipPartRules.mjs'
 
-const SKIP_SHIP = /(?:^|_)(?:pu(?:_|$)|ai(?:_|$)|unmanned|template|display|showdown|gamemaster|fleetweek|tutorial|hijacked|teach|boarded|nointerior|swarm|defendship|collector|lowpoly|invictus|restoration|ninetails|temp(?:_|$)|test(?:_|$)|gs(?:_|$)|ea(?:_|$)|exec(?:_|$)|plat(?:_|$)|bis\d|eaobjective|derelict)/i
+// Trailing `_gs` alone is the player ship for some hulls (Andromeda, Aquila, Hammerhead).
+// Still skip `_gs_…` AI/PU/template variants via the `gs_` token below.
+const SKIP_SHIP = /(?:^|_)(?:pu(?:_|$)|ai(?:_|$)|unmanned|template|display|showdown|gamemaster|fleetweek|tutorial|hijacked|teach|boarded|nointerior|swarm|defendship|collector|lowpoly|invictus|restoration|ninetails|temp(?:_|$)|test(?:_|$)|gs_|ea(?:_|$)|exec(?:_|$)|plat(?:_|$)|bis\d|eaobjective|derelict)/i
 
 const INDEX_DIRS = [
   'entities/scitem/ships/weapons',
@@ -1072,9 +1074,14 @@ export function parseShipShop({ extractedRoot, localization }) {
     if (!vehicle || vehicle.movementClass !== 'Spaceship') continue
     const displayName = resolveName(vehicle.vehicleName, localization)
     if (!usableName(displayName)) continue
-    const id = basename(filePath, '.json').toLowerCase()
+    const rawId = basename(filePath, '.json').toLowerCase()
+    const fromGsSuffix = /_gs$/i.test(rawId)
+    // Keep stable shop ids when CIG only ships the `*_gs` entity (Andromeda / Aquila / Hammerhead).
+    const id = fromGsSuffix ? rawId.replace(/_gs$/i, '') : rawId
     const previous = seenNames.get(displayName.toLowerCase())
-    if (previous && previous.length <= id.length) continue
+    // Prefer the non-_gs record when both exist; never let a _gs overwrite a bare id.
+    if (previous && fromGsSuffix) continue
+    if (previous && previous.length < id.length) continue
 
     const manufacturer = vehicle.manufacturer?.match(/scitemmanufacturer\.(\w+)\.json/i)?.[1]?.toUpperCase() || null
     const role = resolveName(vehicle.vehicleRole, localization)

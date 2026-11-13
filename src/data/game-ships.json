@@ -4633,6 +4633,2188 @@
       ]
     },
     {
+      "id": "aegs_hammerhead",
+      "uuid": "395f30ae-f930-4929-b881-d711fde7e70f",
+      "displayName": "Aegis Hammerhead",
+      "manufacturer": "Aegis Dynamics",
+      "manufacturerCode": "AEGS",
+      "role": "Heavy Gunship",
+      "career": "Combat",
+      "crew": 8,
+      "hullHp": 403400,
+      "crossSection": 39312,
+      "noise": 24,
+      "decoy": 50,
+      "damageReduction": 0.2,
+      "weaponPowerPool": 10,
+      "cargoScu": 64,
+      "maxCrateScu": 32,
+      "pitch": 20,
+      "yaw": 20,
+      "roll": 30,
+      "scmSpeed": 160,
+      "boostSpeed": 340,
+      "maxSpeed": 1000,
+      "boostBack": 170,
+      "ports": [
+        {
+          "id": "hardpoint_radar",
+          "label": "Radar",
+          "section": "systems",
+          "kind": "radar",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "radr_grnp_s03_resolu",
+          "accepts": [
+            {
+              "type": "Radar",
+              "subtypes": [
+                "ShortRangeRadar",
+                "MidRangeRadar"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_controller_flight",
+          "label": "Controller Flight",
+          "section": "systems",
+          "kind": "flight",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "controller_flight_aegs_hammerhead",
+          "requiredTags": "$AEGS_Hammerhead_Blade",
+          "portTags": "AEGS_Hammerhead AEGS_Hammerhead_Blade",
+          "accepts": [
+            {
+              "type": "FlightController",
+              "subtypes": []
+            }
+          ]
+        },
+        {
+          "id": "hardpoint_power_plant_l",
+          "label": "Power Plant L",
+          "section": "systems",
+          "kind": "power",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "powr_amrs_s03_superdrive_scitem",
+          "accepts": [
+            {
+              "type": "PowerPlant",
+              "subtypes": []
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_power_plant_r",
+          "label": "Power Plant R",
+          "section": "systems",
+          "kind": "power",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "powr_amrs_s03_superdrive_scitem",
+          "accepts": [
+            {
+              "type": "PowerPlant",
+              "subtypes": []
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_cooler_l",
+          "label": "Cooler L",
+          "section": "systems",
+          "kind": "cooler",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "cool_aegs_s03_mercury_scitem",
+          "accepts": [
+            {
+              "type": "Cooler",
+              "subtypes": []
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_cooler_r",
+          "label": "Cooler R",
+          "section": "systems",
+          "kind": "cooler",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "cool_aegs_s03_mercury_scitem",
+          "accepts": [
+            {
+              "type": "Cooler",
+              "subtypes": []
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_quantum_drive",
+          "label": "Quantum Drive",
+          "section": "systems",
+          "kind": "quantum",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "qdrv_wetk_s03_pontes_scitem",
+          "accepts": [
+            {
+              "type": "QuantumDrive",
+              "subtypes": [
+                "QDrive"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_shield_generator_l",
+          "label": "Shield Generator L",
+          "section": "defense",
+          "kind": "shield",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "shld_godi_s03_surestop_scitem",
+          "accepts": [
+            {
+              "type": "Shield",
+              "subtypes": []
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_shield_generator_r",
+          "label": "Shield Generator R",
+          "section": "defense",
+          "kind": "shield",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "shld_godi_s03_surestop_scitem",
+          "accepts": [
+            {
+              "type": "Shield",
+              "subtypes": []
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_armor",
+          "label": "Armor",
+          "section": "defense",
+          "kind": "armor",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "armr_aegs_hammerhead",
+          "accepts": [
+            {
+              "type": "Armor",
+              "subtypes": []
+            }
+          ],
+          "locked": true,
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Side_Front_Left",
+          "label": "Turret Side Front Left",
+          "section": "weapons",
+          "kind": "turret",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": null,
+          "accepts": [
+            {
+              "type": "TurretBase",
+              "subtypes": [
+                "MannedTurret"
+              ]
+            }
+          ],
+          "locked": true,
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Side_Front_Left/hardpoint_weapon_left_upper",
+          "label": "Weapon Left Upper",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "mount_gimbal_s4",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Side_Front_Left/hardpoint_weapon_left_upper/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "klwe_laserrepeater_s4",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Side_Front_Left/hardpoint_weapon_left_lower",
+          "label": "Weapon Left Lower",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "mount_gimbal_s4",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Side_Front_Left/hardpoint_weapon_left_lower/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "klwe_laserrepeater_s4",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Side_Front_Left/hardpoint_weapon_right_upper",
+          "label": "Weapon Right Upper",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "mount_gimbal_s4",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Side_Front_Left/hardpoint_weapon_right_upper/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "klwe_laserrepeater_s4",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Side_Front_Left/hardpoint_weapon_right_lower",
+          "label": "Weapon Right Lower",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "mount_gimbal_s4",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Side_Front_Left/hardpoint_weapon_right_lower/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "klwe_laserrepeater_s4",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Side_Front_Right",
+          "label": "Turret Side Front Right",
+          "section": "weapons",
+          "kind": "turret",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": null,
+          "accepts": [
+            {
+              "type": "TurretBase",
+              "subtypes": [
+                "MannedTurret"
+              ]
+            }
+          ],
+          "locked": true,
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Side_Front_Right/hardpoint_weapon_left_upper",
+          "label": "Weapon Left Upper",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "mount_gimbal_s4",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Side_Front_Right/hardpoint_weapon_left_upper/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "klwe_laserrepeater_s4",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Side_Front_Right/hardpoint_weapon_left_lower",
+          "label": "Weapon Left Lower",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "mount_gimbal_s4",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Side_Front_Right/hardpoint_weapon_left_lower/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "klwe_laserrepeater_s4",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Side_Front_Right/hardpoint_weapon_right_upper",
+          "label": "Weapon Right Upper",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "mount_gimbal_s4",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Side_Front_Right/hardpoint_weapon_right_upper/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "klwe_laserrepeater_s4",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Side_Front_Right/hardpoint_weapon_right_lower",
+          "label": "Weapon Right Lower",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "mount_gimbal_s4",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Side_Front_Right/hardpoint_weapon_right_lower/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "klwe_laserrepeater_s4",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Side_Back_Left",
+          "label": "Turret Side Back Left",
+          "section": "weapons",
+          "kind": "turret",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": null,
+          "accepts": [
+            {
+              "type": "TurretBase",
+              "subtypes": [
+                "MannedTurret"
+              ]
+            }
+          ],
+          "locked": true,
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Side_Back_Left/hardpoint_weapon_left_upper",
+          "label": "Weapon Left Upper",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "mount_gimbal_s4",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Side_Back_Left/hardpoint_weapon_left_upper/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "klwe_laserrepeater_s4",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Side_Back_Left/hardpoint_weapon_left_lower",
+          "label": "Weapon Left Lower",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "mount_gimbal_s4",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Side_Back_Left/hardpoint_weapon_left_lower/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "klwe_laserrepeater_s4",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Side_Back_Left/hardpoint_weapon_right_upper",
+          "label": "Weapon Right Upper",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "mount_gimbal_s4",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Side_Back_Left/hardpoint_weapon_right_upper/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "klwe_laserrepeater_s4",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Side_Back_Left/hardpoint_weapon_right_lower",
+          "label": "Weapon Right Lower",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "mount_gimbal_s4",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Side_Back_Left/hardpoint_weapon_right_lower/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "klwe_laserrepeater_s4",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Side_Back_Right",
+          "label": "Turret Side Back Right",
+          "section": "weapons",
+          "kind": "turret",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": null,
+          "accepts": [
+            {
+              "type": "TurretBase",
+              "subtypes": [
+                "MannedTurret"
+              ]
+            }
+          ],
+          "locked": true,
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Side_Back_Right/hardpoint_weapon_left_upper",
+          "label": "Weapon Left Upper",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "mount_gimbal_s4",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Side_Back_Right/hardpoint_weapon_left_upper/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "klwe_laserrepeater_s4",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Side_Back_Right/hardpoint_weapon_left_lower",
+          "label": "Weapon Left Lower",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "mount_gimbal_s4",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Side_Back_Right/hardpoint_weapon_left_lower/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "klwe_laserrepeater_s4",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Side_Back_Right/hardpoint_weapon_right_upper",
+          "label": "Weapon Right Upper",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "mount_gimbal_s4",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Side_Back_Right/hardpoint_weapon_right_upper/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "klwe_laserrepeater_s4",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Side_Back_Right/hardpoint_weapon_right_lower",
+          "label": "Weapon Right Lower",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "mount_gimbal_s4",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Side_Back_Right/hardpoint_weapon_right_lower/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "klwe_laserrepeater_s4",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Top",
+          "label": "Turret Top",
+          "section": "weapons",
+          "kind": "turret",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": null,
+          "accepts": [
+            {
+              "type": "TurretBase",
+              "subtypes": [
+                "MannedTurret"
+              ]
+            }
+          ],
+          "locked": true,
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Top/hardpoint_weapon_left_upper",
+          "label": "Weapon Left Upper",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "mount_gimbal_s4",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Top/hardpoint_weapon_left_upper/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "klwe_laserrepeater_s4",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Top/hardpoint_weapon_left_lower",
+          "label": "Weapon Left Lower",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "mount_gimbal_s4",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Top/hardpoint_weapon_left_lower/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "klwe_laserrepeater_s4",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Top/hardpoint_weapon_right_upper",
+          "label": "Weapon Right Upper",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "mount_gimbal_s4",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Top/hardpoint_weapon_right_upper/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "klwe_laserrepeater_s4",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Top/hardpoint_weapon_right_lower",
+          "label": "Weapon Right Lower",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "mount_gimbal_s4",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Top/hardpoint_weapon_right_lower/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "klwe_laserrepeater_s4",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Rear",
+          "label": "Turret Rear",
+          "section": "weapons",
+          "kind": "turret",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": null,
+          "accepts": [
+            {
+              "type": "TurretBase",
+              "subtypes": [
+                "MannedTurret"
+              ]
+            }
+          ],
+          "locked": true,
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Rear/hardpoint_weapon_left_upper",
+          "label": "Weapon Left Upper",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "mount_gimbal_s4",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Rear/hardpoint_weapon_left_upper/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "klwe_laserrepeater_s4",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Rear/hardpoint_weapon_left_lower",
+          "label": "Weapon Left Lower",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "mount_gimbal_s4",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Rear/hardpoint_weapon_left_lower/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "klwe_laserrepeater_s4",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Rear/hardpoint_weapon_right_upper",
+          "label": "Weapon Right Upper",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "mount_gimbal_s4",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Rear/hardpoint_weapon_right_upper/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "klwe_laserrepeater_s4",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Rear/hardpoint_weapon_right_lower",
+          "label": "Weapon Right Lower",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "mount_gimbal_s4",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "Turret_Rear/hardpoint_weapon_right_lower/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "klwe_laserrepeater_s4",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_top_left_01",
+          "label": "Missile Top Left 01",
+          "section": "missiles",
+          "kind": "missileRack",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "mrck_s05_behr_quad_s03",
+          "accepts": [
+            {
+              "type": "MissileLauncher",
+              "subtypes": [
+                "MissileRack"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_top_left_01/missile_01_attach",
+          "label": "Missile 01 Attach",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_top_left_01/missile_02_attach",
+          "label": "Missile 02 Attach",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_top_left_01/missile_03_attach",
+          "label": "Missile 03 Attach",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_top_left_01/missile_04_attach",
+          "label": "Missile 04 Attach",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_top_left_02",
+          "label": "Missile Top Left 02",
+          "section": "missiles",
+          "kind": "missileRack",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "mrck_s05_behr_quad_s03",
+          "accepts": [
+            {
+              "type": "MissileLauncher",
+              "subtypes": [
+                "MissileRack"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_top_left_02/missile_01_attach",
+          "label": "Missile 01 Attach",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_top_left_02/missile_02_attach",
+          "label": "Missile 02 Attach",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_top_left_02/missile_03_attach",
+          "label": "Missile 03 Attach",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_top_left_02/missile_04_attach",
+          "label": "Missile 04 Attach",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_bottom_left_01",
+          "label": "Missile Bottom Left 01",
+          "section": "missiles",
+          "kind": "missileRack",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "mrck_s05_behr_quad_s03",
+          "accepts": [
+            {
+              "type": "MissileLauncher",
+              "subtypes": [
+                "MissileRack"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_bottom_left_01/missile_01_attach",
+          "label": "Missile 01 Attach",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "misl_s03_ir_novp_viper",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_bottom_left_01/missile_02_attach",
+          "label": "Missile 02 Attach",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "misl_s03_ir_novp_viper",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_bottom_left_01/missile_03_attach",
+          "label": "Missile 03 Attach",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "misl_s03_ir_novp_viper",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_bottom_left_01/missile_04_attach",
+          "label": "Missile 04 Attach",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "misl_s03_ir_novp_viper",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_bottom_left_02",
+          "label": "Missile Bottom Left 02",
+          "section": "missiles",
+          "kind": "missileRack",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "mrck_s05_behr_quad_s03",
+          "accepts": [
+            {
+              "type": "MissileLauncher",
+              "subtypes": [
+                "MissileRack"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_bottom_left_02/missile_01_attach",
+          "label": "Missile 01 Attach",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "misl_s03_ir_novp_viper",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_bottom_left_02/missile_02_attach",
+          "label": "Missile 02 Attach",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "misl_s03_ir_novp_viper",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_bottom_left_02/missile_03_attach",
+          "label": "Missile 03 Attach",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "misl_s03_ir_novp_viper",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_bottom_left_02/missile_04_attach",
+          "label": "Missile 04 Attach",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "misl_s03_ir_novp_viper",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_top_right_01",
+          "label": "Missile Top Right 01",
+          "section": "missiles",
+          "kind": "missileRack",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "mrck_s05_behr_quad_s03",
+          "accepts": [
+            {
+              "type": "MissileLauncher",
+              "subtypes": [
+                "MissileRack"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_top_right_01/missile_01_attach",
+          "label": "Missile 01 Attach",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_top_right_01/missile_02_attach",
+          "label": "Missile 02 Attach",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_top_right_01/missile_03_attach",
+          "label": "Missile 03 Attach",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_top_right_01/missile_04_attach",
+          "label": "Missile 04 Attach",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_top_right_02",
+          "label": "Missile Top Right 02",
+          "section": "missiles",
+          "kind": "missileRack",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "mrck_s05_behr_quad_s03",
+          "accepts": [
+            {
+              "type": "MissileLauncher",
+              "subtypes": [
+                "MissileRack"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_top_right_02/missile_01_attach",
+          "label": "Missile 01 Attach",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_top_right_02/missile_02_attach",
+          "label": "Missile 02 Attach",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_top_right_02/missile_03_attach",
+          "label": "Missile 03 Attach",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_top_right_02/missile_04_attach",
+          "label": "Missile 04 Attach",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_bottom_right_01",
+          "label": "Missile Bottom Right 01",
+          "section": "missiles",
+          "kind": "missileRack",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "mrck_s05_behr_quad_s03",
+          "accepts": [
+            {
+              "type": "MissileLauncher",
+              "subtypes": [
+                "MissileRack"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_bottom_right_01/missile_01_attach",
+          "label": "Missile 01 Attach",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "misl_s03_ir_novp_viper",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_bottom_right_01/missile_02_attach",
+          "label": "Missile 02 Attach",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "misl_s03_ir_novp_viper",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_bottom_right_01/missile_03_attach",
+          "label": "Missile 03 Attach",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "misl_s03_ir_novp_viper",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_bottom_right_01/missile_04_attach",
+          "label": "Missile 04 Attach",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "misl_s03_ir_novp_viper",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_bottom_right_02",
+          "label": "Missile Bottom Right 02",
+          "section": "missiles",
+          "kind": "missileRack",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "mrck_s05_behr_quad_s03",
+          "accepts": [
+            {
+              "type": "MissileLauncher",
+              "subtypes": [
+                "MissileRack"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_bottom_right_02/missile_01_attach",
+          "label": "Missile 01 Attach",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "misl_s03_ir_novp_viper",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_bottom_right_02/missile_02_attach",
+          "label": "Missile 02 Attach",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "misl_s03_ir_novp_viper",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_bottom_right_02/missile_03_attach",
+          "label": "Missile 03 Attach",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "misl_s03_ir_novp_viper",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_missile_bottom_right_02/missile_04_attach",
+          "label": "Missile 04 Attach",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "misl_s03_ir_novp_viper",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "AEGS_Hammerhead"
+        },
+        {
+          "id": "hardpoint_life_support",
+          "label": "Life Support",
+          "section": "systems",
+          "kind": "life",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "lfsp_tydt_s03_comfortairmax",
+          "accepts": [
+            {
+              "type": "LifeSupportGenerator",
+              "subtypes": []
+            }
+          ],
+          "locked": true,
+          "portTags": "AEGS_Hammerhead"
+        }
+      ]
+    },
+    {
       "id": "aegs_idris_m",
       "uuid": "f0caa993-4c6b-4402-8ef1-d91879060f3b",
       "displayName": "Aegis Idris-M",
@@ -111697,6 +113879,2914 @@
               ]
             }
           ]
+        }
+      ]
+    },
+    {
+      "id": "rsi_constellation_andromeda",
+      "uuid": "9f4e2cea-f7dc-4155-9cb2-95bb42a74141",
+      "displayName": "RSI Constellation Mk IV Andromeda",
+      "manufacturer": "Roberts Space Industries",
+      "manufacturerCode": "RSI",
+      "role": "Medium Freight / Gun Ship",
+      "career": "Multi-Role",
+      "crew": 4,
+      "hullHp": 103004,
+      "crossSection": 24000,
+      "noise": 5,
+      "decoy": 48,
+      "damageReduction": 0.2,
+      "weaponPowerPool": 8,
+      "cargoScu": 96,
+      "maxCrateScu": 32,
+      "pitch": 25,
+      "yaw": 21,
+      "roll": 45,
+      "scmSpeed": 190,
+      "boostSpeed": 390,
+      "maxSpeed": 1000,
+      "boostBack": 200,
+      "ports": [
+        {
+          "id": "hardpoint_powerplant_left",
+          "label": "Powerplant Left",
+          "section": "systems",
+          "kind": "power",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "powr_sasu_s02_daybreak_scitem",
+          "accepts": [
+            {
+              "type": "PowerPlant",
+              "subtypes": []
+            }
+          ],
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_powerplant_right",
+          "label": "Powerplant Right",
+          "section": "systems",
+          "kind": "power",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "powr_sasu_s02_daybreak_scitem",
+          "accepts": [
+            {
+              "type": "PowerPlant",
+              "subtypes": []
+            }
+          ],
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_cooler_left",
+          "label": "Cooler Left",
+          "section": "systems",
+          "kind": "cooler",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "cool_jspn_s02_froststarex_scitem",
+          "accepts": [
+            {
+              "type": "Cooler",
+              "subtypes": []
+            }
+          ],
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_cooler_right",
+          "label": "Cooler Right",
+          "section": "systems",
+          "kind": "cooler",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "cool_jspn_s02_froststarex_scitem",
+          "accepts": [
+            {
+              "type": "Cooler",
+              "subtypes": []
+            }
+          ],
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_shield_generator",
+          "label": "Shield Generator",
+          "section": "defense",
+          "kind": "shield",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "shld_behr_s03_5ca_scitem",
+          "accepts": [
+            {
+              "type": "Shield",
+              "subtypes": []
+            }
+          ],
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_armor",
+          "label": "Armor",
+          "section": "defense",
+          "kind": "armor",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "armr_rsi_constellation_andromeda_gs",
+          "accepts": [
+            {
+              "type": "Armor",
+              "subtypes": []
+            }
+          ],
+          "locked": true,
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_controller_flight",
+          "label": "Controller Flight",
+          "section": "systems",
+          "kind": "flight",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "controller_flight_rsi_constellation_andromeda_gs",
+          "requiredTags": "$RSI_Constellation_Andromeda_Blade",
+          "portTags": "RSI_Constellation_Base RSI_Constellation_Andromeda_Blade",
+          "accepts": [
+            {
+              "type": "FlightController",
+              "subtypes": []
+            }
+          ]
+        },
+        {
+          "id": "hardpoint_radar",
+          "label": "Radar",
+          "section": "systems",
+          "kind": "radar",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "radr_wlop_s02_chernykh",
+          "accepts": [
+            {
+              "type": "Radar",
+              "subtypes": [
+                "ShortRangeRadar",
+                "MidRangeRadar"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_quantum_drive",
+          "label": "Quantum Drive",
+          "section": "systems",
+          "kind": "quantum",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "qdrv_just_s02_bolon_scitem",
+          "accepts": [
+            {
+              "type": "QuantumDrive",
+              "subtypes": [
+                "QDrive"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_gun_laser_top_left",
+          "label": "Gun Laser Top Left",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "mount_gimbal_s5",
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            },
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "pilotWeapon": true,
+          "locked": true,
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_gun_laser_top_left/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "klwe_laserrepeater_s5",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_gun_laser_top_right",
+          "label": "Gun Laser Top Right",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "mount_gimbal_s5",
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            },
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "pilotWeapon": true,
+          "locked": true,
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_gun_laser_top_right/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "klwe_laserrepeater_s5",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_gun_laser_bottom_left",
+          "label": "Gun Laser Bottom Left",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "mount_gimbal_s5",
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            },
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "pilotWeapon": true,
+          "locked": true,
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_gun_laser_bottom_left/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "klwe_laserrepeater_s5",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_gun_laser_bottom_right",
+          "label": "Gun Laser Bottom Right",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "mount_gimbal_s5",
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            },
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "pilotWeapon": true,
+          "locked": true,
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_gun_laser_bottom_right/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "klwe_laserrepeater_s5",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_turret_base_upper",
+          "label": "Turret Base Upper",
+          "section": "weapons",
+          "kind": "turret",
+          "size": 6,
+          "minSize": 6,
+          "maxSize": 6,
+          "defaultEntityClass": null,
+          "accepts": [
+            {
+              "type": "TurretBase",
+              "subtypes": [
+                "MannedTurret"
+              ]
+            }
+          ],
+          "locked": true,
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_turret_base_upper/hardpoint_weapon_left",
+          "label": "Weapon Left",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "mount_gimbal_s3",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_turret_base_upper/hardpoint_weapon_left/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "klwe_laserrepeater_s3",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_turret_base_upper/hardpoint_weapon_right",
+          "label": "Weapon Right",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "mount_gimbal_s3",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_turret_base_upper/hardpoint_weapon_right/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "klwe_laserrepeater_s3",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_turret_base_lower",
+          "label": "Turret Base Lower",
+          "section": "weapons",
+          "kind": "turret",
+          "size": 6,
+          "minSize": 6,
+          "maxSize": 6,
+          "defaultEntityClass": null,
+          "accepts": [
+            {
+              "type": "TurretBase",
+              "subtypes": [
+                "MannedTurret"
+              ]
+            }
+          ],
+          "locked": true,
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_turret_base_lower/hardpoint_weapon_left",
+          "label": "Weapon Left",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "mount_gimbal_s3",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_turret_base_lower/hardpoint_weapon_left/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "klwe_laserrepeater_s3",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_turret_base_lower/hardpoint_weapon_right",
+          "label": "Weapon Right",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "mount_gimbal_s3",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_turret_base_lower/hardpoint_weapon_right/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "klwe_laserrepeater_s3",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_missilerack_top_left_front",
+          "label": "Missilerack Top Left Front",
+          "section": "missiles",
+          "kind": "missileRack",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "mrck_s05_rsi_constellation_gs_left",
+          "accepts": [
+            {
+              "type": "MissileLauncher",
+              "subtypes": [
+                "MissileRack"
+              ]
+            }
+          ],
+          "pilotWeapon": true,
+          "locked": true,
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_missilerack_top_left_front/missile_attach_01",
+          "label": "Missile Attach 01",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_left_front/missile_attach_02",
+          "label": "Missile Attach 02",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_left_front/missile_attach_03",
+          "label": "Missile Attach 03",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_left_front/missile_attach_04",
+          "label": "Missile Attach 04",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_left_front/missile_attach_05",
+          "label": "Missile Attach 05",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_left_front/missile_attach_06",
+          "label": "Missile Attach 06",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_left_rear",
+          "label": "Missilerack Top Left Rear",
+          "section": "missiles",
+          "kind": "missileRack",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "mrck_s05_rsi_constellation_gs_left",
+          "accepts": [
+            {
+              "type": "MissileLauncher",
+              "subtypes": [
+                "MissileRack"
+              ]
+            }
+          ],
+          "pilotWeapon": true,
+          "locked": true,
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_missilerack_top_left_rear/missile_attach_01",
+          "label": "Missile Attach 01",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_left_rear/missile_attach_02",
+          "label": "Missile Attach 02",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_left_rear/missile_attach_03",
+          "label": "Missile Attach 03",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_left_rear/missile_attach_04",
+          "label": "Missile Attach 04",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_left_rear/missile_attach_05",
+          "label": "Missile Attach 05",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_left_rear/missile_attach_06",
+          "label": "Missile Attach 06",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_right_front",
+          "label": "Missilerack Top Right Front",
+          "section": "missiles",
+          "kind": "missileRack",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "mrck_s05_rsi_constellation_gs_right",
+          "accepts": [
+            {
+              "type": "MissileLauncher",
+              "subtypes": [
+                "MissileRack"
+              ]
+            }
+          ],
+          "pilotWeapon": true,
+          "locked": true,
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_missilerack_top_right_front/missile_attach_01",
+          "label": "Missile Attach 01",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_right_front/missile_attach_02",
+          "label": "Missile Attach 02",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_right_front/missile_attach_03",
+          "label": "Missile Attach 03",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_right_front/missile_attach_04",
+          "label": "Missile Attach 04",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_right_front/missile_attach_05",
+          "label": "Missile Attach 05",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_right_front/missile_attach_06",
+          "label": "Missile Attach 06",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_right_rear",
+          "label": "Missilerack Top Right Rear",
+          "section": "missiles",
+          "kind": "missileRack",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "mrck_s05_rsi_constellation_gs_right",
+          "accepts": [
+            {
+              "type": "MissileLauncher",
+              "subtypes": [
+                "MissileRack"
+              ]
+            }
+          ],
+          "pilotWeapon": true,
+          "locked": true,
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_missilerack_top_right_rear/missile_attach_01",
+          "label": "Missile Attach 01",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_right_rear/missile_attach_02",
+          "label": "Missile Attach 02",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_right_rear/missile_attach_03",
+          "label": "Missile Attach 03",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_right_rear/missile_attach_04",
+          "label": "Missile Attach 04",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_right_rear/missile_attach_05",
+          "label": "Missile Attach 05",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_right_rear/missile_attach_06",
+          "label": "Missile Attach 06",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_arm_body_left",
+          "label": "Missilerack Arm Body Left",
+          "section": "missiles",
+          "kind": "missileRack",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "mrck_s04_rsi_constellation_gs_short",
+          "accepts": [
+            {
+              "type": "MissileLauncher",
+              "subtypes": [
+                "MissileRack"
+              ]
+            }
+          ],
+          "pilotWeapon": true,
+          "locked": true,
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_missilerack_arm_body_left/missile_attach_01",
+          "label": "Missile Attach 01",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_arm_body_left/missile_attach_02",
+          "label": "Missile Attach 02",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_arm_body_left/missile_attach_03",
+          "label": "Missile Attach 03",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_arm_body_left/missile_attach_04",
+          "label": "Missile Attach 04",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_arm_body_left/missile_attach_05",
+          "label": "Missile Attach 05",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_arm_body_left/missile_attach_06",
+          "label": "Missile Attach 06",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_arm_body_left/missile_attach_07",
+          "label": "Missile Attach 07",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_arm_body_right",
+          "label": "Missilerack Arm Body Right",
+          "section": "missiles",
+          "kind": "missileRack",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "mrck_s04_rsi_constellation_gs_short",
+          "accepts": [
+            {
+              "type": "MissileLauncher",
+              "subtypes": [
+                "MissileRack"
+              ]
+            }
+          ],
+          "pilotWeapon": true,
+          "locked": true,
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_missilerack_arm_body_right/missile_attach_01",
+          "label": "Missile Attach 01",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_arm_body_right/missile_attach_02",
+          "label": "Missile Attach 02",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_arm_body_right/missile_attach_03",
+          "label": "Missile Attach 03",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_arm_body_right/missile_attach_04",
+          "label": "Missile Attach 04",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_arm_body_right/missile_attach_05",
+          "label": "Missile Attach 05",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_arm_body_right/missile_attach_06",
+          "label": "Missile Attach 06",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_arm_body_right/missile_attach_07",
+          "label": "Missile Attach 07",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_arm_tail_left",
+          "label": "Missilerack Arm Tail Left",
+          "section": "missiles",
+          "kind": "missileRack",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "mrck_s04_rsi_constellation_gs_long",
+          "accepts": [
+            {
+              "type": "MissileLauncher",
+              "subtypes": [
+                "MissileRack"
+              ]
+            }
+          ],
+          "pilotWeapon": true,
+          "locked": true,
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_missilerack_arm_tail_left/missile_attach_01",
+          "label": "Missile Attach 01",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_arm_tail_left/missile_attach_02",
+          "label": "Missile Attach 02",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_arm_tail_left/missile_attach_03",
+          "label": "Missile Attach 03",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_arm_tail_left/missile_attach_04",
+          "label": "Missile Attach 04",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_arm_tail_left/missile_attach_05",
+          "label": "Missile Attach 05",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_arm_tail_left/missile_attach_06",
+          "label": "Missile Attach 06",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_arm_tail_left/missile_attach_07",
+          "label": "Missile Attach 07",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_arm_tail_right",
+          "label": "Missilerack Arm Tail Right",
+          "section": "missiles",
+          "kind": "missileRack",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "mrck_s04_rsi_constellation_gs_long",
+          "accepts": [
+            {
+              "type": "MissileLauncher",
+              "subtypes": [
+                "MissileRack"
+              ]
+            }
+          ],
+          "pilotWeapon": true,
+          "locked": true,
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_missilerack_arm_tail_right/missile_attach_01",
+          "label": "Missile Attach 01",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_arm_tail_right/missile_attach_02",
+          "label": "Missile Attach 02",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_arm_tail_right/missile_attach_03",
+          "label": "Missile Attach 03",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_arm_tail_right/missile_attach_04",
+          "label": "Missile Attach 04",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_arm_tail_right/missile_attach_05",
+          "label": "Missile Attach 05",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_arm_tail_right/missile_attach_06",
+          "label": "Missile Attach 06",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_arm_tail_right/missile_attach_07",
+          "label": "Missile Attach 07",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_life_support",
+          "label": "Life Support",
+          "section": "systems",
+          "kind": "life",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "lfsp_tydt_s02_comfortairplus",
+          "accepts": [
+            {
+              "type": "LifeSupportGenerator",
+              "subtypes": []
+            }
+          ],
+          "locked": true,
+          "portTags": "RSI_Constellation_Base"
+        }
+      ]
+    },
+    {
+      "id": "rsi_constellation_aquila",
+      "uuid": "562b0c9b-4635-4b40-8e57-09feb3056073",
+      "displayName": "RSI Constellation Mk IV Aquila",
+      "manufacturer": "Roberts Space Industries",
+      "manufacturerCode": "RSI",
+      "role": "Expedition",
+      "career": "Exploration",
+      "crew": 4,
+      "hullHp": 103004,
+      "crossSection": 24000,
+      "noise": 5,
+      "decoy": 48,
+      "damageReduction": 0.2,
+      "weaponPowerPool": 8,
+      "cargoScu": 96,
+      "maxCrateScu": 32,
+      "pitch": 25,
+      "yaw": 21,
+      "roll": 45,
+      "scmSpeed": 180,
+      "boostSpeed": 380,
+      "maxSpeed": 1075,
+      "boostBack": 200,
+      "ports": [
+        {
+          "id": "hardpoint_powerplant_left",
+          "label": "Powerplant Left",
+          "section": "systems",
+          "kind": "power",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "powr_sasu_s02_daybreak_scitem",
+          "accepts": [
+            {
+              "type": "PowerPlant",
+              "subtypes": []
+            }
+          ],
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_powerplant_right",
+          "label": "Powerplant Right",
+          "section": "systems",
+          "kind": "power",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "powr_sasu_s02_daybreak_scitem",
+          "accepts": [
+            {
+              "type": "PowerPlant",
+              "subtypes": []
+            }
+          ],
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_cooler_left",
+          "label": "Cooler Left",
+          "section": "systems",
+          "kind": "cooler",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "cool_jspn_s02_froststarex_scitem",
+          "accepts": [
+            {
+              "type": "Cooler",
+              "subtypes": []
+            }
+          ],
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_cooler_right",
+          "label": "Cooler Right",
+          "section": "systems",
+          "kind": "cooler",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "cool_jspn_s02_froststarex_scitem",
+          "accepts": [
+            {
+              "type": "Cooler",
+              "subtypes": []
+            }
+          ],
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_shield_generator",
+          "label": "Shield Generator",
+          "section": "defense",
+          "kind": "shield",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "shld_behr_s03_5ca_scitem",
+          "accepts": [
+            {
+              "type": "Shield",
+              "subtypes": []
+            }
+          ],
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_armor",
+          "label": "Armor",
+          "section": "defense",
+          "kind": "armor",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "armr_rsi_constellation_aquila_gs",
+          "accepts": [
+            {
+              "type": "Armor",
+              "subtypes": []
+            }
+          ],
+          "locked": true,
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_controller_flight",
+          "label": "Controller Flight",
+          "section": "systems",
+          "kind": "flight",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "controller_flight_rsi_constellation_aquila_gs",
+          "requiredTags": "$RSI_Constellation_Andromeda_Blade",
+          "portTags": "RSI_Constellation_Base RSI_Constellation_Andromeda_Blade",
+          "accepts": [
+            {
+              "type": "FlightController",
+              "subtypes": []
+            }
+          ]
+        },
+        {
+          "id": "hardpoint_radar",
+          "label": "Radar",
+          "section": "systems",
+          "kind": "radar",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "radr_wlop_s02_chernykh",
+          "accepts": [
+            {
+              "type": "Radar",
+              "subtypes": [
+                "ShortRangeRadar",
+                "MidRangeRadar"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_quantum_drive",
+          "label": "Quantum Drive",
+          "section": "systems",
+          "kind": "quantum",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "qdrv_just_s02_bolon_scitem",
+          "accepts": [
+            {
+              "type": "QuantumDrive",
+              "subtypes": [
+                "QDrive"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_gun_laser_top_left",
+          "label": "Gun Laser Top Left",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "mount_gimbal_s5",
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            },
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "pilotWeapon": true,
+          "locked": true,
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_gun_laser_top_left/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "behr_lasercannon_s5",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_gun_laser_top_right",
+          "label": "Gun Laser Top Right",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "mount_gimbal_s5",
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            },
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "pilotWeapon": true,
+          "locked": true,
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_gun_laser_top_right/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "behr_lasercannon_s5",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_gun_laser_bottom_left",
+          "label": "Gun Laser Bottom Left",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "mount_gimbal_s5",
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            },
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "pilotWeapon": true,
+          "locked": true,
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_gun_laser_bottom_left/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "behr_lasercannon_s5",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_gun_laser_bottom_right",
+          "label": "Gun Laser Bottom Right",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "mount_gimbal_s5",
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            },
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "pilotWeapon": true,
+          "locked": true,
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_gun_laser_bottom_right/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "behr_lasercannon_s5",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_turret_base_upper",
+          "label": "Turret Base Upper",
+          "section": "weapons",
+          "kind": "turret",
+          "size": 6,
+          "minSize": 6,
+          "maxSize": 6,
+          "defaultEntityClass": null,
+          "accepts": [
+            {
+              "type": "TurretBase",
+              "subtypes": [
+                "MannedTurret"
+              ]
+            }
+          ],
+          "locked": true,
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_turret_base_lower",
+          "label": "Turret Base Lower",
+          "section": "weapons",
+          "kind": "turret",
+          "size": 6,
+          "minSize": 6,
+          "maxSize": 6,
+          "defaultEntityClass": null,
+          "accepts": [
+            {
+              "type": "TurretBase",
+              "subtypes": [
+                "MannedTurret"
+              ]
+            }
+          ],
+          "locked": true,
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_turret_base_lower/hardpoint_weapon_left",
+          "label": "Weapon Left",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "mount_gimbal_s3",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_turret_base_lower/hardpoint_weapon_left/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "klwe_laserrepeater_s3",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_turret_base_lower/hardpoint_weapon_right",
+          "label": "Weapon Right",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "mount_gimbal_s3",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_turret_base_lower/hardpoint_weapon_right/hardpoint_class_2",
+          "label": "Class 2",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "klwe_laserrepeater_s3",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_missilerack_top_left_front",
+          "label": "Missilerack Top Left Front",
+          "section": "missiles",
+          "kind": "missileRack",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "mrck_s05_rsi_constellation_gs_left",
+          "accepts": [
+            {
+              "type": "MissileLauncher",
+              "subtypes": [
+                "MissileRack"
+              ]
+            }
+          ],
+          "pilotWeapon": true,
+          "locked": true,
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_missilerack_top_left_front/missile_attach_01",
+          "label": "Missile Attach 01",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_left_front/missile_attach_02",
+          "label": "Missile Attach 02",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_left_front/missile_attach_03",
+          "label": "Missile Attach 03",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_left_front/missile_attach_04",
+          "label": "Missile Attach 04",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_left_front/missile_attach_05",
+          "label": "Missile Attach 05",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_left_front/missile_attach_06",
+          "label": "Missile Attach 06",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_left_rear",
+          "label": "Missilerack Top Left Rear",
+          "section": "missiles",
+          "kind": "missileRack",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "mrck_s05_rsi_constellation_gs_left",
+          "accepts": [
+            {
+              "type": "MissileLauncher",
+              "subtypes": [
+                "MissileRack"
+              ]
+            }
+          ],
+          "pilotWeapon": true,
+          "locked": true,
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_missilerack_top_left_rear/missile_attach_01",
+          "label": "Missile Attach 01",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_left_rear/missile_attach_02",
+          "label": "Missile Attach 02",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_left_rear/missile_attach_03",
+          "label": "Missile Attach 03",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_left_rear/missile_attach_04",
+          "label": "Missile Attach 04",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_left_rear/missile_attach_05",
+          "label": "Missile Attach 05",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_left_rear/missile_attach_06",
+          "label": "Missile Attach 06",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_right_front",
+          "label": "Missilerack Top Right Front",
+          "section": "missiles",
+          "kind": "missileRack",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "mrck_s05_rsi_constellation_gs_right",
+          "accepts": [
+            {
+              "type": "MissileLauncher",
+              "subtypes": [
+                "MissileRack"
+              ]
+            }
+          ],
+          "pilotWeapon": true,
+          "locked": true,
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_missilerack_top_right_front/missile_attach_01",
+          "label": "Missile Attach 01",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_right_front/missile_attach_02",
+          "label": "Missile Attach 02",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_right_front/missile_attach_03",
+          "label": "Missile Attach 03",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_right_front/missile_attach_04",
+          "label": "Missile Attach 04",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_right_front/missile_attach_05",
+          "label": "Missile Attach 05",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_right_front/missile_attach_06",
+          "label": "Missile Attach 06",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_right_rear",
+          "label": "Missilerack Top Right Rear",
+          "section": "missiles",
+          "kind": "missileRack",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "mrck_s05_rsi_constellation_gs_right",
+          "accepts": [
+            {
+              "type": "MissileLauncher",
+              "subtypes": [
+                "MissileRack"
+              ]
+            }
+          ],
+          "pilotWeapon": true,
+          "locked": true,
+          "portTags": "RSI_Constellation_Base"
+        },
+        {
+          "id": "hardpoint_missilerack_top_right_rear/missile_attach_01",
+          "label": "Missile Attach 01",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_right_rear/missile_attach_02",
+          "label": "Missile Attach 02",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_right_rear/missile_attach_03",
+          "label": "Missile Attach 03",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_right_rear/missile_attach_04",
+          "label": "Missile Attach 04",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_right_rear/missile_attach_05",
+          "label": "Missile Attach 05",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_missilerack_top_right_rear/missile_attach_06",
+          "label": "Missile Attach 06",
+          "section": "missiles",
+          "kind": "missile",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "accepts": [
+            {
+              "type": "Missile",
+              "subtypes": [
+                "Missile"
+              ]
+            }
+          ],
+          "portTags": "RSI_Constellation_Base",
+          "pilotWeapon": true
+        },
+        {
+          "id": "hardpoint_life_support",
+          "label": "Life Support",
+          "section": "systems",
+          "kind": "life",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "lfsp_tydt_s02_comfortairplus",
+          "accepts": [
+            {
+              "type": "LifeSupportGenerator",
+              "subtypes": []
+            }
+          ],
+          "locked": true,
+          "portTags": "RSI_Constellation_Base"
         }
       ]
     },

@@ -17785,7 +17785,7 @@
       "attachSubType": "Medium",
       "grade": "A",
       "uuid": "19f2a8ef-9817-4a52-888c-efbf77e155d9",
-      "exclusiveHull": "constellation"
+      "exclusiveHull": "constellation_andromeda"
     },
     {
       "entityClass": "armr_rsi_constellation_andromeda_gs",
@@ -17812,7 +17812,7 @@
       "attachSubType": "Medium",
       "grade": "A",
       "uuid": "30e1a1a9-77a9-4392-a927-e6455081a0f2",
-      "exclusiveHull": "constellation"
+      "exclusiveHull": "constellation_andromeda"
     },
     {
       "entityClass": "armr_rsi_constellation_andromeda_gs_display",
@@ -17839,7 +17839,7 @@
       "attachSubType": "Medium",
       "grade": "A",
       "uuid": "6e5faf6a-8660-425d-9bbc-62af6ee1937e",
-      "exclusiveHull": "constellation"
+      "exclusiveHull": "constellation_andromeda"
     },
     {
       "entityClass": "armr_rsi_constellation_aquila_gs",
@@ -17866,7 +17866,7 @@
       "attachSubType": "Medium",
       "grade": "A",
       "uuid": "c117b130-a872-4fb1-9d3a-6dd5fbf72749",
-      "exclusiveHull": "constellation"
+      "exclusiveHull": "constellation_aquila"
     },
     {
       "entityClass": "armr_rsi_constellation_mk5_centaurus",
@@ -18138,7 +18138,7 @@
       "attachSubType": "UNDEFINED",
       "grade": "A",
       "uuid": "38bd5546-9712-40a1-9b69-134fb7f31b99",
-      "exclusiveHull": "constellation"
+      "exclusiveHull": "constellation_andromeda"
     },
     {
       "entityClass": "controller_flight_rsi_constellation_andromeda_gs_blade_hnd",
@@ -18197,7 +18197,7 @@
       "attachSubType": "UNDEFINED",
       "grade": "A",
       "uuid": "b8d6eaa0-9743-4c7a-a6db-b2b8d02c4b73",
-      "exclusiveHull": "constellation"
+      "exclusiveHull": "constellation_andromeda"
     },
     {
       "entityClass": "controller_flight_rsi_constellation_andromeda_gs",
@@ -18256,7 +18256,7 @@
       "attachSubType": "UNDEFINED",
       "grade": "A",
       "uuid": "f0e43ba1-b299-422e-9b91-a228d6481451",
-      "exclusiveHull": "constellation"
+      "exclusiveHull": "constellation_andromeda"
     },
     {
       "entityClass": "controller_flight_rsi_constellation_andromeda_blade_spd",
@@ -18285,7 +18285,7 @@
       "attachSubType": "UNDEFINED",
       "grade": "A",
       "uuid": "fcf00ef7-932e-46c2-83ec-28455350a429",
-      "exclusiveHull": "constellation"
+      "exclusiveHull": "constellation_andromeda"
     },
     {
       "entityClass": "controller_flight_rsi_constellation_andromeda_gs_blade_spd",
@@ -18344,7 +18344,7 @@
       "attachSubType": "UNDEFINED",
       "grade": "A",
       "uuid": "e8c7c040-63a6-4832-a4d7-ed087c6ad050",
-      "exclusiveHull": "constellation"
+      "exclusiveHull": "constellation_aquila"
     },
     {
       "entityClass": "controller_flight_rsi_constellation_aquila_gs_blade_hnd",
@@ -18403,7 +18403,7 @@
       "attachSubType": "UNDEFINED",
       "grade": "A",
       "uuid": "b8151561-a48c-4426-b4b5-7308ab699d62",
-      "exclusiveHull": "constellation"
+      "exclusiveHull": "constellation_aquila"
     },
     {
       "entityClass": "controller_flight_rsi_constellation_aquila_gs",
@@ -18462,7 +18462,7 @@
       "attachSubType": "UNDEFINED",
       "grade": "A",
       "uuid": "c7365995-5b3f-4179-bff4-50aa4f2a97d6",
-      "exclusiveHull": "constellation"
+      "exclusiveHull": "constellation_aquila"
     },
     {
       "entityClass": "controller_flight_rsi_constellation_aquila_gs_blade_spd",
@@ -32648,7 +32648,8 @@
       "attachType": "Armor",
       "attachSubType": "Medium",
       "grade": "A",
-      "uuid": "439741e2-2d5a-4d54-8a5c-92056a6cd281"
+      "uuid": "439741e2-2d5a-4d54-8a5c-92056a6cd281",
+      "exclusiveHull": "hammerhead"
     },
     {
       "entityClass": "armr_aegs_idris",
