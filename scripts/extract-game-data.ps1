@@ -94,7 +94,27 @@ if (Test-Path $OutputPath) {
 # Create output directory
 New-Item -ItemType Directory -Path $OutputPath -Force | Out-Null
 
-# Capture game build version from the LIVE install (used by parse scripts + site UI)
+# Capture game build version from the LIVE install (used by parse scripts + site UI).
+# ALWAYS pull launcherVersion from the RSI Launcher log — that is the UI string
+# (e.g. 4.10.3-live.13165946). Never invent the patch digit from build_manifest
+# Data.Version (4.10.200.58746) or Branch (sc-alpha-4.10.0).
+function Get-RsiLauncherVersionLabel {
+    param([string]$Channel = 'live')
+    $logPath = Join-Path $env:APPDATA 'rsilauncher\logs\log.log'
+    if (-not (Test-Path $logPath)) { return $null }
+    $token = $Channel.ToUpperInvariant()
+    $pattern = "\b$token\s+(\d+\.\d+\.\d+-$([regex]::Escape($Channel.ToLowerInvariant()))\.\d+)\b"
+    $last = $null
+    foreach ($m in (Select-String -Path $logPath -Pattern $pattern -AllMatches)) {
+        foreach ($gm in $m.Matches) {
+            $last = $gm.Groups[1].Value
+        }
+    }
+    return $last
+}
+
+$channelLeaf = Split-Path -Leaf $StarCitizenPath
+$channel = if ($channelLeaf) { $channelLeaf.ToLowerInvariant() } else { 'live' }
 $BuildManifestPath = Join-Path $StarCitizenPath "build_manifest.id"
 $GameBuildVersion = $null
 if (Test-Path $BuildManifestPath) {
@@ -104,8 +124,27 @@ if (Test-Path $BuildManifestPath) {
         $p4Change = $manifest.Data.RequestedP4ChangeNum
         $branch = $manifest.Data.Branch
         $GameBuildVersion = $null
-        # Prefer sc-alpha-X.Y; CIG hotfix Version is often the 1.0 engine build.
-        if ($branch -match 'sc-alpha-(\d+)\.(\d+)') {
+
+        $fromLauncher = Get-RsiLauncherVersionLabel -Channel $channel
+        $launcherVersion = $fromLauncher
+        if (-not $launcherVersion) {
+            Write-Host "WARNING: RSI Launcher log had no $channel label; falling back to branch+P4 (may be wrong on hotfixes)." -ForegroundColor Yellow
+            $semver = $null
+            if ($branch -match '(\d+)\.(\d+)\.(\d+)') {
+                $semver = "$($Matches[1]).$($Matches[2]).$($Matches[3])"
+            }
+            elseif ($branch -match '(\d+)\.(\d+)') {
+                $semver = "$($Matches[1]).$($Matches[2]).0"
+            }
+            if ($semver -and $p4Change) {
+                $launcherVersion = "$semver-$channel.$p4Change"
+            }
+        }
+
+        if ($launcherVersion -match '^(\d+)\.(\d+)\.\d+-') {
+            $GameBuildVersion = "$($Matches[1]).$($Matches[2]).x"
+        }
+        elseif ($branch -match 'sc-alpha-(\d+)\.(\d+)') {
             $GameBuildVersion = "$($Matches[1]).$($Matches[2]).x"
         }
         elseif ($internalVersion -and $internalVersion -ne 'None' -and $internalVersion -notmatch '^1\.') {
@@ -117,21 +156,7 @@ if (Test-Path $BuildManifestPath) {
         if (-not $GameBuildVersion -and $branch -match '(\d+)\.(\d+)') {
             $GameBuildVersion = "$($Matches[1]).$($Matches[2]).x"
         }
-        # RSI launcher label: "{semver}-live.{RequestedP4ChangeNum}" (e.g. 4.9.0-live.12344265)
-        $launcherVersion = $null
-        $semver = $null
-        if ($branch -match '(\d+)\.(\d+)\.(\d+)') {
-            $semver = "$($Matches[1]).$($Matches[2]).$($Matches[3])"
-        }
-        elseif ($branch -match '(\d+)\.(\d+)') {
-            $semver = "$($Matches[1]).$($Matches[2]).0"
-        }
-        elseif ($GameBuildVersion -match '^(\d+)\.(\d+)') {
-            $semver = "$($Matches[1]).$($Matches[2]).0"
-        }
-        if ($semver -and $p4Change) {
-            $launcherVersion = "$semver-live.$p4Change"
-        }
+
         $gameBuild = @{
             version = $GameBuildVersion
             launcherVersion = $launcherVersion
@@ -140,6 +165,7 @@ if (Test-Path $BuildManifestPath) {
             p4Change = $p4Change
             buildDate = $manifest.Data.BuildDateStamp
             extracted = (Get-Date).ToUniversalTime().ToString("o")
+            source = if ($fromLauncher) { 'rsi-launcher-log' } else { 'build-manifest-fallback' }
         }
         $gameBuildJson = $gameBuild | ConvertTo-Json -Depth 3
         Write-Utf8NoBom -Path (Join-Path $OutputPath "game-build.json") -Content $gameBuildJson
