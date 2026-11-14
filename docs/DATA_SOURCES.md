@@ -163,9 +163,10 @@ When a new Star Citizen patch drops, follow these steps locally. The super-admin
 (`src/components/DbActionsModal.tsx` → `PATCH_DAY_STEPS`) mirrors this runbook for copy-paste commands —
 **keep both in sync** (see `.cursor/rules/db-actions-patch-runbook.mdc`).
 
-1. **Extract:** `.\scripts\extract-game-data.ps1` (wipes and repopulates `extracted-data/`, including the star system containers used for `nav-systems.json`)
-2. **Parse:** `npm run parse-game-data` (regenerates all `src/data/game-*.json` from scratch, including `game-ships.json` and `game-ship-item-stats.json`, and writes `nav-systems.json` when the system containers are present; appends What's New pending lines and pushes to Supabase when `SUPABASE_SERVICE_ROLE_KEY` is set — same `issue_key`+`version` is skipped)
+1. **Extract:** `.\scripts\extract-game-data.ps1` (wipes and repopulates `extracted-data/`, including the star system containers used for `nav-systems.json`, vehicle XML for Fuzy's Ship Shop, and **character loadout XML** → `character-loadouts/` for Loot Finder NPC worn gear)
+2. **Parse:** `npm run parse-game-data` (regenerates all `src/data/game-*.json` from scratch, including `game-ships.json`, `game-ship-item-stats.json`, `nav-systems.json`, and **`game-site-loot.json` for Loot Finder** from location-true slot presets + NPC loadout worn gear — not shared V3 catalog flattening; appends What's New pending lines and pushes to Supabase when `SUPABASE_SERVICE_ROLE_KEY` is set — same `issue_key`+`version` is skipped)
    - Ship items keep their game record id, and a gun whose shot sequence is slower than its fire rate stores that wait so burst and sustained DPS follow it. Do not run a separate cycle patch after this.
+   - Loot Finder stays current every patch via this parse (`npm run bake-site-loot` alone is fine for loot-only iteration).
 3. **Review the patch diff:** `npm run diff-game-data`
    - Compares fresh parse output against the last commit (`--ref <ref>` for another baseline)
    - Reports **ADDED / REMOVED / RENAMED-MOVED / CHANGED** records per file, with field-level stat changes

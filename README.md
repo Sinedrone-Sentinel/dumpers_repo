@@ -215,7 +215,7 @@ A browser list of shop buys, separate from Fuzy's Ship Shop. The header cart but
 
 ### Loot Finder (`/loot-finder`)
 
-Search site loot by item name or browse a location type (Lazarus, Onyx, OLP, PAF, Contested Zone, Executive Hangar, QV Investigation). Baked from client loot slot presets into `src/data/game-site-loot.json` (`npm run bake-site-loot`, also during `parse-game-data`). Relative drop rates only. Open to guests and Offline Mode.
+Search site loot by item name or browse a named location (Lazarus, Onyx, each OLP/PAF, Checkmate / Orbituary / Ruin Contested Zones, Executive Hangar, QV Investigation). Baked from **location-true** loot slot presets plus NPC loadout worn gear into `src/data/game-site-loot.json` (`npm run bake-site-loot`, also during every `parse-game-data` / patch-day parse). Includes Clothing and an **NPC Gear** chip for worn clothing/armour that does not also drop in that site’s crates. Relative drop rates only. Open to guests and Offline Mode.
 
 ### Executive Timer (`/executive-hangar`)
 

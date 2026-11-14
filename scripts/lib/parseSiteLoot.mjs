@@ -2,6 +2,7 @@
  * Bake site loot pools (Lazarus, Onyx, OLP, PAF, Contested Zone, Executive Hangar, QV Investigation)
  * into game-site-loot.json for Loot Finder.
  *
+ * Uses location-true slot presets (not shared V3 catalogs that flatten every tagged config).
  * Relative rates are weight shares within each location after the allowlist.
  */
 
@@ -21,8 +22,21 @@ const PAF_SITES = OLP_SITES.flatMap((complex) =>
   ['I', 'II', 'III'].map((roman) => ({ complex, roman })),
 )
 
-const ORBAGEDDON_PRESETS = ['v3slotpreset_orbageddon.json']
-const CONTESTED_ZONE_PRESETS = ['v3slotpreset_contestedzones.json']
+/**
+ * Location-true presets (not shared V3 catalogs that list every tagged config type).
+ * V3SlotPreset_* files include Ship Weapon / Ship Missile configs that only apply when
+ * a spawn carries those tags — flattening them made ship guns appear at every site.
+ */
+const ORBAGEDDON_PRESETS = [
+  'lootgeneration_slotpreset_orbageddon.json',
+  'orb_orbitalplatform_ext.json',
+  'orb_orbitalplatform_int.json',
+  'orb_dishalignmentfacility.json',
+  'orbageddon/orb_warehouse_multiconfig.json',
+]
+
+const LOADOUT_BUNDLE_ROOT = 'libs/foundry/records/loadoutkits/pu_loadoutbundles'
+const CHARACTER_LOADOUT_ROOT = 'character-loadouts'
 
 const LOCATION_DEFS = [
   {
@@ -31,10 +45,8 @@ const LOCATION_DEFS = [
     group: null,
     systems: ['Pyro'],
     poolId: 'asddelving',
-    presets: [
-      'v3slotpreset_asddelving.json',
-      'v3slotpreset_asddelving_sciencewing.json',
-    ],
+    presets: ['lootgeneration_slotpreset_asddelving.json'],
+    loadoutFolders: ['associated_science_and_development'],
   },
   {
     id: 'onyx',
@@ -42,7 +54,9 @@ const LOCATION_DEFS = [
     group: null,
     systems: ['Stanton'],
     poolId: 'welcometonyx',
+    // No non-V3 WelcomeToOnyx preset in extract — use V3 but skip Ship Weapon/Missile configs.
     presets: ['v3slotpreset_welcometonyx.json'],
+    loadoutFolders: ['associated_science_and_development'],
   },
   ...OLP_SITES.map((complex) => ({
     id: `olp_${complex.toLowerCase()}`,
@@ -52,6 +66,7 @@ const LOCATION_DEFS = [
     systems: ['Stanton'],
     poolId: 'orbageddon',
     presets: ORBAGEDDON_PRESETS,
+    loadoutFolders: ['criminal_gang', 'outlaws'],
   })),
   ...PAF_SITES.map(({ complex, roman }) => ({
     id: `paf_${complex.toLowerCase()}_${roman.toLowerCase()}`,
@@ -61,6 +76,7 @@ const LOCATION_DEFS = [
     systems: ['Stanton'],
     poolId: 'orbageddon',
     presets: ORBAGEDDON_PRESETS,
+    loadoutFolders: ['criminal_gang', 'outlaws'],
   })),
   {
     id: 'cz_checkmate',
@@ -68,8 +84,12 @@ const LOCATION_DEFS = [
     group: 'contested_zone',
     groupLabel: 'Contested Zone',
     systems: ['Pyro'],
-    poolId: 'contestedzones',
-    presets: CONTESTED_ZONE_PRESETS,
+    poolId: 'contestedzone_checkmate',
+    presets: [
+      'contestedzones/contestedzone_1a.json',
+      'contestedzones/contestedzone_1a_rewardroom_001.json',
+    ],
+    loadoutFolders: ['contested_zones', 'pyro_generic_outlaw'],
   },
   {
     id: 'cz_orbituary',
@@ -77,8 +97,13 @@ const LOCATION_DEFS = [
     group: 'contested_zone',
     groupLabel: 'Contested Zone',
     systems: ['Pyro'],
-    poolId: 'contestedzones',
-    presets: CONTESTED_ZONE_PRESETS,
+    poolId: 'contestedzone_orbituary',
+    // 1b reward room is the only Contested Zone preset with Components_ShipWeapons.
+    presets: [
+      'contestedzones/contestedzone_1a.json',
+      'contestedzones/contestedzone_1b_rewardroom_002.json',
+    ],
+    loadoutFolders: ['contested_zones', 'rough_and_ready'],
   },
   {
     id: 'cz_ruin',
@@ -86,8 +111,9 @@ const LOCATION_DEFS = [
     group: 'contested_zone',
     groupLabel: 'Contested Zone',
     systems: ['Pyro'],
-    poolId: 'contestedzones',
-    presets: CONTESTED_ZONE_PRESETS,
+    poolId: 'contestedzone_ruin',
+    presets: ['contestedzones/ghostarena_01.json'],
+    loadoutFolders: ['contested_zones', 'headhunters'],
   },
   {
     id: 'executive_hangar',
@@ -96,6 +122,7 @@ const LOCATION_DEFS = [
     systems: ['Pyro'],
     poolId: 'executive_hangar',
     presets: ['asteroidbases/asteroidbase_exec_hangar_001.json'],
+    loadoutFolders: [],
   },
   {
     id: 'qv_investigation',
@@ -104,20 +131,27 @@ const LOCATION_DEFS = [
     systems: ['Nyx'],
     poolId: 'kaboos',
     presets: ['lootgeneration_slotpreset_kaboos.json'],
+    loadoutFolders: [],
   },
 ]
 
+/** Skip non-loot / placement-gated catalog rows (esp. Ship Weapon tags on shared V3 presets). */
 const SKIP_CONFIG_NAME =
-  /^(Minable|Salvageable|Compboard|PowerBank|Datapad|Decryption|Loose Commodity|ATLS Suit)\b/i
+  /^(Minable|Salvageable|Compboard|PowerBank|Datapad|Decryption|Loose Commodity|Loose Sustenance|ATLS Suit|Ship Weapon|S\d+ Ship Missile|Mining |Repair |Harvestables )\b/i
 
 const KIND_LABELS = {
   fps_weapon: 'FPS Weapon',
   ship_weapon: 'Ship Weapon',
   ship_component: 'Ship Component',
   armour: 'Armour',
+  clothing: 'Clothing',
+  npc_gear: 'NPC Gear',
   plushie: 'Plushie',
   consumable: 'Consumable',
 }
+
+/** Worn clothing/armour kinds that can appear on NPC loadouts. */
+const WORN_GEAR_KINDS = new Set(['armour', 'clothing'])
 
 const SHIP_COMPONENT_TYPES = new Set([
   'Cooler',
@@ -312,6 +346,7 @@ function classifyEntity(entity) {
   if (type === 'WeaponGun' || type === 'WeaponMining' || type === 'Missile' || type === 'Bomb' || /\/ships\/weapons\//.test(path)) {
     return 'ship_weapon'
   }
+  if (type.startsWith('Char_Clothing')) return 'clothing'
   if (
     type.startsWith('Char_Armor') ||
     /undersuit|flight_suit|flight.?suit|cds_armor|armor_(light|medium|heavy)/i.test(key) ||
@@ -447,21 +482,34 @@ function loadJsonRef(ref, extractedRoot, cache) {
   return json
 }
 
-function extractWeaponFromRack(entity, index) {
+function extractAttachedEntities(entity, index, kindFilter) {
   if (!entity) return []
   const text = JSON.stringify(entity.components || [])
-  const re = /entities\/scitem\/weapons\/fps_weapons\/([^\"]+)\.json/g
   const keys = new Set()
-  let m
-  while ((m = re.exec(text))) {
-    keys.add(basename(m[1]))
+  const patterns = [
+    /entities\/scitem\/weapons\/fps_weapons\/([^\"]+)\.json/g,
+    /entities\/scitem\/ships\/weapons\/([^\"]+)\.json/g,
+    /entities\/scitem\/ships\/missiles\/([^\"]+)\.json/g,
+    /entities\/scitem\/ships\/weapon_mounts\/([^\"]+)\.json/g,
+  ]
+  for (const re of patterns) {
+    let m
+    while ((m = re.exec(text))) {
+      keys.add(basename(m[1]))
+    }
   }
   const out = []
   for (const key of keys) {
     const ent = index.byKey.get(key)
-    if (ent?.kind === 'fps_weapon') out.push(ent)
+    if (!ent?.kind) continue
+    if (kindFilter && !kindFilter.has(ent.kind)) continue
+    out.push(ent)
   }
   return out
+}
+
+function extractWeaponFromRack(entity, index) {
+  return extractAttachedEntities(entity, index, new Set(['fps_weapon']))
 }
 
 function resolveFixedEntity(slot, extractedRoot, index, cache) {
@@ -480,9 +528,12 @@ function resolveFixedEntity(slot, extractedRoot, index, cache) {
   const ent = index.byKey.get(entityKey)
   if (!ent) return results
 
-  if (/weapon_rack_/i.test(entityKey)) {
-    const weapons = extractWeaponFromRack(ent, index)
-    if (weapons.length) return weapons
+  // FPS weapon racks and Contested Zone ship-gun usables (weapon_ship_cz_*) wrap the real item.
+  if (/weapon_rack_/i.test(entityKey) || /weapon_ship_cz/i.test(entityKey) || !ent.kind) {
+    const shipGuns = extractAttachedEntities(ent, index, new Set(['ship_weapon']))
+    if (shipGuns.length) return shipGuns
+    const fps = extractWeaponFromRack(ent, index)
+    if (fps.length) return fps
   }
 
   if (ent.kind) results.push(ent)
@@ -903,9 +954,101 @@ function buildStats(entity, catalogs) {
   if (bp?.armorBaseStats) {
     stats.armor = bp.armorBaseStats
   }
-  if (entity.kind === 'armour' && entity.subType) stats.slot = entity.subType
+  if ((entity.kind === 'armour' || entity.kind === 'clothing' || entity.kind === 'npc_gear') && entity.subType) {
+    stats.slot = entity.subType
+  }
   if (entity.kind === 'consumable' && entity.subType) stats.consumableType = entity.subType
   return Object.keys(stats).length ? stats : undefined
+}
+
+function resolveLoadoutXmlPath(loadoutPath, extractedRoot) {
+  if (!loadoutPath || typeof loadoutPath !== 'string') return null
+  const normalized = loadoutPath.replace(/\\/g, '/')
+  const marker = 'Scripts/Loadouts/Character/'
+  const idx = normalized.indexOf(marker)
+  const rel = idx >= 0 ? normalized.slice(idx + 'Scripts/Loadouts/'.length) : normalized.replace(/^Data\//, '')
+  const candidate = join(extractedRoot, CHARACTER_LOADOUT_ROOT, rel)
+  if (existsSync(candidate)) return candidate
+  const alt = join(extractedRoot, 'Data', 'Scripts', 'Loadouts', rel)
+  return existsSync(alt) ? alt : null
+}
+
+function itemNamesFromLoadoutXml(xmlPath) {
+  if (!xmlPath || !existsSync(xmlPath)) return []
+  const text = readFileSync(xmlPath, 'utf8')
+  const names = []
+  const re = /itemName="([^"]*)"/g
+  let m
+  while ((m = re.exec(text))) {
+    const name = String(m[1] || '').trim()
+    if (name) names.push(name)
+  }
+  return names
+}
+
+function collectLoadoutXmlPaths(bundleJson, extractedRoot, cache) {
+  const paths = []
+  const groups = bundleJson?._RecordValue_?.GroupedLoadouts || []
+  for (const group of groups) {
+    const groupName = String(group.Group || '')
+    // Skip weapon / medical / body-mesh groups — worn clothing & armour live on Outfit / armor slots.
+    if (/Weapon|Medical|Grenade|Optic|^Item$|Attachment|Hair|^Body$|Mobiglas|Utility/i.test(groupName)) {
+      continue
+    }
+    for (const lo of group.Loadouts || []) {
+      if (lo.loadoutPath) {
+        const abs = resolveLoadoutXmlPath(lo.loadoutPath, extractedRoot)
+        if (abs) paths.push(abs)
+      }
+      for (const inv of lo.InventoryItems || []) {
+        const ref = inv.entityClass || inv.entityClassRecord || inv.item
+        const key = entityClassFromRef(ref) || (typeof ref === 'string' ? basename(ref, '.json') : null)
+        if (key) paths.push({ __entityKey: key })
+      }
+    }
+  }
+  return paths
+}
+
+/**
+ * Count worn clothing/armour entity keys from NPC loadout bundles for a site pool.
+ * @returns {Map<string, number>}
+ */
+function accumulateNpcWornGear(folderNames, extractedRoot, index, cache) {
+  /** @type {Map<string, number>} */
+  const counts = new Map()
+  if (!folderNames?.length) return counts
+
+  for (const folder of folderNames) {
+    const dir = join(extractedRoot, LOADOUT_BUNDLE_ROOT, folder)
+    if (!existsSync(dir)) continue
+    let files = []
+    try {
+      files = readdirSync(dir).filter((f) => f.endsWith('.json'))
+    } catch {
+      continue
+    }
+    for (const file of files) {
+      const bundle = readJson(join(dir, file))
+      if (!bundle) continue
+      const entries = collectLoadoutXmlPaths(bundle, extractedRoot, cache)
+      for (const entry of entries) {
+        if (entry && typeof entry === 'object' && entry.__entityKey) {
+          const ent = index.byKey.get(entry.__entityKey)
+          if (ent && WORN_GEAR_KINDS.has(ent.kind)) {
+            counts.set(ent.key, (counts.get(ent.key) || 0) + 1)
+          }
+          continue
+        }
+        for (const itemName of itemNamesFromLoadoutXml(entry)) {
+          const ent = index.byKey.get(itemName)
+          if (!ent || !WORN_GEAR_KINDS.has(ent.kind)) continue
+          counts.set(ent.key, (counts.get(ent.key) || 0) + 1)
+        }
+      }
+    }
+  }
+  return counts
 }
 
 /**
@@ -924,6 +1067,8 @@ export function parseSiteLoot(options = {}) {
 
   /** @type {Map<string, Map<string, number>>} poolId -> weights */
   const pools = new Map()
+  /** @type {Map<string, Set<string>>} poolId -> loadout folder names */
+  const loadoutFoldersByPool = new Map()
   const locationTypes = []
 
   for (const loc of LOCATION_DEFS) {
@@ -935,11 +1080,28 @@ export function parseSiteLoot(options = {}) {
       systems: loc.systems,
       poolId: loc.poolId,
     })
+    if (!loadoutFoldersByPool.has(loc.poolId)) loadoutFoldersByPool.set(loc.poolId, new Set())
+    for (const folder of loc.loadoutFolders || []) loadoutFoldersByPool.get(loc.poolId).add(folder)
+
     if (pools.has(loc.poolId)) continue
     console.log(`  Pool ${loc.poolId} (${loc.label})...`)
     const weights = accumulatePool(loc.presets, extractedRoot, index, cache)
     pools.set(loc.poolId, weights)
     console.log(`    ${weights.size} weighted keys before allowlist join`)
+  }
+
+  /** @type {Map<string, Map<string, number>>} poolId -> worn gear counts */
+  const npcPools = new Map()
+  for (const [poolId, folderSet] of loadoutFoldersByPool) {
+    const folders = [...folderSet]
+    if (!folders.length) {
+      npcPools.set(poolId, new Map())
+      continue
+    }
+    console.log(`  NPC worn gear ${poolId} (${folders.join(', ')})...`)
+    const counts = accumulateNpcWornGear(folders, extractedRoot, index, cache)
+    npcPools.set(poolId, counts)
+    console.log(`    ${counts.size} worn clothing/armour keys`)
   }
 
   /** @type {Map<string, any>} */
@@ -957,9 +1119,11 @@ export function parseSiteLoot(options = {}) {
       kept.push({ ent, weight })
       total += weight
     }
+    const crateKeys = new Set()
     for (const { ent, weight } of kept) {
       const ratePct = total > 0 ? (100 * weight) / total : 0
       if (ratePct < 0.001) continue
+      crateKeys.add(ent.key)
       let item = items.get(ent.key)
       if (!item) {
         item = {
@@ -971,6 +1135,43 @@ export function parseSiteLoot(options = {}) {
           locations: [],
         }
         items.set(ent.key, item)
+      }
+      item.locations.push({
+        locationTypeId: loc.id,
+        ratePct: Math.round(ratePct * 1000) / 1000,
+      })
+    }
+
+    // NPC worn clothing/armour that does not also appear in this site's crate loot.
+    const worn = npcPools.get(loc.poolId) || new Map()
+    const npcOnly = []
+    let npcTotal = 0
+    for (const [key, count] of worn) {
+      if (crateKeys.has(key)) continue
+      const ent = index.byKey.get(key)
+      if (!ent || !WORN_GEAR_KINDS.has(ent.kind)) continue
+      if (!usableName(ent.displayName) && !ent.displayName) continue
+      npcOnly.push({ ent, count })
+      npcTotal += count
+    }
+    for (const { ent, count } of npcOnly) {
+      const ratePct = npcTotal > 0 ? (100 * count) / npcTotal : 0
+      if (ratePct < 0.001) continue
+      const itemKey = `npc:${ent.key}`
+      let item = items.get(itemKey)
+      if (!item) {
+        item = {
+          key: itemKey,
+          displayName: usableName(ent.displayName) ? ent.displayName : humanizeToken(ent.key),
+          kind: 'npc_gear',
+          kindLabel: KIND_LABELS.npc_gear,
+          stats: {
+            ...buildStats(ent, catalogs),
+            wornAs: ent.kind === 'clothing' ? 'Clothing' : 'Armour',
+          },
+          locations: [],
+        }
+        items.set(itemKey, item)
       }
       item.locations.push({
         locationTypeId: loc.id,
@@ -1000,7 +1201,8 @@ export function parseSiteLoot(options = {}) {
   }
 
   return {
-    _source: 'Star Citizen Game Files (site loot slot presets + loot tables)',
+    _source:
+      'Star Citizen Game Files (site loot slot presets + NPC loadout worn gear; location-true presets)',
     _extracted: new Date().toISOString(),
     locationTypes,
     items: itemList,
@@ -1009,6 +1211,8 @@ export function parseSiteLoot(options = {}) {
       locationTypeCount: locationTypes.length,
       itemCount: itemList.length,
       poolCount: pools.size,
+      npcGearItemCount: itemList.filter((i) => i.kind === 'npc_gear').length,
+      clothingItemCount: itemList.filter((i) => i.kind === 'clothing').length,
     },
   }
 }

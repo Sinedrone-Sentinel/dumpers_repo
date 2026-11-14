@@ -30,8 +30,9 @@ Key paths in extracted data:
 - `Data/Localization/english/global.ini` - Game lore/flavor text (`items_commodities_*`, `item_desc*`, `Item_Desc_*`)
 
 **Extraction scripts:**
-- `scripts/extract-game-data.ps1` - Full DCB extract + localization; shop socpaks/ShopInventories with `-IncludeShopData` only
-- `scripts/parse-extracted-data.mjs` - Parse extracted JSON into app data (includes `game-lore.json`)
+- `scripts/extract-game-data.ps1` - Full DCB extract + localization; vehicle XML; character loadout XML (`character-loadouts/` for Loot Finder NPC gear); shop socpaks/ShopInventories with `-IncludeShopData` only
+- `scripts/parse-extracted-data.mjs` - Parse extracted JSON into app data (includes `game-lore.json` and location-true `game-site-loot.json`)
+- `scripts/bake-site-loot.mjs` / `scripts/lib/parseSiteLoot.mjs` - Loot Finder bake (also runs inside `parse-game-data` every patch)
 - `scripts/lib/commodityLocalization.mjs` - Commodity key normalization for lore extraction
 - `scripts/lib/gameLore.mjs` - Full lore extraction (commodities + item descriptions)
 

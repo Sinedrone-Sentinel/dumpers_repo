@@ -5,6 +5,8 @@ export type SiteLootKind =
   | 'ship_weapon'
   | 'ship_component'
   | 'armour'
+  | 'clothing'
+  | 'npc_gear'
   | 'plushie'
   | 'consumable'
 
@@ -66,6 +68,8 @@ export const SITE_LOOT_KIND_CHIPS = [
   { id: 'ship_weapon', label: 'Ship Weapons' },
   { id: 'ship_component', label: 'Ship Components' },
   { id: 'armour', label: 'Armour' },
+  { id: 'clothing', label: 'Clothing' },
+  { id: 'npc_gear', label: 'NPC Gear' },
   { id: 'plushie', label: 'Plushies' },
   { id: 'consumable', label: 'Consumables' },
   { id: 'other', label: 'Other' },

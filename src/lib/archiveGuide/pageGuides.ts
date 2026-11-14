@@ -298,9 +298,11 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     details: [
       'Search by item name to see every named site that can drop it, with a relative drop rate for each',
       'Or pick a location — Lazarus, Onyx, each OLP (Attritus, Lamina, Ruptura, Vivere), each PAF (PAF-I / II / III per complex), Checkmate / Orbituary / Ruin Contested Zones, Executive Hangar, or QV Investigation — to browse loot cards',
-      'On By location, filter chips (All, FPS Weapons, Ship Weapons, Ship Components, Armour, Plushies, Consumables) narrow the list — every item sits on at least one chip',
+      'Contested Zone lists differ by station — Orbituary CZ is where ship guns can drop as loot; Checkmate and Ruin do not share that ship-weapon reward room',
+      'On By location, filter chips (All, FPS Weapons, Ship Weapons, Ship Components, Armour, Clothing, NPC Gear, Plushies, Consumables) narrow the list — every item sits on at least one chip',
+      '**NPC Gear** is clothing and armour enemies wear that does not also drop from that site\'s loot containers — strip it off them; crate armour/clothing stays on Armour / Clothing',
       'Rates are relative within that site pool from game data, not a guarantee for any one visit',
-      'Shows weapons, ship components, armour, plushies, and consumables from those sites',
+      'Shows weapons, ship components, armour, clothing, plushies, and consumables from loot containers and reward rooms — not shop shelves',
       'Works in Offline Mode',
     ],
     relatesTo: ['UEX Lookup', 'Executive Timer', "Fuzy's Ship Shop"],
