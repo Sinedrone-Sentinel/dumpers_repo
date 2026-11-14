@@ -243,7 +243,7 @@ catch {
 }
 
 Write-Host ""
-Write-Host "[4/5] Extracting vehicle XML (ship hardpoints for Fuzy's Ship Shop)..." -ForegroundColor Green
+Write-Host "[4/6] Extracting vehicle XML (ship hardpoints for Fuzy's Ship Shop)..." -ForegroundColor Green
 Write-Host "      Scripts/Entities/Vehicles/Implementations/Xml → vehicle-xml/..." -ForegroundColor Gray
 Write-Host ""
 
@@ -277,9 +277,51 @@ catch {
     exit 1
 }
 
+Write-Host ""
+Write-Host "[5/6] Extracting character loadout XML (NPC worn gear for Loot Finder)..." -ForegroundColor Green
+Write-Host "      Scripts/Loadouts/Character → character-loadouts/..." -ForegroundColor Gray
+Write-Host ""
+
+try {
+    $loadoutStaging = Join-Path $OutputPath "_tmp-character-loadouts"
+    $loadoutOut = Join-Path $OutputPath "character-loadouts"
+    if (Test-Path $loadoutStaging) {
+        Remove-Item -Path $loadoutStaging -Recurse -Force
+    }
+    if (Test-Path $loadoutOut) {
+        Remove-Item -Path $loadoutOut -Recurse -Force
+    }
+    New-Item -ItemType Directory -Path $loadoutOut -Force | Out-Null
+
+    & $StarBreakerPath p4k extract `
+        --p4k $DataP4kPath `
+        --output $loadoutStaging `
+        --filter "Data/Scripts/Loadouts/Character/**" `
+        --convert cryxml
+
+    if ($LASTEXITCODE -ne 0) {
+        throw "Character loadout extraction exited with code $LASTEXITCODE"
+    }
+
+    $charSrc = Join-Path $loadoutStaging "Data\Scripts\Loadouts\Character"
+    if (-not (Test-Path $charSrc)) {
+        $charSrc = Join-Path $loadoutStaging "Scripts\Loadouts\Character"
+    }
+    if (Test-Path $charSrc) {
+        Copy-Item -Path $charSrc -Destination (Join-Path $loadoutOut "Character") -Recurse -Force
+    }
+    Remove-Item -Path $loadoutStaging -Recurse -Force -ErrorAction SilentlyContinue
+    $loadoutCount = (Get-ChildItem -Path $loadoutOut -Recurse -Filter *.xml -ErrorAction SilentlyContinue).Count
+    Write-Host "  Copied $loadoutCount character loadout XML files into character-loadouts/" -ForegroundColor Gray
+}
+catch {
+    Write-Host "ERROR: Character loadout extraction failed: $_" -ForegroundColor Red
+    exit 1
+}
+
 if ($IncludeShopData) {
     Write-Host ""
-    Write-Host "[5/5] Extracting shop socpaks + inventory JSON (optional)..." -ForegroundColor Green
+    Write-Host "[6/6] Extracting shop socpaks + inventory JSON (optional)..." -ForegroundColor Green
     Write-Host ""
 
     try {
@@ -311,7 +353,7 @@ if ($IncludeShopData) {
 }
 else {
     Write-Host ""
-    Write-Host "[5/5] Skipping shop socpaks + ShopInventories (not used by this app)." -ForegroundColor Green
+    Write-Host "[6/6] Skipping shop socpaks + ShopInventories (not used by this app)." -ForegroundColor Green
     Write-Host "      Pass -IncludeShopData if you need them for a separate project." -ForegroundColor Gray
 }
 

@@ -44,6 +44,7 @@ function statsLine(stats?: Record<string, unknown>): string | null {
   if (stats.grade != null) bits.push(`Grade ${stats.grade}`)
   if (typeof stats.itemClass === 'string') bits.push(stats.itemClass)
   if (typeof stats.slot === 'string') bits.push(stats.slot)
+  if (typeof stats.wornAs === 'string') bits.push(`Worn ${stats.wornAs}`)
   if (typeof stats.consumableType === 'string') bits.push(stats.consumableType)
   return bits.length ? bits.join(' · ') : null
 }
