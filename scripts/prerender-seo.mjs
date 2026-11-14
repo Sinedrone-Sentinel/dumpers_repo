@@ -113,6 +113,7 @@ async function prerenderPath(browser, baseUrl, urlPath) {
     '/commodity-lookup',
     '/shop-cart',
     '/ship-shop',
+    '/loot-finder',
     '/executive-hangar',
     '/archive',
     '/bazaar',

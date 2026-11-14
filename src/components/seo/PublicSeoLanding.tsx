@@ -98,11 +98,18 @@ const FEATURES: FeatureCard[] = [
     cta: 'Open Shopping Cart offline →',
   },
   {
-    title: 'Executive Hangar',
+    title: 'Loot Finder',
+    body: 'Search what can drop at Lazarus, Onyx, OLP, PAF, Contested Zones, Executive Hangar, and QV Investigation, with relative rates.',
+    href: '/loot-finder',
+    action: 'offline',
+    cta: 'Open Loot Finder offline →',
+  },
+  {
+    title: 'Executive Timer',
     body: 'See when the five hangar lights are green so the seven compboards can open it.',
     href: '/executive-hangar',
     action: 'offline',
-    cta: 'Open Executive Hangar offline →',
+    cta: 'Open Executive Timer offline →',
   },
   {
     title: 'The Bazaar',

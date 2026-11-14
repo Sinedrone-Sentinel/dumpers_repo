@@ -119,7 +119,7 @@ export const DISCORD_COLLECTIONS: DiscordCollection[] = [
   },
   {
     id: 'hangar',
-    title: 'Executive Hangar',
+    title: 'Executive Timer',
     hint: 'Warnings before all five lights turn green.',
     accent: 'border-amber-500/40',
     titleClass: 'text-amber-300',

@@ -27,6 +27,7 @@ import AuthCallbackRoute from './AuthCallback.index'
 import PrivacyRoute from './Privacy.index'
 import ShipShopRoute from './ShipShop.index'
 import ExecutiveHangarRoute from './ExecutiveHangar.index'
+import LootFinderRoute from './LootFinder.index'
 import FlightProfileRoute from './FlightProfile.index'
 import { requireFeature, requireSuperAdmin } from '../lib/routeGuards'
 import type { FeatureId } from '../lib/featureAccess'
@@ -237,6 +238,14 @@ const shipShopRoute = createRoute({
   component: ShipShopRoute,
 })
 
+
+const lootFinderRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/loot-finder',
+  component: LootFinderRoute,
+  beforeLoad: requireFeature('loot_finder'),
+})
+
 const executiveHangarRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/executive-hangar',
@@ -283,6 +292,7 @@ export const routeTree = rootRoute.addChildren([
   themePreviewRoute,
   authCallbackRoute,
   shipShopRoute,
+  lootFinderRoute,
   executiveHangarRoute,
   flightProfileRoute,
 ])

@@ -292,8 +292,21 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     relatesTo: ['UEX Lookup', 'Resource Tracker'],
   },
   {
+    id: 'loot-finder',
+    title: 'Loot Finder',
+    description: 'Search what can drop at site loot locations, or browse a location type for its loot list.',
+    details: [
+      'Search by item name to see which location types can drop it, with a relative drop rate for each',
+      'Or pick a location type — Lazarus, Onyx, OLP, PAF, Contested Zone, Executive Hangar, or QV Investigation — to browse loot cards',
+      'Rates are relative within that site pool from game data, not a guarantee for any one visit',
+      'Shows weapons, ship components, armour, plushies, and consumables from those sites',
+      'Works in Offline Mode',
+    ],
+    relatesTo: ['UEX Lookup', 'Executive Timer', "Fuzy's Ship Shop"],
+  },
+  {
     id: 'executive-hangar',
-    title: 'Executive Hangar',
+    title: 'Executive Timer',
     description: 'See when the five hangar lights are green so the seven compboards can open it.',
     details: [
       'The lights follow one clock on every server. One red light turns green every 24 minutes. The seven compboards work while at least one light is green and none are red. Green lights then turn off every 12 minutes',
