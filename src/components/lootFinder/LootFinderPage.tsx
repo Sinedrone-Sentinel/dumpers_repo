@@ -13,12 +13,16 @@ import {
   formatRatePct,
   kindChipForItem,
   kindChipsForItems,
+  locationSelectGroups,
   locationTypeById,
   systemsLabel,
   type SiteLootItem,
   type SiteLootKindChipId,
   type SiteLootLocationItem,
 } from '../../lib/siteLoot'
+
+const LOCATION_SELECT = locationSelectGroups()
+const GROUP_SORT = ['olp', 'paf', 'contested_zone']
 
 const CHIP =
   'px-3 py-1.5 text-sm font-medium rounded-lg transition-colors site-btn-shimmer'
@@ -106,6 +110,20 @@ export default function LootFinderPage() {
     [selectedItemKey],
   )
 
+  const selectedItemLocations = React.useMemo(() => {
+    if (!selectedItem) return []
+    return [...selectedItem.locations].sort((a, b) => {
+      const la = locationTypeById(a.locationTypeId)
+      const lb = locationTypeById(b.locationTypeId)
+      const ga = la?.group ? GROUP_SORT.indexOf(la.group) : -1
+      const gb = lb?.group ? GROUP_SORT.indexOf(lb.group) : -1
+      const gRankA = ga === -1 ? 100 : ga
+      const gRankB = gb === -1 ? 100 : gb
+      if (gRankA !== gRankB) return gRankA - gRankB
+      return (la?.label || '').localeCompare(lb?.label || '')
+    })
+  }, [selectedItem])
+
   const locationItems = React.useMemo(
     () => SITE_LOOT_BY_LOCATION[locationId] ?? [],
     [locationId],
@@ -146,12 +164,12 @@ export default function LootFinderPage() {
   return (
     <FeaturePageLayout
       title="Loot Finder"
-      seoIntro="Star Citizen Loot Finder — search loot by item or location type for Lazarus, Onyx, OLP, PAF, Contested Zones, Executive Hangar, and QV Investigation, with relative drop rates from game data."
+      seoIntro="Star Citizen Loot Finder — search loot by item or named site for Lazarus, Onyx, each OLP and PAF, Checkmate / Orbituary / Ruin Contested Zones, Executive Hangar, and QV Investigation, with relative drop rates from game data."
       meta={
         <>
           <span>{SITE_LOOT_ITEM_COUNT} loot entries</span>
           <span className="mx-2">·</span>
-          <span>{SITE_LOOT_LOCATION_TYPES.length} location types</span>
+          <span>{SITE_LOOT_LOCATION_TYPES.length} locations</span>
           {SITE_LOOT_EXTRACTED ? (
             <>
               <span className="mx-2">·</span>
@@ -242,7 +260,7 @@ export default function LootFinderPage() {
                   </p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
-                  {selectedItem.locations.map((hit) => (
+                  {selectedItemLocations.map((hit) => (
                     <LocationMiniCard
                       key={hit.locationTypeId}
                       locationTypeId={hit.locationTypeId}
@@ -258,7 +276,7 @@ export default function LootFinderPage() {
         <div className="grid grid-cols-1 lg:grid-cols-[16rem_1fr] gap-4 min-w-0">
           <div className="min-w-0 flex flex-col gap-2">
             <label className="site-label" htmlFor="loot-finder-location">
-              Location type
+              Location
             </label>
             <select
               id="loot-finder-location"
@@ -266,10 +284,19 @@ export default function LootFinderPage() {
               value={locationId}
               onChange={(e) => setLocationId(e.target.value)}
             >
-              {SITE_LOOT_LOCATION_TYPES.map((loc) => (
+              {LOCATION_SELECT.ungrouped.map((loc) => (
                 <option key={loc.id} value={loc.id}>
                   {loc.label}
                 </option>
+              ))}
+              {LOCATION_SELECT.groups.map((group) => (
+                <optgroup key={group.key} label={group.label}>
+                  {group.locations.map((loc) => (
+                    <option key={loc.id} value={loc.id}>
+                      {loc.label}
+                    </option>
+                  ))}
+                </optgroup>
               ))}
             </select>
             <p className="site-hint">{systemsLabel(locationTypeById(locationId))}</p>
@@ -277,7 +304,7 @@ export default function LootFinderPage() {
 
           <div className="min-w-0 flex flex-col gap-3">
             {locationItems.length === 0 ? (
-              <div className="site-empty">No allowlisted loot for this location type.</div>
+              <div className="site-empty">No allowlisted loot for this location.</div>
             ) : (
               <>
                 <div className="site-chip-strip w-fit max-w-full">

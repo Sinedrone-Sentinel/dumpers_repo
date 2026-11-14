@@ -11,6 +11,9 @@ export type SiteLootKind =
 export type SiteLootLocationType = {
   id: string
   label: string
+  /** Shared pool family when several named sites use the same loot table (olp / paf / contested_zone). */
+  group?: string | null
+  groupLabel?: string | null
   systems: string[]
   poolId: string
 }
@@ -86,6 +89,35 @@ export function locationTypeById(id: string): SiteLootLocationType | undefined {
 export function systemsLabel(loc: SiteLootLocationType | undefined): string {
   if (!loc?.systems?.length) return ''
   return loc.systems.join(', ')
+}
+
+/** Select options: ungrouped sites first, then optgroups for OLP / PAF / Contested Zone. */
+export function locationSelectGroups(): {
+  ungrouped: SiteLootLocationType[]
+  groups: { key: string; label: string; locations: SiteLootLocationType[] }[]
+} {
+  const ungrouped: SiteLootLocationType[] = []
+  const byGroup = new Map<string, { label: string; locations: SiteLootLocationType[] }>()
+  for (const loc of SITE_LOOT_LOCATION_TYPES) {
+    if (!loc.group) {
+      ungrouped.push(loc)
+      continue
+    }
+    let entry = byGroup.get(loc.group)
+    if (!entry) {
+      entry = { label: loc.groupLabel || loc.group, locations: [] }
+      byGroup.set(loc.group, entry)
+    }
+    entry.locations.push(loc)
+  }
+  const groupOrder = ['olp', 'paf', 'contested_zone']
+  const groups = [
+    ...groupOrder.filter((key) => byGroup.has(key)).map((key) => ({ key, ...byGroup.get(key)! })),
+    ...[...byGroup.entries()]
+      .filter(([key]) => !groupOrder.includes(key))
+      .map(([key, value]) => ({ key, ...value })),
+  ]
+  return { ungrouped, groups }
 }
 
 /** Every item gets exactly one chip id so no row is orphaned behind All. */
