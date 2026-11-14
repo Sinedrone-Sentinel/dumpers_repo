@@ -34,12 +34,13 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'A few recipes need a minimum material quality (e.g. Clearcut Module needs Q800 Iron and Copper). Those slots show **Min Q###** and only offer qualities at or above it — on Blueprints, Can Craft, Crafting Wishlist and WTS/WTB listings. Can Craft only counts stock that meets the minimum, and older saved recipes or listings below it show a **Below minimum quality** tag',
       'When signed in, opening a material\'s Quality Band dropdown shows how much of that resource you hold in each band (e.g. 1.000scu, or whole units like 12 units for gems) from My Resources. Purchased (Q0) stock is not counted. The same amounts appear in the Can Craft blueprint view, following the selected location chip',
       'Add a blueprint to your order draft from the detail view — continue on My Listings',
+      'A gold treasure-chest mark on a blueprint card opens Loot Finder locations (and relative rates) when that item can drop as site loot',
       '**RS Track** on a blueprint card or detail modal footer adds that blueprint\'s mineable ores to **Mining Tracker → RS Tracker** in one click — skips ores you already track',
       'Optional Display setting: group FPS weapon and armor variants into expandable family cards (off by default; only affects visible FPS items on this page)',
       'Acquired marks from BP Dumper sync here automatically — set up BP Dumper on Mission Tracker',
       'Offline Mode: acquired marks save locally until you sign in',
     ],
-    relatesTo: ['Mission Tracker', 'Resource Tracker', 'My Listings', 'Friends', 'Settings'],
+    relatesTo: ['Mission Tracker', 'Resource Tracker', 'My Listings', 'Friends', 'Settings', 'Loot Finder'],
   },
   {
     id: 'wikelo',
@@ -297,7 +298,8 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     description: 'Search what can drop at named site loot locations, or browse a site for its loot list.',
     details: [
       'Search by item name to see every named site that can drop it, with a relative drop rate for each',
-      'Or pick a location — Lazarus, Onyx, each OLP (Attritus, Lamina, Ruptura, Vivere), each PAF (PAF-I / II / III per complex), Checkmate / Orbituary / Ruin Contested Zones, Executive Hangar, or QV Investigation — to browse loot cards',
+      'Or pick a location — Lazarus, Onyx, OLP/PAF (same Hathor Orbageddon pool), Checkmate / Orbituary / Ruin Contested Zones, Executive Hangar, or QV Investigation — to browse loot cards',
+      'Ship weapon and component cards show Size / type / class / grade chips when game data has them',
       'Contested Zone lists differ by station — Orbituary CZ is where ship guns can drop as loot; Checkmate and Ruin do not share that ship-weapon reward room',
       'On By location, filter chips (All, FPS Weapons, Ship Weapons, Ship Components, Armour, Clothing, NPC Gear, Plushies, Consumables) narrow the list — every item sits on at least one chip',
       '**NPC Gear** is clothing and armour enemies wear that does not also drop from that site\'s loot containers — strip it off them; crate armour/clothing stays on Armour / Clothing',
@@ -305,7 +307,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Shows weapons, ship components, armour, clothing, plushies, and consumables from loot containers and reward rooms — not shop shelves',
       'Works in Offline Mode',
     ],
-    relatesTo: ['UEX Lookup', 'Executive Timer', "Fuzy's Ship Shop"],
+    relatesTo: ['UEX Lookup', 'Executive Timer', "Fuzy's Ship Shop", 'Blueprints'],
   },
   {
     id: 'executive-hangar',

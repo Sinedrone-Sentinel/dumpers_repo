@@ -1,4 +1,5 @@
 import siteLootData from '../data/game-site-loot.json'
+import type { BlueprintDisplayTag, BlueprintTagKind } from './blueprintTaxonomy'
 
 export type SiteLootKind =
   | 'fps_weapon'
@@ -114,7 +115,7 @@ export function locationSelectGroups(): {
     }
     entry.locations.push(loc)
   }
-  const groupOrder = ['olp', 'paf', 'contested_zone']
+  const groupOrder = ['contested_zone']
   const groups = [
     ...groupOrder.filter((key) => byGroup.has(key)).map((key) => ({ key, ...byGroup.get(key)! })),
     ...[...byGroup.entries()]
@@ -122,6 +123,46 @@ export function locationSelectGroups(): {
       .map(([key, value]) => ({ key, ...value })),
   ]
   return { ungrouped, groups }
+}
+
+/** BP-style chips from baked loot stats (Size / damage type / class / grade / slot). */
+export function lootStatChips(stats?: Record<string, unknown> | null): BlueprintDisplayTag[] {
+  if (!stats) return []
+  const tags: BlueprintDisplayTag[] = []
+  const push = (kind: BlueprintTagKind, label: string | number | null | undefined) => {
+    if (label == null || label === '') return
+    const text = String(label).trim()
+    if (!text) return
+    tags.push({ kind, label: text })
+  }
+  if (stats.size != null && stats.size !== '') push('size', `S${stats.size}`)
+  push('subtype', typeof stats.damageType === 'string' ? stats.damageType : null)
+  push('subtype', typeof stats.weaponClass === 'string' ? stats.weaponClass : null)
+  push('subtype', typeof stats.weaponType === 'string' ? stats.weaponType : null)
+  push('category', typeof stats.componentType === 'string' ? stats.componentType : null)
+  push('itemClass', typeof stats.itemClass === 'string' ? stats.itemClass : null)
+  push('grade', stats.grade != null && stats.grade !== '' ? String(stats.grade) : null)
+  push('armorSlot', typeof stats.slot === 'string' ? stats.slot : null)
+  push('garment', typeof stats.wornAs === 'string' ? `Worn ${stats.wornAs}` : null)
+  push('subtype', typeof stats.consumableType === 'string' ? stats.consumableType : null)
+  return tags
+}
+
+const lootByEntityClass = new Map<string, SiteLootItem>()
+for (const item of SITE_LOOT_ITEMS) {
+  if (item.key.startsWith('npc:')) {
+    const bare = item.key.slice(4)
+    if (!lootByEntityClass.has(bare)) lootByEntityClass.set(bare, item)
+    continue
+  }
+  lootByEntityClass.set(item.key, item)
+}
+
+/** Loot Finder row for a blueprint entity class (crate loot preferred over NPC-only). */
+export function lootItemForEntityClass(entityClass?: string | null): SiteLootItem | null {
+  const key = String(entityClass || '').trim()
+  if (!key) return null
+  return lootByEntityClass.get(key) ?? lootByEntityClass.get(`${key}_scitem`) ?? null
 }
 
 /** Every item gets exactly one chip id so no row is orphaned behind All. */

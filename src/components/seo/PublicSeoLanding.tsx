@@ -99,7 +99,7 @@ const FEATURES: FeatureCard[] = [
   },
   {
     title: 'Loot Finder',
-    body: 'Search what can drop at Lazarus, Onyx, each named OLP and PAF, Checkmate / Orbituary / Ruin Contested Zones, Executive Hangar, and QV Investigation, with relative rates.',
+    body: 'Search what can drop at Lazarus, Onyx, OLP/PAF, Checkmate / Orbituary / Ruin Contested Zones, Executive Hangar, and QV Investigation, with relative rates.',
     href: '/loot-finder',
     action: 'offline',
     cta: 'Open Loot Finder offline →',

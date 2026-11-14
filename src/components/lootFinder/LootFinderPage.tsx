@@ -15,14 +15,16 @@ import {
   kindChipsForItems,
   locationSelectGroups,
   locationTypeById,
+  lootStatChips,
   systemsLabel,
   type SiteLootItem,
   type SiteLootKindChipId,
   type SiteLootLocationItem,
 } from '../../lib/siteLoot'
+import { BLUEPRINT_TAG_CHIP_CLASS } from '../../lib/blueprintTaxonomy'
 
 const LOCATION_SELECT = locationSelectGroups()
-const GROUP_SORT = ['olp', 'paf', 'contested_zone']
+const GROUP_SORT = ['contested_zone']
 
 const CHIP =
   'px-3 py-1.5 text-sm font-medium rounded-lg transition-colors site-btn-shimmer'
@@ -35,18 +37,21 @@ function RateBadge({ ratePct }: { ratePct: number }) {
   )
 }
 
-function statsLine(stats?: Record<string, unknown>): string | null {
-  if (!stats) return null
-  const bits: string[] = []
-  if (typeof stats.weaponType === 'string') bits.push(stats.weaponType)
-  if (typeof stats.componentType === 'string') bits.push(stats.componentType)
-  if (stats.size != null) bits.push(`Size ${stats.size}`)
-  if (stats.grade != null) bits.push(`Grade ${stats.grade}`)
-  if (typeof stats.itemClass === 'string') bits.push(stats.itemClass)
-  if (typeof stats.slot === 'string') bits.push(stats.slot)
-  if (typeof stats.wornAs === 'string') bits.push(`Worn ${stats.wornAs}`)
-  if (typeof stats.consumableType === 'string') bits.push(stats.consumableType)
-  return bits.length ? bits.join(' · ') : null
+function LootStatChips({ stats }: { stats?: Record<string, unknown> }) {
+  const tags = lootStatChips(stats)
+  if (!tags.length) return null
+  return (
+    <div className="flex flex-wrap gap-1">
+      {tags.map((tag) => (
+        <span
+          key={`${tag.kind}-${tag.label}`}
+          className={`px-1.5 py-0.5 rounded text-[10px] border ${BLUEPRINT_TAG_CHIP_CLASS[tag.kind]}`}
+        >
+          {tag.label}
+        </span>
+      ))}
+    </div>
+  )
 }
 
 function LocationMiniCard({
@@ -70,17 +75,14 @@ function LocationMiniCard({
 }
 
 function LootMiniCard({ item }: { item: SiteLootLocationItem }) {
-  const detail = statsLine(item.stats)
   return (
-    <div className="site-card p-3 flex flex-col gap-1 min-w-0">
+    <div className="site-card p-3 flex flex-col gap-1.5 min-w-0">
       <div className="flex items-start justify-between gap-2">
         <p className="font-medium text-slate-100 leading-snug">{item.displayName}</p>
         <RateBadge ratePct={item.ratePct} />
       </div>
-      <p className="text-xs text-slate-400">
-        {item.kindLabel}
-        {detail ? ` · ${detail}` : ''}
-      </p>
+      <p className="text-xs text-slate-400">{item.kindLabel}</p>
+      <LootStatChips stats={item.stats} />
     </div>
   )
 }
@@ -165,7 +167,7 @@ export default function LootFinderPage() {
   return (
     <FeaturePageLayout
       title="Loot Finder"
-      seoIntro="Star Citizen Loot Finder — search loot by item or named site for Lazarus, Onyx, each OLP and PAF, Checkmate / Orbituary / Ruin Contested Zones, Executive Hangar, and QV Investigation, with relative drop rates from game data."
+      seoIntro="Star Citizen Loot Finder — search loot by item or named site for Lazarus, Onyx, OLP/PAF, Checkmate / Orbituary / Ruin Contested Zones, Executive Hangar, and QV Investigation, with relative drop rates from game data."
       meta={
         <>
           <span>{SITE_LOOT_ITEM_COUNT} loot entries</span>
@@ -253,12 +255,10 @@ export default function LootFinderPage() {
               <div className="site-empty">Pick a loot item to see where it can drop.</div>
             ) : (
               <>
-                <div className="mb-3">
+                <div className="mb-3 flex flex-col gap-1.5">
                   <p className="text-lg font-medium text-slate-100">{selectedItem.displayName}</p>
-                  <p className="text-sm text-slate-400">
-                    {selectedItem.kindLabel}
-                    {statsLine(selectedItem.stats) ? ` · ${statsLine(selectedItem.stats)}` : ''}
-                  </p>
+                  <p className="text-sm text-slate-400">{selectedItem.kindLabel}</p>
+                  <LootStatChips stats={selectedItem.stats} />
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
                   {selectedItemLocations.map((hit) => (

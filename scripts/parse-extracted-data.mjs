@@ -5421,27 +5421,6 @@ async function main() {
     console.log('  ⚠ No quality band data (run extract-game-data.ps1 with dcb query)')
   }
 
-  // Site loot pools for Loot Finder
-  const fpsByClass = new Map(
-    (fpsWeapons || []).map((w) => [w.entityClass || w.internalName || w.name, w]).filter(([k]) => k)
-  )
-  const componentByClass = new Map(
-    (components || []).map((c) => [c.entityClass || c.internalName || c.name, c]).filter(([k]) => k)
-  )
-  const blueprintByClass = new Map()
-  for (const bp of cleanedBlueprints || []) {
-    if (bp.entityClass) blueprintByClass.set(bp.entityClass, bp)
-  }
-  const siteLoot = parseSiteLoot({
-    extractedRoot: EXTRACTED_DATA,
-    localization,
-    catalogs: { fpsByClass, componentByClass, blueprintByClass },
-  })
-  saveJson('game-site-loot.json', siteLoot)
-  console.log(
-    `  Site loot: ${siteLoot.summary.itemCount} items across ${siteLoot.summary.locationTypeCount} location types`
-  )
-
   // Validation report
   console.log('\n' + '='.repeat(60))
   console.log('  Extraction Summary')
@@ -5457,6 +5436,30 @@ async function main() {
     items: shipShop.catalog,
   })
   console.log(`  Parsed ${shipShop.ships.length} ships and ${shipShop.catalog.length} ship items`)
+
+  // Site loot pools for Loot Finder (after ship catalog so Size/Class/Grade chips bake in)
+  const fpsByClass = new Map(
+    (fpsWeapons || []).map((w) => [w.entityClass || w.internalName || w.name, w]).filter(([k]) => k)
+  )
+  const componentByClass = new Map(
+    (components || []).map((c) => [c.entityClass || c.internalName || c.name, c]).filter(([k]) => k)
+  )
+  const blueprintByClass = new Map()
+  for (const bp of cleanedBlueprints || []) {
+    if (bp.entityClass) blueprintByClass.set(bp.entityClass, bp)
+  }
+  const shipByClass = new Map(
+    (shipShop.catalog || []).map((row) => [row.entityClass, row]).filter(([k]) => k)
+  )
+  const siteLoot = parseSiteLoot({
+    extractedRoot: EXTRACTED_DATA,
+    localization,
+    catalogs: { fpsByClass, componentByClass, blueprintByClass, shipByClass },
+  })
+  saveJson('game-site-loot.json', siteLoot)
+  console.log(
+    `  Site loot: ${siteLoot.summary.itemCount} items across ${siteLoot.summary.locationTypeCount} location types`
+  )
 
   const systemRoot = join(EXTRACTED_DATA, 'Data', 'ObjectContainers', 'PU', 'system')
   if (!existsSync(systemRoot)) {

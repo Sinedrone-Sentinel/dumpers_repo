@@ -53,11 +53,13 @@ const localization = loadLocalization()
 const fps = loadJson('game-fps-weapons.json')
 const comps = loadJson('game-components.json')
 const bps = loadJson('game-blueprints.json')
+const shipItems = loadJson('game-ship-item-stats.json')
 
 const catalogs = {
   fpsByClass: mapByClass(fps?.weapons),
   componentByClass: mapByClass(comps?.components || comps?.items),
   blueprintByClass: mapByClass(bps?.blueprints),
+  shipByClass: mapByClass(shipItems?.items),
 }
 
 const data = parseSiteLoot({ extractedRoot: EXTRACTED, localization, catalogs })

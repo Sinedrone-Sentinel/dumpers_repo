@@ -29,7 +29,7 @@ export const OFFLINE_MODE_SECTION = {
     '**UEX Lookup** — where to buy guns, ammo, ship components, armor, ships, commodities, food, and drinks, and where to sell commodities',
     '**Shopping Cart** — a browser list of shop buys, separate from Fuzy\'s Ship Shop. Calculate a route with Fewest Stops, Cheapest, or Efficient',
     '**Fuzy\'s Ship Shop** — build a ship loadout, compare Pilot DPS and Burst DPS, and see where to buy the parts. Builds save in this browser until you sign in',
-    '**Loot Finder** — what can drop at Lazarus, Onyx, each named OLP and PAF, Checkmate / Orbituary / Ruin Contested Zones, Executive Hangar, and QV Investigation (including Clothing and NPC Gear enemies wear)',
+    '**Loot Finder** — what can drop at Lazarus, Onyx, OLP/PAF, Checkmate / Orbituary / Ruin Contested Zones, Executive Hangar, and QV Investigation (including Clothing and NPC Gear enemies wear)',
     '**Executive Timer** — when the five hangar lights are green so the seven compboards can open it',
     '**Information Archive** — site guide plus component, ordnance, faction, and lore references',
     '**Request Services** — call 3rd party services like Medrunner',
