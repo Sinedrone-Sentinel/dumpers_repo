@@ -57,6 +57,21 @@ export const SITE_LOOT_ITEM_COUNT = data.summary?.itemCount ?? data.items.length
 export const RATE_TOOLTIP =
   'Relative chance within this site loot pool from game weights — not a guarantee for any one visit.'
 
+/** Stable chip order for By location. Every baked item maps to one of these (or Other). */
+export const SITE_LOOT_KIND_CHIPS = [
+  { id: 'fps_weapon', label: 'FPS Weapons' },
+  { id: 'ship_weapon', label: 'Ship Weapons' },
+  { id: 'ship_component', label: 'Ship Components' },
+  { id: 'armour', label: 'Armour' },
+  { id: 'plushie', label: 'Plushies' },
+  { id: 'consumable', label: 'Consumables' },
+  { id: 'other', label: 'Other' },
+] as const
+
+export type SiteLootKindChipId = (typeof SITE_LOOT_KIND_CHIPS)[number]['id']
+
+const KIND_CHIP_IDS = new Set<string>(SITE_LOOT_KIND_CHIPS.map((chip) => chip.id))
+
 export function formatRatePct(ratePct: number): string {
   if (ratePct >= 10) return `${ratePct.toFixed(1)}%`
   if (ratePct >= 1) return `${ratePct.toFixed(2)}%`
@@ -71,6 +86,21 @@ export function locationTypeById(id: string): SiteLootLocationType | undefined {
 export function systemsLabel(loc: SiteLootLocationType | undefined): string {
   if (!loc?.systems?.length) return ''
   return loc.systems.join(', ')
+}
+
+/** Every item gets exactly one chip id so no row is orphaned behind All. */
+export function kindChipForItem(item: { kind?: string | null }): SiteLootKindChipId {
+  const kind = String(item.kind || '').trim()
+  if (KIND_CHIP_IDS.has(kind) && kind !== 'other') return kind as SiteLootKindChipId
+  return 'other'
+}
+
+export function kindChipsForItems(items: SiteLootLocationItem[]): { id: SiteLootKindChipId; label: string }[] {
+  const present = new Set(items.map((item) => kindChipForItem(item)))
+  return SITE_LOOT_KIND_CHIPS.filter((chip) => present.has(chip.id)).map((chip) => ({
+    id: chip.id,
+    label: chip.label,
+  }))
 }
 
 export function filterItemsByQuery(query: string, limit = 40): SiteLootItem[] {
