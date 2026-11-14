@@ -154,7 +154,7 @@ export default function LootFinderPage() {
 
       {mode === 'item' ? (
         <div className="grid grid-cols-1 lg:grid-cols-[20rem_1fr] gap-4 min-w-0">
-          <div className="min-w-0 flex flex-col gap-2 relative">
+          <div className="min-w-0 flex flex-col gap-2">
             <label className="site-label" htmlFor="loot-finder-search">
               Item
             </label>
@@ -175,7 +175,7 @@ export default function LootFinderPage() {
               }}
             />
             {suggestOpen && suggestions.length > 0 ? (
-              <div className="site-dropdown-list absolute left-0 right-0 top-[4.5rem] z-30 max-h-72 overflow-y-auto">
+              <div className="site-dropdown-list !relative mt-1 z-30 max-h-52 overflow-y-auto overscroll-contain">
                 {suggestions.map((item) => (
                   <button
                     key={item.key}
