@@ -114,9 +114,7 @@ export default function LootFinderPage() {
   return (
     <FeaturePageLayout
       title="Loot Finder"
-      subtitle="See what can drop at Lazarus, Onyx, OLP, PAF, Contested Zones, Executive Hangar, and QV Investigation"
       seoIntro="Star Citizen Loot Finder — search loot by item or location type for Lazarus, Onyx, OLP, PAF, Contested Zones, Executive Hangar, and QV Investigation, with relative drop rates from game data."
-      badge="Offline"
       meta={
         <>
           <span>{SITE_LOOT_ITEM_COUNT} loot entries</span>
@@ -133,17 +131,21 @@ export default function LootFinderPage() {
         </>
       }
     >
-      <div className="site-chip-strip mb-4">
+      <div className="site-chip-strip mb-4 w-fit">
         <button
           type="button"
-          className={mode === 'item' ? 'site-filter-selected-cyan' : 'site-filter-idle'}
+          className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors site-btn-shimmer ${
+            mode === 'item' ? 'site-filter-selected-orange' : 'site-filter-idle'
+          }`}
           onClick={() => setMode('item')}
         >
           Search loot
         </button>
         <button
           type="button"
-          className={mode === 'location' ? 'site-filter-selected-cyan' : 'site-filter-idle'}
+          className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors site-btn-shimmer ${
+            mode === 'location' ? 'site-filter-selected-orange' : 'site-filter-idle'
+          }`}
           onClick={() => setMode('location')}
         >
           By location
