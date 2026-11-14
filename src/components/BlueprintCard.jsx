@@ -9,6 +9,7 @@ import { isDefaultBlueprint } from '../lib/defaultBlueprints'
 import { useDfpEngineReady } from '../hooks/useDfpEngineReady'
 import { shopItemForBlueprint } from '../lib/uexCatalog'
 import { UexItemActions } from './shop/UexItemActions'
+import BlueprintLootLocations from './BlueprintLootLocations'
 import FriendBlueprintOwners from './FriendBlueprintOwners'
 import SiteTooltip from './SiteTooltip'
 
@@ -124,6 +125,7 @@ export default function BlueprintCard({
               </span></SiteTooltip>
             ) : null}
             {shopItem ? <UexItemActions item={shopItem} /> : null}
+            <BlueprintLootLocations entityClass={blueprint.entityClass} />
           </div>
           <SiteTooltip content={
               isStarterBlueprint

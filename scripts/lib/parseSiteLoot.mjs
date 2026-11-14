@@ -1,5 +1,5 @@
 /**
- * Bake site loot pools (Lazarus, Onyx, OLP, PAF, Contested Zone, Executive Hangar, QV Investigation)
+ * Bake site loot pools (Lazarus, Onyx, OLP/PAF, Contested Zone, Executive Hangar, QV Investigation)
  * into game-site-loot.json for Loot Finder.
  *
  * Uses location-true slot presets (not shared V3 catalogs that flatten every tagged config).
@@ -14,18 +14,12 @@ const LOOT_ROOT = 'libs/foundry/records/lootgeneration'
 const ENTITY_ROOT = 'libs/foundry/records/entities/scitem'
 const TAG_DB = 'libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json'
 
-/** Hathor Orbital Laser Platforms — shared Orbageddon loot pool. */
-const OLP_SITES = ['Lamina', 'Attritus', 'Ruptura', 'Vivere']
-
-/** Planetary Alignment Facilities — same pool; game uses Roman I/II/III. */
-const PAF_SITES = OLP_SITES.flatMap((complex) =>
-  ['I', 'II', 'III'].map((roman) => ({ complex, roman })),
-)
-
 /**
  * Location-true presets (not shared V3 catalogs that list every tagged config type).
  * V3SlotPreset_* files include Ship Weapon / Ship Missile configs that only apply when
  * a spawn carries those tags — flattening them made ship guns appear at every site.
+ *
+ * OLP + PAF share one Orbageddon pool (bit-identical) — one member-facing location.
  */
 const ORBAGEDDON_PRESETS = [
   'lootgeneration_slotpreset_orbageddon.json',
@@ -58,26 +52,15 @@ const LOCATION_DEFS = [
     presets: ['v3slotpreset_welcometonyx.json'],
     loadoutFolders: ['associated_science_and_development'],
   },
-  ...OLP_SITES.map((complex) => ({
-    id: `olp_${complex.toLowerCase()}`,
-    label: `${complex} OLP`,
-    group: 'olp',
-    groupLabel: 'OLP',
+  {
+    id: 'olp_paf',
+    label: 'OLP/PAF',
+    group: null,
     systems: ['Stanton'],
     poolId: 'orbageddon',
     presets: ORBAGEDDON_PRESETS,
     loadoutFolders: ['criminal_gang', 'outlaws'],
-  })),
-  ...PAF_SITES.map(({ complex, roman }) => ({
-    id: `paf_${complex.toLowerCase()}_${roman.toLowerCase()}`,
-    label: `${complex} PAF-${roman}`,
-    group: 'paf',
-    groupLabel: 'PAF',
-    systems: ['Stanton'],
-    poolId: 'orbageddon',
-    presets: ORBAGEDDON_PRESETS,
-    loadoutFolders: ['criminal_gang', 'outlaws'],
-  })),
+  },
   {
     id: 'cz_checkmate',
     label: 'Checkmate CZ',
@@ -935,6 +918,13 @@ function accumulatePool(presetPaths, extractedRoot, index, cache) {
   return weights
 }
 
+function titleCaseToken(value) {
+  if (!value || typeof value !== 'string') return null
+  const t = value.trim()
+  if (!t) return null
+  return t.charAt(0).toUpperCase() + t.slice(1)
+}
+
 function buildStats(entity, catalogs) {
   const stats = {}
   const fps = catalogs?.fpsByClass?.get(entity.key)
@@ -950,9 +940,31 @@ function buildStats(entity, catalogs) {
     if (comp.grade != null) stats.grade = comp.grade
     if (comp.class) stats.itemClass = comp.class
   }
+  const ship = catalogs?.shipByClass?.get(entity.key)
+  if (ship) {
+    if (ship.size != null) stats.size = ship.size
+    if (ship.damageType) stats.damageType = ship.damageType
+    if (ship.weaponClass) stats.weaponClass = ship.weaponClass
+    if (ship.itemClass) stats.itemClass = ship.itemClass
+    if (ship.grade != null && ship.grade !== '') stats.grade = ship.grade
+    if (ship.attachType && ship.attachType !== 'WeaponGun' && ship.attachType !== 'UNDEFINED') {
+      stats.componentType = ship.attachType
+    } else if (ship.kind && ship.kind !== 'weapon') {
+      stats.componentType = titleCaseToken(ship.kind)
+    }
+  }
   const bp = catalogs?.blueprintByClass?.get(entity.key)
   if (bp?.armorBaseStats) {
     stats.armor = bp.armorBaseStats
+  }
+  if (bp) {
+    const cat = bp.categoryName || ''
+    const sizeMatch = /\bS(\d+)\b/i.exec(cat)
+    if (stats.size == null && sizeMatch) stats.size = Number(sizeMatch[1])
+    if (!stats.itemClass && bp.class) stats.itemClass = bp.class
+    if (stats.grade == null && bp.grade != null) stats.grade = bp.grade
+    if (!stats.componentType && bp.subCategoryName) stats.componentType = bp.subCategoryName
+    if (!stats.weaponType && bp.subtype && entity.kind === 'fps_weapon') stats.weaponType = bp.subtype
   }
   if ((entity.kind === 'armour' || entity.kind === 'clothing' || entity.kind === 'npc_gear') && entity.subType) {
     stats.slot = entity.subType
