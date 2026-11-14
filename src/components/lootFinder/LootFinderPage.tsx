@@ -11,11 +11,17 @@ import {
   RATE_TOOLTIP,
   filterItemsByQuery,
   formatRatePct,
+  kindChipForItem,
+  kindChipsForItems,
   locationTypeById,
   systemsLabel,
   type SiteLootItem,
+  type SiteLootKindChipId,
   type SiteLootLocationItem,
 } from '../../lib/siteLoot'
+
+const CHIP =
+  'px-3 py-1.5 text-sm font-medium rounded-lg transition-colors site-btn-shimmer'
 
 function RateBadge({ ratePct }: { ratePct: number }) {
   return (
@@ -79,6 +85,7 @@ export default function LootFinderPage() {
   const [query, setQuery] = React.useState('')
   const [selectedItemKey, setSelectedItemKey] = React.useState<string | null>(null)
   const [locationId, setLocationId] = React.useState(SITE_LOOT_LOCATION_TYPES[0]?.id ?? '')
+  const [kindChip, setKindChip] = React.useState<SiteLootKindChipId | 'all'>('all')
   const [suggestOpen, setSuggestOpen] = React.useState(false)
   const blurTimer = React.useRef<number | null>(null)
 
@@ -103,6 +110,31 @@ export default function LootFinderPage() {
     () => SITE_LOOT_BY_LOCATION[locationId] ?? [],
     [locationId],
   )
+
+  const availableKindChips = React.useMemo(() => kindChipsForItems(locationItems), [locationItems])
+
+  const kindCounts = React.useMemo(() => {
+    const counts: Partial<Record<SiteLootKindChipId, number>> = {}
+    for (const item of locationItems) {
+      const id = kindChipForItem(item)
+      counts[id] = (counts[id] ?? 0) + 1
+    }
+    return counts
+  }, [locationItems])
+
+  React.useEffect(() => {
+    setKindChip('all')
+  }, [locationId])
+
+  React.useEffect(() => {
+    if (kindChip === 'all') return
+    if (!availableKindChips.some((chip) => chip.id === kindChip)) setKindChip('all')
+  }, [availableKindChips, kindChip])
+
+  const filteredLocationItems = React.useMemo(() => {
+    if (kindChip === 'all') return locationItems
+    return locationItems.filter((item) => kindChipForItem(item) === kindChip)
+  }, [locationItems, kindChip])
 
   const pickItem = (item: SiteLootItem) => {
     setSelectedItemKey(item.key)
@@ -243,15 +275,42 @@ export default function LootFinderPage() {
             <p className="site-hint">{systemsLabel(locationTypeById(locationId))}</p>
           </div>
 
-          <div className="min-w-0">
+          <div className="min-w-0 flex flex-col gap-3">
             {locationItems.length === 0 ? (
               <div className="site-empty">No allowlisted loot for this location type.</div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
-                {locationItems.map((item) => (
-                  <LootMiniCard key={item.key} item={item} />
-                ))}
-              </div>
+              <>
+                <div className="site-chip-strip w-fit max-w-full">
+                  <button
+                    type="button"
+                    className={`${CHIP} ${kindChip === 'all' ? 'site-filter-selected-orange' : 'site-filter-idle'}`}
+                    onClick={() => setKindChip('all')}
+                  >
+                    All
+                    <span className="ml-1.5 tabular-nums opacity-80">{locationItems.length}</span>
+                  </button>
+                  {availableKindChips.map((chip) => (
+                    <button
+                      key={chip.id}
+                      type="button"
+                      className={`${CHIP} ${kindChip === chip.id ? 'site-filter-selected-orange' : 'site-filter-idle'}`}
+                      onClick={() => setKindChip(chip.id)}
+                    >
+                      {chip.label}
+                      <span className="ml-1.5 tabular-nums opacity-80">{kindCounts[chip.id] ?? 0}</span>
+                    </button>
+                  ))}
+                </div>
+                {filteredLocationItems.length === 0 ? (
+                  <div className="site-empty">No loot in that filter for this location.</div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
+                    {filteredLocationItems.map((item) => (
+                      <LootMiniCard key={item.key} item={item} />
+                    ))}
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>

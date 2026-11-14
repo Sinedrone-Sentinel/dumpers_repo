@@ -298,6 +298,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     details: [
       'Search by item name to see which location types can drop it, with a relative drop rate for each',
       'Or pick a location type — Lazarus, Onyx, OLP, PAF, Contested Zone, Executive Hangar, or QV Investigation — to browse loot cards',
+      'On By location, filter chips (All, FPS Weapons, Ship Weapons, Ship Components, Armour, Plushies, Consumables) narrow the list — every item sits on at least one chip',
       'Rates are relative within that site pool from game data, not a guarantee for any one visit',
       'Shows weapons, ship components, armour, plushies, and consumables from those sites',
       'Works in Offline Mode',
