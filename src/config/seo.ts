@@ -28,6 +28,7 @@ export const SEO_PRERENDER_PATHS = [
   '/commodity-lookup',
   '/shop-cart',
   '/ship-shop',
+  '/loot-finder',
   '/executive-hangar',
   '/archive',
   '/bazaar',
@@ -43,6 +44,7 @@ export const SEO_SITEMAP_PATHS = [
   '/commodity-lookup/',
   '/shop-cart/',
   '/ship-shop/',
+  '/loot-finder/',
   '/executive-hangar/',
   '/archive/',
   '/bazaar/',
@@ -105,10 +107,16 @@ const pages: Record<string, SeoPageConfig> = {
       "Build a Star Citizen ship loadout in Fuzy's Ship Shop, compare Pilot DPS and Burst DPS, and see where to buy the parts. Offline Mode keeps four builds in this browser.",
     canonicalPath: '/ship-shop/',
   },
-  '/executive-hangar': {
-    title: "Executive Hangar Lights | Dumper's Repo",
+  '/loot-finder': {
+    title: "Loot Finder | Dumper's Repo",
     description:
-      'See when the Star Citizen Executive Hangar lights are green so the seven compboards can open the hangar. The same clock on every server.',
+      'Search Star Citizen site loot by item or location type for Lazarus, Onyx, OLP, PAF, Contested Zones, Executive Hangar, and QV Investigation.',
+    canonicalPath: '/loot-finder/',
+  },
+  '/executive-hangar': {
+    title: "Executive Timer | Dumper's Repo",
+    description:
+      'Executive Timer — see when the Star Citizen Executive Hangar lights are green so the seven compboards can open it. The same clock on every server.',
     canonicalPath: '/executive-hangar/',
   },
   '/archive': {
@@ -240,8 +248,9 @@ export function buildJsonLdGraph(): Record<string, unknown> {
           'Flight Profile',
           "Fuzy's Ship Shop",
           'UEX Lookup',
+          'Loot Finder',
           'Shopping Cart',
-          'Executive Hangar',
+          'Executive Timer',
           'The Bazaar',
           'My Listings',
           'Info Archive',

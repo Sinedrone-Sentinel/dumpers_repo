@@ -118,6 +118,7 @@ function pathToTool(pathname: string): string | null {
   if (pathname.startsWith('/commodity-lookup')) return 'commodity_lookup'
   if (pathname.startsWith('/shop-cart')) return 'shop_cart'
   if (pathname.startsWith('/ship-shop')) return 'ship_shop'
+  if (pathname.startsWith('/loot-finder')) return 'loot_finder'
   if (pathname.startsWith('/executive-hangar')) return 'executive_hangar'
   if (pathname.startsWith('/orders')) return 'custom_orders'
   if (pathname.startsWith('/bazaar')) return 'fulfillment'
@@ -276,7 +277,8 @@ export const ANALYTICS_TOOL_LABELS: Record<string, string> = {
   commodity_lookup: 'UEX Lookup',
   shop_cart: 'Shopping Cart',
   ship_shop: "Fuzy's Ship Shop",
-  executive_hangar: 'Executive Hangar',
+  loot_finder: 'Loot Finder',
+  executive_hangar: 'Executive Timer',
   custom_orders: 'My Listings',
   fulfillment: 'The Bazaar',
   archive: 'Info Archive',
@@ -312,6 +314,8 @@ export const ANALYTICS_SUB_TOOL_LABELS: Record<string, string> = {
   manage: 'Manage',
   officer_pending: 'Pending review',
   status: 'Status',
+  by_item: 'By Item',
+  by_location: 'By Location',
   welcome: 'Overview',
   components: 'Components',
   ordnance: 'Ordnance',

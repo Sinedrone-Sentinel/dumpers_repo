@@ -20,6 +20,7 @@ import { parseMiningSpawns } from './lib/parseMiningSpawns.mjs'
 import { mergeSpawnOreLocations, rebuildRarityTiers } from './lib/mergeSpawnOreLocations.mjs'
 import { parseOreSignatures } from './lib/parseOreSignatures.mjs'
 import { parseShipShop } from './lib/parseShipShop.mjs'
+import { parseSiteLoot } from './lib/parseSiteLoot.mjs'
 import { extractShipItemStats } from './lib/shipItemStats.mjs'
 import { parseNavSystems } from './lib/parseNavSystems.mjs'
 import {
@@ -5419,7 +5420,28 @@ async function main() {
   } else {
     console.log('  ⚠ No quality band data (run extract-game-data.ps1 with dcb query)')
   }
-  
+
+  // Site loot pools for Loot Finder
+  const fpsByClass = new Map(
+    (fpsWeapons || []).map((w) => [w.entityClass || w.internalName || w.name, w]).filter(([k]) => k)
+  )
+  const componentByClass = new Map(
+    (components || []).map((c) => [c.entityClass || c.internalName || c.name, c]).filter(([k]) => k)
+  )
+  const blueprintByClass = new Map()
+  for (const bp of cleanedBlueprints || []) {
+    if (bp.entityClass) blueprintByClass.set(bp.entityClass, bp)
+  }
+  const siteLoot = parseSiteLoot({
+    extractedRoot: EXTRACTED_DATA,
+    localization,
+    catalogs: { fpsByClass, componentByClass, blueprintByClass },
+  })
+  saveJson('game-site-loot.json', siteLoot)
+  console.log(
+    `  Site loot: ${siteLoot.summary.itemCount} items across ${siteLoot.summary.locationTypeCount} location types`
+  )
+
   // Validation report
   console.log('\n' + '='.repeat(60))
   console.log('  Extraction Summary')

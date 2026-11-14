@@ -50,7 +50,8 @@ Member-facing how-tos live in the in-app **Info Archive** (`/archive`) and the p
 | `/commodity-lookup` | UEX Lookup | Offline + members |
 | `/shop-cart` | Shopping Cart | Offline + everyone |
 | `/ship-shop` | Fuzy's Ship Shop | Offline + everyone |
-| `/executive-hangar` | Executive Hangar | Offline + everyone |
+| `/loot-finder` | Loot Finder | Offline + everyone |
+| `/executive-hangar` | Executive Timer | Offline + everyone |
 | `/orders` | My Listings | Approved members |
 | `/bazaar` | The Bazaar | Approved members (offline: open-listing count only) |
 | `/archive` | Info Archive | Offline + members |
@@ -212,7 +213,11 @@ Find every shop that sells a gun, ammo, armor piece, ship, commodity, food, or d
 
 A browser list of shop buys, separate from Fuzy's Ship Shop. The header cart button beside the notepad opens it. Adding from a Buy row remembers that shop and price. Clear empties the cart. Calculate plans a route from your start with Fewest Stops, Cheapest, or Efficient. The cart stays in this browser.
 
-### Executive Hangar (`/executive-hangar`)
+### Loot Finder (`/loot-finder`)
+
+Search site loot by item name or browse a location type (Lazarus, Onyx, OLP, PAF, Contested Zone, Executive Hangar, QV Investigation). Baked from client loot slot presets into `src/data/game-site-loot.json` (`npm run bake-site-loot`, also during `parse-game-data`). Relative drop rates only. Open to guests and Offline Mode.
+
+### Executive Timer (`/executive-hangar`)
 
 Five status lights for the PYAM-EXHANG-0-1 hangar. The page reads a published hangar clock once when it opens, then counts the lights in the browser. If that read fails, it uses the saved 4.10.2 times in `src/data/executive-hangar-cycle.json`. Compboards work while at least one light is green and none are red. Open to guests and Offline Mode.
 
@@ -334,7 +339,7 @@ The production build regenerates [`public/archive-guide.html`](public/archive-gu
 
 | Role | Capabilities |
 |------|----------------|
-| **Offline** | Browse core tools, Fuzy's Ship Shop, Executive Hangar, and Archive; local storage; Bazaar listing-count teaser |
+| **Offline** | Browse core tools, Fuzy's Ship Shop, Loot Finder, Executive Timer, and Archive; local storage; Bazaar listing-count teaser |
 | **pending** | Signed in, awaiting officer approval; no marketplace or notifications |
 | **member** | Full marketplace, BP Dumper, mining ledgers (with RSI verification), Discord webhooks |
 | **officer** | Admin Panel, Support Dashboard, Site Total on Resource Tracker |
@@ -350,7 +355,7 @@ The production build regenerates [`public/archive-guide.html`](public/archive-gu
 
 Signed-out visitors land on the public home page first. Choose **Browse tools offline** (or **Continue in Offline Mode**). That choice is remembered in this browser, so a bookmark to a tool opens that tool instead of the sign-in page.
 
-- Blueprints (acquired marks), Wikelo, Mission Tracker, Resource Tracker, Mining Tracker (RS + Guide + Caves), UEX Lookup, Shopping Cart, Fuzy's Ship Shop, Executive Hangar, Archive, Bazaar listing-count teaser
+- Blueprints (acquired marks), Wikelo, Mission Tracker, Resource Tracker, Mining Tracker (RS + Guide + Caves), UEX Lookup, Shopping Cart, Fuzy's Ship Shop, Loot Finder, Executive Timer, Archive, Bazaar listing-count teaser
 
 Requires a free member account:
 
@@ -459,6 +464,7 @@ Never commit `service_role` / `sb_secret_` keys. Edge Functions receive platform
 | `npm run lint` | ESLint on `src/` |
 | `npm run generate-archive-guide` | Regenerate `public/archive-guide.html` and the Help chat knowledge base |
 | `npm run build-help-knowledge-base` | Rebake `supabase/functions/site-help-bot/knowledge.json` from the Archive |
+| `npm run bake-site-loot` | Bake `src/data/game-site-loot.json` for Loot Finder (also runs inside `parse-game-data`) |
 | `npm run validate-blueprints` | Catalog validation after parse |
 | `npm run audit-hpp-mining-locations` | HPP spawn location audit |
 | `npm run audit-mining-aliases` | Mining alias consistency |
@@ -482,6 +488,7 @@ Primary source: Star Citizen game files via StarBreaker. See [docs/DATA_SOURCES.
 ```powershell
 .\scripts\extract-game-data.ps1
 npm run parse-game-data       # regenerate src/data/game-*.json from scratch (+ What's New → Supabase)
+npm run bake-site-loot        # Loot Finder bake only (also part of parse-game-data)
 npm run fetch-ship-shop-shops # every patch, after parse: Fuzy's Ship Shop UEX buy locations
 npm run push-whats-new        # retry pending What's New ingest if parse could not reach DB
 npm run diff-game-data        # patch report: adds / removes / renames / stat changes vs last commit

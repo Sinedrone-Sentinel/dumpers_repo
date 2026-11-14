@@ -95,8 +95,15 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
     featureId: 'fulfillment',
   },
   {
+    id: 'loot-finder',
+    label: 'Loot Finder',
+    path: '/loot-finder',
+    icon: 'loot',
+    featureId: 'loot_finder',
+  },
+  {
     id: 'executive-hangar',
-    label: 'Executive Hangar',
+    label: 'Executive Timer',
     path: '/executive-hangar',
     icon: 'hangar',
     featureId: 'executive_hangar',
@@ -135,7 +142,14 @@ export const NAV_GROUPS: { id: string; label: string; itemIds: string[] }[] = [
   {
     id: 'tools',
     label: 'Tools',
-    itemIds: ['ship-shop', 'fulfillment', 'custom-orders', 'commodity-lookup', 'executive-hangar'],
+    itemIds: [
+      'ship-shop',
+      'fulfillment',
+      'custom-orders',
+      'commodity-lookup',
+      'loot-finder',
+      'executive-hangar',
+    ],
   },
   {
     id: 'reference',

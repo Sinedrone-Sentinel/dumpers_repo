@@ -24,6 +24,7 @@
     "test": "node scripts/run-tests.mjs",
     "verify-mining-math": "node scripts/verify-mining-math.mjs",
     "parse-game-data": "node scripts/parse-extracted-data.mjs",
+    "bake-site-loot": "node scripts/bake-site-loot.mjs",
     "enrich-mission-descriptions": "node scripts/enrich-mission-descriptions.mjs",
     "diff-game-data": "node scripts/diff-game-data.mjs",
     "relink-acquired-blueprint-ids": "node scripts/relink-acquired-blueprint-ids.mjs",
