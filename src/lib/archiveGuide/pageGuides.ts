@@ -294,10 +294,10 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
   {
     id: 'loot-finder',
     title: 'Loot Finder',
-    description: 'Search what can drop at site loot locations, or browse a location type for its loot list.',
+    description: 'Search what can drop at named site loot locations, or browse a site for its loot list.',
     details: [
-      'Search by item name to see which location types can drop it, with a relative drop rate for each',
-      'Or pick a location type — Lazarus, Onyx, OLP, PAF, Contested Zone, Executive Hangar, or QV Investigation — to browse loot cards',
+      'Search by item name to see every named site that can drop it, with a relative drop rate for each',
+      'Or pick a location — Lazarus, Onyx, each OLP (Attritus, Lamina, Ruptura, Vivere), each PAF (PAF-I / II / III per complex), Checkmate / Orbituary / Ruin Contested Zones, Executive Hangar, or QV Investigation — to browse loot cards',
       'On By location, filter chips (All, FPS Weapons, Ship Weapons, Ship Components, Armour, Plushies, Consumables) narrow the list — every item sits on at least one chip',
       'Rates are relative within that site pool from game data, not a guarantee for any one visit',
       'Shows weapons, ship components, armour, plushies, and consumables from those sites',

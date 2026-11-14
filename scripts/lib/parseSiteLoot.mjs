@@ -13,10 +13,22 @@ const LOOT_ROOT = 'libs/foundry/records/lootgeneration'
 const ENTITY_ROOT = 'libs/foundry/records/entities/scitem'
 const TAG_DB = 'libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json'
 
+/** Hathor Orbital Laser Platforms — shared Orbageddon loot pool. */
+const OLP_SITES = ['Lamina', 'Attritus', 'Ruptura', 'Vivere']
+
+/** Planetary Alignment Facilities — same pool; game uses Roman I/II/III. */
+const PAF_SITES = OLP_SITES.flatMap((complex) =>
+  ['I', 'II', 'III'].map((roman) => ({ complex, roman })),
+)
+
+const ORBAGEDDON_PRESETS = ['v3slotpreset_orbageddon.json']
+const CONTESTED_ZONE_PRESETS = ['v3slotpreset_contestedzones.json']
+
 const LOCATION_DEFS = [
   {
     id: 'lazarus',
     label: 'Lazarus',
+    group: null,
     systems: ['Pyro'],
     poolId: 'asddelving',
     presets: [
@@ -27,34 +39,60 @@ const LOCATION_DEFS = [
   {
     id: 'onyx',
     label: 'Onyx',
+    group: null,
     systems: ['Stanton'],
     poolId: 'welcometonyx',
     presets: ['v3slotpreset_welcometonyx.json'],
   },
-  {
-    id: 'olp',
-    label: 'OLP',
+  ...OLP_SITES.map((complex) => ({
+    id: `olp_${complex.toLowerCase()}`,
+    label: `${complex} OLP`,
+    group: 'olp',
+    groupLabel: 'OLP',
     systems: ['Stanton'],
     poolId: 'orbageddon',
-    presets: ['v3slotpreset_orbageddon.json'],
-  },
-  {
-    id: 'paf',
-    label: 'PAF',
+    presets: ORBAGEDDON_PRESETS,
+  })),
+  ...PAF_SITES.map(({ complex, roman }) => ({
+    id: `paf_${complex.toLowerCase()}_${roman.toLowerCase()}`,
+    label: `${complex} PAF-${roman}`,
+    group: 'paf',
+    groupLabel: 'PAF',
     systems: ['Stanton'],
     poolId: 'orbageddon',
-    presets: ['v3slotpreset_orbageddon.json'],
-  },
+    presets: ORBAGEDDON_PRESETS,
+  })),
   {
-    id: 'contested_zone',
-    label: 'Contested Zone',
+    id: 'cz_checkmate',
+    label: 'Checkmate CZ',
+    group: 'contested_zone',
+    groupLabel: 'Contested Zone',
     systems: ['Pyro'],
     poolId: 'contestedzones',
-    presets: ['v3slotpreset_contestedzones.json'],
+    presets: CONTESTED_ZONE_PRESETS,
+  },
+  {
+    id: 'cz_orbituary',
+    label: 'Orbituary CZ',
+    group: 'contested_zone',
+    groupLabel: 'Contested Zone',
+    systems: ['Pyro'],
+    poolId: 'contestedzones',
+    presets: CONTESTED_ZONE_PRESETS,
+  },
+  {
+    id: 'cz_ruin',
+    label: 'Ruin CZ',
+    group: 'contested_zone',
+    groupLabel: 'Contested Zone',
+    systems: ['Pyro'],
+    poolId: 'contestedzones',
+    presets: CONTESTED_ZONE_PRESETS,
   },
   {
     id: 'executive_hangar',
     label: 'Executive Hangar',
+    group: null,
     systems: ['Pyro'],
     poolId: 'executive_hangar',
     presets: ['asteroidbases/asteroidbase_exec_hangar_001.json'],
@@ -62,6 +100,7 @@ const LOCATION_DEFS = [
   {
     id: 'qv_investigation',
     label: 'QV Investigation',
+    group: null,
     systems: ['Nyx'],
     poolId: 'kaboos',
     presets: ['lootgeneration_slotpreset_kaboos.json'],
@@ -891,6 +930,8 @@ export function parseSiteLoot(options = {}) {
     locationTypes.push({
       id: loc.id,
       label: loc.label,
+      group: loc.group || null,
+      groupLabel: loc.groupLabel || null,
       systems: loc.systems,
       poolId: loc.poolId,
     })
