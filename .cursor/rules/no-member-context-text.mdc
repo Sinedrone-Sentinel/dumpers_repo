@@ -1,0 +1,47 @@
+---
+description: Never put meta/implementation context copy on member-facing UI
+alwaysApply: true
+---
+
+# No context text on the website
+
+Member-facing UI must not show **meta commentary** about how the site is built, how data is fetched, or what engineers decided. That reads as unfinished and unprofessional.
+
+## Hard rule
+
+Do **not** put on the page (body copy, muted footnotes, card subtitles, empty-state asides):
+
+- How a link or list is sourced ("polled from GitHub", "listing is static", "baked at build time", "Edge Function", "RPC")
+- Implementation status ("not wired yet", "temporary", "placeholder", "for now")
+- Dev/process asides ("we always track the latest release", "this tab was moved from a modal")
+- Internal product nicknames next to the display name when the tab already shows the product name
+
+Members need **what the product is** and **what to click**. How we keep it up to date belongs in Archive, README, or code comments — not under the download button.
+
+## Allowed on the page
+
+- What the tool does in plain language
+- Requirements the member must meet (sign-in, RSI verified, Chromium browser)
+- Errors and empty states about *their* action ("Could not load downloads — try again")
+- Legal / affiliation one-liners when required (e.g. unofficial fan tool, not CIG)
+- Trust/verify material members use (VirusTotal findings, checksum verify links) when that is the product surface
+
+## Prefer
+
+- Delete the muted `text-xs text-slate-500` footnote if it only explains implementation
+- Put control how-to in `SiteTooltip` (see `site-tooltips.mdc`), not a paragraph under the control
+- Keep engineer notes in code comments or `docs/`
+
+## Bad vs good
+
+```tsx
+// BAD — meta about our pipeline
+<p className="text-xs text-slate-500">
+  Listing is static (not polled from GitHub).
+</p>
+
+// GOOD — nothing, or a real requirement
+<p className="text-sm text-slate-400">
+  Add RSI+ from the Chrome Web Store. Works in Chrome or Chromium-based Edge.
+</p>
+```
