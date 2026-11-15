@@ -167,7 +167,7 @@ export default function LootFinderPage() {
   return (
     <FeaturePageLayout
       title="Loot Finder"
-      seoIntro="Star Citizen Loot Finder — search loot by item or named site for Lazarus, Onyx, OLP/PAF, Checkmate / Orbituary / Ruin Contested Zones, Executive Hangar, and QV Investigation, with relative drop rates from game data."
+      seoIntro="Star Citizen Loot Finder — search loot by item or named site for Lazarus, Onyx, OLP/PAF, Checkmate / Orbituary / Ruin Contested Zones, Executive Hangar, QV Investigation, and Siege of Orison, with relative drop rates from game data."
       meta={
         <>
           <span>{SITE_LOOT_ITEM_COUNT} loot entries</span>

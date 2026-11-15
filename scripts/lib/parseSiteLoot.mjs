@@ -1,6 +1,6 @@
 /**
- * Bake site loot pools (Lazarus, Onyx, OLP/PAF, Contested Zone, Executive Hangar, QV Investigation)
- * into game-site-loot.json for Loot Finder.
+ * Bake site loot pools (Lazarus, Onyx, OLP/PAF, Contested Zone, Executive Hangar,
+ * QV Investigation, Siege of Orison) into game-site-loot.json for Loot Finder.
  *
  * Uses location-true slot presets (not shared V3 catalogs that flatten every tagged config).
  * Relative rates are weight shares within each location after the allowlist.
@@ -115,6 +115,16 @@ const LOCATION_DEFS = [
     poolId: 'kaboos',
     presets: ['lootgeneration_slotpreset_kaboos.json'],
     loadoutFolders: [],
+  },
+  {
+    id: 'siege_of_orison',
+    label: 'Siege of Orison',
+    group: null,
+    systems: ['Stanton'],
+    poolId: 'soo',
+    // Event-only V3 preset (weapons caches + SOO event armour tables). Skip Ship Weapon/Missile configs.
+    presets: ['v3slotpreset_soo.json'],
+    loadoutFolders: ['xenothreat'],
   },
 ]
 

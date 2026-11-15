@@ -298,7 +298,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     description: 'Search what can drop at named site loot locations, or browse a site for its loot list.',
     details: [
       'Search by item name to see every named site that can drop it, with a relative drop rate for each',
-      'Or pick a location — Lazarus, Onyx, OLP/PAF (same Hathor Orbageddon pool), Checkmate / Orbituary / Ruin Contested Zones, Executive Hangar, or QV Investigation — to browse loot cards',
+      'Or pick a location — Lazarus, Onyx, OLP/PAF (same Hathor Orbageddon pool), Checkmate / Orbituary / Ruin Contested Zones, Executive Hangar, QV Investigation, or Siege of Orison — to browse loot cards',
       'Ship weapon and component cards show Size / type / class / grade chips when game data has them',
       'Contested Zone lists differ by station — Orbituary CZ is where ship guns can drop as loot; Checkmate and Ruin do not share that ship-weapon reward room',
       'On By location, filter chips (All, FPS Weapons, Ship Weapons, Ship Components, Armour, Clothing, NPC Gear, Plushies, Consumables) narrow the list — every item sits on at least one chip',
