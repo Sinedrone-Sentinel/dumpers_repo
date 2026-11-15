@@ -24,7 +24,7 @@ export function parseDumperAppTab(raw: unknown): DumperAppTabId {
   return DEFAULT_DUMPER_APP_TAB
 }
 
-/** Zedwil / voidput StarOrg Codex (StarOrg-Strings) GitHub releases. */
+/** StarOrg Codex (starorg-strings) GitHub releases. */
 export const STARORG_STRINGS_REPO = 'voidput/starorg-strings' as const
 export const STARORG_STRINGS_RELEASES_API =
   `https://api.github.com/repos/${STARORG_STRINGS_REPO}/releases/latest` as const
@@ -34,7 +34,7 @@ export const STARORG_STRINGS_DISPLAY_NAME = 'StarOrg-Strings' as const
 export const STARORG_STRINGS_PRODUCT_NAME = 'StarOrg Codex' as const
 
 /**
- * RSI+ Chrome Web Store listing (Zedwil).
+ * RSI+ Chrome Web Store listing (StarOrg).
  * Extension id jpdcafgdkkhgffohcddpebmippacbide — update if the listing URL changes.
  */
 export const RSI_PLUS_DISPLAY_NAME = 'RSI+' as const

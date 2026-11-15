@@ -8,8 +8,8 @@ export default function RsiPlusPanel() {
       <section className="space-y-2">
         <h3 className="text-sm font-semibold text-white">What it is</h3>
         <p className="text-sm text-slate-400 leading-relaxed">
-          <strong className="text-slate-300">{RSI_PLUS_DISPLAY_NAME}</strong> is Zedwil&apos;s Chrome
-          extension for robertsspaceindustries.com — Spectrum read tracking, mutes and watches, hangar
+          <strong className="text-slate-300">{RSI_PLUS_DISPLAY_NAME}</strong> is a Chrome extension from
+          StarOrg for robertsspaceindustries.com — Spectrum read tracking, mutes and watches, hangar
           and buyback explorer, store prices, wishlist alerts, and a CCU planner. It runs in your
           browser with the RSI session you already use.
         </p>

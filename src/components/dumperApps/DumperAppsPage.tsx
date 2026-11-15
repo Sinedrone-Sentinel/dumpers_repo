@@ -132,7 +132,7 @@ export default function DumperAppsPage() {
       seoIntro="BP Dumper, StarOrg-Strings (StarOrg Codex), and the RSI+ Chrome extension — StarOrg and RSI+ are open in Offline Mode; BP Dumper needs a free member account."
       meta={
         <span className="text-slate-400">
-          Companion tools by Dumper&apos;s Repo and Zedwil — BP Dumper needs sign-in
+          Companion tools by Dumper&apos;s Repo and StarOrg — BP Dumper needs sign-in
         </span>
       }
     >

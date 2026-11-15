@@ -61,7 +61,7 @@ export default function StarOrgStringsPanel() {
         <h3 className="text-sm font-semibold text-white">What it is</h3>
         <p className="text-sm text-slate-400 leading-relaxed">
           <strong className="text-slate-300">{STARORG_STRINGS_PRODUCT_NAME}</strong> ({STARORG_STRINGS_DISPLAY_NAME})
-          is Zedwil&apos;s Star Citizen localization helper — clearer component tags, ship/weapon stats
+          is a Star Citizen localization helper from StarOrg — clearer component tags, ship/weapon stats
           blocks, and mission facts in your local <span className="font-mono text-slate-300">global.ini</span>,
           built from your own install and removable in one click. Desktop app for Windows and Linux, plus
           a CLI. No account. Offline by default.
