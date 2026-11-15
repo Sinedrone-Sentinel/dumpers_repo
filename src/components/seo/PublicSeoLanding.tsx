@@ -77,6 +77,13 @@ const FEATURES: FeatureCard[] = [
     cta: 'Sign in to use Flight Profile →',
   },
   {
+    title: 'Dumper Apps',
+    body: 'StarOrg-Strings and RSI+ downloads in Offline Mode. BP Dumper for Game.log blueprint sync needs a free member account.',
+    href: '/dumper-apps',
+    action: 'offline',
+    cta: 'Open Dumper Apps offline →',
+  },
+  {
     title: "Fuzy's Ship Shop",
     body: 'Build a ship loadout, compare Pilot DPS and Burst DPS, and see where to buy the parts. Sign in to save ships in My Hangar.',
     href: '/ship-shop',

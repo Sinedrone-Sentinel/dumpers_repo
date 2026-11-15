@@ -1,15 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { Link } from '@tanstack/react-router'
-import AppModal from '../layout/AppModal'
 import CopyFeedbackButton from '../CopyFeedbackButton'
-import BpDumperDownloadLinks from './BpDumperDownloadLinks'
-import { DUMPER_APPS_DISPLAY_NAME } from '../../config/bpDumper'
+import BpDumperDownloadLinks from '../bpDumper/BpDumperDownloadLinks'
 import { useAuth } from '../../contexts/AuthContext'
 import { supabase } from '../../lib/supabase'
-
-interface BpDumperModalProps {
-  onClose: () => void
-}
 
 function SetupStepList({ children }: { children: React.ReactNode }) {
   return <ol className="mt-2 list-decimal space-y-2.5 pl-5 text-sm leading-relaxed text-slate-400">{children}</ol>
@@ -164,7 +158,8 @@ function SetupHowTo() {
   )
 }
 
-export default function BpDumperModal({ onClose }: BpDumperModalProps) {
+/** BP Dumper tab body — moved from the old modal with no content changes. */
+export default function BpDumperPanel() {
   const { user, isApproved, isPending } = useAuth()
   const [error, setError] = useState<string | null>(null)
   const [apiKey, setApiKey] = useState<string | null>(null)
@@ -218,14 +213,12 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
   }, [])
 
   return (
-    <AppModal
-      title={DUMPER_APPS_DISPLAY_NAME}
-      subtitle="Microsoft Store on Windows (recommended) — choose your LIVE folder, sync unlocks, power Live Mission Tracker."
-      onClose={onClose}
-      size="lg"
-    >
-      <div className="space-y-6">
-        <section className="space-y-2">
+    <div className="space-y-6">
+      <p className="text-sm text-slate-400 leading-relaxed">
+        Microsoft Store on Windows (recommended) — choose your LIVE folder, sync unlocks, power Live
+        Mission Tracker.
+      </p>
+      <section className="space-y-2">
           <h3 className="text-sm font-semibold text-white">What you get</h3>
           <ul className="list-disc list-inside space-y-1 text-sm text-slate-400">
             <li>
@@ -318,7 +311,6 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
             </p>
           )}
         </section>
-      </div>
-    </AppModal>
+    </div>
   )
 }

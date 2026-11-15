@@ -3,12 +3,10 @@ import { Link } from '@tanstack/react-router'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { setAnalyticsSubTool } from '../lib/analytics'
 import { DUMPER_APPS_DISPLAY_NAME } from '../config/bpDumper'
-import { useBpDumperModal } from '../contexts/BpDumperModalContext'
 import { useLiveMissionTracker } from '../hooks/useLiveMissionTracker'
 import SiteTooltip from '../components/SiteTooltip'
 
 export default function TargetsLiveRoute() {
-  const { openBpDumperModal } = useBpDumperModal()
   const { loading, refreshing, error, isConnected, statusBar, hideMissionLists, missions, remaining, refresh } =
     useLiveMissionTracker()
 
@@ -170,13 +168,13 @@ export default function TargetsLiveRoute() {
             Start BP Dumper in watch mode with your API key, then keep this page open. Mission and
             blueprint lists are hidden until connected.
           </p>
-          <button
-            type="button"
-            onClick={openBpDumperModal}
-            className="mt-6 site-btn-primary px-4 py-2 text-sm font-medium"
+          <Link
+            to="/dumper-apps"
+            search={{ app: 'bp-dumper' }}
+            className="mt-6 inline-flex site-btn-primary px-4 py-2 text-sm font-medium"
           >
             Open {DUMPER_APPS_DISPLAY_NAME}
-          </button>
+          </Link>
         </div>
       )}
     </FeaturePageLayout>

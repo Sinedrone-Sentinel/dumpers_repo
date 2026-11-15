@@ -27,6 +27,7 @@ export type FeatureId =
   | 'contribute'
   | 'contributor_team_admin'
   | 'flight_profile'
+  | 'dumper_apps'
 
 export interface VisibilityContext {
   role: UserRole | null
@@ -75,7 +76,8 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
       featureId === 'shop_cart' ||
       featureId === 'ship_shop' ||
       featureId === 'executive_hangar' ||
-      featureId === 'loot_finder'
+      featureId === 'loot_finder' ||
+      featureId === 'dumper_apps'
     )
   }
 
@@ -154,6 +156,10 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
 
     case 'flight_profile':
       return ctx.isApproved
+
+    case 'dumper_apps':
+      // Page open to any signed-in role; BP Dumper tab still requires approval in UI.
+      return !!ctx.role
 
     default:
       return false

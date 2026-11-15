@@ -127,6 +127,7 @@ function pathToTool(pathname: string): string | null {
   if (pathname.startsWith('/contribute')) return 'contribute'
   if (pathname.startsWith('/guest-locked')) return 'guest_locked'
   if (pathname.startsWith('/flight-profile')) return 'flight_profile'
+  if (pathname.startsWith('/dumper-apps')) return 'dumper_apps'
 
   return null
 }
@@ -286,6 +287,7 @@ export const ANALYTICS_TOOL_LABELS: Record<string, string> = {
   contribute: 'Contribute',
   guest_locked: 'Guest Locked',
   flight_profile: 'Flight Profile',
+  dumper_apps: 'Dumper Apps',
 }
 
 export const ANALYTICS_SUB_TOOL_LABELS: Record<string, string> = {
@@ -316,6 +318,9 @@ export const ANALYTICS_SUB_TOOL_LABELS: Record<string, string> = {
   status: 'Status',
   by_item: 'By Item',
   by_location: 'By Location',
+  bp_dumper: 'BP Dumper',
+  starorg_strings: 'StarOrg-Strings',
+  rsi_plus: 'RSI+',
   welcome: 'Overview',
   components: 'Components',
   ordnance: 'Ordnance',

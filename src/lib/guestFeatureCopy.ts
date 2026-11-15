@@ -50,6 +50,17 @@ export const GUEST_LOCKED_FEATURE_COPY: Partial<Record<FeatureId, GuestFeatureCo
       'Free member account — sign in with Google or Discord',
     ],
   },
+  dumper_apps: {
+    title: 'BP Dumper',
+    description:
+      'BP Dumper syncs blueprint unlocks from your Game.log and powers Live Mission Tracker. StarOrg-Strings and RSI+ stay available on the other Dumper Apps tabs without signing in.',
+    details: [
+      'Microsoft Store (recommended), Windows exe, or Python scripts — pick one path',
+      'Personal API key from this site after your free member account is approved',
+      'Powers Live Mission Tracker while watch mode runs',
+      'Free member account — sign in with Google or Discord',
+    ],
+  },
 }
 
 export function getGuestFeatureCopy(featureId: FeatureId): GuestFeatureCopy {

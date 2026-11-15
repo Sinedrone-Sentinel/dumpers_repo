@@ -18,7 +18,6 @@ interface AppUserMenuProps {
   showDbActionsButton: boolean
   showAdminPanelButton: boolean
   onOpenSettings: () => void
-  onOpenBpDumper: () => void
   onOpenDbActions: () => void
   onOpenDiscord: () => void
   onOpenAdmin: () => void
@@ -53,7 +52,6 @@ export default function AppUserMenu({
   showDbActionsButton,
   showAdminPanelButton,
   onOpenSettings,
-  onOpenBpDumper,
   onOpenDbActions,
   onOpenDiscord,
   onOpenAdmin,
@@ -201,16 +199,9 @@ export default function AppUserMenu({
                 <Link to="/flight-profile" onClick={close} className={`block ${menuItemClass}`}>
                   Flight Profile
                 </Link>
-                <button
-                  type="button"
-                  onClick={() => {
-                    close()
-                    onOpenBpDumper()
-                  }}
-                  className={menuItemClass}
-                >
+                <Link to="/dumper-apps" onClick={close} className={`block ${menuItemClass}`}>
                   {DUMPER_APPS_DISPLAY_NAME}
-                </button>
+                </Link>
                 <Link to="/discord-subscribe" onClick={close} className={`block ${menuItemClass}`}>
                   Webhooks
                 </Link>

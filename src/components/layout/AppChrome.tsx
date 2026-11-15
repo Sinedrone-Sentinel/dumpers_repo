@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useRouterState } from '@tanstack/react-router'
+import { Link, useRouterState } from '@tanstack/react-router'
 import SiteBrandTitle from '../SiteBrandTitle'
 import { SITE_COPYRIGHT } from '../../config/site'
 import DfpOptOutFooter from './DfpOptOutFooter'
@@ -57,7 +57,6 @@ interface AppChromeProps {
   onOpenQuestionnairesAdmin?: () => void
   onOpenTickerAdmin?: () => void
   onOpenSettings: () => void
-  onOpenBpDumper: () => void
   onOpenDbActions: () => void
   onOpenDiscord: () => void
   onOpenAdmin: () => void
@@ -83,7 +82,6 @@ export default function AppChrome({
   onOpenQuestionnairesAdmin,
   onOpenTickerAdmin,
   onOpenSettings,
-  onOpenBpDumper,
   onOpenDbActions,
   onOpenDiscord,
   onOpenAdmin,
@@ -176,6 +174,13 @@ export default function AppChrome({
               {isGuestPreview ? (
                 <>
                   <RequestServicesControl disabled={false} />
+                  <Link
+                    to="/dumper-apps"
+                    search={{ app: 'starorg-strings' }}
+                    className="site-chrome-control inline-flex items-center !rounded-lg !px-3 !py-1.5 text-xs font-medium whitespace-nowrap"
+                  >
+                    Dumper Apps
+                  </Link>
                   <SignInMenu />
                 </>
               ) : (
@@ -196,7 +201,6 @@ export default function AppChrome({
                     showDbActionsButton={showDbActionsButton}
                     showAdminPanelButton={showAdminPanelButton}
                     onOpenSettings={onOpenSettings}
-                    onOpenBpDumper={onOpenBpDumper}
                     onOpenDbActions={onOpenDbActions}
                     onOpenDiscord={onOpenDiscord}
                     onOpenAdmin={onOpenAdmin}
