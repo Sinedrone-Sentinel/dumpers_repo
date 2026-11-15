@@ -545,7 +545,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Only one BP Dumper runs at a time — the Store app, **DumperApps.exe**, and `dumper.py` share one lock. A second copy exits and tells you to close the other window',
       'While watch mode runs, use Live Tracker to see active missions and remaining pool blueprints',
       'Successful imports appear under BP Dumper — Success in the notification bell',
-      '**StarOrg-Strings** (StarOrg Codex by Zedwil) — download cards always load from the latest GitHub release (Windows installer/MSI/zip, Linux AppImage/deb/rpm/CLI, checksums and signatures)',
+      '**StarOrg-Strings** (StarOrg Codex by Zedwil) — download cards always load from the latest GitHub release (Windows installer/MSI/zip, Linux AppImage/deb/rpm/CLI)',
       '**RSI+** — Chrome Web Store install for Zedwil\'s RSI site companion (Spectrum, hangar, store, CCU tools)',
     ],
     relatesTo: ['Blueprints', 'Mission Tracker', 'Live Mission Tracker', 'Mining Tracker', 'Notifications', 'Settings'],

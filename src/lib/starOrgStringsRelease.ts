@@ -32,6 +32,19 @@ function formatBytes(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
 }
 
+/** Skip signatures, checksums, notices, and machine manifests — members only need installers. */
+function shouldSkipAsset(name: string): boolean {
+  const lower = name.toLowerCase()
+  if (lower.endsWith('.sig')) return true
+  if (lower.endsWith('.md')) return true
+  if (lower === 'sha256sums' || lower.startsWith('sha256sums')) return true
+  if (lower.includes('checksum')) return true
+  if (lower === 'latest.json') return true
+  if (lower.includes('third_party')) return true
+  if (/^source code/i.test(name)) return true
+  return false
+}
+
 function classifyAsset(name: string): {
   label: string
   description: string
@@ -40,43 +53,6 @@ function classifyAsset(name: string): {
   rank: number
 } {
   const lower = name.toLowerCase()
-  // Signatures / checksums / notices first so package-name heuristics do not steal them.
-  if (lower.endsWith('.sig')) {
-    return {
-      label: name,
-      description: 'Signature file for the matching package.',
-      kind: 'meta',
-      recommended: false,
-      rank: 80,
-    }
-  }
-  if (lower === 'sha256sums' || lower.startsWith('sha256sums')) {
-    return {
-      label: 'SHA256SUMS',
-      description: 'Checksums for every asset in this release.',
-      kind: 'meta',
-      recommended: false,
-      rank: 70,
-    }
-  }
-  if (lower === 'latest.json') {
-    return {
-      label: 'latest.json',
-      description: 'Machine-readable latest-release manifest.',
-      kind: 'meta',
-      recommended: false,
-      rank: 71,
-    }
-  }
-  if (lower.includes('third_party') || lower.endsWith('.md')) {
-    return {
-      label: name,
-      description: 'License / third-party notices for this release.',
-      kind: 'meta',
-      recommended: false,
-      rank: 90,
-    }
-  }
   // Windows installers (setup.exe preferred)
   if (lower.endsWith('-setup.exe') || (lower.includes('setup') && lower.endsWith('.exe'))) {
     return {
@@ -177,7 +153,7 @@ export async function fetchStarOrgStringsRelease(): Promise<StarOrgStringsReleas
     const name = String(asset.name || '').trim()
     const url = String(asset.browser_download_url || '').trim()
     if (!name || !url) continue
-    if (/^source code/i.test(name)) continue
+    if (shouldSkipAsset(name)) continue
     const info = classifyAsset(name)
     const sizeBytes = Number(asset.size) || 0
     assets.push({
