@@ -1202,7 +1202,10 @@ export function parseSiteLoot(options = {}) {
     }
   }
 
-  const itemList = [...items.values()].sort((a, b) => a.displayName.localeCompare(b.displayName))
+  const rawList = [...items.values()]
+  const itemList = collapseItemsByExactDisplayName(rawList).sort((a, b) =>
+    a.displayName.localeCompare(b.displayName),
+  )
   const byLocation = {}
   for (const loc of locationTypes) {
     byLocation[loc.id] = itemList
@@ -1235,6 +1238,81 @@ export function parseSiteLoot(options = {}) {
       poolCount: pools.size,
       npcGearItemCount: itemList.filter((i) => i.kind === 'npc_gear').length,
       clothingItemCount: itemList.filter((i) => i.kind === 'clothing').length,
+      collapsedDuplicateNames: rawList.length - itemList.length,
     },
   }
+}
+
+/** Prefer a stable canonical entity key when merging same-name variants. */
+function preferLootEntityKey(a, b) {
+  const score = (key) => {
+    const k = String(key || '')
+    let s = 0
+    if (k.startsWith('npc:')) s += 100
+    if (/destroyed/i.test(k)) s += 50
+    if (/_default_/i.test(k)) s += 20
+    if (/_triggerfish/i.test(k)) s += 10
+    s += k.length / 1000
+    return s
+  }
+  const sa = score(a)
+  const sb = score(b)
+  if (sa !== sb) return sa < sb ? a : b
+  return String(a).localeCompare(String(b)) <= 0 ? a : b
+}
+
+/**
+ * Collapse rows that share the same kind + display name (case-insensitive).
+ * Per-location rates are summed so the card reflects any variant with that name.
+ * aliasKeys keeps every entity class for blueprint gold-chest lookup.
+ */
+function collapseItemsByExactDisplayName(itemList) {
+  /** @type {Map<string, any>} */
+  const groups = new Map()
+  for (const item of itemList) {
+    const nameKey = String(item.displayName || '')
+      .trim()
+      .toLowerCase()
+    if (!nameKey) continue
+    const groupKey = `${item.kind}\0${nameKey}`
+    let group = groups.get(groupKey)
+    if (!group) {
+      group = {
+        key: item.key,
+        displayName: item.displayName,
+        kind: item.kind,
+        kindLabel: item.kindLabel,
+        stats: item.stats,
+        locations: new Map(),
+        aliasKeys: new Set([item.key]),
+      }
+      groups.set(groupKey, group)
+    } else {
+      group.key = preferLootEntityKey(group.key, item.key)
+      if (!group.stats && item.stats) group.stats = item.stats
+      group.aliasKeys.add(item.key)
+    }
+    for (const hit of item.locations || []) {
+      const prev = group.locations.get(hit.locationTypeId) || 0
+      group.locations.set(hit.locationTypeId, prev + (Number(hit.ratePct) || 0))
+    }
+  }
+
+  return [...groups.values()].map((group) => {
+    const aliases = [...group.aliasKeys].filter((k) => k !== group.key).sort()
+    return {
+      key: group.key,
+      displayName: group.displayName,
+      kind: group.kind,
+      kindLabel: group.kindLabel,
+      stats: group.stats,
+      ...(aliases.length ? { aliasKeys: aliases } : {}),
+      locations: [...group.locations.entries()]
+        .map(([locationTypeId, ratePct]) => ({
+          locationTypeId,
+          ratePct: Math.round(ratePct * 1000) / 1000,
+        }))
+        .sort((a, b) => a.locationTypeId.localeCompare(b.locationTypeId)),
+    }
+  })
 }

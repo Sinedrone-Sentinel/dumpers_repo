@@ -33,6 +33,8 @@ export type SiteLootLocationHit = {
 
 export type SiteLootItem = {
   key: string
+  /** Extra entity classes merged into this exact display-name row. */
+  aliasKeys?: string[]
   displayName: string
   kind: SiteLootKind | string
   kindLabel: string

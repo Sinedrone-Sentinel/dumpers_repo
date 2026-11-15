@@ -3242,7 +3242,15 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
     key: 'cool_aegs_s01_bracer_scitem',
     locations: [{ locationTypeId: 'olp_paf', ratePct: 0.5 }],
   }
-  const index = lootLookup.buildLootEntityIndex([crate, npcOnly, emptyLocs, scitem])
+  const collapsedPlushie = {
+    key: 'carryable_2h_cy_toy_plushie_penguin_1_a',
+    aliasKeys: [
+      'carryable_2h_cy_toy_plushie_penguin_2_a',
+      'carryable_2h_cy_toy_plushie_penguin_1_destroyed_a',
+    ],
+    locations: [{ locationTypeId: 'siege_of_orison', ratePct: 0.075 }],
+  }
+  const index = lootLookup.buildLootEntityIndex([crate, npcOnly, emptyLocs, scitem, collapsedPlushie])
   check(
     lootLookup.blueprintHasLootLocations(index, 'behr_rifle_ballistic_01') &&
       lootLookup.lookupLootItemInIndex(index, 'behr_rifle_ballistic_01').locations.length === 2,
@@ -3258,6 +3266,11 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
     lootLookup.blueprintHasLootLocations(index, 'cool_aegs_s01_bracer') &&
       lootLookup.blueprintHasLootLocations(index, 'cool_aegs_s01_bracer_scitem'),
     'loot chest: entityClass matches with or without _scitem suffix',
+  )
+  check(
+    lootLookup.blueprintHasLootLocations(index, 'carryable_2h_cy_toy_plushie_penguin_2_a') &&
+      lootLookup.blueprintHasLootLocations(index, 'carryable_2h_cy_toy_plushie_penguin_1_destroyed_a'),
+    'loot chest: collapsed same-name aliasKeys still resolve',
   )
   const afterRemoveSoo = lootLookup.buildLootEntityIndex([
     {

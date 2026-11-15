@@ -1,36 +1,53 @@
 /** Minimal loot row shape for blueprint ↔ Loot Finder chest lookup. */
 export type LootLookupItem = {
   key: string
+  /** Extra entity classes collapsed into this display-name row. */
+  aliasKeys?: string[]
   locations: { locationTypeId: string; ratePct: number }[]
+}
+
+function indexEntityKey(map: Map<string, LootLookupItem>, key: string, item: LootLookupItem, allowOverwrite: boolean) {
+  const raw = String(key || '').trim()
+  if (!raw) return
+  const bare = raw.startsWith('npc:') ? raw.slice(4) : raw
+  if (!bare) return
+  const write = (k: string) => {
+    if (!k) return
+    if (allowOverwrite || !map.has(k)) map.set(k, item)
+  }
+  write(bare)
+  if (bare.endsWith('_scitem')) {
+    write(bare.slice(0, -'_scitem'.length))
+  } else {
+    write(`${bare}_scitem`)
+  }
 }
 
 /**
  * Index loot rows by entity class. Crate loot wins over NPC-only (`npc:`) rows.
+ * Collapsed same-name rows register aliasKeys so every variant still finds the chest.
  * Only rows with at least one tracked location are indexed (chest must disappear
  * when a blueprint leaves every Loot Finder location after rebake).
  */
 export function buildLootEntityIndex(items: LootLookupItem[]): Map<string, LootLookupItem> {
   const map = new Map<string, LootLookupItem>()
+  // Pass 1: crate / non-npc rows (and their aliases).
   for (const item of items) {
     if (!item?.locations?.length) continue
-    if (item.key.startsWith('npc:')) {
-      const bare = item.key.slice(4)
-      if (!bare) continue
-      if (!map.has(bare)) map.set(bare, item)
-      if (bare.endsWith('_scitem')) {
-        const stripped = bare.slice(0, -'_scitem'.length)
-        if (stripped && !map.has(stripped)) map.set(stripped, item)
-      } else if (!map.has(`${bare}_scitem`)) {
-        map.set(`${bare}_scitem`, item)
-      }
-      continue
+    if (item.key.startsWith('npc:')) continue
+    indexEntityKey(map, item.key, item, true)
+    for (const alias of item.aliasKeys || []) {
+      if (String(alias).startsWith('npc:')) continue
+      indexEntityKey(map, alias, item, true)
     }
-    map.set(item.key, item)
-    if (item.key.endsWith('_scitem')) {
-      const stripped = item.key.slice(0, -'_scitem'.length)
-      if (stripped) map.set(stripped, item)
-    } else {
-      map.set(`${item.key}_scitem`, item)
+  }
+  // Pass 2: NPC-only rows — fill gaps only.
+  for (const item of items) {
+    if (!item?.locations?.length) continue
+    if (!item.key.startsWith('npc:')) continue
+    indexEntityKey(map, item.key, item, false)
+    for (const alias of item.aliasKeys || []) {
+      indexEntityKey(map, alias, item, false)
     }
   }
   return map
