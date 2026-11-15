@@ -129,12 +129,8 @@ export default function DumperAppsPage() {
   return (
     <FeaturePageLayout
       title={DUMPER_APPS_DISPLAY_NAME}
-      seoIntro="BP Dumper, StarOrg-Strings (StarOrg Codex), and the RSI+ Chrome extension — StarOrg and RSI+ are open in Offline Mode; BP Dumper needs a free member account."
-      meta={
-        <span className="text-slate-400">
-          Companion tools by Dumper&apos;s Repo and StarOrg — BP Dumper needs sign-in
-        </span>
-      }
+      seoIntro="BP Dumper, StarOrg Codex, and the RSI+ Chrome extension — companion apps for Dumper's Repo."
+      meta={<span className="text-slate-400">Companion tools by Dumper&apos;s Repo and StarOrg</span>}
     >
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[14rem_1fr] min-w-0">
         <nav

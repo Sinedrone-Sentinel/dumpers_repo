@@ -13,9 +13,6 @@ export default function RsiPlusPanel() {
           and buyback explorer, store prices, wishlist alerts, and a CCU planner. It runs in your
           browser with the RSI session you already use.
         </p>
-        <p className="text-xs text-slate-500 leading-relaxed">
-          Install from the Chrome Web Store. Listing is static (not polled from GitHub).
-        </p>
       </section>
 
       <section className="space-y-3">

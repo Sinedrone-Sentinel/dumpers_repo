@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import {
-  STARORG_STRINGS_DISPLAY_NAME,
   STARORG_STRINGS_PRODUCT_NAME,
   STARORG_STRINGS_RELEASES_PAGE,
 } from '../../config/dumperApps'
@@ -60,15 +59,14 @@ export default function StarOrgStringsPanel() {
       <section className="space-y-2">
         <h3 className="text-sm font-semibold text-white">What it is</h3>
         <p className="text-sm text-slate-400 leading-relaxed">
-          <strong className="text-slate-300">{STARORG_STRINGS_PRODUCT_NAME}</strong> ({STARORG_STRINGS_DISPLAY_NAME})
-          is a Star Citizen localization helper from StarOrg — clearer component tags, ship/weapon stats
-          blocks, and mission facts in your local <span className="font-mono text-slate-300">global.ini</span>,
-          built from your own install and removable in one click. Desktop app for Windows and Linux, plus
-          a CLI. No account. Offline by default.
+          <strong className="text-slate-300">{STARORG_STRINGS_PRODUCT_NAME}</strong> is a Star Citizen
+          localization helper from StarOrg — clearer component tags, ship/weapon stats blocks, and mission
+          facts in your local <span className="font-mono text-slate-300">global.ini</span>, built from your
+          own install and removable in one click. Desktop app for Windows and Linux, plus a CLI. No
+          account. Offline by default.
         </p>
         <p className="text-xs text-slate-500 leading-relaxed">
-          Unofficial fan tool — not affiliated with Cloud Imperium / RSI. Downloads below always track
-          the latest GitHub release.
+          Unofficial fan tool — not affiliated with Cloud Imperium / RSI.
         </p>
       </section>
 
@@ -96,7 +94,7 @@ export default function StarOrgStringsPanel() {
             <AppDownloadCard
               href={STARORG_STRINGS_RELEASES_PAGE}
               label="Open GitHub Releases"
-              description="Browse every build and checksum on GitHub."
+              description="Browse builds on GitHub."
               recommended
             />
           </div>
