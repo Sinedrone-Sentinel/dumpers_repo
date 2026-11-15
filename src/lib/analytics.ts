@@ -319,7 +319,7 @@ export const ANALYTICS_SUB_TOOL_LABELS: Record<string, string> = {
   by_item: 'By Item',
   by_location: 'By Location',
   bp_dumper: 'BP Dumper',
-  starorg_strings: 'StarOrg-Strings',
+  starorg_strings: 'StarOrg Codex',
   rsi_plus: 'RSI+',
   welcome: 'Overview',
   components: 'Components',
