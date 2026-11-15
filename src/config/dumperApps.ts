@@ -10,7 +10,7 @@ export const DUMPER_APP_TABS: {
   shortLabel: string
 }[] = [
   { id: 'bp-dumper', label: 'BP Dumper', shortLabel: 'BP Dumper' },
-  { id: 'starorg-strings', label: 'StarOrg-Strings', shortLabel: 'StarOrg' },
+  { id: 'starorg-strings', label: 'StarOrg Codex', shortLabel: 'Codex' },
   { id: 'rsi-plus', label: 'RSI+', shortLabel: 'RSI+' },
 ]
 
