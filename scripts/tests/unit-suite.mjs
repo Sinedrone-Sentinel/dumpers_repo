@@ -54,6 +54,7 @@ const modules = [
   'src/lib/tickerLinks.ts',
   'src/lib/flightProfile/catalog.ts',
   'src/lib/flightProfile/parseProfile.ts',
+  'src/lib/lootBlueprintLookup.ts',
 ]
 
 console.log('Unit tests: bundling modules...')
@@ -3222,5 +3223,54 @@ check(
     flightProfile.stableButton(other, 'pad:2', [true], 80).button === null,
   'a controller that flips 1 and 7 is ignored, and another controller still counts',
 )
+
+const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLookup.mjs')).href)
+{
+  const crate = {
+    key: 'behr_rifle_ballistic_01',
+    locations: [
+      { locationTypeId: 'lazarus', ratePct: 1 },
+      { locationTypeId: 'siege_of_orison', ratePct: 2 },
+    ],
+  }
+  const npcOnly = {
+    key: 'npc:orc_armor_light_core_01',
+    locations: [{ locationTypeId: 'siege_of_orison', ratePct: 5 }],
+  }
+  const emptyLocs = { key: 'gone_item', locations: [] }
+  const scitem = {
+    key: 'cool_aegs_s01_bracer_scitem',
+    locations: [{ locationTypeId: 'olp_paf', ratePct: 0.5 }],
+  }
+  const index = lootLookup.buildLootEntityIndex([crate, npcOnly, emptyLocs, scitem])
+  check(
+    lootLookup.blueprintHasLootLocations(index, 'behr_rifle_ballistic_01') &&
+      lootLookup.lookupLootItemInIndex(index, 'behr_rifle_ballistic_01').locations.length === 2,
+    'loot chest: blueprint in any tracked location keeps the chest with all sites',
+  )
+  check(
+    lootLookup.blueprintHasLootLocations(index, 'orc_armor_light_core_01') &&
+      !lootLookup.blueprintHasLootLocations(index, 'gone_item') &&
+      !lootLookup.blueprintHasLootLocations(index, 'never_listed'),
+    'loot chest: NPC-only gear shows the chest; zero locations or unknown entity hides it',
+  )
+  check(
+    lootLookup.blueprintHasLootLocations(index, 'cool_aegs_s01_bracer') &&
+      lootLookup.blueprintHasLootLocations(index, 'cool_aegs_s01_bracer_scitem'),
+    'loot chest: entityClass matches with or without _scitem suffix',
+  )
+  const afterRemoveSoo = lootLookup.buildLootEntityIndex([
+    {
+      key: 'behr_rifle_ballistic_01',
+      locations: [{ locationTypeId: 'lazarus', ratePct: 1 }],
+    },
+    { key: 'npc:orc_armor_light_core_01', locations: [] },
+  ])
+  check(
+    lootLookup.blueprintHasLootLocations(afterRemoveSoo, 'behr_rifle_ballistic_01') &&
+      !lootLookup.blueprintHasLootLocations(afterRemoveSoo, 'orc_armor_light_core_01'),
+    'loot chest: removing one location keeps the chest if another site remains; drops it when none remain',
+  )
+}
 
 console.log(`Unit tests: ${pass} passed`)

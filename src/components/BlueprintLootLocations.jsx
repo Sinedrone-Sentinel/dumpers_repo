@@ -58,7 +58,11 @@ function LootLocationsModal({ item, onClose }) {
   )
 }
 
-/** Dumpers-gold treasure chest — opens loot locations when the BP appears in Loot Finder. */
+/**
+ * Dumpers-gold treasure chest — opens loot locations when the BP appears in any
+ * tracked Loot Finder site. Visibility follows the bake: adding a location can
+ * show new chests; removing a location hides the chest only when no sites remain.
+ */
 export default function BlueprintLootLocations({ entityClass, className = '' }) {
   const [open, setOpen] = useState(false)
   const lootItem = useMemo(() => lootItemForEntityClass(entityClass), [entityClass])

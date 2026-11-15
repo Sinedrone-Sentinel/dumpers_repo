@@ -34,7 +34,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'A few recipes need a minimum material quality (e.g. Clearcut Module needs Q800 Iron and Copper). Those slots show **Min Q###** and only offer qualities at or above it — on Blueprints, Can Craft, Crafting Wishlist and WTS/WTB listings. Can Craft only counts stock that meets the minimum, and older saved recipes or listings below it show a **Below minimum quality** tag',
       'When signed in, opening a material\'s Quality Band dropdown shows how much of that resource you hold in each band (e.g. 1.000scu, or whole units like 12 units for gems) from My Resources. Purchased (Q0) stock is not counted. The same amounts appear in the Can Craft blueprint view, following the selected location chip',
       'Add a blueprint to your order draft from the detail view — continue on My Listings',
-      'A gold treasure-chest mark on a blueprint card opens Loot Finder locations (and relative rates) when that item can drop as site loot',
+      'A gold treasure-chest mark on a blueprint card (and in the detail view) opens Loot Finder locations and relative rates when that item can drop at any tracked site — the mark updates when loot locations are added or removed, and only disappears when the item is no longer in any of them',
       '**RS Track** on a blueprint card or detail modal footer adds that blueprint\'s mineable ores to **Mining Tracker → RS Tracker** in one click — skips ores you already track',
       'Optional Display setting: group FPS weapon and armor variants into expandable family cards (off by default; only affects visible FPS items on this page)',
       'Acquired marks from BP Dumper sync here automatically — set up BP Dumper on Mission Tracker',
