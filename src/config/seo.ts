@@ -110,7 +110,7 @@ const pages: Record<string, SeoPageConfig> = {
   '/loot-finder': {
     title: "Loot Finder | Dumper's Repo",
     description:
-      'Search Star Citizen site loot by item or named site for Lazarus, Onyx, OLP/PAF, Checkmate / Orbituary / Ruin Contested Zones, Executive Hangar, and QV Investigation.',
+      'Search Star Citizen site loot by item or named site for Lazarus, Onyx, OLP/PAF, Checkmate / Orbituary / Ruin Contested Zones, Executive Hangar, QV Investigation, and Siege of Orison.',
     canonicalPath: '/loot-finder/',
   },
   '/executive-hangar': {

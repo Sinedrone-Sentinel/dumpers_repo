@@ -1,5 +1,10 @@
 import siteLootData from '../data/game-site-loot.json'
 import type { BlueprintDisplayTag, BlueprintTagKind } from './blueprintTaxonomy'
+import {
+  blueprintHasLootLocations as blueprintHasLootLocationsInIndex,
+  buildLootEntityIndex,
+  lookupLootItemInIndex,
+} from './lootBlueprintLookup'
 
 export type SiteLootKind =
   | 'fps_weapon'
@@ -148,21 +153,20 @@ export function lootStatChips(stats?: Record<string, unknown> | null): Blueprint
   return tags
 }
 
-const lootByEntityClass = new Map<string, SiteLootItem>()
-for (const item of SITE_LOOT_ITEMS) {
-  if (item.key.startsWith('npc:')) {
-    const bare = item.key.slice(4)
-    if (!lootByEntityClass.has(bare)) lootByEntityClass.set(bare, item)
-    continue
-  }
-  lootByEntityClass.set(item.key, item)
+const lootByEntityClass = buildLootEntityIndex(SITE_LOOT_ITEMS)
+
+/**
+ * Loot Finder row for a blueprint entity class (crate loot preferred over NPC-only).
+ * Returns null when the item is not in any tracked location — that is when the
+ * gold chest must not render on Blueprint cards / details.
+ */
+export function lootItemForEntityClass(entityClass?: string | null): SiteLootItem | null {
+  return lookupLootItemInIndex(lootByEntityClass, entityClass) as SiteLootItem | null
 }
 
-/** Loot Finder row for a blueprint entity class (crate loot preferred over NPC-only). */
-export function lootItemForEntityClass(entityClass?: string | null): SiteLootItem | null {
-  const key = String(entityClass || '').trim()
-  if (!key) return null
-  return lootByEntityClass.get(key) ?? lootByEntityClass.get(`${key}_scitem`) ?? null
+/** True when this blueprint entity appears in at least one tracked Loot Finder location. */
+export function blueprintHasLootLocations(entityClass?: string | null): boolean {
+  return blueprintHasLootLocationsInIndex(lootByEntityClass, entityClass)
 }
 
 /** Every item gets exactly one chip id so no row is orphaned behind All. */
