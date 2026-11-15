@@ -521,10 +521,11 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     id: 'bp-dumper',
     title: 'Dumper Apps',
     description:
-      'Member page for companion apps — BP Dumper, StarOrg-Strings, and RSI+ — with downloads and setup.',
+      'Companion apps — BP Dumper, StarOrg-Strings, and RSI+ — with downloads and setup. StarOrg and RSI+ work in Offline Mode; BP Dumper needs a signed-in approved member.',
     details: [
-      'Open **Dumper Apps** from Tools in the sidebar, Mission Tracker / Live Tracker, or the avatar menu (signed-in members)',
+      'Open **Dumper Apps** from Tools in the sidebar, the header **Dumper Apps** button (Offline Mode), Mission Tracker / Live Tracker, or the avatar menu (signed-in members)',
       'Left tabs separate each product: **BP Dumper**, **StarOrg-Strings**, and **RSI+**',
+      '**Offline Mode:** StarOrg-Strings and RSI+ tabs are open without signing in; the BP Dumper tab shows a sign-in prompt until you have an approved member account',
       '**BP Dumper** — desktop app that reads your local Star Citizen Game.log (not CIG servers) to sync blueprint unlocks and power Live Mission Tracker',
       '**Windows (recommended):** install **BP Dumper** from the Microsoft Store. You choose the LIVE folder (the app does not scan your drives). It stays idle until you press Start. Paste your API key, then Start. Updates come from the Store',
       '**Windows (alternate):** download **DumperApps.exe** — auto-detects LIVE (or paste a path), then paste your API key. This build is **unsigned**; Windows Defender / SmartScreen often block it (false positive)',

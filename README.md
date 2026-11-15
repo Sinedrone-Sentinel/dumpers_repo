@@ -52,7 +52,7 @@ Member-facing how-tos live in the in-app **Info Archive** (`/archive`) and the p
 | `/ship-shop` | Fuzy's Ship Shop | Offline + everyone |
 | `/loot-finder` | Loot Finder | Offline + everyone |
 | `/executive-hangar` | Executive Timer | Offline + everyone |
-| `/dumper-apps` | Dumper Apps (BP Dumper, StarOrg-Strings, RSI+) | Approved members |
+| `/dumper-apps` | Dumper Apps (BP Dumper, StarOrg-Strings, RSI+) | Offline (StarOrg/RSI+); BP Dumper tab needs approved member |
 | `/orders` | My Listings | Approved members |
 | `/bazaar` | The Bazaar | Approved members (offline: open-listing count only) |
 | `/archive` | Info Archive | Offline + members |
@@ -65,7 +65,7 @@ Member-facing how-tos live in the in-app **Info Archive** (`/archive`) and the p
 | `/analytics` | Site Analytics | Super-admins |
 | `/guest-locked` | Feature preview gate | Offline users (locked features) |
 
-Header (signed-in): **?** Help, **Friends**, **Request Services** (RSI verified). Avatar menu: **Account** (Settings, Ship Hangar, Dumper Apps, Webhooks, Partnership when RSI verified, Contribute), **Help** (Support for members/officers), **Officer** (Support Dashboard, Admin Panel, Officer Tools), **Site admin** (super-admins: Site Analytics, Discord, Questionnaires, Updates Ticker, DB Actions, Contributor Team).
+Header (signed-in): **?** Help, **Friends**, **Request Services** (RSI verified). Avatar menu: **Account** (Settings, Ship Hangar, Dumper Apps, Webhooks, Partnership when RSI verified, Contribute), **Help** (Support for members/officers), **Officer** (Support Dashboard, Admin Panel, Officer Tools), **Site admin** (super-admins: Site Analytics, Discord, Questionnaires, Updates Ticker, DB Actions, Contributor Team). Offline Mode header: **Dumper Apps** (opens StarOrg/RSI+; BP Dumper tab locked) + **Sign in**.
 
 ---
 
@@ -356,7 +356,7 @@ The production build regenerates [`public/archive-guide.html`](public/archive-gu
 
 Signed-out visitors land on the public home page first. Choose **Browse tools offline** (or **Continue in Offline Mode**). That choice is remembered in this browser, so a bookmark to a tool opens that tool instead of the sign-in page.
 
-- Blueprints (acquired marks), Wikelo, Mission Tracker, Resource Tracker, Mining Tracker (RS + Guide + Caves), UEX Lookup, Shopping Cart, Fuzy's Ship Shop, Loot Finder, Executive Timer, Archive, Bazaar listing-count teaser
+- Blueprints (acquired marks), Wikelo, Mission Tracker, Resource Tracker, Mining Tracker (RS + Guide + Caves), UEX Lookup, Shopping Cart, Fuzy's Ship Shop, Loot Finder, Executive Timer, Archive, Bazaar listing-count teaser, Dumper Apps (StarOrg-Strings + RSI+; BP Dumper tab locked)
 
 Requires a free member account:
 

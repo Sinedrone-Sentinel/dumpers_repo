@@ -152,7 +152,7 @@ const pages: Record<string, SeoPageConfig> = {
   '/dumper-apps': {
     title: "Dumper Apps — BP Dumper, StarOrg-Strings & RSI+ | Dumper's Repo",
     description:
-      'Download BP Dumper, StarOrg-Strings, and the RSI+ Chrome extension. Member sign-in required.',
+      'Download StarOrg-Strings and RSI+ in Offline Mode; BP Dumper downloads and API key need a free member account.',
     canonicalPath: '/dumper-apps/',
   },
   '/privacy': {

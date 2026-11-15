@@ -78,9 +78,10 @@ const FEATURES: FeatureCard[] = [
   },
   {
     title: 'Dumper Apps',
-    body: 'BP Dumper for Game.log blueprint sync, StarOrg-Strings for clearer in-game text, and RSI+ for the Chrome RSI companion. Sign-in required.',
-    action: 'signin',
-    cta: 'Sign in for Dumper Apps →',
+    body: 'StarOrg-Strings and RSI+ downloads in Offline Mode. BP Dumper for Game.log blueprint sync needs a free member account.',
+    href: '/dumper-apps',
+    action: 'offline',
+    cta: 'Open Dumper Apps offline →',
   },
   {
     title: "Fuzy's Ship Shop",

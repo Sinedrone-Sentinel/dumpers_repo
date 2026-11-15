@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useRouterState } from '@tanstack/react-router'
+import { Link, useRouterState } from '@tanstack/react-router'
 import SiteBrandTitle from '../SiteBrandTitle'
 import { SITE_COPYRIGHT } from '../../config/site'
 import DfpOptOutFooter from './DfpOptOutFooter'
@@ -174,6 +174,13 @@ export default function AppChrome({
               {isGuestPreview ? (
                 <>
                   <RequestServicesControl disabled={false} />
+                  <Link
+                    to="/dumper-apps"
+                    search={{ app: 'starorg-strings' }}
+                    className="site-chrome-control inline-flex items-center !rounded-lg !px-3 !py-1.5 text-xs font-medium whitespace-nowrap"
+                  >
+                    Dumper Apps
+                  </Link>
                   <SignInMenu />
                 </>
               ) : (

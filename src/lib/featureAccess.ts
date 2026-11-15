@@ -76,7 +76,8 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
       featureId === 'shop_cart' ||
       featureId === 'ship_shop' ||
       featureId === 'executive_hangar' ||
-      featureId === 'loot_finder'
+      featureId === 'loot_finder' ||
+      featureId === 'dumper_apps'
     )
   }
 
@@ -157,7 +158,8 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
       return ctx.isApproved
 
     case 'dumper_apps':
-      return ctx.isApproved
+      // Page open to any signed-in role; BP Dumper tab still requires approval in UI.
+      return !!ctx.role
 
     default:
       return false
