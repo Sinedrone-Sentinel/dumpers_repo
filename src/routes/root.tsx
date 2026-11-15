@@ -29,6 +29,7 @@ import ShipShopRoute from './ShipShop.index'
 import ExecutiveHangarRoute from './ExecutiveHangar.index'
 import LootFinderRoute from './LootFinder.index'
 import FlightProfileRoute from './FlightProfile.index'
+import DumperAppsRoute from './DumperApps.index'
 import { requireFeature, requireSuperAdmin } from '../lib/routeGuards'
 import type { FeatureId } from '../lib/featureAccess'
 
@@ -266,6 +267,16 @@ const flightProfileRoute = createRoute({
   beforeLoad: requireFeature('flight_profile'),
 })
 
+const dumperAppsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/dumper-apps',
+  component: DumperAppsRoute,
+  beforeLoad: requireFeature('dumper_apps'),
+  validateSearch: (search: Record<string, unknown>) => ({
+    app: typeof search.app === 'string' ? search.app : undefined,
+  }),
+})
+
 export const routeTree = rootRoute.addChildren([
   indexRoute,
   publicBlueprintsRoute,
@@ -295,6 +306,7 @@ export const routeTree = rootRoute.addChildren([
   lootFinderRoute,
   executiveHangarRoute,
   flightProfileRoute,
+  dumperAppsRoute,
 ])
 
 export default routeTree

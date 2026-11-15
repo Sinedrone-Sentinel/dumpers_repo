@@ -4,7 +4,6 @@ import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { DUMPER_APPS_DISPLAY_NAME } from '../config/bpDumper'
 import { useBlueprintData } from './blueprints'
 import { useAuth } from '../contexts/AuthContext'
-import { useBpDumperModal } from '../contexts/BpDumperModalContext'
 import { useBlueprintOrderOverrides } from '../hooks/useBlueprintOrderOverrides'
 import { useTargetList } from '../hooks/useTargetList'
 import { catalogIsReward } from '../lib/blueprintOrderable'
@@ -237,7 +236,6 @@ function formatEmptyMissionMessage(blueprintId: string): string {
 
 export default function TargetsRoute() {
   const { acquiredBlueprints, isApproved, isGuestPreview, user, toggleAcquired } = useAuth()
-  const { openBpDumperModal } = useBpDumperModal()
   const isGuest = isGuestPreview && !user
   const { data: blueprints = [] } = useBlueprintData()
   const { overridesMap } = useBlueprintOrderOverrides()
@@ -380,13 +378,13 @@ export default function TargetsRoute() {
       seoIntro="Track which reputation missions reward crafting blueprints, build a wishlist of recipes you still need, and browse faction contracts by location and standing. Sync unlocks with BP Dumper while you play."
       actions={
         <div className="flex items-center gap-2 flex-wrap">
-          <button
-            type="button"
-            onClick={openBpDumperModal}
+          <Link
+            to="/dumper-apps"
+            search={{ app: 'bp-dumper' }}
             className="site-btn-secondary px-3 py-1.5 text-sm text-amber-300"
           >
             {DUMPER_APPS_DISPLAY_NAME}
-          </button>
+          </Link>
           <Link
             to="/targets/live"
             className="site-btn-primary !rounded-lg !px-3 !py-1.5 text-sm"
@@ -428,7 +426,7 @@ export default function TargetsRoute() {
         </button>
       </div>
 
-      <BpDumperCallout onOpenModal={openBpDumperModal} />
+      <BpDumperCallout />
 
       {isGuest && viewMode === 'tracker' && (
         <div className="mb-4 site-banner-warn text-xs text-amber-200/90">

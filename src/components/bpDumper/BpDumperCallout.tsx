@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react'
+import { Link } from '@tanstack/react-router'
 import { BP_DUMPER_CALLOUT_DISMISS_KEY } from '../../config/bpDumper'
 
 interface BpDumperCalloutProps {
-  onOpenModal: () => void
   className?: string
 }
 
@@ -14,7 +14,7 @@ function readDismissed(): boolean {
   }
 }
 
-export default function BpDumperCallout({ onOpenModal, className = '' }: BpDumperCalloutProps) {
+export default function BpDumperCallout({ className = '' }: BpDumperCalloutProps) {
   const [dismissed, setDismissed] = useState(true)
 
   useEffect(() => {
@@ -43,13 +43,13 @@ export default function BpDumperCallout({ onOpenModal, className = '' }: BpDumpe
         blueprints still to acquire.
       </div>
       <div className="flex items-center gap-2 shrink-0">
-        <button
-          type="button"
-          onClick={onOpenModal}
+        <Link
+          to="/dumper-apps"
+          search={{ app: 'bp-dumper' }}
           className="px-3 py-1.5 rounded-lg text-xs font-medium site-btn-shimmer site-filter-selected-amber whitespace-nowrap"
         >
           Get BP Dumper
-        </button>
+        </Link>
         <button
           type="button"
           onClick={handleDismiss}

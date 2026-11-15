@@ -52,6 +52,7 @@ Member-facing how-tos live in the in-app **Info Archive** (`/archive`) and the p
 | `/ship-shop` | Fuzy's Ship Shop | Offline + everyone |
 | `/loot-finder` | Loot Finder | Offline + everyone |
 | `/executive-hangar` | Executive Timer | Offline + everyone |
+| `/dumper-apps` | Dumper Apps (BP Dumper, StarOrg-Strings, RSI+) | Approved members |
 | `/orders` | My Listings | Approved members |
 | `/bazaar` | The Bazaar | Approved members (offline: open-listing count only) |
 | `/archive` | Info Archive | Offline + members |
@@ -101,7 +102,7 @@ Header (signed-in): **?** Help, **Friends**, **Request Services** (RSI verified)
 - **🔒 Prerequisite chips** — gated contracts link to the intro/starter missions that unlock them
 - **📍 Locality tags** — where you must be for a contract to appear (game `MissionLocality` gates)
 - Investigation, collection, and bounty mission families (including Hathor PAF sites) with color-coded tag legend
-- Header shortcuts: **BP Dumper** (setup + API key) and **Live Tracker** (`/targets/live`)
+- Header shortcuts: **Dumper Apps** (`/dumper-apps` — BP Dumper setup + API key, StarOrg-Strings, RSI+) and **Live Tracker** (`/targets/live`)
 - Dismissible callout explains the BP Dumper + Live Tracker workflow
 
 ### Live Mission Tracker (`/targets/live`)
@@ -378,7 +379,7 @@ Companion desktop app for blueprint farming — watches Star Citizen `Game.log` 
 | **Trust / release integrity** | [`docs/TRUST_AND_SIGNING.md`](docs/TRUST_AND_SIGNING.md) — Scorecard + VirusTotal publish gate + SHA256SUMS/cosign (Authenticode not used) |
 | **Store listing** | Legacy / not in member UI — `apps/bp-dumper-store/` parked; do not advertise |
 | **Releases** | [`scripts/bp-dumper/README.md`](scripts/bp-dumper/README.md) — semantic-release on `feat(dumper)` / `fix(dumper)` commits |
-| **API key** | Per-user key in the BP Dumper modal (Settings / Mission Tracker); sent as `Authorization: Bearer dr_…` |
+| **API key** | Per-user key on **Dumper Apps → BP Dumper** (`/dumper-apps`); sent as `Authorization: Bearer dr_…` |
 | **Webhook** | `log-watcher-webhook` — requires `X-Dumper-Version` (`426` if outdated); migration **174** IP auth-fail `429` + valid-key burst alerts to super-admins (see `SUPABASE_SETUP.md`) |
 | **Updates** | Store app: Microsoft Store. Exe: download new `DumperApps.exe` from GitHub Releases when prompted (no auto-download / self-replace) |
 | **Min game version** | Baked into each dumper build from `src/data/game-build-version.json` after parse |

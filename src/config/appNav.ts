@@ -109,6 +109,13 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
     featureId: 'executive_hangar',
   },
   {
+    id: 'dumper-apps',
+    label: 'Dumper Apps',
+    path: '/dumper-apps',
+    icon: 'dumper',
+    featureId: 'dumper_apps',
+  },
+  {
     id: 'ship-shop',
     label: "Fuzy's Ship Shop",
     path: '/ship-shop',
@@ -149,6 +156,7 @@ export const NAV_GROUPS: { id: string; label: string; itemIds: string[] }[] = [
       'commodity-lookup',
       'loot-finder',
       'executive-hangar',
+      'dumper-apps',
     ],
   },
   {

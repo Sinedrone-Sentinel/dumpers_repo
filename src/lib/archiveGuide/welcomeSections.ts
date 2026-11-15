@@ -46,7 +46,7 @@ export const OFFLINE_MODE_SECTION = {
     '**Mining Ledgers** — crew payout books for mining runs: shares, deductions, and paid status (verified RSI Handle)',
     '**Crafting Wishlists** — up to 10 named lists of blueprints, checked against your stock at the exact qualities you need',
     '**My Listings + The Bazaar** — post one WTB and one WTS listing, buy and sell with other members, deal chat, and trade ratings (verified RSI Handle)',
-    '**BP Dumper + Live Mission Tracker** — blueprint unlocks sync from your game log, and you can watch your active missions live',
+    '**Dumper Apps + Live Mission Tracker** — BP Dumper, StarOrg-Strings, and RSI+ downloads for members; BP Dumper syncs unlocks from your game log while Live Tracker watches active missions',
     '**Friends** — see friends\' blueprint collections and resource stock (verified RSI Handle)',
     '**Partner services** — request help from partner orgs through Request Services (verified RSI Handle)',
     '**Notifications + Discord Webhooks** — trade, friend, and BP Dumper alerts in the site and in your own Discord channel',

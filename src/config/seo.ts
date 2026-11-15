@@ -149,6 +149,12 @@ const pages: Record<string, SeoPageConfig> = {
       "Map a Star Citizen joystick and HOTAS profile onto the VKB or Virpil controls you have mounted. Sign-in required.",
     canonicalPath: '/flight-profile/',
   },
+  '/dumper-apps': {
+    title: "Dumper Apps — BP Dumper, StarOrg-Strings & RSI+ | Dumper's Repo",
+    description:
+      'Download BP Dumper, StarOrg-Strings, and the RSI+ Chrome extension. Member sign-in required.',
+    canonicalPath: '/dumper-apps/',
+  },
   '/privacy': {
     title: "Privacy Policy | Dumper's Repo",
     description:

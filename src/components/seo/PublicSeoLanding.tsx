@@ -77,6 +77,12 @@ const FEATURES: FeatureCard[] = [
     cta: 'Sign in to use Flight Profile →',
   },
   {
+    title: 'Dumper Apps',
+    body: 'BP Dumper for Game.log blueprint sync, StarOrg-Strings for clearer in-game text, and RSI+ for the Chrome RSI companion. Sign-in required.',
+    action: 'signin',
+    cta: 'Sign in for Dumper Apps →',
+  },
+  {
     title: "Fuzy's Ship Shop",
     body: 'Build a ship loadout, compare Pilot DPS and Burst DPS, and see where to buy the parts. Sign in to save ships in My Hangar.',
     href: '/ship-shop',

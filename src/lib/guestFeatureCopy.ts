@@ -50,6 +50,16 @@ export const GUEST_LOCKED_FEATURE_COPY: Partial<Record<FeatureId, GuestFeatureCo
       'Free member account — sign in with Google or Discord',
     ],
   },
+  dumper_apps: {
+    title: 'Dumper Apps',
+    description: 'Download BP Dumper, StarOrg-Strings, and RSI+ — companion apps for Dumper\'s Repo and the verse.',
+    details: [
+      'BP Dumper syncs blueprint unlocks from your Game.log and powers Live Mission Tracker',
+      'StarOrg-Strings (StarOrg Codex) clarifies item, ship, and mission text from your own install',
+      'RSI+ Chrome extension improves Spectrum, hangar, store, and CCU tools on RSI',
+      'Free member account — sign in with Google or Discord',
+    ],
+  },
 }
 
 export function getGuestFeatureCopy(featureId: FeatureId): GuestFeatureCopy {
