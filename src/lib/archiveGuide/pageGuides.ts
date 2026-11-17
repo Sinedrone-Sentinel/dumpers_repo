@@ -545,7 +545,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Only one BP Dumper runs at a time — the Store app, **DumperApps.exe**, and `dumper.py` share one lock. A second copy exits and tells you to close the other window',
       'While watch mode runs, use Live Tracker to see active missions and remaining pool blueprints',
       'Successful imports appear under BP Dumper — Success in the notification bell',
-      '**StarOrg Codex** — download cards always load from the latest GitHub release (Windows installer/MSI/zip, Linux AppImage/deb/rpm/CLI)',
+      '**StarOrg Codex** — on Windows, install from the Microsoft Store (recommended; updates come from the Store). Other builds (Windows installer, MSI, zip, Linux AppImage, deb, rpm, and CLI) load from the latest GitHub release',
       '**RSI+** — Chrome Web Store install for the StarOrg RSI site companion (Spectrum, hangar, store, CCU tools)',
     ],
     relatesTo: ['Blueprints', 'Mission Tracker', 'Live Mission Tracker', 'Mining Tracker', 'Notifications', 'Settings'],

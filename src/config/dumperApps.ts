@@ -33,6 +33,12 @@ export const STARORG_STRINGS_RELEASES_PAGE =
 export const STARORG_STRINGS_DISPLAY_NAME = 'StarOrg-Strings' as const
 export const STARORG_STRINGS_PRODUCT_NAME = 'StarOrg Codex' as const
 
+/** Microsoft Store product StarOrg Codex. Recommended Windows install. */
+export const STARORG_CODEX_STORE_PRODUCT_ID = '9NWHZD6MLMLD' as const
+
+export const STARORG_CODEX_STORE_URL =
+  `https://apps.microsoft.com/detail/${STARORG_CODEX_STORE_PRODUCT_ID}` as const
+
 /**
  * RSI+ Chrome Web Store listing (StarOrg).
  * Extension id jpdcafgdkkhgffohcddpebmippacbide — update if the listing URL changes.
