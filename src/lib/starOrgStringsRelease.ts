@@ -57,9 +57,9 @@ function classifyAsset(name: string): {
   if (lower.endsWith('-setup.exe') || (lower.includes('setup') && lower.endsWith('.exe'))) {
     return {
       label: 'Windows installer (.exe)',
-      description: 'Recommended Windows install of StarOrg Codex.',
+      description: 'Windows installer for StarOrg Codex.',
       kind: 'windows',
-      recommended: true,
+      recommended: false,
       rank: 10,
     }
   }

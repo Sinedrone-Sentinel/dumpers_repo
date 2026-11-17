@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import {
+  STARORG_CODEX_STORE_URL,
   STARORG_STRINGS_PRODUCT_NAME,
   STARORG_STRINGS_RELEASES_PAGE,
 } from '../../config/dumperApps'
@@ -82,6 +83,13 @@ export default function StarOrgStringsPanel() {
           ) : null}
         </div>
 
+        <AppDownloadCard
+          href={STARORG_CODEX_STORE_URL}
+          label="Microsoft Store (Windows)"
+          description="Recommended on Windows. Install StarOrg Codex from the Microsoft Store. Updates come from the Store."
+          recommended
+        />
+
         {loading && !release ? (
           <p className="text-sm text-slate-500">Loading latest release…</p>
         ) : null}
@@ -95,7 +103,6 @@ export default function StarOrgStringsPanel() {
               href={STARORG_STRINGS_RELEASES_PAGE}
               label="Open GitHub Releases"
               description="Browse builds on GitHub."
-              recommended
             />
           </div>
         ) : null}
