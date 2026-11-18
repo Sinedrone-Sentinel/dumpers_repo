@@ -1315,6 +1315,15 @@
   background: rgba(28, 18, 8, 0.92);
 }
 
+/* Nested tree rows. Gimbal rails read lighter; guns and other child ports sit between that and the parent. */
+.ship-shop-section-body .site-card.ship-shop-tree-gimbal {
+  background: rgba(112, 78, 24, 0.9);
+}
+
+.ship-shop-section-body .site-card.ship-shop-tree-port {
+  background: rgba(58, 38, 14, 0.96);
+}
+
 .ship-shop-section-bar:hover {
   background: rgba(255, 255, 255, 0.04);
 }
