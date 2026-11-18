@@ -220,35 +220,30 @@ function compactNumber(value: number | undefined): string | null {
 }
 
 /**
- * Weapons assignment curve. Empty at no pips, 1 at one third of the ship weapon pool,
- * and 1.2 when that pool is full. Knots from the weapons capacitor assignment curve.
+ * Share of the fitted guns' power the assigned weapon pips cover.
+ * No fitted gun power leaves a full magazine when pips are on, and 0 when they are off.
+ * The share never goes above 1.
  */
-export function weaponAssignmentFactor(assignment: number): number {
-  if (!Number.isFinite(assignment) || assignment <= 0) return 0
-  const x = Math.min(1, assignment)
-  const third = 1 / 3
-  if (x <= third) return x / third
-  return 1 + ((x - third) / (1 - third)) * 0.2
+export function weaponShotEfficiency(assignedPips: number, parts: PowerPart[]): number {
+  const sum = weaponPowerSum(parts)
+  const assigned = Number.isFinite(assignedPips) ? Math.max(0, assignedPips) : 0
+  if (sum <= 0) return assigned > 0 ? 1 : 0
+  return Math.min(1, assigned / sum)
 }
 
 /**
  * Shots on the weapon line.
- * A ballistic magazine stays fixed. An energy or distortion gun uses its requested
- * ammo divided by the cost per shot, then the weapons assignment curve of
- * (assigned weapon pips / the ship's weapon pool). A full pool is 1.2 times that
- * base, which is 450 for a Rhino. No weapon pool passes a full assignment.
+ * A ballistic magazine stays fixed. An energy or distortion gun is its magazine
+ * times how much of the fitted guns' power the weapon pips cover.
  */
-export function weaponAmmoCount(stats: Record<string, number> | null | undefined, assignment = 1): number | null {
+export function weaponAmmoCount(stats: Record<string, number> | null | undefined, efficiency = 1): number | null {
   if (!stats) return null
   const ballistic = stats.Weapon_Ammo || 0
   if (ballistic > 0) return ballistic
-  const requested = stats.Weapon_RequestedAmmo || 0
-  const cost = stats.Weapon_RegenCost || 0
-  const capacitor = stats.Weapon_CapacitorShots || 0
-  const rated = requested > 0 && cost > 0 ? requested / cost : capacitor > 0 ? capacitor / 1.2 : 0
-  if (rated <= 0) return null
-  const shots = rated * weaponAssignmentFactor(assignment)
-  return Math.round((shots + Number.EPSILON) * 10) / 10
+  const magazine = stats.Weapon_CapacitorShots || 0
+  if (magazine <= 0) return null
+  const factor = Number.isFinite(efficiency) ? Math.min(1, Math.max(0, efficiency)) : 0
+  return Math.round(magazine * factor)
 }
 
 export function weaponAmmoLabel(stats: Record<string, number> | null | undefined, assignment = 1): string | null {

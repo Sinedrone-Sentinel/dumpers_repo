@@ -58,6 +58,7 @@ import {
   shieldPowerFactor,
   togglePowerColumn,
   weaponAmmoLabel,
+  weaponShotEfficiency,
   weaponBurstDps,
   weaponStatBits,
   wrapPipBlocks,
@@ -838,8 +839,7 @@ export default function ShipShopPage() {
   const power = resolvedPower(columns, build.power, generated)
   const weaponColumn = columns.find((column) => column.id === 'weapons')
   const weaponSelected = weaponColumn ? (power[weaponColumn.id] || 0) : 0
-  const weaponPool = ship?.weaponPowerPool || 0
-  const weaponAssignment = weaponPool > 0 ? Math.min(weaponSelected, weaponPool) / weaponPool : 1
+  const weaponAssignment = weaponColumn ? weaponShotEfficiency(weaponSelected, powerParts) : 1
   const remaining = Math.max(0, generated - powerUsed(columns, power))
   const snapshot = snapshotForBuild(ship, build.ports, build.power)
   const shopCart = store.cart || []
