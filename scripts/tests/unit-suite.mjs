@@ -2503,6 +2503,16 @@ check(
     shipShopMath.rackLoadLine([{ name: 'a', minSize: 2, maxSize: 2 }, { name: 'b', minSize: 2, maxSize: 2 }, { name: 'c', minSize: 1, maxSize: 1 }]) === 'S2 x 2 · S1 x 1',
   'ship shop: quantum speed and sustained DPS use plain labels',
 )
+check(
+  shipShopMath.weaponAmmoCount({ Weapon_Ammo: 5220, Weapon_CapacitorShots: 25 }, 0.5) === 5220 &&
+    shipShopMath.weaponAmmoCount({ Weapon_CapacitorShots: 25 }, 1) === 25 &&
+    shipShopMath.weaponAmmoCount({ Weapon_CapacitorShots: 25 }, 0.5) === 12.5 &&
+    shipShopMath.weaponAmmoCount({ Weapon_CapacitorShots: 25 }, 0) === 0 &&
+    shipShopMath.weaponAmmoCount({ Weapon_CapacitorShots: 25 }, 2) === 25 &&
+    shipShopMath.weaponAmmoLabel({ Weapon_Ammo: 5220 }, 0.25) === `${(5220).toLocaleString()} ammo` &&
+    shipShopMath.weaponStatBits({ Weapon_Ammo: 100, Weapon_Damage: 10, Weapon_Firerate: 60 })[0] === '100 ammo',
+  'ship shop: ballistic ammo stays fixed and capacitor shots follow the weapon power share',
+)
 const plant = (generation, size) => ({ portId: 'p', kind: 'power', size, stats: { Itemresource_Powergeneration: generation } })
 check(
   shipShopMath.powerGenerated([plant(23, 3), plant(23, 3)]) === 30 &&
