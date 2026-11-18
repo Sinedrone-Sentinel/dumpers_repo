@@ -63,7 +63,7 @@ function LootLocationsModal({ item, onClose }) {
  * tracked Loot Finder site. Visibility follows the bake: adding a location can
  * show new chests; removing a location hides the chest only when no sites remain.
  */
-export default function BlueprintLootLocations({ entityClass, className = '' }) {
+export default function BlueprintLootLocations({ entityClass, className = '', label = 'Loot locations' }) {
   const [open, setOpen] = useState(false)
   const lootItem = useMemo(() => lootItemForEntityClass(entityClass), [entityClass])
   if (!lootItem?.locations?.length) return null
@@ -71,11 +71,11 @@ export default function BlueprintLootLocations({ entityClass, className = '' }) 
   return (
     <>
       <span className={`inline-flex items-center ${className}`.trim()}>
-        <SiteTooltip content="Loot locations">
+        <SiteTooltip content={label}>
           <button
             type="button"
             className={`${ICON} text-amber-300`}
-            aria-label="Loot locations"
+            aria-label={label}
             onClick={(event) => {
               event.stopPropagation()
               setOpen(true)
