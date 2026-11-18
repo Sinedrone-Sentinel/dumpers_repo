@@ -44,6 +44,7 @@ import {
   clickPowerColumn,
   componentGroups,
   coolantBarPercent,
+  weaponEfficiencyPercent,
   flightRole,
   formatQuantumSpeed,
   formatShopNumber,
@@ -144,15 +145,12 @@ function itemTitle(item: { displayName: string; kind?: string; itemClass?: strin
   return rank ? `${item.displayName} - ${rank}` : item.displayName
 }
 
-function CoolantBar({ snapshot }: { snapshot: ShipSnapshotNumbers }) {
-  const percent = coolantBarPercent(snapshot.coolant, snapshot.coolantDemand, snapshot.coolantShutOff)
-  if (percent == null) return null
-  const over = percent >= 100
+function MeterBar({ label, percent, over }: { label: string; percent: number; over?: boolean }) {
   const width = Math.max(0, Math.min(100, percent))
   return (
     <div>
       <div className="flex items-baseline justify-between gap-3 text-sm">
-        <span className="text-slate-400">Coolant</span>
+        <span className="text-slate-400">{label}</span>
         <span className="font-mono text-white">{percent}%</span>
       </div>
       <div className="mt-1 h-2 overflow-hidden rounded-full bg-slate-800">
@@ -160,6 +158,12 @@ function CoolantBar({ snapshot }: { snapshot: ShipSnapshotNumbers }) {
       </div>
     </div>
   )
+}
+
+function CoolantBar({ snapshot }: { snapshot: ShipSnapshotNumbers }) {
+  const percent = coolantBarPercent(snapshot.coolant, snapshot.coolantDemand, snapshot.coolantShutOff)
+  if (percent == null) return null
+  return <MeterBar label="Coolant" percent={percent} over={percent >= 100} />
 }
 
 function PipBoard({
@@ -259,7 +263,7 @@ function PipBoard({
   )
 }
 
-function ShipSnapshot({ snapshot }: { snapshot: ShipSnapshotNumbers }) {
+function ShipSnapshot({ snapshot, efficiencyPercent }: { snapshot: ShipSnapshotNumbers; efficiencyPercent: number | null }) {
   const rows = [
     {
       title: 'Signatures',
@@ -321,6 +325,11 @@ function ShipSnapshot({ snapshot }: { snapshot: ShipSnapshotNumbers }) {
           <div key={group.title} className="space-y-4">
             <section>
               <h3 className="ship-shop-snap-head uppercase tracking-wide text-slate-500 mb-2">{group.title}</h3>
+              {group.title === 'Offense' && efficiencyPercent != null ? (
+                <div className="mb-2">
+                  <MeterBar label="Efficiency" percent={efficiencyPercent} />
+                </div>
+              ) : null}
               <dl className="space-y-1">
                 {group.lines.map(([label, value]) => (
                   <div key={label} className="flex items-baseline justify-between gap-3 text-sm">
@@ -1436,7 +1445,10 @@ export default function ShipShopPage() {
         })}
         </div>
         <div className="ship-shop-snap order-1 shrink-0 lg:order-2">
-          <ShipSnapshot snapshot={snapshot} />
+          <ShipSnapshot
+            snapshot={snapshot}
+            efficiencyPercent={weaponEfficiencyPercent(weaponSelected, powerParts, Boolean(weaponColumn))}
+          />
         </div>
       </div>
       {copyWeapon && !viewingFraken && (() => {
