@@ -1294,14 +1294,28 @@
   border: 0;
   border-radius: 0.75rem;
   background: transparent;
-  color: inherit;
+  color: var(--color-slate-950);
   font: inherit;
+  font-weight: 700;
   text-align: left;
   cursor: pointer;
 }
 
 .ship-shop-section {
-  background-color: color-mix(in oklab, var(--color-orange-950) 80%, transparent);
+  background: linear-gradient(to right, var(--color-amber-500), var(--color-yellow-300), var(--color-amber-400));
+  border-color: var(--color-amber-200);
+}
+
+.ship-shop-section-bar,
+.ship-shop-section-bar .text-sm,
+.ship-shop-section-bar .ship-shop-expand {
+  font-size: calc(0.875rem + 2pt);
+  font-weight: 700;
+  color: var(--color-slate-950);
+}
+
+.ship-shop-section:has(.ship-shop-section-body) {
+  background: color-mix(in oklab, var(--color-orange-950) 80%, transparent);
   border-color: color-mix(in oklab, var(--color-orange-500) 45%, transparent);
 }
 
@@ -1309,6 +1323,11 @@
   padding-bottom: 0;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
+  background: linear-gradient(to right, var(--color-amber-500), var(--color-yellow-300), var(--color-amber-400));
+}
+
+.ship-shop-snap .text-sm {
+  font-size: calc(0.875rem + 4pt);
 }
 
 .ship-shop-snap-head {
@@ -1317,7 +1336,7 @@
 }
 
 .ship-shop-section-bar:hover {
-  background: rgba(255, 255, 255, 0.04);
+  filter: brightness(1.06);
 }
 
 .ship-shop-section-body {
@@ -1387,6 +1406,17 @@
     font-size: calc(0.6rem + 4pt);
   }
 
+  .ship-shop-page .ship-shop-snap .text-sm {
+    font-size: calc(0.7rem + 4pt);
+  }
+
+  .ship-shop-page .ship-shop-section-bar .text-sm,
+  .ship-shop-page .ship-shop-section-bar .ship-shop-expand {
+    font-size: calc(0.7rem + 2pt);
+    font-weight: 700;
+    color: var(--color-slate-950);
+  }
+
   .ship-shop-page .text-sm,
   .ship-shop-page .text-base,
   .ship-shop-page .site-label,
@@ -1434,6 +1464,10 @@
 
   .ship-shop-expand {
     font-size: 1.75rem;
+  }
+
+  .ship-shop-section-bar .ship-shop-expand {
+    font-size: calc(1.75rem + 2pt);
   }
 }
 
