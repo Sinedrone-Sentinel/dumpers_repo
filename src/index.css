@@ -1300,10 +1300,19 @@
   cursor: pointer;
 }
 
+.ship-shop-section:has(.ship-shop-section-body) {
+  background: linear-gradient(180deg, rgba(72, 48, 14, 0.78) 0%, rgba(42, 28, 12, 0.9) 100%);
+  border-color: rgba(251, 191, 36, 0.35);
+}
+
 .ship-shop-section:has(.ship-shop-section-body) .ship-shop-section-bar {
   padding-bottom: 0;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
+}
+
+.ship-shop-section-body .site-card {
+  background: rgba(28, 18, 8, 0.92);
 }
 
 .ship-shop-section-bar:hover {
