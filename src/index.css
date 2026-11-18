@@ -1290,7 +1290,7 @@
   justify-content: space-between;
   gap: 0.75rem;
   margin: 0;
-  padding: 1rem;
+  padding: 1.15rem 1rem;
   border: 0;
   border-radius: 0.75rem;
   background: transparent;
@@ -1311,16 +1311,16 @@
 .ship-shop-section-bar .ship-shop-expand {
   font-size: calc(0.875rem + 2pt);
   font-weight: 700;
+  line-height: 1.25;
   color: var(--color-slate-950);
 }
 
 .ship-shop-section:has(.ship-shop-section-body) {
-  background: color-mix(in oklab, var(--color-orange-950) 80%, transparent);
-  border-color: color-mix(in oklab, var(--color-orange-500) 45%, transparent);
+  background: #848482;
+  border-color: #6b6b69;
 }
 
 .ship-shop-section:has(.ship-shop-section-body) .ship-shop-section-bar {
-  padding-bottom: 0;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
   background: linear-gradient(to right, var(--color-amber-500), var(--color-yellow-300), var(--color-amber-400));
@@ -1333,6 +1333,10 @@
 .ship-shop-snap-head {
   font-size: calc(0.75rem + 4pt);
   font-weight: 700;
+  background-image: linear-gradient(to right, var(--color-amber-500), var(--color-yellow-300), var(--color-amber-400));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .ship-shop-section-bar:hover {
@@ -1346,8 +1350,8 @@
 .ship-shop-expand {
   padding: 0;
   font-size: 0.7rem;
-  line-height: 1rem;
-  color: rgb(148 163 184);
+  line-height: 1.25;
+  color: var(--color-slate-950);
 }
 
 .ship-shop-build {
@@ -1414,6 +1418,7 @@
   .ship-shop-page .ship-shop-section-bar .ship-shop-expand {
     font-size: calc(0.7rem + 2pt);
     font-weight: 700;
+    line-height: 1.25;
     color: var(--color-slate-950);
   }
 
@@ -1437,7 +1442,7 @@
   }
 
   .ship-shop-section-bar {
-    padding: 0.65rem;
+    padding: 0.85rem 0.65rem;
   }
 
   .ship-shop-section-body {
@@ -1446,6 +1451,11 @@
 }
 
 @media (min-width: 1921px) {
+  .ship-shop-section-bar {
+    padding-top: 1.35rem;
+    padding-bottom: 1.35rem;
+  }
+
   .ship-shop-pip {
     font-size: 14px;
   }
@@ -1468,6 +1478,7 @@
 
   .ship-shop-section-bar .ship-shop-expand {
     font-size: calc(1.75rem + 2pt);
+    line-height: 1.25;
   }
 }
 
