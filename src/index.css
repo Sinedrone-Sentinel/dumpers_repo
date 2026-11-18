@@ -1300,28 +1300,15 @@
   cursor: pointer;
 }
 
-.ship-shop-section:has(.ship-shop-section-body) {
-  background: linear-gradient(180deg, rgba(72, 48, 14, 0.78) 0%, rgba(42, 28, 12, 0.9) 100%);
-  border-color: rgba(251, 191, 36, 0.35);
+.ship-shop-section {
+  background-color: color-mix(in oklab, var(--color-orange-950) 80%, transparent);
+  border-color: color-mix(in oklab, var(--color-orange-500) 45%, transparent);
 }
 
 .ship-shop-section:has(.ship-shop-section-body) .ship-shop-section-bar {
   padding-bottom: 0;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
-}
-
-.ship-shop-section-body .site-card {
-  background: rgba(28, 18, 8, 0.92);
-}
-
-/* Nested tree rows. Gimbal rails read lighter; guns and other child ports sit between that and the parent. */
-.ship-shop-section-body .site-card.ship-shop-tree-gimbal {
-  background: rgba(112, 78, 24, 0.9);
-}
-
-.ship-shop-section-body .site-card.ship-shop-tree-port {
-  background: rgba(58, 38, 14, 0.96);
 }
 
 .ship-shop-section-bar:hover {
