@@ -205,6 +205,8 @@ export function extractShipItemStats(json, options = {}) {
   if (regen) {
     setStat(stats, 'Weapon_CapacitorShots', regen.maxAmmoLoad)
     setStat(stats, 'Weapon_RegenPerSec', regen.maxRegenPerSec)
+    setStat(stats, 'Weapon_RequestedAmmo', regen.requestedAmmoLoad)
+    setStat(stats, 'Weapon_RegenCost', regen.regenerationCostPerBullet)
   }
 
   const isLarger = (value, current) => typeof value === 'number' && (current === undefined || value > current)

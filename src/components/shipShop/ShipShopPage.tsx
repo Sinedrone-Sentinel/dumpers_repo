@@ -437,7 +437,7 @@ function PartPicker({
   ship,
   port,
   fitted,
-  weaponFraction,
+  weaponAssignment,
   onClose,
   onSelect,
   onQualities,
@@ -446,7 +446,7 @@ function PartPicker({
   ship: GameShip | null
   port: ShipPort
   fitted: FittedPart | undefined
-  weaponFraction: number
+  weaponAssignment: number
   onClose: () => void
   onSelect: (entityClass: string | null) => void
   onQualities: (qualities: Record<number, number>) => void
@@ -478,8 +478,8 @@ function PartPicker({
   const current = statsForFitted(fitted)
   const blueprint = fitted ? blueprintForEntity(fitted.entityClass) : null
   const owned = useMyStockIndex(user?.id, Boolean(fitted?.source === 'crafted' && blueprint))
-  const detail = current?.item.kind === 'weapon' ? weaponStatBits(current.stats, weaponFraction) : []
-  const detailAmmo = current?.item.kind === 'weapon' ? weaponAmmoLabel(current.stats, weaponFraction) : null
+  const detail = current?.item.kind === 'weapon' ? weaponStatBits(current.stats, weaponAssignment) : []
+  const detailAmmo = current?.item.kind === 'weapon' ? weaponAmmoLabel(current.stats, weaponAssignment) : null
 
   return (
     <div className="relative mt-2 space-y-2" onClick={(event) => event.stopPropagation()}>
@@ -510,8 +510,8 @@ function PartPicker({
           Empty mount
         </button>
         {options.map((item) => {
-          const bits = item.kind === 'weapon' ? weaponStatBits(item.stats, weaponFraction) : [partInfo(item, item.stats)].filter(Boolean)
-          const ammo = item.kind === 'weapon' ? weaponAmmoLabel(item.stats, weaponFraction) : null
+          const bits = item.kind === 'weapon' ? weaponStatBits(item.stats, weaponAssignment) : [partInfo(item, item.stats)].filter(Boolean)
+          const ammo = item.kind === 'weapon' ? weaponAmmoLabel(item.stats, weaponAssignment) : null
           const restBits = ammo ? bits.slice(1) : bits
           const inline = !stackedPartKind(port.kind)
           return (
@@ -832,8 +832,8 @@ export default function ShipShopPage() {
   const power = resolvedPower(columns, build.power, generated)
   const weaponColumn = columns.find((column) => column.id === 'weapons')
   const weaponSelected = weaponColumn ? (power[weaponColumn.id] || 0) : 0
-  const weaponFull = weaponColumn?.fullPower || 0
-  const weaponFraction = weaponFull > 0 ? Math.min(weaponSelected, weaponFull) / weaponFull : 1
+  const weaponPool = ship?.weaponPowerPool || 0
+  const weaponAssignment = weaponPool > 0 ? Math.min(weaponSelected, weaponPool) / weaponPool : 1
   const remaining = Math.max(0, generated - powerUsed(columns, power))
   const snapshot = snapshotForBuild(ship, build.ports, build.power)
   const shopCart = store.cart || []
@@ -1227,7 +1227,7 @@ export default function ShipShopPage() {
             const fitted = statsForFitted(build.ports[port.id])
             const line = fitted ? partInfo(fitted.item, fitted.stats, port.kind === 'shield' ? shieldScale(port.id) : 1) : ''
             const source = fitted ? (build.ports[port.id]?.source === 'crafted' ? 'Crafted' : 'Stock') : ''
-            const ammo = fitted?.item.kind === 'weapon' ? weaponAmmoLabel(fitted.stats, weaponFraction) : null
+            const ammo = fitted?.item.kind === 'weapon' ? weaponAmmoLabel(fitted.stats, weaponAssignment) : null
             const open = !viewingFraken && pickerPortId === port.id && !port.locked
             const info = fitted ? [line, source].filter(Boolean).join(' · ') : 'Open port'
             const sizeLabel = port.minSize && port.maxSize && port.minSize !== port.maxSize
@@ -1249,7 +1249,7 @@ export default function ShipShopPage() {
                 ship={ship}
                 port={port}
                 fitted={build.ports[port.id]}
-                weaponFraction={weaponFraction}
+                weaponAssignment={weaponAssignment}
                 onClose={() => setPickerPortId(null)}
                 onSelect={(entityClass) => {
                   if (!entityClass) {
