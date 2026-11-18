@@ -903,6 +903,78 @@ function itemChildPorts(json) {
   return mounts
 }
 
+/** Hull engineering part. `maxAmmoLoadMultiplier` scales an energy gun's magazine. */
+function regenFromBuff(json) {
+  let ammo = 1
+  let power = 1
+  let found = false
+  const take = (node) => {
+    if (!node || typeof node !== 'object' || found) return
+    if (node._Type_ === 'SRegenConsumerModifier') {
+      if (typeof node.maxAmmoLoadMultiplier === 'number' && node.maxAmmoLoadMultiplier > 0) ammo = node.maxAmmoLoadMultiplier
+      if (typeof node.powerRatioMultiplier === 'number' && node.powerRatioMultiplier > 0) power = node.powerRatioMultiplier
+      found = true
+      return
+    }
+    for (const value of Object.values(node)) take(value)
+  }
+  const walk = (node) => {
+    if (!node || typeof node !== 'object' || found) return
+    if (node.targetItemType === 'WeaponGun') take(node)
+    if (found) return
+    for (const value of Object.values(node)) walk(value)
+  }
+  walk(json)
+  return { ammo, power }
+}
+
+export function weaponRegenFromEntity(json, extractedRoot) {
+  let ref = ''
+  const walk = (node) => {
+    if (!node || typeof node !== 'object' || ref) return
+    if (node.Name === 'engineeringBuff' && typeof node.defaultItem?.entityClass === 'string') {
+      ref = node.defaultItem.entityClass
+      return
+    }
+    for (const value of Object.values(node)) walk(value)
+  }
+  walk(json)
+  if (!ref) return { ammo: 1, power: 1 }
+  const marker = 'libs/foundry/records/'
+  const norm = ref.replace(/\\/g, '/')
+  const at = norm.toLowerCase().indexOf(marker)
+  if (at < 0) return { ammo: 1, power: 1 }
+  return regenFromBuff(readJson(join(extractedRoot, norm.slice(at))))
+}
+
+export function weaponRegenTable(ships) {
+  const table = {}
+  for (const ship of ships) {
+    const row = {}
+    if (typeof ship.weaponAmmoMultiplier === 'number' && ship.weaponAmmoMultiplier !== 1) row.ammo = ship.weaponAmmoMultiplier
+    if (typeof ship.weaponPowerRatio === 'number' && ship.weaponPowerRatio !== 1) row.power = ship.weaponPowerRatio
+    if (row.ammo != null || row.power != null) table[ship.id] = row
+  }
+  return table
+}
+
+export function collectWeaponRegen(extractedRoot, shipIds) {
+  const dir = join(extractedRoot, 'libs/foundry/records/entities/spaceships')
+  const byName = new Map()
+  for (const path of walkFiles(dir)) byName.set(basename(path, '.json').toLowerCase(), path)
+  const table = {}
+  for (const id of shipIds) {
+    const path = byName.get(String(id).toLowerCase())
+    if (!path) continue
+    const regen = weaponRegenFromEntity(readJson(path), extractedRoot)
+    const row = {}
+    if (regen.ammo !== 1) row.ammo = regen.ammo
+    if (regen.power !== 1) row.power = regen.power
+    if (row.ammo != null || row.power != null) table[id] = row
+  }
+  return table
+}
+
 function countermeasureCounts(json) {
   const ammo = firstComponent(json, 'SAmmoContainerComponentParams')
   const count = Number(ammo?.maxAmmoCount) || 0
@@ -1226,6 +1298,7 @@ export function parseShipShop({ extractedRoot, localization }) {
     for (const port of ports) delete port.crewTurret
 
     const cargo = cargoLimitsFromEntries(entries, loadKey, extractedRoot, filePath)
+    const regen = weaponRegenFromEntity(json, extractedRoot)
     const ship = {
       id,
       uuid: typeof json._RecordId_ === 'string' ? json._RecordId_ : null,
@@ -1241,6 +1314,8 @@ export function parseShipShop({ extractedRoot, localization }) {
       decoy,
       damageReduction: damageReduction(vehicle),
       weaponPowerPool: weaponPowerPool(json),
+      ...(regen.ammo !== 1 ? { weaponAmmoMultiplier: regen.ammo } : {}),
+      ...(regen.power !== 1 ? { weaponPowerRatio: regen.power } : {}),
       cargoScu: cargo.cargoScu,
       maxCrateScu: cargo.maxCrateScu,
       ...flight,

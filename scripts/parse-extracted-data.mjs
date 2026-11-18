@@ -19,7 +19,7 @@ import { HATHOR_PAF_OLP_MARKERS } from './lib/hathorPafSites.mjs'
 import { parseMiningSpawns } from './lib/parseMiningSpawns.mjs'
 import { mergeSpawnOreLocations, rebuildRarityTiers } from './lib/mergeSpawnOreLocations.mjs'
 import { parseOreSignatures } from './lib/parseOreSignatures.mjs'
-import { parseShipShop } from './lib/parseShipShop.mjs'
+import { parseShipShop, weaponRegenTable } from './lib/parseShipShop.mjs'
 import { parseSiteLoot } from './lib/parseSiteLoot.mjs'
 import { extractShipItemStats } from './lib/shipItemStats.mjs'
 import { parseNavSystems } from './lib/parseNavSystems.mjs'
@@ -5436,6 +5436,7 @@ async function main() {
     items: shipShop.catalog,
   })
   console.log(`  Parsed ${shipShop.ships.length} ships and ${shipShop.catalog.length} ship items`)
+  saveJson('ship-weapon-regen.json', weaponRegenTable(shipShop.ships))
 
   // Site loot pools for Loot Finder (after ship catalog so Size/Class/Grade chips bake in)
   const fpsByClass = new Map(

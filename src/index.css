@@ -1294,7 +1294,7 @@
   border: 0;
   border-radius: 0.75rem;
   background: transparent;
-  color: var(--color-slate-950);
+  color: inherit;
   font: inherit;
   font-weight: 700;
   text-align: left;
@@ -1302,8 +1302,8 @@
 }
 
 .ship-shop-section {
-  background: linear-gradient(to right, var(--color-amber-500), var(--color-yellow-300), var(--color-amber-400));
-  border-color: var(--color-amber-200);
+  background-color: color-mix(in oklab, var(--color-orange-950) 80%, transparent);
+  border-color: color-mix(in oklab, var(--color-orange-500) 45%, transparent);
 }
 
 .ship-shop-section-bar,
@@ -1312,7 +1312,6 @@
   font-size: calc(0.875rem + 2pt);
   font-weight: 700;
   line-height: 1.25;
-  color: var(--color-slate-950);
 }
 
 .ship-shop-section:has(.ship-shop-section-body) {
@@ -1323,7 +1322,8 @@
 .ship-shop-section:has(.ship-shop-section-body) .ship-shop-section-bar {
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
-  background: linear-gradient(to right, var(--color-amber-500), var(--color-yellow-300), var(--color-amber-400));
+  background-color: color-mix(in oklab, var(--color-orange-950) 80%, transparent);
+  border-color: color-mix(in oklab, var(--color-orange-500) 45%, transparent);
 }
 
 .ship-shop-snap .text-sm {
@@ -1351,7 +1351,7 @@
   padding: 0;
   font-size: 0.7rem;
   line-height: 1.25;
-  color: var(--color-slate-950);
+  color: rgb(148 163 184);
 }
 
 .ship-shop-build {
@@ -1419,7 +1419,6 @@
     font-size: calc(0.7rem + 2pt);
     font-weight: 700;
     line-height: 1.25;
-    color: var(--color-slate-950);
   }
 
   .ship-shop-page .text-sm,
