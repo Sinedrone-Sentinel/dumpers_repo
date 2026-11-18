@@ -639,6 +639,21 @@ assert.ok(polarisSnap.pilotDps < polarisSnap.burstDps)
 const pepperSnap = shop.snapshotForBuild(polarisShip, pepper)
 assert.ok(pepperSnap.pilotDps < polarisSnap.pilotDps)
 
+const marauder = shop.getShip('drak_marauder')
+const marauderPlant = marauder.ports.find((port) => port.id === 'hardpoint_power_plant_top')
+const marauderPlants = shop.partsForPort(marauderPlant, marauder)
+assert.ok(marauderPlants.some((item) => item.entityClass === 'powr_sasu_s01_lightblossom_scitem'))
+assert.ok(marauderPlants.some((item) => item.entityClass !== 'powr_sasu_s01_lightblossom_scitem'))
+const marauderGuns = []
+const walkMarauderGuns = (nodes) => {
+  for (const node of nodes) {
+    marauderGuns.push(node.port)
+    walkMarauderGuns(node.children || [])
+  }
+}
+walkMarauderGuns(shop.weaponTree(marauder))
+assert.equal(marauderGuns.some((port) => port.id.includes('weaponslocker')), false)
+
 const shopsOut = path.join('node_modules', '.cache', 'ship-shop-shops.mjs')
 await esbuild.build({
   entryPoints: [path.join('src', 'lib', 'shipShopShops.ts')],

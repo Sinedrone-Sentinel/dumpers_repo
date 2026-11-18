@@ -250,7 +250,7 @@ function isQuantumPortName(name) {
 function classifyPort(name, entityKey, itemKind) {
   const n = name.toLowerCase()
   const e = (entityKey || '').toLowerCase()
-  if (n.includes('weapon_rack') || n.includes('weaponrack') || n.includes('weapon_locker') || n.includes('weaponlocker') || n.includes('weapons_locker') || n.includes('gun_rack') || n.includes('gunrack') || n.includes('regen_pool')) return null
+  if (n.includes('weapon_rack') || n.includes('weaponrack') || n.includes('weapon_locker') || n.includes('weaponlocker') || n.includes('weapons_locker') || n.includes('weaponslocker') || n.includes('gun_rack') || n.includes('gunrack') || n.includes('regen_pool')) return null
   if (n.includes('seat') || n.includes('dashboard') || n.includes('seataccess') || n.includes('camera')) return null
   if (n.includes('controller_flight')) return { section: 'systems', kind: 'flight' }
   if (n.includes('controller')) return null
@@ -384,10 +384,7 @@ function portDefsFromXml(text) {
     if (typeMatch) {
       const type = attrValue(typeMatch[1], 'type')
       if (type) {
-        const subtypes = attrValue(typeMatch[1], 'subtypes')
-          .split(',')
-          .map((value) => value.trim())
-          .filter(Boolean)
+        const subtypes = componentSubtypes(attrValue(typeMatch[1], 'subtypes'))
         current.accepts.push({ type, subtypes })
       }
     }
@@ -565,14 +562,20 @@ function crossSectionFromShip(json) {
   return found
 }
 
+/** `$editable` and the other `$` tokens are port flags, not component subtypes. */
+function componentSubtypes(values) {
+  const list = Array.isArray(values) ? values : String(values || '').split(',')
+  return list
+    .map((value) => String(value || '').trim())
+    .filter((value) => value && !value.startsWith('$'))
+}
+
 function portAccepts(port) {
   const types = Array.isArray(port?.Types) ? port.Types : []
   return types
     .map((entry) => ({
       type: String(entry?.Type || ''),
-      subtypes: (Array.isArray(entry?.SubTypes) ? entry.SubTypes : [])
-        .map((value) => String(value || '').trim())
-        .filter(Boolean),
+      subtypes: componentSubtypes(entry?.SubTypes),
     }))
     .filter((entry) => entry.type)
 }

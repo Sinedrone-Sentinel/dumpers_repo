@@ -221,8 +221,14 @@ function slotFromModuleMount(ship: GameShip, parentId: string, mount: MissileMou
   }
 }
 
+function shipGunPort(port: ShipPort): boolean {
+  const accepts = port.accepts || []
+  if (accepts.length > 0 && accepts.every((rule) => rule.type.toLowerCase() === 'usable')) return false
+  return port.kind === 'turret' || port.kind === 'weaponMount' || port.kind === 'weapon' || effectivePortKind(port) === 'weaponMount'
+}
+
 function resolveWeaponPorts(ship: GameShip, fitted?: Record<string, FittedPart>): ShipPort[] {
-  const weaponPorts = ship.ports.filter((port) => port.kind === 'turret' || port.kind === 'weaponMount' || port.kind === 'weapon' || effectivePortKind(port) === 'weaponMount')
+  const weaponPorts = ship.ports.filter(shipGunPort)
   if (!fitted) return weaponPorts
   const hidden = new Set<string>()
   const generated: ShipPort[] = []
@@ -510,7 +516,10 @@ function attachmentFits(item: ShipItemStats, accepts: PortAccept[] | undefined):
   if (!type) return false
   return accepts.some((rule) => {
     if (rule.type.toLowerCase() !== type) return false
-    const subtypes = (rule.subtypes || []).filter((entry) => entry && entry.toLowerCase() !== 'undefined')
+    const subtypes = (rule.subtypes || []).filter((entry) => {
+      const text = (entry || '').trim()
+      return text && text.toLowerCase() !== 'undefined' && !text.startsWith('$')
+    })
     if (subtypes.length === 0 || !subtype || subtype === 'undefined') return true
     return subtypes.some((entry) => entry.toLowerCase() === subtype)
   })
