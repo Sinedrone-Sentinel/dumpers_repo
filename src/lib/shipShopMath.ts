@@ -219,9 +219,33 @@ function compactNumber(value: number | undefined): string | null {
   return formatShopNumber(value)
 }
 
-/** Weapon columns, in plain labels. Missiles are not part of DPS. */
-export function weaponStatBits(stats: Record<string, number>): string[] {
+/**
+ * Shots on the weapon line.
+ * A ballistic magazine stays fixed. An energy or distortion capacitor scales with the
+ * weapon power share (assigned pips / pips the fitted guns need), the same share used
+ * for capacitor regen. A share above 1 is capped. No weapon pip column passes 1.
+ */
+export function weaponAmmoCount(stats: Record<string, number> | null | undefined, powerFraction = 1): number | null {
+  if (!stats) return null
+  const ballistic = stats.Weapon_Ammo || 0
+  if (ballistic > 0) return ballistic
+  const capacitor = stats.Weapon_CapacitorShots || 0
+  if (capacitor <= 0) return null
+  const fraction = Math.max(0, Math.min(1, powerFraction))
+  return capacitor * fraction
+}
+
+export function weaponAmmoLabel(stats: Record<string, number> | null | undefined, powerFraction = 1): string | null {
+  const count = weaponAmmoCount(stats, powerFraction)
+  if (count == null) return null
+  return `${formatShopNumber(count)} ammo`
+}
+
+/** Weapon columns, in plain labels. Ammo leads. Missiles are not part of DPS. */
+export function weaponStatBits(stats: Record<string, number>, powerFraction = 1): string[] {
   const bits: string[] = []
+  const ammo = weaponAmmoLabel(stats, powerFraction)
+  if (ammo) bits.push(ammo)
   const push = (label: string, value: number | undefined) => {
     const text = compactNumber(value)
     if (text) bits.push(`${label} ${text}`)
@@ -236,7 +260,6 @@ export function weaponStatBits(stats: Record<string, number>): string[] {
   push('Spread', stats.Weapon_Spread)
   push('Power', stats.Weapon_Power)
   push('EM', stats.Weapon_Em)
-  push('Ammo', stats.Weapon_Ammo)
   push('HP', stats.Health_Maxhealth)
   return bits
 }

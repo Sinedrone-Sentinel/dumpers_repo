@@ -57,6 +57,7 @@ import {
   resolvedPower,
   shieldPowerFactor,
   togglePowerColumn,
+  weaponAmmoLabel,
   weaponBurstDps,
   weaponStatBits,
   wrapPipBlocks,
@@ -404,6 +405,16 @@ function partInfo(item: ShipItemStats, stats: Record<string, number>, scale = 1)
   return partStatLine(item.kind, stats, scale)
 }
 
+function StatLead({ ammo, rest, className }: { ammo: string | null; rest: string; className?: string }) {
+  if (!ammo) return <span className={className}>{rest}</span>
+  return (
+    <span className={className}>
+      <span className="text-green-400">{ammo}</span>
+      {rest ? <span> · {rest}</span> : null}
+    </span>
+  )
+}
+
 function listChip(item: { kind: string; weaponClass?: string | null; guidance?: string | null; itemClass?: string | null }): string | null {
   if (item.kind === 'weapon') return item.weaponClass || null
   if (item.kind === 'missile') return item.guidance || null
@@ -426,6 +437,7 @@ function PartPicker({
   ship,
   port,
   fitted,
+  weaponFraction,
   onClose,
   onSelect,
   onQualities,
@@ -434,6 +446,7 @@ function PartPicker({
   ship: GameShip | null
   port: ShipPort
   fitted: FittedPart | undefined
+  weaponFraction: number
   onClose: () => void
   onSelect: (entityClass: string | null) => void
   onQualities: (qualities: Record<number, number>) => void
@@ -465,7 +478,8 @@ function PartPicker({
   const current = statsForFitted(fitted)
   const blueprint = fitted ? blueprintForEntity(fitted.entityClass) : null
   const owned = useMyStockIndex(user?.id, Boolean(fitted?.source === 'crafted' && blueprint))
-  const detail = current?.item.kind === 'weapon' ? weaponStatBits(current.stats) : []
+  const detail = current?.item.kind === 'weapon' ? weaponStatBits(current.stats, weaponFraction) : []
+  const detailAmmo = current?.item.kind === 'weapon' ? weaponAmmoLabel(current.stats, weaponFraction) : null
 
   return (
     <div className="relative mt-2 space-y-2" onClick={(event) => event.stopPropagation()}>
@@ -496,7 +510,9 @@ function PartPicker({
           Empty mount
         </button>
         {options.map((item) => {
-          const bits = item.kind === 'weapon' ? weaponStatBits(item.stats) : [partInfo(item, item.stats)].filter(Boolean)
+          const bits = item.kind === 'weapon' ? weaponStatBits(item.stats, weaponFraction) : [partInfo(item, item.stats)].filter(Boolean)
+          const ammo = item.kind === 'weapon' ? weaponAmmoLabel(item.stats, weaponFraction) : null
+          const restBits = ammo ? bits.slice(1) : bits
           const inline = !stackedPartKind(port.kind)
           return (
             <button
@@ -506,7 +522,13 @@ function PartPicker({
               onClick={() => onSelect(item.entityClass)}
             >
               <span className={inline ? 'shrink-0 text-white' : 'block text-white'}>{titled(item)}</span>
-              {bits.length > 0 && <span className={inline ? 'truncate text-sm text-slate-200' : 'block text-sm text-slate-200'}>{bits.join(' · ')}</span>}
+              {restBits.length > 0 || ammo ? (
+                <StatLead
+                  ammo={ammo}
+                  rest={restBits.join(' · ')}
+                  className={inline ? 'truncate text-sm text-slate-200' : 'block text-sm text-slate-200'}
+                />
+              ) : null}
             </button>
           )
         })}
@@ -551,7 +573,13 @@ function PartPicker({
               })}
             </div>
           )}
-          {detail.length > 0 && <p className="text-xs text-slate-400">{detail.join(' · ')}</p>}
+          {detail.length > 0 && (
+            <StatLead
+              ammo={detailAmmo}
+              rest={(detailAmmo ? detail.slice(1) : detail).join(' · ')}
+              className="text-xs text-slate-400"
+            />
+          )}
           <button type="button" className="site-btn-ghost" onClick={onClose}>Close</button>
         </div>
       )}
@@ -802,6 +830,10 @@ export default function ShipShopPage() {
   const columns = powerColumns(ship?.weaponPowerPool || 0, powerParts)
   const generated = powerGenerated(powerParts)
   const power = resolvedPower(columns, build.power, generated)
+  const weaponColumn = columns.find((column) => column.id === 'weapons')
+  const weaponSelected = weaponColumn ? (power[weaponColumn.id] || 0) : 0
+  const weaponFull = weaponColumn?.fullPower || 0
+  const weaponFraction = weaponFull > 0 ? Math.min(weaponSelected, weaponFull) / weaponFull : 1
   const remaining = Math.max(0, generated - powerUsed(columns, power))
   const snapshot = snapshotForBuild(ship, build.ports, build.power)
   const shopCart = store.cart || []
@@ -1195,6 +1227,7 @@ export default function ShipShopPage() {
             const fitted = statsForFitted(build.ports[port.id])
             const line = fitted ? partInfo(fitted.item, fitted.stats, port.kind === 'shield' ? shieldScale(port.id) : 1) : ''
             const source = fitted ? (build.ports[port.id]?.source === 'crafted' ? 'Crafted' : 'Stock') : ''
+            const ammo = fitted?.item.kind === 'weapon' ? weaponAmmoLabel(fitted.stats, weaponFraction) : null
             const open = !viewingFraken && pickerPortId === port.id && !port.locked
             const info = fitted ? [line, source].filter(Boolean).join(' · ') : 'Open port'
             const sizeLabel = port.minSize && port.maxSize && port.minSize !== port.maxSize
@@ -1216,6 +1249,7 @@ export default function ShipShopPage() {
                 ship={ship}
                 port={port}
                 fitted={build.ports[port.id]}
+                weaponFraction={weaponFraction}
                 onClose={() => setPickerPortId(null)}
                 onSelect={(entityClass) => {
                   if (!entityClass) {
@@ -1307,7 +1341,7 @@ export default function ShipShopPage() {
                       {addToAll}
                     </span>
                     <span className="truncate text-sm font-medium text-white">{name}</span>
-                    <span className="truncate text-sm text-slate-300">{info}</span>
+                    <StatLead ammo={ammo} rest={info} className="truncate text-sm text-slate-300" />
                     {buy}
                     <span className="ml-auto shrink-0 text-xs text-slate-500">{port.locked ? `${port.label} · Locked` : port.label}</span>
                     {fitted && !viewingFraken && !port.locked && (
@@ -1327,7 +1361,7 @@ export default function ShipShopPage() {
                     </div>
                     <div className={`mt-1 flex w-full gap-3 text-left ${inline ? 'flex-nowrap items-center' : 'flex-wrap items-baseline gap-y-1'}`}>
                       <span className="ship-shop-part-name min-w-0 truncate font-medium text-white">{name}</span>
-                      <span className={`text-base text-slate-300 ${inline ? 'min-w-0 truncate' : ''}`}>{info}</span>
+                      <StatLead ammo={ammo} rest={info} className={`text-base text-slate-300 ${inline ? 'min-w-0 truncate' : ''}`} />
                       {buy}
                       {inline && fitted && !viewingFraken && !port.locked && (
                         <button type="button" className="site-btn-ghost ml-auto shrink-0 px-3 py-1 text-sm" onClick={() => setFitted(port, null)}>
