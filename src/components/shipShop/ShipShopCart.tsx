@@ -15,6 +15,7 @@ import {
 } from '../../lib/shipShopShops'
 import { cartLineKey, craftedDraftFields, craftedMaterials, type ShopCartLine } from '../../lib/shipShopData'
 import SiteTooltip from '../SiteTooltip'
+import BlueprintLootLocations from '../BlueprintLootLocations'
 
 const CHIP = 'shrink-0 rounded-lg px-2 py-0.5 text-xs font-semibold uppercase tracking-wide transition hover:brightness-125 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:brightness-100'
 
@@ -197,10 +198,12 @@ export function ShopBuyButtons({
 export function ShopWhereModal({
   title,
   listings,
+  entityClass,
   onClose,
 }: {
   title: string
   listings: ShopListing[]
+  entityClass?: string
   onClose: () => void
 }) {
   const rows = [...listings].filter((row) => row.price > 0).sort((a, b) => locationLine(a).localeCompare(locationLine(b)) || a.price - b.price)
@@ -210,6 +213,7 @@ export function ShopWhereModal({
       <div className="site-modal-shell mt-16 flex max-h-[min(70dvh,calc(100dvh-6rem))] w-full max-w-xl flex-col overflow-hidden p-4" role="dialog" aria-modal="true" aria-label={`Where to buy ${title}`}>
         <div className="mb-3 flex items-center gap-3">
           <h3 className="min-w-0 flex-1 truncate text-base font-semibold text-white">Where to buy {title}</h3>
+          {entityClass ? <BlueprintLootLocations entityClass={entityClass} label="Loot Chest" /> : null}
           <button type="button" className="site-btn-ghost shrink-0 px-3 py-1 text-sm" aria-label="Close" onClick={onClose}>×</button>
         </div>
         <div data-shop-modal-scroll className="min-h-0 flex-1 space-y-1 overflow-y-auto overscroll-contain">
@@ -388,7 +392,10 @@ export function ShopCartModal({
                 <ul className="mt-3 space-y-3">
                   {crafted.map((line) => (
                     <li key={`${line.kind}:${line.id}:${JSON.stringify(line.qualities || {})}`}>
-                      <p className="text-sm text-slate-100">{line.name} × {line.qty}</p>
+                      <p className="flex items-center gap-2 text-sm text-slate-100">
+                        <span className="min-w-0 truncate">{line.name} × {line.qty}</span>
+                        <BlueprintLootLocations entityClass={line.id} label="Loot Chest" />
+                      </p>
                       <ul className="mt-1 space-y-0.5 pl-3">
                         {craftedMaterials(line.id, line.qualities, line.qty).map((row) => (
                           <li key={`${row.label}:${row.quality}`} className="text-sm text-slate-300">
@@ -463,6 +470,7 @@ export function ShopCartModal({
               {lines.map((line) => (
                 <div key={cartLineKey(line)} className="flex items-center gap-3 text-sm">
                   <span className="min-w-0 flex-1 truncate text-white">{line.crafted ? `${line.name} (crafted)` : line.name}</span>
+                  {line.kind === 'part' ? <BlueprintLootLocations entityClass={line.id} label="Loot Chest" /> : null}
                   <button type="button" className="site-btn-ghost px-2 py-0.5" aria-label={`Decrease ${line.name}`} onClick={() => onQty(line, line.qty - 1)}>−</button>
                   <span className="w-8 text-center text-slate-100">{line.qty}</span>
                   <button type="button" className="site-btn-ghost px-2 py-0.5" aria-label={`Increase ${line.name}`} onClick={() => onQty(line, line.qty + 1)}>+</button>

@@ -68,6 +68,7 @@ import { supabase } from '../../lib/supabase'
 import { defaultShipShopLoadouts, deleteShipShopFrakenFit, fetchFrakenCanSave, fetchShipShopFrakenFit, fetchShipShopFrakenShipIds, fetchShipShopLoadouts, readGuestShipShopStore, saveShipShopFrakenFit, saveShipShopLoadouts, shipShopStoreHasShip, clearGuestShipShopStore, writeGuestShipShopStore, type FrakenFit } from '../../lib/shipShopOps'
 import { isForSale, listingsFor, partListings, shipListings, showPartWhereToBuy, type ShopListing } from '../../lib/shipShopShops'
 import { ShopBuyButtons, ShopCartModal, ShopModalFrame, ShopQtyModal, ShopWhereModal } from './ShipShopCart'
+import BlueprintLootLocations from '../BlueprintLootLocations'
 import SiteTooltip from '../SiteTooltip'
 import WebhookCue from '../WebhookCue'
 import ShipHangarModal from '../shipHangar/ShipHangarModal'
@@ -515,39 +516,44 @@ function PartPicker({
           const restBits = ammo ? bits.slice(1) : bits
           const inline = !stackedPartKind(port.kind)
           return (
-            <button
-              key={item.entityClass}
-              type="button"
-              className={`site-dropdown-item ${inline ? 'flex items-baseline gap-3' : ''} ${fitted?.entityClass === item.entityClass ? 'site-dropdown-item-active' : ''}`}
-              onClick={() => onSelect(item.entityClass)}
-            >
-              <span className={inline ? 'shrink-0 text-white' : 'block text-white'}>{titled(item)}</span>
-              {restBits.length > 0 || ammo ? (
-                <StatLead
-                  ammo={ammo}
-                  rest={restBits.join(' · ')}
-                  className={inline ? 'truncate text-sm text-slate-200' : 'block text-sm text-slate-200'}
-                />
-              ) : null}
-            </button>
+            <div key={item.entityClass} className="flex items-center">
+              <button
+                type="button"
+                className={`site-dropdown-item min-w-0 flex-1 ${inline ? 'flex items-baseline gap-3' : ''} ${fitted?.entityClass === item.entityClass ? 'site-dropdown-item-active' : ''}`}
+                onClick={() => onSelect(item.entityClass)}
+              >
+                <span className={inline ? 'shrink-0 text-white' : 'block text-white'}>{titled(item)}</span>
+                {restBits.length > 0 || ammo ? (
+                  <StatLead
+                    ammo={ammo}
+                    rest={restBits.join(' · ')}
+                    className={inline ? 'truncate text-sm text-slate-200' : 'block text-sm text-slate-200'}
+                  />
+                ) : null}
+              </button>
+              <BlueprintLootLocations entityClass={item.entityClass} label="Loot Chest" className="pr-2" />
+            </div>
           )
         })}
         {options.length === 0 && <p className="site-empty px-3 py-2">No parts fit this mount.</p>}
       </div>
       {current && (
         <div className="site-card rounded-xl p-3 space-y-3">
-          <div className="site-chip-strip w-fit">
-            <button type="button" className={`${CHIP} ${fitted?.source !== 'crafted' ? 'site-filter-selected-orange' : 'site-filter-idle'}`} onClick={() => onSource('stock')}>
-              Stock
-            </button>
-            <button
-              type="button"
-              className={`${CHIP} ${fitted?.source === 'crafted' ? 'site-filter-selected-orange' : 'site-filter-idle'}`}
-              disabled={!blueprint}
-              onClick={() => blueprint && onSource('crafted')}
-            >
-              Crafted
-            </button>
+          <div className="flex items-center gap-2">
+            <div className="site-chip-strip w-fit">
+              <button type="button" className={`${CHIP} ${fitted?.source !== 'crafted' ? 'site-filter-selected-orange' : 'site-filter-idle'}`} onClick={() => onSource('stock')}>
+                Stock
+              </button>
+              <button
+                type="button"
+                className={`${CHIP} ${fitted?.source === 'crafted' ? 'site-filter-selected-orange' : 'site-filter-idle'}`}
+                disabled={!blueprint}
+                onClick={() => blueprint && onSource('crafted')}
+              >
+                Crafted
+              </button>
+            </div>
+            <BlueprintLootLocations entityClass={current.item.entityClass} label="Loot Chest" />
           </div>
           {!blueprint && <p className="site-hint text-sm">This part has no blueprint, so it stays stock.</p>}
           {fitted?.source === 'crafted' && blueprint?.slots && blueprint.slots.length > 0 && (
@@ -602,7 +608,7 @@ export default function ShipShopPage() {
   const [copyWeapon, setCopyWeapon] = useState<{ portId: string; part: FittedPart } | null>(null)
   const [shopModal, setShopModal] = useState<
     | null
-    | { mode: 'where'; title: string; listings: ShopListing[] }
+    | { mode: 'where'; title: string; listings: ShopListing[]; entityClass?: string }
     | { mode: 'qty'; title: string; id: string; lineKind: 'ship' | 'part'; crafted?: boolean; qualities?: Record<number, number> }
     | { mode: 'cart' }
   >(null)
@@ -1292,6 +1298,7 @@ export default function ShipShopPage() {
                   mode: 'where',
                   title: name,
                   listings: partListings(fitted.item.entityClass),
+                  entityClass: fitted.item.entityClass,
                 })}
                 onAdd={() => setShopModal({
                   mode: 'qty',
@@ -1341,6 +1348,7 @@ export default function ShipShopPage() {
                       {addToAll}
                     </span>
                     <span className="truncate text-sm font-medium text-white">{name}</span>
+                    {fitted ? <BlueprintLootLocations entityClass={fitted.item.entityClass} label="Loot Chest" /> : null}
                     <StatLead ammo={ammo} rest={info} className="truncate text-sm text-slate-300" />
                     {buy}
                     <span className="ml-auto shrink-0 text-xs text-slate-500">{port.locked ? `${port.label} · Locked` : port.label}</span>
@@ -1361,6 +1369,7 @@ export default function ShipShopPage() {
                     </div>
                     <div className={`mt-1 flex w-full gap-3 text-left ${inline ? 'flex-nowrap items-center' : 'flex-wrap items-baseline gap-y-1'}`}>
                       <span className="ship-shop-part-name min-w-0 truncate font-medium text-white">{name}</span>
+                      {fitted ? <BlueprintLootLocations entityClass={fitted.item.entityClass} label="Loot Chest" /> : null}
                       <StatLead ammo={ammo} rest={info} className={`text-base text-slate-300 ${inline ? 'min-w-0 truncate' : ''}`} />
                       {buy}
                       {inline && fitted && !viewingFraken && !port.locked && (
@@ -1463,6 +1472,7 @@ export default function ShipShopPage() {
             >
               <div className="mb-4 flex items-center gap-3">
                 <h3 className="min-w-0 flex-1 truncate text-base font-semibold text-white">{itemName}</h3>
+                <BlueprintLootLocations entityClass={part.entityClass} label="Loot Chest" />
                 <button type="button" className="site-btn-secondary shrink-0 px-3 py-1 text-sm" onClick={() => paint(groups.flatMap((group) => group.slots), true)}>
                   Mark all
                 </button>
@@ -1505,6 +1515,7 @@ export default function ShipShopPage() {
         <ShopWhereModal
           title={shopModal.title}
           listings={shopModal.listings}
+          entityClass={shopModal.entityClass}
           onClose={() => setShopModal(null)}
         />
       )}

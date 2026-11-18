@@ -21,7 +21,7 @@ It reads the baked Loot Finder index (`game-site-loot.json` → `lootItemForEnti
 1. **Add or remove a Loot Finder location** → update `LOCATION_DEFS` in `scripts/lib/parseSiteLoot.mjs`, then **`npm run bake-site-loot`** (or full `parse-game-data`) and commit `src/data/game-site-loot.json`. Chest icons update from that bake alone.
 2. **Show the chest** when the blueprint `entityClass` appears in **any** tracked location (crate loot preferred over NPC-only).
 3. **Remove the chest** only when that entity has **zero** remaining tracked locations after rebake — never strip the icon because one location was deleted if others still list the item.
-4. Wire the chest through shared UI only: `BlueprintLootLocations` on `BlueprintCard` and `BlueprintDetailsModal` (Blueprints + Resource Tracker Can Craft use `BlueprintCard`). Do not hardcode per-location entity lists in React.
+4. Wire the chest through shared UI only: `BlueprintLootLocations` on `BlueprintCard`, `BlueprintDetailsModal` (Blueprints + Resource Tracker Can Craft use `BlueprintCard`), and Fuzy's Ship Shop part rows (fitted part, part list, Where to Buy, cart). Do not hardcode per-location entity lists in React. Ship Shop passes `label="Loot Chest"`.
 5. Lookup helpers live in `src/lib/lootBlueprintLookup.ts` — keep crate-over-NPC and `_scitem` alias behavior when changing them.
 
 ## Do not
