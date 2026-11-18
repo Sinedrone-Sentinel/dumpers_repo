@@ -220,31 +220,47 @@ function compactNumber(value: number | undefined): string | null {
 }
 
 /**
- * Shots on the weapon line.
- * A ballistic magazine stays fixed. An energy or distortion capacitor scales with the
- * weapon power share (assigned pips / pips the fitted guns need), the same share used
- * for capacitor regen. A share above 1 is capped. No weapon pip column passes 1.
+ * Weapons assignment curve. Empty at no pips, 1 at one third of the ship weapon pool,
+ * and 1.2 when that pool is full. Knots from the weapons capacitor assignment curve.
  */
-export function weaponAmmoCount(stats: Record<string, number> | null | undefined, powerFraction = 1): number | null {
+export function weaponAssignmentFactor(assignment: number): number {
+  if (!Number.isFinite(assignment) || assignment <= 0) return 0
+  const x = Math.min(1, assignment)
+  const third = 1 / 3
+  if (x <= third) return x / third
+  return 1 + ((x - third) / (1 - third)) * 0.2
+}
+
+/**
+ * Shots on the weapon line.
+ * A ballistic magazine stays fixed. An energy or distortion gun uses its requested
+ * ammo divided by the cost per shot, then the weapons assignment curve of
+ * (assigned weapon pips / the ship's weapon pool). A full pool is 1.2 times that
+ * base, which is 450 for a Rhino. No weapon pool passes a full assignment.
+ */
+export function weaponAmmoCount(stats: Record<string, number> | null | undefined, assignment = 1): number | null {
   if (!stats) return null
   const ballistic = stats.Weapon_Ammo || 0
   if (ballistic > 0) return ballistic
+  const requested = stats.Weapon_RequestedAmmo || 0
+  const cost = stats.Weapon_RegenCost || 0
   const capacitor = stats.Weapon_CapacitorShots || 0
-  if (capacitor <= 0) return null
-  const fraction = Math.max(0, Math.min(1, powerFraction))
-  return capacitor * fraction
+  const rated = requested > 0 && cost > 0 ? requested / cost : capacitor > 0 ? capacitor / 1.2 : 0
+  if (rated <= 0) return null
+  const shots = rated * weaponAssignmentFactor(assignment)
+  return Math.round((shots + Number.EPSILON) * 10) / 10
 }
 
-export function weaponAmmoLabel(stats: Record<string, number> | null | undefined, powerFraction = 1): string | null {
-  const count = weaponAmmoCount(stats, powerFraction)
+export function weaponAmmoLabel(stats: Record<string, number> | null | undefined, assignment = 1): string | null {
+  const count = weaponAmmoCount(stats, assignment)
   if (count == null) return null
   return `${formatShopNumber(count)} ammo`
 }
 
 /** Weapon columns, in plain labels. Ammo leads. Missiles are not part of DPS. */
-export function weaponStatBits(stats: Record<string, number>, powerFraction = 1): string[] {
+export function weaponStatBits(stats: Record<string, number>, assignment = 1): string[] {
   const bits: string[] = []
-  const ammo = weaponAmmoLabel(stats, powerFraction)
+  const ammo = weaponAmmoLabel(stats, assignment)
   if (ammo) bits.push(ammo)
   const push = (label: string, value: number | undefined) => {
     const text = compactNumber(value)
