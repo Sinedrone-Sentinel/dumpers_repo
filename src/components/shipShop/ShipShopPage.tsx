@@ -1348,9 +1348,9 @@ export default function ShipShopPage() {
                       {addToAll}
                     </span>
                     <span className="truncate text-sm font-medium text-white">{name}</span>
-                    {fitted ? <BlueprintLootLocations entityClass={fitted.item.entityClass} label="Loot Chest" /> : null}
                     <StatLead ammo={ammo} rest={info} className="truncate text-sm text-slate-300" />
                     {buy}
+                    {fitted ? <BlueprintLootLocations entityClass={fitted.item.entityClass} label="Loot Chest" /> : null}
                     <span className="ml-auto shrink-0 text-xs text-slate-500">{port.locked ? `${port.label} · Locked` : port.label}</span>
                     {fitted && !viewingFraken && !port.locked && (
                       <button type="button" className="site-btn-ghost shrink-0 px-2 py-0.5 text-xs" onClick={() => setFitted(port, null)}>
@@ -1369,9 +1369,9 @@ export default function ShipShopPage() {
                     </div>
                     <div className={`mt-1 flex w-full gap-3 text-left ${inline ? 'flex-nowrap items-center' : 'flex-wrap items-baseline gap-y-1'}`}>
                       <span className="ship-shop-part-name min-w-0 truncate font-medium text-white">{name}</span>
-                      {fitted ? <BlueprintLootLocations entityClass={fitted.item.entityClass} label="Loot Chest" /> : null}
                       <StatLead ammo={ammo} rest={info} className={`text-base text-slate-300 ${inline ? 'min-w-0 truncate' : ''}`} />
                       {buy}
+                      {fitted ? <BlueprintLootLocations entityClass={fitted.item.entityClass} label="Loot Chest" /> : null}
                       {inline && fitted && !viewingFraken && !port.locked && (
                         <button type="button" className="site-btn-ghost ml-auto shrink-0 px-3 py-1 text-sm" onClick={() => setFitted(port, null)}>
                           Clear
