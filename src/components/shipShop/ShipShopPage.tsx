@@ -317,7 +317,7 @@ function ShipSnapshot({ snapshot }: { snapshot: ShipSnapshotNumbers }) {
         {rows.map((group) => (
           <div key={group.title} className="space-y-4">
             <section>
-              <h3 className="text-xs uppercase tracking-wide text-slate-500 mb-2">{group.title}</h3>
+              <h3 className="ship-shop-snap-head uppercase tracking-wide text-slate-500 mb-2">{group.title}</h3>
               <dl className="space-y-1">
                 {group.lines.map(([label, value]) => (
                   <div key={label} className="flex items-baseline justify-between gap-3 text-sm">
