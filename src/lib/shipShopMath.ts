@@ -231,6 +231,13 @@ export function weaponShotEfficiency(assignedPips: number, parts: PowerPart[]): 
   return Math.min(1, assigned / sum)
 }
 
+/** Whole percent for the Offense efficiency bar. Hidden when the ship has no weapon power to cover. */
+export function weaponEfficiencyPercent(assignedPips: number, parts: PowerPart[], hasWeaponColumn = true): number | null {
+  if (!hasWeaponColumn && weaponPowerSum(parts) <= 0) return null
+  const efficiency = hasWeaponColumn ? weaponShotEfficiency(assignedPips, parts) : 1
+  return Math.round(Math.min(1, Math.max(0, efficiency)) * 100)
+}
+
 /**
  * Shots on the weapon line.
  * A ballistic magazine stays fixed. An energy or distortion gun is its magazine

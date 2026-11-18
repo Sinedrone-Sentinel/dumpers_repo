@@ -2518,7 +2518,11 @@ check(
     shipShopMath.weaponAmmoCount(panther, 0) === 0 &&
     shipShopMath.weaponAmmoCount({ Weapon_Ammo: 5220, ...panther }, 0.5) === 5220 &&
     shipShopMath.weaponAmmoLabel({ Weapon_Ammo: 5220 }, 0.25) === `${(5220).toLocaleString()} ammo` &&
-    shipShopMath.weaponStatBits({ Weapon_Ammo: 100, Weapon_Damage: 10, Weapon_Firerate: 60 })[0] === '100 ammo',
+    shipShopMath.weaponStatBits({ Weapon_Ammo: 100, Weapon_Damage: 10, Weapon_Firerate: 60 })[0] === '100 ammo' &&
+    shipShopMath.weaponEfficiencyPercent(4, gunParts(panther, 4)) === 100 &&
+    shipShopMath.weaponEfficiencyPercent(4, [...gunParts(panther, 2), ...gunParts(omnisky, 2)]) === 80 &&
+    shipShopMath.weaponEfficiencyPercent(0, gunParts(panther, 4)) === 0 &&
+    shipShopMath.weaponEfficiencyPercent(0, [], false) == null,
   'ship shop: energy shots are the magazine times the share of gun power the pips cover',
 )
 const plant = (generation, size) => ({ portId: 'p', kind: 'power', size, stats: { Itemresource_Powergeneration: generation } })
