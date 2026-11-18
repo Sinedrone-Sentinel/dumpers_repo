@@ -1293,7 +1293,6 @@ export default function ShipShopPage() {
                 Add to All
               </button>
             ) : null
-            const treeTone = depth === 0 ? '' : attachment ? 'ship-shop-tree-gimbal' : 'ship-shop-tree-port'
             return (
               <div
                 key={port.id}
@@ -1302,7 +1301,7 @@ export default function ShipShopPage() {
                 style={depth > 0 ? { marginLeft: `${depth * 1.5}rem` } : undefined}
               >
                 {attachment ? (
-                  <div className={`site-card flex items-center gap-3 rounded-lg px-3 py-1 ${treeTone}`} data-ship-port={port.id} onClick={openPicker}>
+                  <div className="site-card flex items-center gap-3 rounded-lg px-3 py-1" data-ship-port={port.id} onClick={openPicker}>
                     <span className="flex shrink-0 items-center gap-2">
                       <span className="text-xs uppercase tracking-wide text-slate-500">{sizeLabel}</span>
                       {addToAll}
@@ -1318,7 +1317,7 @@ export default function ShipShopPage() {
                     )}
                   </div>
                 ) : (
-                  <div className={`site-card rounded-xl p-3 ${treeTone}`} data-ship-port={port.id} onClick={openPicker}>
+                  <div className="site-card rounded-xl p-3" data-ship-port={port.id} onClick={openPicker}>
                     <div className="flex items-center justify-between gap-3">
                       <span className="flex items-center gap-2">
                         <span className="text-xs uppercase tracking-wide text-slate-500">{sizeLabel}</span>
