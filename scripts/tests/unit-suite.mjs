@@ -2516,7 +2516,8 @@ check(
     shipShopMath.weaponShotEfficiency(4, gunParts(ndb, 4)) === 1 &&
     shipShopMath.weaponAmmoCount(ndb, 1) === 75 &&
     shipShopMath.weaponAmmoCount(panther, 0) === 0 &&
-    shipShopMath.weaponAmmoCount({ Weapon_Ammo: 5220, ...panther }, 0.5) === 5220 &&
+    shipShopMath.weaponAmmoCount(panther, 1, 2) === 150 &&
+    shipShopMath.weaponAmmoCount({ Weapon_Ammo: 5220, ...panther }, 0.5, 2) === 5220 &&
     shipShopMath.weaponAmmoLabel({ Weapon_Ammo: 5220 }, 0.25) === `${(5220).toLocaleString()} ammo` &&
     shipShopMath.weaponStatBits({ Weapon_Ammo: 100, Weapon_Damage: 10, Weapon_Firerate: 60 })[0] === '100 ammo' &&
     shipShopMath.weaponEfficiencyPercent(4, gunParts(panther, 4)) === 100 &&

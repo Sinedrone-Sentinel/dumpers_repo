@@ -224,45 +224,48 @@ function compactNumber(value: number | undefined): string | null {
  * No fitted gun power leaves a full magazine when pips are on, and 0 when they are off.
  * The share never goes above 1.
  */
-export function weaponShotEfficiency(assignedPips: number, parts: PowerPart[]): number {
+export function weaponShotEfficiency(assignedPips: number, parts: PowerPart[], powerRatio = 1): number {
   const sum = weaponPowerSum(parts)
   const assigned = Number.isFinite(assignedPips) ? Math.max(0, assignedPips) : 0
+  const ratio = Number.isFinite(powerRatio) && powerRatio > 0 ? powerRatio : 1
   if (sum <= 0) return assigned > 0 ? 1 : 0
-  return Math.min(1, assigned / sum)
+  return Math.min(1, (assigned / sum) * ratio)
 }
 
 /** Whole percent for the Offense efficiency bar. Hidden when the ship has no weapon power to cover. */
-export function weaponEfficiencyPercent(assignedPips: number, parts: PowerPart[], hasWeaponColumn = true): number | null {
+export function weaponEfficiencyPercent(assignedPips: number, parts: PowerPart[], hasWeaponColumn = true, powerRatio = 1): number | null {
   if (!hasWeaponColumn && weaponPowerSum(parts) <= 0) return null
-  const efficiency = hasWeaponColumn ? weaponShotEfficiency(assignedPips, parts) : 1
+  const efficiency = hasWeaponColumn ? weaponShotEfficiency(assignedPips, parts, powerRatio) : 1
   return Math.round(Math.min(1, Math.max(0, efficiency)) * 100)
 }
 
 /**
  * Shots on the weapon line.
  * A ballistic magazine stays fixed. An energy or distortion gun is its magazine
- * times how much of the fitted guns' power the weapon pips cover.
+ * times how much of the fitted guns' power the weapon pips cover, then times
+ * that hull's magazine multiplier.
  */
-export function weaponAmmoCount(stats: Record<string, number> | null | undefined, efficiency = 1): number | null {
+export function weaponAmmoCount(stats: Record<string, number> | null | undefined, efficiency = 1, magazineScale = 1): number | null {
   if (!stats) return null
   const ballistic = stats.Weapon_Ammo || 0
   if (ballistic > 0) return ballistic
   const magazine = stats.Weapon_CapacitorShots || 0
   if (magazine <= 0) return null
   const factor = Number.isFinite(efficiency) ? Math.min(1, Math.max(0, efficiency)) : 0
-  return Math.round(magazine * factor)
+  const scale = Number.isFinite(magazineScale) && magazineScale > 0 ? magazineScale : 1
+  return Math.round(magazine * factor * scale)
 }
 
-export function weaponAmmoLabel(stats: Record<string, number> | null | undefined, assignment = 1): string | null {
-  const count = weaponAmmoCount(stats, assignment)
+export function weaponAmmoLabel(stats: Record<string, number> | null | undefined, assignment = 1, magazineScale = 1): string | null {
+  const count = weaponAmmoCount(stats, assignment, magazineScale)
   if (count == null) return null
   return `${formatShopNumber(count)} ammo`
 }
 
 /** Weapon columns, in plain labels. Ammo leads. Missiles are not part of DPS. */
-export function weaponStatBits(stats: Record<string, number>, assignment = 1): string[] {
+export function weaponStatBits(stats: Record<string, number>, assignment = 1, magazineScale = 1): string[] {
   const bits: string[] = []
-  const ammo = weaponAmmoLabel(stats, assignment)
+  const ammo = weaponAmmoLabel(stats, assignment, magazineScale)
   if (ammo) bits.push(ammo)
   const push = (label: string, value: number | undefined) => {
     const text = compactNumber(value)

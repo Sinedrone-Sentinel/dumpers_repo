@@ -1,0 +1,21 @@
+{
+  "modifiers": [
+    {
+      "targetItemType": "WeaponGun",
+      "modifiers": [
+        {
+          "weaponModifier": {
+            "weaponStats": {
+              "regenModifier": {
+                "_Type_": "SRegenConsumerModifier",
+                "powerRatioMultiplier": 1.0,
+                "maxAmmoLoadMultiplier": 2.0,
+                "maxRegenPerSecMultiplier": 1.0
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

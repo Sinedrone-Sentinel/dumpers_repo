@@ -4,6 +4,7 @@ import * as esbuild from 'esbuild'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { weaponBurstDps } from '../lib/shipItemStats.mjs'
+import { weaponRegenFromEntity } from '../lib/parseShipShop.mjs'
 import { applyShipPartRules } from '../lib/shipPartRules.mjs'
 import { matchShopRow } from '../lib/uexShopJoin.mjs'
 
@@ -653,6 +654,18 @@ const walkMarauderGuns = (nodes) => {
 }
 walkMarauderGuns(shop.weaponTree(marauder))
 assert.equal(marauderGuns.some((port) => port.id.includes('weaponslocker')), false)
+
+assert.equal(shop.weaponRegenFor(shop.getShip('drak_cutlass_black')).ammo, 2)
+assert.equal(shop.weaponRegenFor(shop.getShip('aegs_sabre_raven')).ammo, 1)
+assert.equal(shop.weaponRegenFor(shop.getShip('aegs_sabre_raven')).power, 1)
+const regenRoot = path.join('scripts', 'tests', 'fixtures', 'weapon-regen')
+assert.deepEqual(weaponRegenFromEntity({
+  ports: [{
+    Name: 'engineeringBuff',
+    defaultItem: { entityClass: 'file://./libs/foundry/records/cutlass-buff.json' },
+  }],
+}, regenRoot), { ammo: 2, power: 1 })
+assert.deepEqual(weaponRegenFromEntity({}, regenRoot), { ammo: 1, power: 1 })
 
 const shopsOut = path.join('node_modules', '.cache', 'ship-shop-shops.mjs')
 await esbuild.build({

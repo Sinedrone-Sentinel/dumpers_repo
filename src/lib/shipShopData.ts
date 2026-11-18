@@ -1,5 +1,6 @@
 import gameBlueprints from '../data/game-blueprints.json'
 import gameShips from '../data/game-ships.json'
+import shipWeaponRegen from '../data/ship-weapon-regen.json'
 import type { BlueprintForEffectiveStats } from './blueprintEffectiveStats'
 import { buildDefaultSlotQualities } from './blueprintQuality'
 import {
@@ -76,6 +77,10 @@ export interface GameShip {
   boostSpeed: number | null
   maxSpeed: number | null
   weaponPowerPool?: number
+  /** Hull engineering part. Scales an energy gun's magazine. 1 when the hull has no modifier. */
+  weaponAmmoMultiplier?: number
+  /** Hull engineering part. Scales how far weapon pips cover gun power, still capped at 1. */
+  weaponPowerRatio?: number
   /** Freight grids only. Walkways, ladders, access, and fake grids are not counted. */
   cargoScu?: number
   /** Largest standard crate, 1 through 32 SCU, that fits in any one freight grid. */
@@ -302,6 +307,19 @@ export function weaponTree(ship: GameShip, fitted?: Record<string, FittedPart>):
 }
 
 export const SHIPS: GameShip[] = (gameShips as { ships: GameShip[] }).ships
+
+const regenByShip = shipWeaponRegen as Record<string, { ammo?: number; power?: number }>
+
+/** Magazine scale and power-ratio scale from the hull engineering part. Defaults are 1. */
+export function weaponRegenFor(ship: GameShip | null | undefined): { ammo: number; power: number } {
+  const row = ship ? regenByShip[ship.id] : undefined
+  const ammo = ship?.weaponAmmoMultiplier ?? row?.ammo ?? 1
+  const power = ship?.weaponPowerRatio ?? row?.power ?? 1
+  return {
+    ammo: Number.isFinite(ammo) && ammo > 0 ? ammo : 1,
+    power: Number.isFinite(power) && power > 0 ? power : 1,
+  }
+}
 
 const shipById = new Map(SHIPS.map((ship) => [ship.id, ship]))
 

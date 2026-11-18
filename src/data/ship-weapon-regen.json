@@ -1,0 +1,152 @@
+{
+  "aegs_idris_m": {
+    "ammo": 6
+  },
+  "aegs_idris_p": {
+    "ammo": 6
+  },
+  "aegs_reclaimer": {
+    "ammo": 2.5,
+    "power": 1.18
+  },
+  "aegs_redeemer": {
+    "ammo": 3.5
+  },
+  "aegs_retaliator": {
+    "ammo": 5
+  },
+  "aegs_tiburon": {
+    "ammo": 4,
+    "power": 2.9
+  },
+  "anvl_asgard": {
+    "ammo": 5
+  },
+  "anvl_carrack": {
+    "ammo": 3
+  },
+  "anvl_carrack_expedition": {
+    "ammo": 3
+  },
+  "anvl_gladiator": {
+    "ammo": 2.5
+  },
+  "anvl_hurricane": {
+    "ammo": 2.5
+  },
+  "anvl_liberator": {
+    "ammo": 4
+  },
+  "anvl_paladin": {
+    "ammo": 2.2
+  },
+  "anvl_valkyrie": {
+    "ammo": 3.5
+  },
+  "anvl_valkyrie_citizencon": {
+    "ammo": 3.5
+  },
+  "crus_star_runner": {
+    "ammo": 2
+  },
+  "crus_starlifter_a2": {
+    "ammo": 3
+  },
+  "crus_starlifter_c2": {
+    "ammo": 3
+  },
+  "crus_starlifter_m2": {
+    "ammo": 3
+  },
+  "drak_caterpillar": {
+    "ammo": 3
+  },
+  "drak_caterpillar_pirate": {
+    "ammo": 3
+  },
+  "drak_caterpillar_shipshowdown": {
+    "ammo": 3
+  },
+  "drak_corsair": {
+    "ammo": 2
+  },
+  "drak_cutlass_black": {
+    "ammo": 2
+  },
+  "drak_cutlass_black_shipshowdown": {
+    "ammo": 2
+  },
+  "drak_cutlass_blue": {
+    "ammo": 2
+  },
+  "drak_cutlass_red": {
+    "ammo": 2
+  },
+  "drak_cutlass_steel": {
+    "ammo": 3
+  },
+  "misc_starfarer": {
+    "ammo": 3
+  },
+  "misc_starfarer_gemini": {
+    "ammo": 3
+  },
+  "misc_starlancer_max": {
+    "ammo": 4
+  },
+  "misc_starlancer_tac": {
+    "ammo": 4.25
+  },
+  "orig_400i": {
+    "ammo": 3
+  },
+  "orig_600i": {
+    "ammo": 3
+  },
+  "orig_600i_executive_edition": {
+    "ammo": 3
+  },
+  "orig_600i_touring": {
+    "ammo": 3
+  },
+  "orig_890jump": {
+    "ammo": 4
+  },
+  "rsi_constellation_mk5_centaurus": {
+    "ammo": 9
+  },
+  "rsi_constellation_phoenix": {
+    "ammo": 3
+  },
+  "rsi_constellation_taurus": {
+    "ammo": 3
+  },
+  "rsi_galaxy": {
+    "ammo": 2.1
+  },
+  "rsi_perseus": {
+    "ammo": 2.7
+  },
+  "rsi_polaris": {
+    "ammo": 4,
+    "power": 2.3
+  },
+  "rsi_scorpius": {
+    "ammo": 2.5
+  },
+  "rsi_scorpius_antares": {
+    "ammo": 2.5
+  },
+  "rsi_scorpius_stealth": {
+    "ammo": 2.5
+  },
+  "vncl_blade": {
+    "ammo": 1.4
+  },
+  "vncl_glaive": {
+    "ammo": 2.2
+  },
+  "vncl_scythe": {
+    "ammo": 2.2
+  }
+}
