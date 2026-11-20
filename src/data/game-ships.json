@@ -4647,6 +4647,8 @@
       "decoy": 50,
       "damageReduction": 0.2,
       "weaponPowerPool": 10,
+      "weaponAmmoMultiplier": 4,
+      "weaponPowerRatio": 2.9,
       "cargoScu": 64,
       "maxCrateScu": 32,
       "pitch": 20,
@@ -6829,6 +6831,7 @@
       "decoy": 1200,
       "damageReduction": 0.2,
       "weaponPowerPool": 10,
+      "weaponAmmoMultiplier": 6,
       "cargoScu": 1326,
       "maxCrateScu": 32,
       "pitch": 6,
@@ -8584,6 +8587,7 @@
       "decoy": 1200,
       "damageReduction": 0.2,
       "weaponPowerPool": 10,
+      "weaponAmmoMultiplier": 6,
       "cargoScu": 1374,
       "maxCrateScu": 32,
       "pitch": 6,
@@ -11488,6 +11492,8 @@
       "decoy": 25,
       "damageReduction": 0.2,
       "weaponPowerPool": 10,
+      "weaponAmmoMultiplier": 2.5,
+      "weaponPowerRatio": 1.18,
       "cargoScu": 420,
       "maxCrateScu": 32,
       "pitch": 11,
@@ -12606,6 +12612,7 @@
       "decoy": 25,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
+      "weaponAmmoMultiplier": 3.5,
       "cargoScu": 2,
       "maxCrateScu": 2,
       "pitch": 36,
@@ -13679,6 +13686,7 @@
       "decoy": 96,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
+      "weaponAmmoMultiplier": 5,
       "cargoScu": 0,
       "maxCrateScu": 0,
       "pitch": 25,
@@ -17335,6 +17343,8 @@
       "decoy": 50,
       "damageReduction": 0.2,
       "weaponPowerPool": 10,
+      "weaponAmmoMultiplier": 4,
+      "weaponPowerRatio": 2.9,
       "cargoScu": 64,
       "maxCrateScu": 32,
       "pitch": 13,
@@ -22886,6 +22896,7 @@
       "decoy": 192,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
+      "weaponAmmoMultiplier": 5,
       "cargoScu": 180,
       "maxCrateScu": 32,
       "pitch": 32.5,
@@ -25024,6 +25035,7 @@
       "decoy": 25,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
+      "weaponAmmoMultiplier": 3,
       "cargoScu": 456,
       "maxCrateScu": 32,
       "pitch": 16,
@@ -25695,6 +25707,7 @@
       "decoy": 25,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
+      "weaponAmmoMultiplier": 3,
       "cargoScu": 456,
       "maxCrateScu": 32,
       "pitch": 16,
@@ -35787,6 +35800,7 @@
       "decoy": 96,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
+      "weaponAmmoMultiplier": 2.5,
       "cargoScu": 0,
       "maxCrateScu": 0,
       "pitch": 40,
@@ -37020,6 +37034,7 @@
       "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
+      "weaponAmmoMultiplier": 2.5,
       "cargoScu": 0,
       "maxCrateScu": 0,
       "pitch": 46,
@@ -37659,6 +37674,7 @@
       "decoy": 96,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
+      "weaponAmmoMultiplier": 4,
       "cargoScu": 400,
       "maxCrateScu": 32,
       "pitch": 9,
@@ -38437,6 +38453,7 @@
       "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 10,
+      "weaponAmmoMultiplier": 2.2,
       "cargoScu": 4,
       "maxCrateScu": 2,
       "pitch": 23,
@@ -39862,6 +39879,7 @@
       "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
+      "weaponAmmoMultiplier": 3.5,
       "cargoScu": 90,
       "maxCrateScu": 32,
       "pitch": 34,
@@ -40601,6 +40619,7 @@
       "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
+      "weaponAmmoMultiplier": 3.5,
       "cargoScu": 90,
       "maxCrateScu": 32,
       "pitch": 34,
@@ -49129,6 +49148,7 @@
       "decoy": 50,
       "damageReduction": 0.2,
       "weaponPowerPool": 10,
+      "weaponAmmoMultiplier": 3,
       "cargoScu": 219,
       "maxCrateScu": 32,
       "pitch": 20,
@@ -52772,6 +52792,7 @@
       "decoy": 50,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
+      "weaponAmmoMultiplier": 3,
       "cargoScu": 696,
       "maxCrateScu": 32,
       "pitch": 20,
@@ -53618,6 +53639,7 @@
       "decoy": 50,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
+      "weaponAmmoMultiplier": 3,
       "cargoScu": 525,
       "maxCrateScu": 32,
       "pitch": 20,
@@ -54276,6 +54298,7 @@
       "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
+      "weaponAmmoMultiplier": 2,
       "cargoScu": 114,
       "maxCrateScu": 32,
       "pitch": 25,
@@ -55484,6 +55507,7 @@
       "decoy": 25,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
+      "weaponAmmoMultiplier": 3,
       "cargoScu": 444,
       "maxCrateScu": 32,
       "pitch": 16,
@@ -55941,6 +55965,7 @@
       "decoy": 25,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
+      "weaponAmmoMultiplier": 3,
       "cargoScu": 444,
       "maxCrateScu": 32,
       "pitch": 16,
@@ -56398,6 +56423,7 @@
       "decoy": 25,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
+      "weaponAmmoMultiplier": 3,
       "cargoScu": 444,
       "maxCrateScu": 32,
       "pitch": 16,
@@ -58211,6 +58237,7 @@
       "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 10,
+      "weaponAmmoMultiplier": 2,
       "cargoScu": 72,
       "maxCrateScu": 32,
       "pitch": 26,
@@ -59235,6 +59262,7 @@
       "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
+      "weaponAmmoMultiplier": 2,
       "cargoScu": 46,
       "maxCrateScu": 32,
       "pitch": 39,
@@ -60165,6 +60193,7 @@
       "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
+      "weaponAmmoMultiplier": 2,
       "cargoScu": 46,
       "maxCrateScu": 32,
       "pitch": 39,
@@ -61095,6 +61124,7 @@
       "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
+      "weaponAmmoMultiplier": 2,
       "cargoScu": 12,
       "maxCrateScu": 4,
       "pitch": 38,
@@ -62105,6 +62135,7 @@
       "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
+      "weaponAmmoMultiplier": 2,
       "cargoScu": 12,
       "maxCrateScu": 4,
       "pitch": 37,
@@ -62476,6 +62507,7 @@
       "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
+      "weaponAmmoMultiplier": 3,
       "cargoScu": 0,
       "maxCrateScu": 0,
       "pitch": 35,
@@ -69944,9 +69976,7 @@
           "accepts": [
             {
               "type": "PowerPlant",
-              "subtypes": [
-                "$editable"
-              ]
+              "subtypes": []
             }
           ],
           "portTags": "DRAK_marauder"
@@ -69963,9 +69993,7 @@
           "accepts": [
             {
               "type": "PowerPlant",
-              "subtypes": [
-                "$editable"
-              ]
+              "subtypes": []
             }
           ],
           "portTags": "DRAK_marauder"
@@ -70537,25 +70565,6 @@
             }
           ],
           "portTags": "DRAK_marauder"
-        },
-        {
-          "id": "hardpoint_weaponslocker",
-          "label": "Weaponslocker",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 1,
-          "minSize": 1,
-          "maxSize": 1,
-          "defaultEntityClass": null,
-          "accepts": [
-            {
-              "type": "Usable",
-              "subtypes": []
-            }
-          ],
-          "locked": true,
-          "portTags": "DRAK_marauder",
-          "pilotWeapon": true
         }
       ]
     },
@@ -71599,6 +71608,7 @@
       "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
+      "weaponAmmoMultiplier": 1.4,
       "cargoScu": 0,
       "maxCrateScu": 0,
       "pitch": 70,
@@ -72187,6 +72197,7 @@
       "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
+      "weaponAmmoMultiplier": 2.2,
       "cargoScu": 0,
       "maxCrateScu": 0,
       "pitch": 60,
@@ -96939,6 +96950,7 @@
       "decoy": 50,
       "damageReduction": 0.2,
       "weaponPowerPool": 10,
+      "weaponAmmoMultiplier": 3,
       "cargoScu": 291,
       "maxCrateScu": 32,
       "pitch": 23,
@@ -97626,6 +97638,7 @@
       "decoy": 50,
       "damageReduction": 0.2,
       "weaponPowerPool": 10,
+      "weaponAmmoMultiplier": 3,
       "cargoScu": 291,
       "maxCrateScu": 32,
       "pitch": 23,
@@ -98484,6 +98497,7 @@
       "decoy": 100,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
+      "weaponAmmoMultiplier": 4,
       "cargoScu": 96,
       "maxCrateScu": 16,
       "pitch": 31,
@@ -99374,6 +99388,7 @@
       "decoy": 100,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
+      "weaponAmmoMultiplier": 4.25,
       "cargoScu": 96,
       "maxCrateScu": 16,
       "pitch": 27,
@@ -104171,6 +104186,7 @@
       "decoy": 25,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
+      "weaponAmmoMultiplier": 3,
       "cargoScu": 0,
       "maxCrateScu": 0,
       "pitch": 35,
@@ -104228,9 +104244,7 @@
           "accepts": [
             {
               "type": "Cooler",
-              "subtypes": [
-                "$editable"
-              ]
+              "subtypes": []
             }
           ],
           "portTags": "ORIG_400i"
@@ -104283,9 +104297,7 @@
           "accepts": [
             {
               "type": "Shield",
-              "subtypes": [
-                "$editable"
-              ]
+              "subtypes": []
             }
           ],
           "portTags": "ORIG_400i"
@@ -105363,6 +105375,7 @@
       "decoy": 25,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
+      "weaponAmmoMultiplier": 3,
       "cargoScu": 44,
       "maxCrateScu": 4,
       "pitch": 19,
@@ -106266,6 +106279,7 @@
       "decoy": 25,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
+      "weaponAmmoMultiplier": 3,
       "cargoScu": 44,
       "maxCrateScu": 4,
       "pitch": 19,
@@ -107169,6 +107183,7 @@
       "decoy": 25,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
+      "weaponAmmoMultiplier": 3,
       "cargoScu": 20,
       "maxCrateScu": 4,
       "pitch": 19,
@@ -108454,6 +108469,7 @@
       "decoy": 25,
       "damageReduction": 0.2,
       "weaponPowerPool": 10,
+      "weaponAmmoMultiplier": 4,
       "cargoScu": 100,
       "maxCrateScu": 16,
       "pitch": 10,
@@ -110604,9 +110620,7 @@
           "accepts": [
             {
               "type": "PowerPlant",
-              "subtypes": [
-                "$editable"
-              ]
+              "subtypes": []
             }
           ],
           "portTags": "Orig_m80"
@@ -116805,6 +116819,7 @@
       "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
+      "weaponAmmoMultiplier": 3,
       "cargoScu": 80,
       "maxCrateScu": 32,
       "pitch": 25,
@@ -118070,6 +118085,7 @@
       "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
+      "weaponAmmoMultiplier": 3,
       "cargoScu": 174,
       "maxCrateScu": 32,
       "pitch": 25,
@@ -119157,6 +119173,7 @@
       "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
+      "weaponAmmoMultiplier": 9,
       "cargoScu": 240,
       "maxCrateScu": 32,
       "pitch": 22,
@@ -120525,6 +120542,7 @@
       "decoy": 50,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
+      "weaponAmmoMultiplier": 2.1,
       "cargoScu": 64,
       "maxCrateScu": 32,
       "pitch": 14,
@@ -123904,6 +123922,7 @@
       "decoy": 50,
       "damageReduction": 0.2,
       "weaponPowerPool": 10,
+      "weaponAmmoMultiplier": 2.7,
       "cargoScu": 96,
       "maxCrateScu": 32,
       "pitch": 15,
@@ -125238,6 +125257,8 @@
       "decoy": 120,
       "damageReduction": 0.2,
       "weaponPowerPool": 10,
+      "weaponAmmoMultiplier": 4,
+      "weaponPowerRatio": 2.3,
       "cargoScu": 576,
       "maxCrateScu": 32,
       "pitch": 10,
@@ -127953,6 +127974,7 @@
       "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
+      "weaponAmmoMultiplier": 2.5,
       "cargoScu": 0,
       "maxCrateScu": 0,
       "pitch": 42,
@@ -128839,6 +128861,7 @@
       "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
+      "weaponAmmoMultiplier": 2.5,
       "cargoScu": 0,
       "maxCrateScu": 0,
       "pitch": 42,
@@ -129755,6 +129778,7 @@
       "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
+      "weaponAmmoMultiplier": 2.5,
       "cargoScu": 0,
       "maxCrateScu": 0,
       "pitch": 42,
@@ -133911,6 +133935,7 @@
       "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
+      "weaponAmmoMultiplier": 2.2,
       "cargoScu": 0,
       "maxCrateScu": 0,
       "pitch": 56,

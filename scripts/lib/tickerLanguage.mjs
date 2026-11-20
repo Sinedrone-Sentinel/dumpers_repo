@@ -36,6 +36,12 @@ const HIDDEN_FIELD_ROOTS = new Set([
   'titleKey',
 ])
 
+/** Capacitor bookkeeping. The shot count members see is the magazine, not these. */
+const HIDDEN_STAT_LEAVES = new Set([
+  'Weapon_RequestedAmmo',
+  'Weapon_RegenCost',
+])
+
 const FIELD_LABELS = {
   armorBaseStats: 'Armour stats',
   armorWeight: 'Armour weight',
@@ -432,7 +438,8 @@ function describeStatObject(label, oldVal, newVal) {
 export function describeField(field, resolve, options = {}) {
   const segments = String(field.path).split('.')
   const root = segments[0]
-  if (HIDDEN_FIELD_ROOTS.has(root)) return null
+  const leaf = segments[segments.length - 1]
+  if (HIDDEN_FIELD_ROOTS.has(root) || HIDDEN_STAT_LEAVES.has(leaf)) return null
 
   const { old: oldVal, new: newVal } = field
   if (isBlank(oldVal) && isBlank(newVal)) return null

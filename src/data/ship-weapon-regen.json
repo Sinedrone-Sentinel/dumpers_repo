@@ -1,4 +1,8 @@
 {
+  "aegs_hammerhead": {
+    "ammo": 4,
+    "power": 2.9
+  },
   "aegs_idris_m": {
     "ammo": 6
   },
@@ -46,9 +50,6 @@
   "anvl_valkyrie_citizencon": {
     "ammo": 3.5
   },
-  "crus_star_runner": {
-    "ammo": 2
-  },
   "crus_starlifter_a2": {
     "ammo": 3
   },
@@ -58,22 +59,25 @@
   "crus_starlifter_m2": {
     "ammo": 3
   },
-  "drak_caterpillar": {
-    "ammo": 3
+  "crus_star_runner": {
+    "ammo": 2
   },
-  "drak_caterpillar_pirate": {
+  "drak_caterpillar": {
     "ammo": 3
   },
   "drak_caterpillar_shipshowdown": {
     "ammo": 3
   },
+  "drak_caterpillar_pirate": {
+    "ammo": 3
+  },
   "drak_corsair": {
     "ammo": 2
   },
-  "drak_cutlass_black": {
+  "drak_cutlass_black_shipshowdown": {
     "ammo": 2
   },
-  "drak_cutlass_black_shipshowdown": {
+  "drak_cutlass_black": {
     "ammo": 2
   },
   "drak_cutlass_blue": {
@@ -84,6 +88,12 @@
   },
   "drak_cutlass_steel": {
     "ammo": 3
+  },
+  "vncl_blade": {
+    "ammo": 1.4
+  },
+  "vncl_glaive": {
+    "ammo": 2.2
   },
   "misc_starfarer": {
     "ammo": 3
@@ -112,14 +122,14 @@
   "orig_890jump": {
     "ammo": 4
   },
-  "rsi_constellation_mk5_centaurus": {
-    "ammo": 9
-  },
   "rsi_constellation_phoenix": {
     "ammo": 3
   },
   "rsi_constellation_taurus": {
     "ammo": 3
+  },
+  "rsi_constellation_mk5_centaurus": {
+    "ammo": 9
   },
   "rsi_galaxy": {
     "ammo": 2.1
@@ -139,12 +149,6 @@
   },
   "rsi_scorpius_stealth": {
     "ammo": 2.5
-  },
-  "vncl_blade": {
-    "ammo": 1.4
-  },
-  "vncl_glaive": {
-    "ammo": 2.2
   },
   "vncl_scythe": {
     "ammo": 2.2

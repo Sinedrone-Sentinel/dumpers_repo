@@ -117,6 +117,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 5625,
+        "Weapon_RegenCost": 200,
         "Weapon_Firerate": 200,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.45,
@@ -135,9 +137,7 @@
         "Signature_Em": 578,
         "Signature_Ir": 0,
         "Weapon_CycleShots": 1,
-        "Weapon_CycleSeconds": 1.2,
-        "Weapon_RequestedAmmo": 5625,
-        "Weapon_RegenCost": 200
+        "Weapon_CycleSeconds": 1.2
       },
       "burstDps": 473,
       "tags": "VNCL NeutronCannon flightReady weaponMountUsable",
@@ -158,6 +158,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 3750,
+        "Weapon_RegenCost": 375,
         "Weapon_Firerate": 100,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.5,
@@ -174,9 +176,7 @@
         "Weapon_Power": 1.5,
         "Weapon_Em": 681,
         "Signature_Em": 681,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 3750,
-        "Weapon_RegenCost": 375
+        "Signature_Ir": 0
       },
       "burstDps": 878,
       "tags": "VNCL PlasmaCannon flightReady weaponMountUsable",
@@ -197,6 +197,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 3750,
+        "Weapon_RegenCost": 60,
         "Weapon_Firerate": 350,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.5,
@@ -213,9 +215,7 @@
         "Weapon_Power": 1.2,
         "Weapon_Em": 545,
         "Signature_Em": 545,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 3750,
-        "Weapon_RegenCost": 60
+        "Signature_Ir": 0
       },
       "burstDps": 520,
       "tags": "VNCL LaserCannon flightReady weaponMountUsable",
@@ -236,6 +236,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 5625,
+        "Weapon_RegenCost": 55,
         "Weapon_Firerate": 350,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.5,
@@ -252,9 +254,7 @@
         "Weapon_Power": 1.13,
         "Weapon_Em": 513,
         "Signature_Em": 513,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 5625,
-        "Weapon_RegenCost": 55
+        "Signature_Ir": 0
       },
       "burstDps": 292,
       "tags": "VNCL LaserCannon flightReady weaponMountUsable",
@@ -275,6 +275,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 16860,
+        "Weapon_RegenCost": 168,
         "Weapon_Firerate": 100,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.4,
@@ -291,9 +293,7 @@
         "Weapon_Power": 1.2,
         "Weapon_Em": 545,
         "Signature_Em": 545,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 16860,
-        "Weapon_RegenCost": 168
+        "Signature_Ir": 0
       },
       "burstDps": 455,
       "tags": "VNCL PlasmaCannon flightReady weaponMountUsable",
@@ -314,6 +314,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 5625,
+        "Weapon_RegenCost": 450,
         "Weapon_Firerate": 50,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.45,
@@ -330,9 +332,7 @@
         "Weapon_Power": 2.1,
         "Weapon_Em": 953,
         "Signature_Em": 953,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 5625,
-        "Weapon_RegenCost": 450
+        "Signature_Ir": 0
       },
       "burstDps": 810,
       "tags": "VNCL PlasmaCannon flightReady weaponMountUsable",
@@ -353,6 +353,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 5625,
+        "Weapon_RegenCost": 450,
         "Weapon_Firerate": 50,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.45,
@@ -369,9 +371,7 @@
         "Weapon_Power": 2.1,
         "Weapon_Em": 953,
         "Signature_Em": 953,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 5625,
-        "Weapon_RegenCost": 450
+        "Signature_Ir": 0
       },
       "burstDps": 808,
       "tags": "VNCL PlasmaCannon flightReady weaponMountUsable",
@@ -1292,6 +1292,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 63600,
+        "Weapon_RegenCost": 180,
         "Weapon_Firerate": 60,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 4,
@@ -1308,9 +1310,7 @@
         "Weapon_Power": 1.4,
         "Weapon_Em": 578,
         "Signature_Em": 578,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 63600,
-        "Weapon_RegenCost": 180
+        "Signature_Ir": 0
       },
       "burstDps": 720,
       "tags": "PRAR DistortionScatterGun flightReady weaponMountUsable",
@@ -7170,6 +7170,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 11250,
+        "Weapon_RegenCost": 64.3,
         "Weapon_Firerate": 350,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.3,
@@ -7186,9 +7188,7 @@
         "Weapon_Power": 0.45,
         "Weapon_Em": 167,
         "Signature_Em": 167,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 11250,
-        "Weapon_RegenCost": 64.3
+        "Signature_Ir": 0
       },
       "burstDps": 210,
       "tags": "HRST LaserRepeater flightReady weaponMountUsable",
@@ -7208,6 +7208,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 16875,
+        "Weapon_RegenCost": 96.3,
         "Weapon_Firerate": 350,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.3,
@@ -7224,9 +7226,7 @@
         "Weapon_Power": 0.6,
         "Weapon_Em": 223,
         "Signature_Em": 223,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 16875,
-        "Weapon_RegenCost": 96.3
+        "Signature_Ir": 0
       },
       "burstDps": 344,
       "tags": "HRST LaserRepeater flightReady weaponMountUsable",
@@ -7246,6 +7246,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 25200,
+        "Weapon_RegenCost": 144.7,
         "Weapon_Firerate": 350,
         "Weapon_HeatPerShot": 1800,
         "Weapon_Spread": 0.3,
@@ -7262,9 +7264,7 @@
         "Weapon_Power": 0.75,
         "Weapon_Em": 278,
         "Signature_Em": 278,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 25200,
-        "Weapon_RegenCost": 144.7
+        "Signature_Ir": 0
       },
       "burstDps": 537,
       "tags": "HRST LaserRepeater flightReady weaponMountUsable",
@@ -11376,6 +11376,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 12932,
+        "Weapon_RegenCost": 37,
         "Weapon_Firerate": 350,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.5,
@@ -11392,9 +11394,7 @@
         "Weapon_Power": 0.45,
         "Weapon_Em": 167,
         "Signature_Em": 167,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 12932,
-        "Weapon_RegenCost": 37
+        "Signature_Ir": 0
       },
       "burstDps": 198,
       "tags": "HRST LaserRepeater flightReady weaponMountUsable",
@@ -11414,6 +11414,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 19390,
+        "Weapon_RegenCost": 55.4,
         "Weapon_Firerate": 350,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.5,
@@ -11430,9 +11432,7 @@
         "Weapon_Power": 0.6,
         "Weapon_Em": 223,
         "Signature_Em": 223,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 19390,
-        "Weapon_RegenCost": 55.4
+        "Signature_Ir": 0
       },
       "burstDps": 321,
       "tags": "HRST LaserRepeater flightReady weaponMountUsable",
@@ -11452,6 +11452,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 29120,
+        "Weapon_RegenCost": 84,
         "Weapon_Firerate": 350,
         "Weapon_HeatPerShot": 1800,
         "Weapon_Spread": 0.5,
@@ -11468,9 +11470,7 @@
         "Weapon_Power": 0.75,
         "Weapon_Em": 278,
         "Signature_Em": 278,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 29120,
-        "Weapon_RegenCost": 84
+        "Signature_Ir": 0
       },
       "burstDps": 502,
       "tags": "HRST LaserRepeater flightReady weaponMountUsable",
@@ -11490,6 +11490,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 43680,
+        "Weapon_RegenCost": 124.8,
         "Weapon_Firerate": 350,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.5,
@@ -11506,9 +11508,7 @@
         "Weapon_Power": 0.9,
         "Weapon_Em": 334,
         "Signature_Em": 334,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 43680,
-        "Weapon_RegenCost": 124.8
+        "Signature_Ir": 0
       },
       "burstDps": 583,
       "tags": "HRST LaserRepeater flightReady weaponMountUsable",
@@ -11528,6 +11528,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 30000,
+        "Weapon_RegenCost": 125,
         "Weapon_Firerate": 350,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.5,
@@ -11544,9 +11546,7 @@
         "Weapon_Power": 0.9,
         "Weapon_Em": 334,
         "Signature_Em": 334,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 30000,
-        "Weapon_RegenCost": 125
+        "Signature_Ir": 0
       },
       "burstDps": 875,
       "tags": "HRST LaserRepeater flightReady weaponMountUsable",
@@ -11566,6 +11566,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 65485,
+        "Weapon_RegenCost": 187.1,
         "Weapon_Firerate": 350,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.5,
@@ -11582,9 +11584,7 @@
         "Weapon_Power": 1.05,
         "Weapon_Em": 390,
         "Signature_Em": 390,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 65485,
-        "Weapon_RegenCost": 187.1
+        "Signature_Ir": 0
       },
       "burstDps": 875,
       "tags": "HRST LaserRepeater flightReady weaponMountUsable",
@@ -11604,6 +11604,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 98262,
+        "Weapon_RegenCost": 280.8,
         "Weapon_Firerate": 350,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.5,
@@ -11620,9 +11622,7 @@
         "Weapon_Power": 1.2,
         "Weapon_Em": 446,
         "Signature_Em": 446,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 98262,
-        "Weapon_RegenCost": 280.8
+        "Signature_Ir": 0
       },
       "burstDps": 2948,
       "tags": "HRST LaserRepeater flightReady weaponMountUsable",
@@ -11642,6 +11642,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 6750,
+        "Weapon_RegenCost": 27,
         "Weapon_Firerate": 500,
         "Weapon_HeatPerShot": 400,
         "Weapon_Spread": 0.55,
@@ -11658,9 +11660,7 @@
         "Weapon_Power": 0.6,
         "Weapon_Em": 243,
         "Signature_Em": 243,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 6750,
-        "Weapon_RegenCost": 27
+        "Signature_Ir": 0
       },
       "burstDps": 225,
       "tags": "flightReady weaponMountUsable VanguardNose AEGS_Vanguard_Base",
@@ -12377,6 +12377,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 27262.5,
+        "Weapon_RegenCost": 72.7,
         "Weapon_Firerate": 750,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.55,
@@ -12395,9 +12397,7 @@
         "Signature_Em": 0,
         "Signature_Ir": 0,
         "Weapon_CycleShots": 2,
-        "Weapon_CycleSeconds": 0.218182,
-        "Weapon_RequestedAmmo": 27262.5,
-        "Weapon_RegenCost": 72.7
+        "Weapon_CycleSeconds": 0.218182
       },
       "burstDps": 779,
       "tags": "LaserRepeater flightReady weaponMountUsable Wolf_Gun",
@@ -15653,6 +15653,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 12150,
+        "Weapon_RegenCost": 32.4,
         "Weapon_Firerate": 120,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.4,
@@ -15669,9 +15671,7 @@
         "Weapon_Power": 1,
         "Weapon_Em": 0,
         "Signature_Em": 0,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 12150,
-        "Weapon_RegenCost": 32.4
+        "Signature_Ir": 0
       },
       "burstDps": 16,
       "tags": "BRRA LaserCannon flightReady weaponMountUsable",
@@ -16640,6 +16640,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 8100,
+        "Weapon_RegenCost": 21.6,
         "Weapon_Firerate": 750,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.6,
@@ -16656,9 +16658,7 @@
         "Weapon_Power": 0.45,
         "Weapon_Em": 152,
         "Signature_Em": 152,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 8100,
-        "Weapon_RegenCost": 21.6
+        "Signature_Ir": 0
       },
       "burstDps": 219,
       "tags": "KLWE LaserRepeater flightReady weaponMountUsable",
@@ -16678,6 +16678,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 8100,
+        "Weapon_RegenCost": 21.6,
         "Weapon_Firerate": 750,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.6,
@@ -16694,9 +16696,7 @@
         "Weapon_Power": 0.45,
         "Weapon_Em": 152,
         "Signature_Em": 152,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 8100,
-        "Weapon_RegenCost": 21.6
+        "Signature_Ir": 0
       },
       "burstDps": 219,
       "tags": "KLWE LaserRepeater flightReady weaponMountUsable",
@@ -16716,6 +16716,8 @@
       "stats": {
         "Weapon_CapacitorShots": 70,
         "Weapon_RegenPerSec": 7.43,
+        "Weapon_RequestedAmmo": 8100,
+        "Weapon_RegenCost": 21.6,
         "Weapon_Firerate": 750,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.6,
@@ -16732,9 +16734,7 @@
         "Weapon_Power": 0.45,
         "Weapon_Em": 152,
         "Signature_Em": 152,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 8100,
-        "Weapon_RegenCost": 21.6
+        "Signature_Ir": 0
       },
       "burstDps": 141,
       "tags": "KLWE LaserRepeater flightReady weaponMountUsable",
@@ -16754,6 +16754,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 12150,
+        "Weapon_RegenCost": 32.4,
         "Weapon_Firerate": 750,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.6,
@@ -16770,9 +16772,7 @@
         "Weapon_Power": 0.6,
         "Weapon_Em": 203,
         "Signature_Em": 203,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 12150,
-        "Weapon_RegenCost": 32.4
+        "Signature_Ir": 0
       },
       "burstDps": 328,
       "tags": "KLWE LaserRepeater flightReady weaponMountUsable",
@@ -16792,6 +16792,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 12150,
+        "Weapon_RegenCost": 32.4,
         "Weapon_Firerate": 750,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.6,
@@ -16808,9 +16810,7 @@
         "Weapon_Power": 0.502,
         "Weapon_Em": 169,
         "Signature_Em": 169,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 12150,
-        "Weapon_RegenCost": 32.4
+        "Signature_Ir": 0
       },
       "burstDps": 328,
       "tags": "KLWE LaserRepeater flightReady weaponMountUsable",
@@ -16830,6 +16830,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 12150,
+        "Weapon_RegenCost": 32.4,
         "Weapon_Firerate": 750,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.6,
@@ -16846,9 +16848,7 @@
         "Weapon_Power": 0.6,
         "Weapon_Em": 203,
         "Signature_Em": 203,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 12150,
-        "Weapon_RegenCost": 32.4
+        "Signature_Ir": 0
       },
       "burstDps": 328,
       "tags": "KLWE LaserRepeater flightReady weaponMountUsable",
@@ -16868,6 +16868,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 18187,
+        "Weapon_RegenCost": 48.5,
         "Weapon_Firerate": 750,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.6,
@@ -16884,9 +16886,7 @@
         "Weapon_Power": 1,
         "Weapon_Em": 0,
         "Signature_Em": 0,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 18187,
-        "Weapon_RegenCost": 48.5
+        "Signature_Ir": 0
       },
       "burstDps": 546,
       "tags": "KLWE LaserRepeater flightReady weaponMountUsable",
@@ -16906,6 +16906,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 18187,
+        "Weapon_RegenCost": 48.5,
         "Weapon_Firerate": 750,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.6,
@@ -16922,9 +16924,7 @@
         "Weapon_Power": 1,
         "Weapon_Em": 0,
         "Signature_Em": 0,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 18187,
-        "Weapon_RegenCost": 48.5
+        "Signature_Ir": 0
       },
       "burstDps": 546,
       "tags": "KLWE LaserRepeater flightReady weaponMountUsable",
@@ -16944,6 +16944,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 27262.5,
+        "Weapon_RegenCost": 72.7,
         "Weapon_Firerate": 750,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.6,
@@ -16960,9 +16962,7 @@
         "Weapon_Power": 0.9,
         "Weapon_Em": 304,
         "Signature_Em": 304,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 27262.5,
-        "Weapon_RegenCost": 72.7
+        "Signature_Ir": 0
       },
       "burstDps": 818,
       "tags": "KLWE LaserRepeater flightReady weaponMountUsable",
@@ -16982,6 +16982,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 40912,
+        "Weapon_RegenCost": 109.1,
         "Weapon_Firerate": 750,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.6,
@@ -16998,9 +17000,7 @@
         "Weapon_Power": 1.05,
         "Weapon_Em": 354,
         "Signature_Em": 354,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 40912,
-        "Weapon_RegenCost": 109.1
+        "Signature_Ir": 0
       },
       "burstDps": 1227,
       "tags": "KLWE LaserRepeater flightReady weaponMountUsable",
@@ -17020,6 +17020,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 40912,
+        "Weapon_RegenCost": 109.1,
         "Weapon_Firerate": 750,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.6,
@@ -17036,9 +17038,7 @@
         "Weapon_Power": 1.05,
         "Weapon_Em": 354,
         "Signature_Em": 354,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 40912,
-        "Weapon_RegenCost": 109.1
+        "Signature_Ir": 0
       },
       "burstDps": 9375,
       "tags": "AEGS_Idris_M_PU",
@@ -17059,6 +17059,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 40912,
+        "Weapon_RegenCost": 109.1,
         "Weapon_Firerate": 750,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.6,
@@ -17074,9 +17076,7 @@
         "Weapon_Power": 1.05,
         "Weapon_Em": 354,
         "Signature_Em": 354,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 40912,
-        "Weapon_RegenCost": 109.1
+        "Signature_Ir": 0
       },
       "burstDps": 1227,
       "tags": "KLWE LaserRepeater flightReady weaponMountUsable",
@@ -17096,6 +17096,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 61387,
+        "Weapon_RegenCost": 163.7,
         "Weapon_Firerate": 750,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.6,
@@ -17112,9 +17114,7 @@
         "Weapon_Power": 1.2,
         "Weapon_Em": 405,
         "Signature_Em": 405,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 61387,
-        "Weapon_RegenCost": 163.7
+        "Signature_Ir": 0
       },
       "burstDps": 1842,
       "tags": "KLWE LaserRepeater flightReady weaponMountUsable",
@@ -17134,6 +17134,8 @@
       "stats": {
         "Weapon_CapacitorShots": 70,
         "Weapon_RegenPerSec": 7.43,
+        "Weapon_RequestedAmmo": 8100,
+        "Weapon_RegenCost": 21.6,
         "Weapon_Firerate": 150,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.6,
@@ -17150,9 +17152,7 @@
         "Weapon_Power": 0.45,
         "Weapon_Em": 152,
         "Signature_Em": 152,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 8100,
-        "Weapon_RegenCost": 21.6
+        "Signature_Ir": 0
       },
       "burstDps": 30,
       "tags": "KLWE LaserRepeater flightReady weaponMountUsable",
@@ -17693,6 +17693,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 63600,
+        "Weapon_RegenCost": 265,
         "Weapon_Firerate": 60,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 4,
@@ -17709,9 +17711,7 @@
         "Weapon_Power": 1.6,
         "Weapon_Em": 660,
         "Signature_Em": 660,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 63600,
-        "Weapon_RegenCost": 265
+        "Signature_Ir": 0
       },
       "burstDps": 1040,
       "tags": "PRAR DistortionScatterGun flightReady weaponMountUsable",
@@ -20230,6 +20230,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 11200,
+        "Weapon_RegenCost": 70,
         "Weapon_Firerate": 50,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 4,
@@ -20246,9 +20248,7 @@
         "Weapon_Power": 0.6,
         "Weapon_Em": 248,
         "Signature_Em": 248,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 11200,
-        "Weapon_RegenCost": 70
+        "Signature_Ir": 0
       },
       "burstDps": 420,
       "tags": "HRST ScatterGun flightReady weaponMountUsable",
@@ -20268,6 +20268,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 17600,
+        "Weapon_RegenCost": 110,
         "Weapon_Firerate": 50,
         "Weapon_HeatPerShot": 12000,
         "Weapon_Spread": 4,
@@ -20284,9 +20286,7 @@
         "Weapon_Power": 0.8,
         "Weapon_Em": 330,
         "Signature_Em": 330,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 17600,
-        "Weapon_RegenCost": 110
+        "Signature_Ir": 0
       },
       "burstDps": 660,
       "tags": "HRST ScatterGun flightReady weaponMountUsable",
@@ -20306,6 +20306,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 24800,
+        "Weapon_RegenCost": 155,
         "Weapon_Firerate": 50,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 4,
@@ -20322,9 +20324,7 @@
         "Weapon_Power": 1,
         "Weapon_Em": 413,
         "Signature_Em": 413,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 24800,
-        "Weapon_RegenCost": 155
+        "Signature_Ir": 0
       },
       "burstDps": 930,
       "tags": "HRST ScatterGun flightReady weaponMountUsable",
@@ -20396,6 +20396,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 4500,
+        "Weapon_RegenCost": 25.7,
         "Weapon_Firerate": 400,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.5,
@@ -20414,9 +20416,7 @@
         "Signature_Em": 167,
         "Signature_Ir": 0,
         "Weapon_CycleShots": 2,
-        "Weapon_CycleSeconds": 0.342857,
-        "Weapon_RequestedAmmo": 4500,
-        "Weapon_RegenCost": 25.7
+        "Weapon_CycleSeconds": 0.342857
       },
       "burstDps": 150,
       "tags": "ASAD DistortionRepeater flightReady weaponMountUsable",
@@ -20436,6 +20436,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 6737,
+        "Weapon_RegenCost": 38.5,
         "Weapon_Firerate": 400,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.5,
@@ -20454,9 +20456,7 @@
         "Signature_Em": 223,
         "Signature_Ir": 0,
         "Weapon_CycleShots": 2,
-        "Weapon_CycleSeconds": 0.342857,
-        "Weapon_RequestedAmmo": 6737,
-        "Weapon_RegenCost": 38.5
+        "Weapon_CycleSeconds": 0.342857
       },
       "burstDps": 225,
       "tags": "ASAD DistortionRepeater flightReady weaponMountUsable",
@@ -20476,6 +20476,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 10132,
+        "Weapon_RegenCost": 57.9,
         "Weapon_Firerate": 400,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.5,
@@ -20494,9 +20496,7 @@
         "Signature_Em": 278,
         "Signature_Ir": 0,
         "Weapon_CycleShots": 2,
-        "Weapon_CycleSeconds": 0.342857,
-        "Weapon_RequestedAmmo": 10132,
-        "Weapon_RegenCost": 57.9
+        "Weapon_CycleSeconds": 0.342857
       },
       "burstDps": 338,
       "tags": "ASAD DistortionRepeater flightReady weaponMountUsable",
@@ -21571,6 +21571,8 @@
       "stats": {
         "Weapon_CapacitorShots": 225,
         "Weapon_RegenPerSec": 2787,
+        "Weapon_RequestedAmmo": 27262.5,
+        "Weapon_RegenCost": 72.7,
         "Weapon_Firerate": 800,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.6,
@@ -21589,9 +21591,7 @@
         "Signature_Em": 0,
         "Signature_Ir": 0,
         "Weapon_CycleShots": 3,
-        "Weapon_CycleSeconds": 0.341667,
-        "Weapon_RequestedAmmo": 27262.5,
-        "Weapon_RegenCost": 72.7
+        "Weapon_CycleSeconds": 0.341667
       },
       "burstDps": 834,
       "tags": "RSI LaserRepeater flightReady weaponMountUsable $RSI_Meteor",
@@ -23103,6 +23103,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 6750,
+        "Weapon_RegenCost": 90,
         "Weapon_Firerate": 150,
         "Weapon_HeatPerShot": 2000,
         "Weapon_Spread": 0.45,
@@ -23119,9 +23121,7 @@
         "Weapon_Power": 1.2,
         "Weapon_Em": 594,
         "Signature_Em": 594,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 6750,
-        "Weapon_RegenCost": 90
+        "Signature_Ir": 0
       },
       "burstDps": 203,
       "tags": "flightReady weaponMountUsable VanguardNose",
@@ -23298,6 +23298,8 @@
       "stats": {
         "Weapon_CapacitorShots": 60,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 10200,
+        "Weapon_RegenCost": 43,
         "Weapon_Ammo": 0,
         "Weapon_Speed": 1220,
         "Weapon_Range": 8003,
@@ -23310,9 +23312,7 @@
         "Weapon_Power": 1,
         "Weapon_Em": 0,
         "Signature_Em": 0,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 10200,
-        "Weapon_RegenCost": 43
+        "Signature_Ir": 0
       },
       "burstDps": 0,
       "tags": "flightReady weaponMountUsable $AEGS_Idris_Nose",
@@ -23333,6 +23333,8 @@
       "stats": {
         "Weapon_CapacitorShots": 60,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 10200,
+        "Weapon_RegenCost": 43,
         "Weapon_Ammo": 0,
         "Weapon_Speed": 1200,
         "Weapon_Range": 8004,
@@ -23345,9 +23347,7 @@
         "Weapon_Power": 1,
         "Weapon_Em": 0,
         "Signature_Em": 0,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 10200,
-        "Weapon_RegenCost": 43
+        "Signature_Ir": 0
       },
       "burstDps": 0,
       "tags": "flightReady weaponMountUsable $AEGS_Idris_Nose",
@@ -23717,6 +23717,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 7600,
+        "Weapon_RegenCost": 52.3,
         "Weapon_Firerate": 250,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.5,
@@ -23733,9 +23735,7 @@
         "Weapon_Power": 0.9,
         "Weapon_Em": 408,
         "Signature_Em": 408,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 7600,
-        "Weapon_RegenCost": 52.3
+        "Signature_Ir": 0
       },
       "burstDps": 205,
       "tags": "KRON LaserCannon flightReady weaponMountUsable",
@@ -23755,6 +23755,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 11425,
+        "Weapon_RegenCost": 78.6,
         "Weapon_Firerate": 250,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.5,
@@ -23771,9 +23773,7 @@
         "Weapon_Power": 1.2,
         "Weapon_Em": 545,
         "Signature_Em": 545,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 11425,
-        "Weapon_RegenCost": 78.6
+        "Signature_Ir": 0
       },
       "burstDps": 308,
       "tags": "KRON DistortionCannon flightReady weaponMountUsable",
@@ -23793,6 +23793,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 17100,
+        "Weapon_RegenCost": 117.6,
         "Weapon_Firerate": 250,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.5,
@@ -23809,9 +23811,7 @@
         "Weapon_Power": 1.5,
         "Weapon_Em": 681,
         "Signature_Em": 681,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 17100,
-        "Weapon_RegenCost": 117.6
+        "Signature_Ir": 0
       },
       "burstDps": 462,
       "tags": "KRON LaserCannon flightReady weaponMountUsable",
@@ -32514,6 +32514,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 331625,
+        "Weapon_RegenCost": 947.5,
         "Weapon_Firerate": 350,
         "Weapon_HeatPerShot": 50000,
         "Weapon_Spread": 0.5,
@@ -32530,9 +32532,7 @@
         "Weapon_Power": 1.8,
         "Weapon_Em": 729,
         "Signature_Em": 729,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 331625,
-        "Weapon_RegenCost": 947.5
+        "Signature_Ir": 0
       },
       "burstDps": 145833,
       "tags": "flightReady weaponMountUsable VanguardNose",
@@ -32552,6 +32552,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 331625,
+        "Weapon_RegenCost": 947.5,
         "Weapon_Firerate": 350,
         "Weapon_HeatPerShot": 50000,
         "Weapon_Spread": 0.5,
@@ -32568,9 +32570,7 @@
         "Weapon_Power": 1.8,
         "Weapon_Em": 729,
         "Signature_Em": 729,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 331625,
-        "Weapon_RegenCost": 947.5
+        "Signature_Ir": 0
       },
       "burstDps": 145833,
       "tags": "flightReady weaponMountUsable VanguardNose",
@@ -32590,6 +32590,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 331625,
+        "Weapon_RegenCost": 947.5,
         "Weapon_Firerate": 350,
         "Weapon_HeatPerShot": 50000,
         "Weapon_Spread": 0.5,
@@ -32606,9 +32608,7 @@
         "Weapon_Power": 1.8,
         "Weapon_Em": 729,
         "Signature_Em": 729,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 331625,
-        "Weapon_RegenCost": 947.5
+        "Signature_Ir": 0
       },
       "burstDps": 9949,
       "tags": "flightReady weaponMountUsable VanguardNose",
@@ -32628,6 +32628,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 19390,
+        "Weapon_RegenCost": 55.4,
         "Weapon_Firerate": 350,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.5,
@@ -32644,9 +32646,7 @@
         "Weapon_Power": 0.713,
         "Weapon_Em": 289,
         "Signature_Em": 289,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 19390,
-        "Weapon_RegenCost": 55.4
+        "Signature_Ir": 0
       },
       "burstDps": 582,
       "tags": "flightReady weaponMountUsable VanguardNose",
@@ -38613,6 +38613,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 7600,
+        "Weapon_RegenCost": 52.3,
         "Weapon_Firerate": 250,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.5,
@@ -38629,9 +38631,7 @@
         "Weapon_Power": 0.9,
         "Weapon_Em": 371,
         "Signature_Em": 371,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 7600,
-        "Weapon_RegenCost": 52.3
+        "Signature_Ir": 0
       },
       "burstDps": 205,
       "tags": "ESP LaserCannon flightReady weaponMountUsable",
@@ -38651,6 +38651,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 11425,
+        "Weapon_RegenCost": 78.6,
         "Weapon_Firerate": 250,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.5,
@@ -38667,9 +38669,7 @@
         "Weapon_Power": 1.2,
         "Weapon_Em": 495,
         "Signature_Em": 495,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 11425,
-        "Weapon_RegenCost": 78.6
+        "Signature_Ir": 0
       },
       "burstDps": 308,
       "tags": "ESP LaserCannon flightReady weaponMountUsable",
@@ -38689,6 +38689,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 17100,
+        "Weapon_RegenCost": 117.6,
         "Weapon_Firerate": 250,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.5,
@@ -38705,9 +38707,7 @@
         "Weapon_Power": 1.5,
         "Weapon_Em": 619,
         "Signature_Em": 619,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 17100,
-        "Weapon_RegenCost": 117.6
+        "Signature_Ir": 0
       },
       "burstDps": 462,
       "tags": "ESP LaserCannon flightReady weaponMountUsable",
@@ -38727,6 +38727,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 25650,
+        "Weapon_RegenCost": 176.5,
         "Weapon_Firerate": 250,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.5,
@@ -38743,9 +38745,7 @@
         "Weapon_Power": 1.8,
         "Weapon_Em": 743,
         "Signature_Em": 743,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 25650,
-        "Weapon_RegenCost": 176.5
+        "Signature_Ir": 0
       },
       "burstDps": 693,
       "tags": "ESP LaserCannon flightReady weaponMountUsable",
@@ -38765,6 +38765,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 38375,
+        "Weapon_RegenCost": 264,
         "Weapon_Firerate": 250,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.5,
@@ -38781,9 +38783,7 @@
         "Weapon_Power": 2.1,
         "Weapon_Em": 866,
         "Signature_Em": 866,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 38375,
-        "Weapon_RegenCost": 264
+        "Signature_Ir": 0
       },
       "burstDps": 1036,
       "tags": "ESP LaserCannon flightReady weaponMountUsable",
@@ -38803,6 +38803,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 57737.5,
+        "Weapon_RegenCost": 397,
         "Weapon_Firerate": 250,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.5,
@@ -38819,9 +38821,7 @@
         "Weapon_Power": 2.4,
         "Weapon_Em": 990,
         "Signature_Em": 990,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 57737.5,
-        "Weapon_RegenCost": 397
+        "Signature_Ir": 0
       },
       "burstDps": 1559,
       "tags": "ESP LaserCannon flightReady weaponMountUsable",
@@ -38955,6 +38955,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 12150,
+        "Weapon_RegenCost": 32.4,
         "Weapon_Firerate": 1000,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.1,
@@ -38971,9 +38973,7 @@
         "Weapon_Power": 0.352,
         "Weapon_Em": 143,
         "Signature_Em": 143,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 12150,
-        "Weapon_RegenCost": 32.4
+        "Signature_Ir": 0
       },
       "burstDps": 167,
       "tags": "PDC",
@@ -39068,6 +39068,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 11200,
+        "Weapon_RegenCost": 112,
         "Weapon_Firerate": 100,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.4,
@@ -39084,9 +39086,7 @@
         "Weapon_Power": 0.704,
         "Weapon_Em": 348,
         "Signature_Em": 348,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 11200,
-        "Weapon_RegenCost": 112
+        "Signature_Ir": 0
       },
       "burstDps": 304,
       "tags": "BEHR LaserCannon flightReady weaponMountUsable",
@@ -39106,6 +39106,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 11200,
+        "Weapon_RegenCost": 112,
         "Weapon_Firerate": 100,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.4,
@@ -39122,9 +39124,7 @@
         "Weapon_Power": 0.704,
         "Weapon_Em": 348,
         "Signature_Em": 348,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 11200,
-        "Weapon_RegenCost": 112
+        "Signature_Ir": 0
       },
       "burstDps": 304,
       "tags": "BEHR LaserCannon flightReady weaponMountUsable",
@@ -39144,6 +39144,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 11200,
+        "Weapon_RegenCost": 112,
         "Weapon_Firerate": 100,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.4,
@@ -39160,9 +39162,7 @@
         "Weapon_Power": 0.704,
         "Weapon_Em": 348,
         "Signature_Em": 348,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 11200,
-        "Weapon_RegenCost": 112
+        "Signature_Ir": 0
       },
       "burstDps": 304,
       "tags": "BEHR LaserCannon flightReady weaponMountUsable",
@@ -39182,6 +39182,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 16887,
+        "Weapon_RegenCost": 168,
         "Weapon_Firerate": 100,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.4,
@@ -39198,9 +39200,7 @@
         "Weapon_Power": 1,
         "Weapon_Em": 495,
         "Signature_Em": 495,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 16887,
-        "Weapon_RegenCost": 168
+        "Signature_Ir": 0
       },
       "burstDps": 456,
       "tags": "BEHR LaserCannon flightReady weaponMountUsable",
@@ -39220,6 +39220,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 16887,
+        "Weapon_RegenCost": 168,
         "Weapon_Firerate": 100,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.4,
@@ -39236,9 +39238,7 @@
         "Weapon_Power": 1,
         "Weapon_Em": 495,
         "Signature_Em": 495,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 16887,
-        "Weapon_RegenCost": 168
+        "Signature_Ir": 0
       },
       "burstDps": 456,
       "tags": "BEHR LaserCannon flightReady weaponMountUsable",
@@ -39258,6 +39258,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 16887,
+        "Weapon_RegenCost": 168,
         "Weapon_Firerate": 100,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.4,
@@ -39274,9 +39276,7 @@
         "Weapon_Power": 1,
         "Weapon_Em": 495,
         "Signature_Em": 495,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 16887,
-        "Weapon_RegenCost": 168
+        "Signature_Ir": 0
       },
       "burstDps": 456,
       "tags": "BEHR LaserCannon flightReady weaponMountUsable",
@@ -39350,6 +39350,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 25320,
+        "Weapon_RegenCost": 253,
         "Weapon_Firerate": 100,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.4,
@@ -39366,9 +39368,7 @@
         "Weapon_Power": 1.3,
         "Weapon_Em": 644,
         "Signature_Em": 644,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 25320,
-        "Weapon_RegenCost": 253
+        "Signature_Ir": 0
       },
       "burstDps": 684,
       "tags": "BEHR LaserCannon flightReady weaponMountUsable",
@@ -39388,6 +39388,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 25320,
+        "Weapon_RegenCost": 253,
         "Weapon_Firerate": 100,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.4,
@@ -39404,9 +39406,7 @@
         "Weapon_Power": 1.3,
         "Weapon_Em": 644,
         "Signature_Em": 644,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 25320,
-        "Weapon_RegenCost": 253
+        "Signature_Ir": 0
       },
       "burstDps": 684,
       "tags": "BEHR LaserCannon flightReady weaponMountUsable",
@@ -39426,6 +39426,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 25320,
+        "Weapon_RegenCost": 253,
         "Weapon_Firerate": 100,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.4,
@@ -39442,9 +39444,7 @@
         "Weapon_Power": 1.3,
         "Weapon_Em": 644,
         "Signature_Em": 644,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 25320,
-        "Weapon_RegenCost": 253
+        "Signature_Ir": 0
       },
       "burstDps": 684,
       "tags": "BEHR LaserCannon flightReady weaponMountUsable",
@@ -39464,6 +39464,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 37980,
+        "Weapon_RegenCost": 379,
         "Weapon_Firerate": 100,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.4,
@@ -39480,9 +39482,7 @@
         "Weapon_Power": 1.6,
         "Weapon_Em": 792,
         "Signature_Em": 792,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 37980,
-        "Weapon_RegenCost": 379
+        "Signature_Ir": 0
       },
       "burstDps": 1025,
       "tags": "BEHR LaserCannon flightReady weaponMountUsable",
@@ -39502,6 +39502,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 56900,
+        "Weapon_RegenCost": 569,
         "Weapon_Firerate": 100,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.4,
@@ -39518,9 +39520,7 @@
         "Weapon_Power": 1.9,
         "Weapon_Em": 941,
         "Signature_Em": 941,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 56900,
-        "Weapon_RegenCost": 569
+        "Signature_Ir": 0
       },
       "burstDps": 1536,
       "tags": "BEHR LaserCannon flightReady weaponMountUsable",
@@ -39540,6 +39540,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 85750,
+        "Weapon_RegenCost": 854,
         "Weapon_Firerate": 100,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.4,
@@ -39556,9 +39558,7 @@
         "Weapon_Power": 2.2,
         "Weapon_Em": 1090,
         "Signature_Em": 1090,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 85750,
-        "Weapon_RegenCost": 854
+        "Signature_Ir": 0
       },
       "burstDps": 2306,
       "tags": "BEHR LaserCannon flightReady weaponMountUsable",
@@ -39578,6 +39578,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 85750,
+        "Weapon_RegenCost": 854,
         "Weapon_Firerate": 100,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.4,
@@ -39594,9 +39596,7 @@
         "Weapon_Power": 2.2,
         "Weapon_Em": 1090,
         "Signature_Em": 1090,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 85750,
-        "Weapon_RegenCost": 854
+        "Signature_Ir": 0
       },
       "burstDps": 2306,
       "tags": "BEHR LaserCannon flightReady weaponMountUsable",
@@ -39616,6 +39616,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 85750,
+        "Weapon_RegenCost": 854,
         "Weapon_Firerate": 120,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.4,
@@ -39634,9 +39636,7 @@
         "Signature_Em": 1090,
         "Signature_Ir": 0,
         "Weapon_CycleShots": 1,
-        "Weapon_CycleSeconds": 0.6,
-        "Weapon_RequestedAmmo": 85750,
-        "Weapon_RegenCost": 854
+        "Weapon_CycleSeconds": 0.6
       },
       "burstDps": 1500,
       "tags": "BEHR LaserCannon flightReady weaponMountUsable",
@@ -39723,6 +39723,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 128130,
+        "Weapon_RegenCost": 1281,
         "Weapon_Firerate": 100,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.4,
@@ -39739,9 +39741,7 @@
         "Weapon_Power": 2.5,
         "Weapon_Em": 1240,
         "Signature_Em": 1240,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 128130,
-        "Weapon_RegenCost": 1281
+        "Signature_Ir": 0
       },
       "burstDps": 3460,
       "tags": "BEHR LaserCannon flightReady weaponMountUsable",
@@ -39761,6 +39761,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 128130,
+        "Weapon_RegenCost": 1281,
         "Weapon_Firerate": 100,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.4,
@@ -39777,9 +39779,7 @@
         "Weapon_Power": 2.5,
         "Weapon_Em": 1240,
         "Signature_Em": 1240,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 128130,
-        "Weapon_RegenCost": 1281
+        "Signature_Ir": 0
       },
       "burstDps": 11250,
       "tags": "BEHR LaserCannon flightReady weaponMountUsable",
@@ -39800,6 +39800,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 128130,
+        "Weapon_RegenCost": 1281,
         "Weapon_Firerate": 100,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.4,
@@ -39816,9 +39818,7 @@
         "Weapon_Power": 2.5,
         "Weapon_Em": 1240,
         "Signature_Em": 1240,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 128130,
-        "Weapon_RegenCost": 1281
+        "Signature_Ir": 0
       },
       "burstDps": 0,
       "tags": "BEHR LaserCannon flightReady weaponMountUsable",
@@ -39839,6 +39839,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 128130,
+        "Weapon_RegenCost": 1281,
         "Weapon_Firerate": 60,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.4,
@@ -39855,9 +39857,7 @@
         "Weapon_Power": 2.5,
         "Weapon_Em": 1240,
         "Signature_Em": 1240,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 128130,
-        "Weapon_RegenCost": 1281
+        "Signature_Ir": 0
       },
       "burstDps": 14040,
       "tags": "BEHR LaserCannon flightReady weaponMountUsable",
@@ -39877,6 +39877,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 192200,
+        "Weapon_RegenCost": 1922,
         "Weapon_Firerate": 100,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.4,
@@ -39893,9 +39895,7 @@
         "Weapon_Power": 2.8,
         "Weapon_Em": 1390,
         "Signature_Em": 1390,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 192200,
-        "Weapon_RegenCost": 1922
+        "Signature_Ir": 0
       },
       "burstDps": 5189,
       "tags": "BEHR LaserCannon flightReady weaponMountUsable",
@@ -39915,6 +39915,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 288300,
+        "Weapon_RegenCost": 2883,
         "Weapon_Firerate": 100,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.4,
@@ -39931,9 +39933,7 @@
         "Weapon_Power": 3.1,
         "Weapon_Em": 1530,
         "Signature_Em": 1530,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 288300,
-        "Weapon_RegenCost": 2883
+        "Signature_Ir": 0
       },
       "burstDps": 7784,
       "tags": "BEHR LaserCannon flightReady weaponMountUsable",
@@ -49170,6 +49170,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 16850,
+        "Weapon_RegenCost": 168,
         "Weapon_Firerate": 100,
         "Weapon_HeatPerShot": 1000,
         "Weapon_Spread": 0.4,
@@ -49186,9 +49188,7 @@
         "Weapon_Power": 1.43,
         "Weapon_Em": 708,
         "Signature_Em": 708,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 16850,
-        "Weapon_RegenCost": 168
+        "Signature_Ir": 0
       },
       "burstDps": 455,
       "tags": "flightReady weaponMountUsable VanguardNose AEGS_Vanguard_Base",
@@ -49420,6 +49420,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 10550,
+        "Weapon_RegenCost": 31.6,
         "Weapon_Firerate": 500,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.55,
@@ -49436,9 +49438,7 @@
         "Weapon_Power": 0.45,
         "Weapon_Em": 138,
         "Signature_Em": 138,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 10550,
-        "Weapon_RegenCost": 31.6
+        "Signature_Ir": 0
       },
       "burstDps": 317,
       "tags": "flightReady weaponMountUsable MXOX",
@@ -49458,6 +49458,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 15825,
+        "Weapon_RegenCost": 47.5,
         "Weapon_Firerate": 500,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.55,
@@ -49474,9 +49476,7 @@
         "Weapon_Power": 0.6,
         "Weapon_Em": 184,
         "Signature_Em": 184,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 15825,
-        "Weapon_RegenCost": 47.5
+        "Signature_Ir": 0
       },
       "burstDps": 475,
       "tags": "flightReady weaponMountUsable MXOX",
@@ -49496,6 +49496,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 23750,
+        "Weapon_RegenCost": 71.25,
         "Weapon_Firerate": 500,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.55,
@@ -49512,9 +49514,7 @@
         "Weapon_Power": 0.75,
         "Weapon_Em": 230,
         "Signature_Em": 230,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 23750,
-        "Weapon_RegenCost": 71.25
+        "Signature_Ir": 0
       },
       "burstDps": 713,
       "tags": "flightReady weaponMountUsable MXOX",
@@ -49605,6 +49605,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 9000,
+        "Weapon_RegenCost": 90,
         "Weapon_Firerate": 150,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.45,
@@ -49621,9 +49623,7 @@
         "Weapon_Power": 0.6,
         "Weapon_Em": 205,
         "Signature_Em": 205,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 9000,
-        "Weapon_RegenCost": 90
+        "Signature_Ir": 0
       },
       "burstDps": 253,
       "tags": "MXOX NeutronCannon flightReady weaponMountUsable",
@@ -49643,6 +49643,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 13500,
+        "Weapon_RegenCost": 135,
         "Weapon_Firerate": 150,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.45,
@@ -49659,9 +49661,7 @@
         "Weapon_Power": 0.8,
         "Weapon_Em": 273,
         "Signature_Em": 273,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 13500,
-        "Weapon_RegenCost": 135
+        "Signature_Ir": 0
       },
       "burstDps": 382,
       "tags": "MXOX NeutronCannon flightReady weaponMountUsable",
@@ -49681,6 +49681,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 20250,
+        "Weapon_RegenCost": 202,
         "Weapon_Firerate": 150,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.45,
@@ -49697,9 +49699,7 @@
         "Weapon_Power": 1,
         "Weapon_Em": 341,
         "Signature_Em": 341,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 20250,
-        "Weapon_RegenCost": 202
+        "Signature_Ir": 0
       },
       "burstDps": 552,
       "tags": "MXOX NeutronCannon flightReady weaponMountUsable",
@@ -50258,6 +50258,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 9000,
+        "Weapon_RegenCost": 90,
         "Weapon_Firerate": 150,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.45,
@@ -50274,9 +50276,7 @@
         "Weapon_Power": 0.9,
         "Weapon_Em": 446,
         "Signature_Em": 446,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 9000,
-        "Weapon_RegenCost": 90
+        "Signature_Ir": 0
       },
       "burstDps": 243,
       "tags": "AMRS LaserCannon flightReady weaponMountUsable",
@@ -50296,6 +50296,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 20200,
+        "Weapon_RegenCost": 202,
         "Weapon_Firerate": 150,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.45,
@@ -50312,9 +50314,7 @@
         "Weapon_Power": 1.5,
         "Weapon_Em": 743,
         "Signature_Em": 743,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 20200,
-        "Weapon_RegenCost": 202
+        "Signature_Ir": 0
       },
       "burstDps": 547,
       "tags": "AMRS LaserCannon flightReady weaponMountUsable",
@@ -50334,6 +50334,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 13500,
+        "Weapon_RegenCost": 135,
         "Weapon_Firerate": 150,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.45,
@@ -50350,9 +50352,7 @@
         "Weapon_Power": 1.2,
         "Weapon_Em": 594,
         "Signature_Em": 594,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 13500,
-        "Weapon_RegenCost": 135
+        "Signature_Ir": 0
       },
       "burstDps": 365,
       "tags": "AMRS LaserCannon flightReady weaponMountUsable",
@@ -50372,6 +50372,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 30300,
+        "Weapon_RegenCost": 303,
         "Weapon_Firerate": 150,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.45,
@@ -50388,9 +50390,7 @@
         "Weapon_Power": 1.3,
         "Weapon_Em": 0,
         "Signature_Em": 0,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 30300,
-        "Weapon_RegenCost": 303
+        "Signature_Ir": 0
       },
       "burstDps": 820,
       "tags": "AMRS LaserCannon flightReady weaponMountUsable",
@@ -50410,6 +50410,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 45500,
+        "Weapon_RegenCost": 455,
         "Weapon_Firerate": 150,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.45,
@@ -50426,9 +50428,7 @@
         "Weapon_Power": 2.1,
         "Weapon_Em": 1040,
         "Signature_Em": 1040,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 45500,
-        "Weapon_RegenCost": 455
+        "Signature_Ir": 0
       },
       "burstDps": 1230,
       "tags": "AMRS LaserCannon flightReady weaponMountUsable",
@@ -50448,6 +50448,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 68300,
+        "Weapon_RegenCost": 683,
         "Weapon_Firerate": 150,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.45,
@@ -50464,9 +50466,7 @@
         "Weapon_Power": 2.4,
         "Weapon_Em": 1190,
         "Signature_Em": 1190,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 68300,
-        "Weapon_RegenCost": 683
+        "Signature_Ir": 0
       },
       "burstDps": 1846,
       "tags": "AMRS LaserCannon flightReady weaponMountUsable",
@@ -52028,6 +52028,8 @@
       "stats": {
         "Weapon_CapacitorShots": 60,
         "Weapon_RegenPerSec": 1947,
+        "Weapon_RequestedAmmo": 100,
+        "Weapon_RegenCost": 1,
         "Weapon_Firerate": 40,
         "Weapon_HeatPerShot": 5,
         "Weapon_Spread": 4,
@@ -52044,9 +52046,7 @@
         "Weapon_Power": 1,
         "Weapon_Em": 450,
         "Signature_Em": 450,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 100,
-        "Weapon_RegenCost": 1
+        "Signature_Ir": 0
       },
       "burstDps": 277,
       "tags": "flightReady weaponMountUsable",
@@ -52066,6 +52066,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 15400,
+        "Weapon_RegenCost": 440,
         "Weapon_Firerate": 70,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 4,
@@ -52082,9 +52084,7 @@
         "Weapon_Power": 1,
         "Weapon_Em": 450,
         "Signature_Em": 450,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 15400,
-        "Weapon_RegenCost": 440
+        "Signature_Ir": 0
       },
       "burstDps": 462,
       "tags": "AMRS ScatterGun flightReady weaponMountUsable",
@@ -52271,6 +52271,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 20250,
+        "Weapon_RegenCost": 202,
         "Weapon_Firerate": 150,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.45,
@@ -52287,9 +52289,7 @@
         "Weapon_Power": 1.73,
         "Weapon_Em": 649,
         "Signature_Em": 649,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 20250,
-        "Weapon_RegenCost": 202
+        "Signature_Ir": 0
       },
       "burstDps": 547,
       "tags": "KRIG LaserCannon flightReady weaponMountUsable",
@@ -53327,6 +53327,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 29120,
+        "Weapon_RegenCost": 84,
         "Weapon_Firerate": 350,
         "Weapon_HeatPerShot": 1800,
         "Weapon_Spread": 0.5,
@@ -53343,9 +53345,7 @@
         "Weapon_Power": 0.863,
         "Weapon_Em": 320,
         "Signature_Em": 320,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 29120,
-        "Weapon_RegenCost": 84
+        "Signature_Ir": 0
       },
       "burstDps": 2042,
       "tags": "HRST LaserRepeater flightReady weaponMountUsable TMBL_Storm",
@@ -59794,6 +59794,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 28800,
+        "Weapon_RegenCost": 120,
         "Weapon_Firerate": 60,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 4,
@@ -59810,9 +59812,7 @@
         "Weapon_Power": 1.2,
         "Weapon_Em": 495,
         "Signature_Em": 495,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 28800,
-        "Weapon_RegenCost": 120
+        "Signature_Ir": 0
       },
       "burstDps": 480,
       "tags": "PRAR DistortionScatterGun flightReady weaponMountUsable",
@@ -60763,6 +60763,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 128130,
+        "Weapon_RegenCost": 1200,
         "Weapon_Firerate": 55,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.4,
@@ -60779,9 +60781,7 @@
         "Weapon_Power": 2.93,
         "Weapon_Em": 1450,
         "Signature_Em": 1450,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 128130,
-        "Weapon_RegenCost": 1200
+        "Signature_Ir": 0
       },
       "burstDps": 4721,
       "tags": "BEHR LaserCannon flightReady weaponMountUsable",
@@ -60801,6 +60801,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 128130,
+        "Weapon_RegenCost": 1200,
         "Weapon_Firerate": 55,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.4,
@@ -60817,9 +60819,7 @@
         "Weapon_Power": 2.93,
         "Weapon_Em": 1450,
         "Signature_Em": 1450,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 128130,
-        "Weapon_RegenCost": 1200
+        "Signature_Ir": 0
       },
       "burstDps": 4721,
       "tags": "BEHR LaserCannon flightReady weaponMountUsable",
@@ -61160,6 +61160,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 1000,
+        "Weapon_RegenCost": 300,
         "Weapon_Firerate": 90,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.1,
@@ -61178,9 +61180,7 @@
         "Weapon_Power": 1.2,
         "Weapon_Em": 594,
         "Signature_Em": 594,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 1000,
-        "Weapon_RegenCost": 300
+        "Signature_Ir": 0
       },
       "burstDps": 203,
       "tags": "BANU_TachyonCannon flightReady weaponMountUsable",
@@ -61200,6 +61200,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 1300,
+        "Weapon_RegenCost": 400,
         "Weapon_Firerate": 90,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.1,
@@ -61218,9 +61220,7 @@
         "Weapon_Power": 1.6,
         "Weapon_Em": 792,
         "Signature_Em": 792,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 1300,
-        "Weapon_RegenCost": 400
+        "Signature_Ir": 0
       },
       "burstDps": 270,
       "tags": "BANU_TachyonCannon flightReady weaponMountUsable",
@@ -61240,6 +61240,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 1600,
+        "Weapon_RegenCost": 500,
         "Weapon_Firerate": 90,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.1,
@@ -61258,9 +61260,7 @@
         "Weapon_Power": 2,
         "Weapon_Em": 990,
         "Signature_Em": 990,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 1600,
-        "Weapon_RegenCost": 500
+        "Signature_Ir": 0
       },
       "burstDps": 405,
       "tags": "BANU_TachyonCannon flightReady weaponMountUsable",
@@ -61576,6 +61576,8 @@
       "stats": {
         "Weapon_CapacitorShots": 65,
         "Weapon_RegenPerSec": 20,
+        "Weapon_RequestedAmmo": 12150,
+        "Weapon_RegenCost": 32.4,
         "Weapon_Firerate": 750,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.6,
@@ -61592,9 +61594,7 @@
         "Weapon_Power": 0.8,
         "Weapon_Em": 0,
         "Signature_Em": 0,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 12150,
-        "Weapon_RegenCost": 32.4
+        "Signature_Ir": 0
       },
       "burstDps": 350,
       "tags": "GLSN LaserRepeater flightReady weaponMountUsable",
@@ -64196,6 +64196,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 4500,
+        "Weapon_RegenCost": 90,
         "Weapon_Firerate": 100,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.4,
@@ -64212,9 +64214,7 @@
         "Weapon_Power": 0.9,
         "Weapon_Em": 408,
         "Signature_Em": 408,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 4500,
-        "Weapon_RegenCost": 90
+        "Signature_Ir": 0
       },
       "burstDps": 135,
       "tags": "JOKR DistortionCannon flightReady weaponMountUsable",
@@ -64234,6 +64234,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 6750,
+        "Weapon_RegenCost": 135,
         "Weapon_Firerate": 100,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.4,
@@ -64250,9 +64252,7 @@
         "Weapon_Power": 1.2,
         "Weapon_Em": 545,
         "Signature_Em": 545,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 6750,
-        "Weapon_RegenCost": 135
+        "Signature_Ir": 0
       },
       "burstDps": 203,
       "tags": "JOKR DistortionCannon flightReady weaponMountUsable",
@@ -64272,6 +64272,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 10140,
+        "Weapon_RegenCost": 202.8,
         "Weapon_Firerate": 100,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.4,
@@ -64288,9 +64290,7 @@
         "Weapon_Power": 1.5,
         "Weapon_Em": 681,
         "Signature_Em": 681,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 10140,
-        "Weapon_RegenCost": 202.8
+        "Signature_Ir": 0
       },
       "burstDps": 304,
       "tags": "JOKR DistortionCannon flightReady weaponMountUsable",
@@ -64521,6 +64521,8 @@
       "stats": {
         "Weapon_CapacitorShots": 60,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 10200,
+        "Weapon_RegenCost": 43,
         "Weapon_Overheat": 100,
         "Weapon_Cooling": 5.5,
         "Weapon_OverheatFix": 3.5,
@@ -64536,9 +64538,7 @@
         "Weapon_Power": 2,
         "Weapon_Em": 0,
         "Signature_Em": 0,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 10200,
-        "Weapon_RegenCost": 43
+        "Signature_Ir": 0
       },
       "burstDps": 0,
       "tags": "flightReady weaponMountUsable AEGS_tiburon",
@@ -65585,6 +65585,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 10450,
+        "Weapon_RegenCost": 19,
         "Weapon_Firerate": 1100,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.518,
@@ -65601,9 +65603,7 @@
         "Weapon_Power": 0.335,
         "Weapon_Em": 111,
         "Signature_Em": 111,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 10450,
-        "Weapon_RegenCost": 19
+        "Signature_Ir": 0
       },
       "burstDps": 314,
       "tags": "TOAG LaserGatling flightReady weaponMountUsable MRAI_Pulse",
@@ -66119,6 +66119,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 18187,
+        "Weapon_RegenCost": 48.5,
         "Weapon_Firerate": 850,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.62,
@@ -66137,9 +66139,7 @@
         "Signature_Em": 0,
         "Signature_Ir": 0,
         "Weapon_CycleShots": 2,
-        "Weapon_CycleSeconds": 0.150588,
-        "Weapon_RequestedAmmo": 18187,
-        "Weapon_RegenCost": 48.5
+        "Weapon_CycleSeconds": 0.150588
       },
       "burstDps": 525,
       "tags": "GLSN LaserRepeater flightReady weaponMountUsable",
@@ -67167,6 +67167,8 @@
       "stats": {
         "Weapon_CapacitorShots": 225,
         "Weapon_RegenPerSec": 537,
+        "Weapon_RequestedAmmo": 100,
+        "Weapon_RegenCost": 1,
         "Weapon_Ammo": 0,
         "Weapon_Speed": 1200,
         "Weapon_Range": 8004,
@@ -67179,9 +67181,7 @@
         "Weapon_Power": 0.25,
         "Weapon_Em": 0,
         "Signature_Em": 0,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 100,
-        "Weapon_RegenCost": 1
+        "Signature_Ir": 0
       },
       "burstDps": 0,
       "tags": "flightReady weaponMountUsable",
@@ -67201,6 +67201,8 @@
       "stats": {
         "Weapon_CapacitorShots": 225,
         "Weapon_RegenPerSec": 537,
+        "Weapon_RequestedAmmo": 100,
+        "Weapon_RegenCost": 1,
         "Weapon_Firerate": 60,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.45,
@@ -67217,9 +67219,7 @@
         "Weapon_Power": 3.6,
         "Weapon_Em": 1780,
         "Signature_Em": 1780,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 100,
-        "Weapon_RegenCost": 1
+        "Signature_Ir": 0
       },
       "burstDps": 125,
       "tags": "flightReady weaponMountUsable",
@@ -67239,6 +67239,8 @@
       "stats": {
         "Weapon_CapacitorShots": 225,
         "Weapon_RegenPerSec": 45,
+        "Weapon_RequestedAmmo": 100,
+        "Weapon_RegenCost": 1,
         "Weapon_Ammo": 0,
         "Weapon_Speed": 1240,
         "Weapon_Range": 7924,
@@ -67251,9 +67253,7 @@
         "Weapon_Power": 1,
         "Weapon_Em": 0,
         "Signature_Em": 0,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 100,
-        "Weapon_RegenCost": 1
+        "Signature_Ir": 0
       },
       "burstDps": 0,
       "tags": "flightReady weaponMountUsable",
@@ -67273,6 +67273,8 @@
       "stats": {
         "Weapon_CapacitorShots": 225,
         "Weapon_RegenPerSec": 537,
+        "Weapon_RequestedAmmo": 100,
+        "Weapon_RegenCost": 1,
         "Weapon_Firerate": 60,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.45,
@@ -67289,9 +67291,7 @@
         "Weapon_Power": 0.25,
         "Weapon_Em": 0,
         "Signature_Em": 0,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 100,
-        "Weapon_RegenCost": 1
+        "Signature_Ir": 0
       },
       "burstDps": 4671,
       "tags": "flightReady weaponMountUsable",
@@ -67311,6 +67311,8 @@
       "stats": {
         "Weapon_CapacitorShots": 225,
         "Weapon_RegenPerSec": 2787,
+        "Weapon_RequestedAmmo": 100,
+        "Weapon_RegenCost": 1,
         "Weapon_Firerate": 750,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.6,
@@ -67327,9 +67329,7 @@
         "Weapon_Power": 1.2,
         "Weapon_Em": 446,
         "Signature_Em": 446,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 100,
-        "Weapon_RegenCost": 1
+        "Signature_Ir": 0
       },
       "burstDps": 3125,
       "tags": "flightReady weaponMountUsable",
@@ -69591,6 +69591,8 @@
       "stats": {
         "Weapon_CapacitorShots": 225,
         "Weapon_RegenPerSec": 537,
+        "Weapon_RequestedAmmo": 100,
+        "Weapon_RegenCost": 1,
         "Weapon_Firerate": 60,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.45,
@@ -69607,9 +69609,7 @@
         "Weapon_Power": 0.25,
         "Weapon_Em": 0,
         "Signature_Em": 0,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 100,
-        "Weapon_RegenCost": 1
+        "Signature_Ir": 0
       },
       "burstDps": 85,
       "tags": "flightReady weaponMountUsable",
@@ -69725,6 +69725,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 3750,
+        "Weapon_RegenCost": 60,
         "Weapon_Firerate": 350,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.5,
@@ -69741,9 +69743,7 @@
         "Weapon_Power": 0.25,
         "Weapon_Em": 545,
         "Signature_Em": 545,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 3750,
-        "Weapon_RegenCost": 60
+        "Signature_Ir": 0
       },
       "burstDps": 915,
       "tags": "flightReady weaponMountUsable",
@@ -69763,6 +69763,8 @@
       "stats": {
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
+        "Weapon_RequestedAmmo": 5625,
+        "Weapon_RegenCost": 450,
         "Weapon_Firerate": 100,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.45,
@@ -69779,9 +69781,7 @@
         "Weapon_Power": 0.25,
         "Weapon_Em": 817,
         "Signature_Em": 817,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 5625,
-        "Weapon_RegenCost": 450
+        "Signature_Ir": 0
       },
       "burstDps": 309,
       "tags": "flightReady weaponMountUsable",
@@ -70405,6 +70405,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 100,
+        "Weapon_RegenCost": 1,
         "Weapon_Firerate": 180,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.6,
@@ -70421,9 +70423,7 @@
         "Weapon_Power": 0.65,
         "Weapon_Em": 0,
         "Signature_Em": 0,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 100,
-        "Weapon_RegenCost": 1
+        "Signature_Ir": 0
       },
       "burstDps": 90,
       "tags": "KRIG LaserRepeater flightReady weaponMountUsable Merlin_Nose",
@@ -70876,6 +70876,8 @@
       "stats": {
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
+        "Weapon_RequestedAmmo": 15187,
+        "Weapon_RegenCost": 40.5,
         "Weapon_Firerate": 750,
         "Weapon_HeatPerShot": 0,
         "Weapon_Spread": 0.6,
@@ -70892,9 +70894,7 @@
         "Weapon_Power": 0.652,
         "Weapon_Em": 242,
         "Signature_Em": 242,
-        "Signature_Ir": 0,
-        "Weapon_RequestedAmmo": 15187,
-        "Weapon_RegenCost": 40.5
+        "Signature_Ir": 0
       },
       "burstDps": 513,
       "tags": "TOAG LaserRepeater flightReady weaponMountUsable",
