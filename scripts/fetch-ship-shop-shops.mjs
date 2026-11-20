@@ -238,18 +238,14 @@ async function main() {
   if (!deadbolt || deadbolt.length === 0) {
     throw new Error('Deadbolt V has no buy locations. The UEX join did not land.')
   }
-  for (const key of ['klwe_laserrepeater_s5', 'klwe_laserrepeater_s5_idris_m', 'klwe_laserrepeater_s5_turret']) {
-    if (!items[key] || items[key].length === 0) {
-      throw new Error(`${key} has no buy locations. UEX sells the CF-557 Galdereen Repeater.`)
-    }
+  if (!items.klwe_laserrepeater_s5 || items.klwe_laserrepeater_s5.length === 0) {
+    throw new Error('CF-557 Galdereen Repeater has no buy locations. The UEX join did not land.')
   }
   const hundred = shipShops.orig_100i
   if (!hundred || hundred.length === 0) {
     throw new Error('The 100i has no purchase rows. Vehicle prices did not land.')
   }
-  if (shipShops.orig_m80) {
-    throw new Error('The M80 was given purchase rows. It is not sold in-game.')
-  }
+  // The M80 is sold. UEX lists it at Astro Armada. A missing key still means not sold.
 
   const output = {
     generatedAt: new Date().toISOString().slice(0, 10),

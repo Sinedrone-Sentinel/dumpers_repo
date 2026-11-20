@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-13T00:33:19.527Z",
+  "generatedAt": "2026-11-20T00:40:08.380Z",
   "source": "api.star-citizen.wiki",
   "blueprints": {
     "cool_acom_s01_iceplunge": {
@@ -1094,6 +1094,7 @@
       "grade": "B"
     },
     "radr_wlop_s03_lephari": {
+      "itemClass": "civilian",
       "grade": "C"
     },
     "radr_wlop_s03_socoria": {
@@ -1280,7 +1281,6 @@
       "grade": "A"
     },
     "shld_rsi_s04_polaris": {
-      "itemClass": "industrial",
       "grade": "A"
     },
     "shld_seco_s00_pin": {
@@ -1560,10 +1560,19 @@
     "behr_lasercannon_s1": {
       "grade": "A"
     },
+    "behr_lasercannon_s1_mr02": {
+      "grade": "A"
+    },
     "behr_lasercannon_s2": {
       "grade": "A"
     },
+    "behr_lasercannon_s2_mr02": {
+      "grade": "A"
+    },
     "behr_lasercannon_s3": {
+      "grade": "A"
+    },
+    "behr_lasercannon_s3_mr02": {
       "grade": "A"
     },
     "behr_lasercannon_s4": {
