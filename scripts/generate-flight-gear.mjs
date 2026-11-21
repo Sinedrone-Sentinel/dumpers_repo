@@ -1,10 +1,21 @@
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
+import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const gear = JSON.parse(readFileSync(join(root, 'src/lib/flightProfile/gear.json'), 'utf8')).gear
 const spec = JSON.parse(readFileSync(join(root, 'src/lib/flightProfile/devices.json'), 'utf8'))
+const layoutFile = join(root, 'src/lib/flightProfile/sheetLayouts.json')
+const layouts = existsSync(layoutFile) ? JSON.parse(readFileSync(layoutFile, 'utf8')) : {}
+
+function placedBreakouts(breakouts, layout) {
+  const byName = new Map((layout ?? []).map((group) => [group.name, group]))
+  return breakouts.map((group) => {
+    const placed = byName.get(group.name)
+    if (!placed) return { ...group }
+    return { ...group, cx: placed.cx, cy: placed.cy, r: placed.r, x: placed.x, y: placed.y }
+  })
+}
 const byId = new Map(spec.devices.map((device) => [device.id, device]))
 
 const BASE = new Set(['F1', 'F2', 'F3', 'Sw1', 'Throttle', 'En1'])
@@ -114,7 +125,7 @@ for (const item of gear) {
     subtitle,
     photo: item.photo,
     columns: sheet.columns,
-    breakouts: sheet.breakouts,
+    breakouts: placedBreakouts(sheet.breakouts, layouts[item.id]),
     controls: sheet.controls,
   })
 }

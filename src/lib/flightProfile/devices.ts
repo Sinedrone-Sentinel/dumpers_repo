@@ -52,3 +52,5 @@ for (const device of generated.devices as DeviceDef[]) {
 }
 
 PHOTO_SIZE['gear/t-rudder.jpg'] = { width: 600, height: 600 }
+PHOTO_SIZE['gear/ota.jpg'] = { width: 600, height: 600 }
+PHOTO_SIZE['gear/ota-lh.jpg'] = { width: 600, height: 600 }
