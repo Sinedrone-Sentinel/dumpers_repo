@@ -257,6 +257,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 187 | `222_list_ship_shop_fraken_ships.sql` | Ship search gold names. `list_ship_shop_fraken_ship_ids` returns the published ship ids. `ship_shop_fraken_listed` mirrors those ids (select only, realtime) so an open page hears a publish or a removal. `delete_ship_shop_fraken_fit` is the owner-only way to take one down. The fit JSON stays on `get_ship_shop_fraken_fit`. Apply after **221** |
 | 188 | `223_fix_ticker_launcher_version_4_10_3.sql` | Rewrites patch-day What's New headlines/version from invented `4.10.0` to RSI Launcher `4.10.3` (`4.10.3-live.13165946`). Apply after **222** |
 | 189 | `224_drop_capacitor_bookkeeping_ticker.sql` | Removes the `4.10.3-live.13220821` digest that announced capacitor bookkeeping as blueprint changes, plus the misspellings row attached to that same run. Apply after **223** |
+| 190 | `225_flight_gear_list_finished.sql` | Lists the finished VKB sheets: Space Combat Edition Standard (both hands), Omni Throttle (both hands), THQ, THQ-V, and ATEM. Gear that stays `listed = false` stays out of the picker. Apply after **224** |
 
 ### pg_cron (migrations 054, 065-068, 144, 147, 178, 179, 191, 196)
 
