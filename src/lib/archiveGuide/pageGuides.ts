@@ -249,9 +249,9 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     id: 'commodity-lookup',
     title: 'UEX Lookup',
     description:
-      'Find every shop that sells a gun, ammo, ship component, armor piece, clothing, ship, commodity, food, or drink. Powered by UEX.',
+      'Find every shop that sells a gun, ammo, ship component, armor piece, clothing, ship, commodity, food, drink, medpen, or plushie. Powered by UEX.',
     details: [
-      'Search or filter by Guns, Ammo, Components, Armor, Clothing, Ships, Commodities, Food, or Drinks. Mining lasers and modules that are sold in a shop are under Components',
+      'Search or filter by Guns, Ammo, Components, Armor, Clothing, Ships, Commodities, Food, Drinks, Consumables, or Plushies. Mining lasers and modules that are sold in a shop are under Components. Consumables are medpens and the other medical pens shops sell',
       '**Buy from** lists every shop that sells the item, with the UEX price. Commodities also have **Sell to** for terminals that buy them from you, plus SCU box sizes',
       'Locations are grouped by star system and show the shop and the place',
       'Commodity rows also show the live **UEX status** from 1 to 7, what it means, the SCU, and the date a player last reported it. On **Buy from** it is the stock (1 is out of stock). On **Sell to** it is how full the terminal is (7 is full and will not buy). Only reports from the last 7 days are shown. You do not need to sign in to see it',
