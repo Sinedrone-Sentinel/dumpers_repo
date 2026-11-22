@@ -131,11 +131,11 @@ function throttleBottom(): Partial<Record<ModuleId, SlotId[]>> {
  * Set `ready` only when devices.json has the same id.
  */
 export const MODULE_RULES: ModuleRule[] = [
-  { id: 'scg', name: 'Gladiator NXT EVO Space Combat Edition (Right Hand)', kind: 'main', ready: true, photo: '/flight-profile/scg.jpg', hand: 'right', role: 'stick', ports: stickPorts },
-  { id: 'scg-lh', name: 'Gladiator NXT EVO Space Combat Edition (Left Hand)', kind: 'main', ready: true, photo: '/flight-profile/scg-lh.jpg', hand: 'left', role: 'stick', ports: stickPorts },
-  { id: 'ota', name: 'NXT EVO Omni Throttle (RH)', kind: 'main', ready: false, hand: 'right', role: 'throttle', ports: ['top', 'left'] },
-  { id: 'ota-lh', name: 'NXT EVO Omni Throttle (LH)', kind: 'main', ready: false, hand: 'left', role: 'throttle', ports: ['top', 'right'] },
-  { id: 'stecs', name: 'STECS Modern Throttle (LH)', kind: 'main', ready: true, photo: '/flight-profile/stecs.jpg', hand: 'left', role: 'throttle', ports: throttlePorts },
+  { id: 'scg', name: 'Gladiator NXT EVO Space Combat Edition Premium (Right Hand)', kind: 'main', ready: true, photo: '/flight-profile/scg.jpg', hand: 'right', role: 'stick', ports: stickPorts },
+  { id: 'scg-lh', name: 'Gladiator NXT EVO Space Combat Edition Premium (Left Hand)', kind: 'main', ready: true, photo: '/flight-profile/scg-lh.jpg', hand: 'left', role: 'stick', ports: stickPorts },
+  { id: 'ota', name: 'Gladiator NXT EVO Omni Throttle (Right Hand)', kind: 'main', ready: true, photo: '/flight-profile/gear/ota.jpg', hand: 'right', role: 'throttle', ports: ['top', 'left'] },
+  { id: 'ota-lh', name: 'Gladiator NXT EVO Omni Throttle (Left Hand)', kind: 'main', ready: true, photo: '/flight-profile/gear/ota-lh.jpg', hand: 'left', role: 'throttle', ports: ['top', 'right'] },
+  { id: 'stecs', name: 'STECS Modern Throttle Mk.II Standard (LH)', kind: 'main', ready: true, photo: '/flight-profile/stecs.jpg', hand: 'left', role: 'throttle', ports: throttlePorts },
   { id: 'stecs-plus', name: 'STECS Modern Throttle Mini Plus (LH)', kind: 'main', ready: false, hand: 'left', role: 'throttle', ports: throttlePorts, acceptsAtem: true },
   { id: 'stecs-max', name: 'STECS Modern Throttle Max (LH)', kind: 'main', ready: false, hand: 'left', role: 'throttle', ports: throttlePorts, acceptsAtem: true },
   { id: 'stg', name: 'STECS Space Throttle (RH)', kind: 'main', ready: false, hand: 'right', role: 'throttle', ports: throttlePorts },
@@ -151,9 +151,9 @@ export const MODULE_RULES: ModuleRule[] = [
   { id: 'sem', name: 'SEM-V', kind: 'attach', ready: true, photo: '/flight-profile/semv.jpg', mounts: { ...verticalOnThrottle(), ...stickTop() } },
   { id: 'sem-h', name: 'SEM', kind: 'attach', ready: true, photo: '/flight-profile/sem.jpg', mounts: sideBus() },
   { id: 'stem', name: 'STEM', kind: 'attach', ready: true, photo: '/flight-profile/stem.jpg', mounts: throttleBottom() },
-  { id: 'atem', name: 'ATEM', kind: 'attach', ready: false },
-  { id: 'thq', name: 'THQ', kind: 'attach', ready: false, mounts: sideBus() },
-  { id: 'thq-v', name: 'THQ-V', kind: 'attach', ready: false, mounts: verticalOnThrottle() },
+  { id: 'atem', name: 'ATEM', kind: 'attach', ready: true, photo: '/flight-profile/gear/atem.jpg' },
+  { id: 'thq', name: 'THQ', kind: 'attach', ready: true, photo: '/flight-profile/gear/thq.jpg', mounts: sideBus() },
+  { id: 'thq-v', name: 'THQ-V', kind: 'attach', ready: true, photo: '/flight-profile/gear/thq-v.jpg', mounts: verticalOnThrottle() },
   { id: 'thq-ww2', name: 'THQ WWII', kind: 'attach', ready: false, mounts: sideBus() },
   { id: 'thq-v-ww2', name: 'THQ-V WWII', kind: 'attach', ready: false, mounts: verticalOnThrottle() },
 ]
