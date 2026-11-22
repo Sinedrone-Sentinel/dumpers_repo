@@ -26,7 +26,7 @@ export const OFFLINE_MODE_SECTION = {
     '**Resource Tracker** — log your stock and see which blueprints you can craft with it (saved in this browser)',
     '**Mining Tracker** — RS signature reference, the Rock Calculator, the Mining Guide, and Caves with a route from where you are',
     '**Wikelo** — every barter trade, what to hand in, and what you get back',
-    '**UEX Lookup** — where to buy guns, ammo, ship components, armor, ships, commodities, food, and drinks, and where to sell commodities',
+    '**UEX Lookup** — where to buy guns, ammo, ship components, armor, clothing, ships, commodities, food, and drinks, and where to sell commodities',
     '**Shopping Cart** — a browser list of shop buys, separate from Fuzy\'s Ship Shop. Calculate a route with Fewest Stops, Cheapest, or Efficient',
     '**Fuzy\'s Ship Shop** — build a ship loadout, compare Pilot DPS and Burst DPS, and see where to buy the parts. Builds save in this browser until you sign in',
     '**Loot Finder** — what can drop at Lazarus, Onyx, OLP/PAF, Checkmate / Orbituary / Ruin Contested Zones, Executive Hangar, QV Investigation, and Siege of Orison (including Clothing and NPC Gear enemies wear)',
