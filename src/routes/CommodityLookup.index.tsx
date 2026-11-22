@@ -62,8 +62,8 @@ export default function CommodityLookupRoute() {
   return (
     <FeaturePageLayout
       title="UEX Lookup"
-      subtitle="Where to buy guns, ammo, ship components, mining lasers, armor, clothing, ships, commodities, food, and drinks"
-      seoIntro="Star Citizen UEX Lookup — shop locations and prices for guns, ammo, ship components, armor, clothing, ships, commodities, food, and drinks."
+      subtitle="Where to buy guns, ammo, ship components, mining lasers, armor, clothing, ships, commodities, food, drinks, medpens, and plushies"
+      seoIntro="Star Citizen UEX Lookup — shop locations and prices for guns, ammo, ship components, armor, clothing, ships, commodities, food, drinks, medpens, and plushies."
       badge="UEX"
       meta={
         <>

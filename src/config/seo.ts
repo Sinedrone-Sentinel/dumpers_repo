@@ -92,7 +92,7 @@ const pages: Record<string, SeoPageConfig> = {
   '/commodity-lookup': {
     title: "Star Citizen UEX Lookup — Shops, Ships & Commodities | Dumper's Repo",
     description:
-      'Look up Star Citizen shops for guns, ammo, ship components, armor, clothing, ships, commodities, food, and drinks. UEX prices and buy locations, plus commodity sell terminals.',
+      'Look up Star Citizen shops for guns, ammo, ship components, armor, clothing, ships, commodities, food, drinks, medpens, and plushies. UEX prices and buy locations, plus commodity sell terminals.',
     canonicalPath: '/commodity-lookup/',
   },
   '/shop-cart': {
