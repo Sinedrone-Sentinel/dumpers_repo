@@ -171,6 +171,12 @@ export function blueprintHasLootLocations(entityClass?: string | null): boolean 
   return blueprintHasLootLocationsInIndex(lootByEntityClass, entityClass)
 }
 
+/** By location chip label for a loot kind (Clothing, NPC Gear, and the rest). */
+export function kindChipLabel(kind?: string | null): string {
+  const id = kindChipForItem({ kind })
+  return SITE_LOOT_KIND_CHIPS.find((chip) => chip.id === id)?.label ?? 'Other'
+}
+
 /** Every item gets exactly one chip id so no row is orphaned behind All. */
 export function kindChipForItem(item: { kind?: string | null }): SiteLootKindChipId {
   const kind = String(item.kind || '').trim()

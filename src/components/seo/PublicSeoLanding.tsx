@@ -92,7 +92,7 @@ const FEATURES: FeatureCard[] = [
   },
   {
     title: 'UEX Lookup',
-    body: 'Where to buy guns, ammo, ship components, armor, ships, commodities, food, and drinks, and where to sell commodities. Add a shop to the Shopping Cart.',
+    body: 'Where to buy guns, ammo, ship components, armor, clothing, ships, commodities, food, and drinks, and where to sell commodities. Add a shop to the Shopping Cart.',
     href: '/commodity-lookup',
     action: 'offline',
     cta: 'Open UEX Lookup offline →',
@@ -106,7 +106,7 @@ const FEATURES: FeatureCard[] = [
   },
   {
     title: 'Loot Finder',
-    body: 'Search what can drop at Lazarus, Onyx, OLP/PAF, Checkmate / Orbituary / Ruin Contested Zones, Executive Hangar, QV Investigation, and Siege of Orison, with relative rates.',
+    body: 'Search what can drop at Lazarus, Onyx, OLP/PAF, Checkmate / Orbituary / Ruin Contested Zones, Executive Hangar, QV Investigation, and Siege of Orison, with relative rates. Narrow a site by category, and add a shop-sold item to the cart.',
     href: '/loot-finder',
     action: 'offline',
     cta: 'Open Loot Finder offline →',

@@ -201,13 +201,13 @@ Open to everyone, including Offline Mode. Each person can keep four builds. Sign
 
 ### UEX Lookup (`/commodity-lookup`)
 
-Find every shop that sells a gun, ammo, armor piece, ship, commodity, food, or drink, with **UEX** prices — **Powered by [UEX](https://uexcorp.space)**. Commodities still show **Sell to** and SCU box sizes.
+Find every shop that sells a gun, ammo, armor piece, clothing, ship, commodity, food, or drink, with **UEX** prices — **Powered by [UEX](https://uexcorp.space)**. Commodities still show **Sell to** and SCU box sizes.
 
-- Search or filter by Guns, Ammo, Armor, Ships, Commodities, Food, or Drinks
+- Search or filter by Guns, Ammo, Armor, Clothing, Ships, Commodities, Food, or Drinks
 - The cart mark on each **Buy from** row adds that shop and its price to [Shopping Cart](#shopping-cart-shop-cart)
 - A blueprint card shows **$$$** and the cart mark when the item is sold in a shop
 - Commodity rows show the live UEX status (1–7 with its meaning), SCU, and report date from the `smart-hauler-availability` Edge Function, for guests and members. Only reports from the last 7 days are shown; if the check fails the row says so and the baked prices stay
-- Commodity terminals, per-SCU prices, and box sizes are baked by `npm run fetch-shop-data`. Guns, armor, food, and drinks are baked by `npm run fetch-shop-item-index`. Ships and ship weapons come from the ship-shop bake
+- Commodity terminals, per-SCU prices, and box sizes are baked by `npm run fetch-shop-data`. Guns, armor, clothing, food, and drinks are baked by `npm run fetch-shop-item-index` (required every patch, with the loot table and the ship-shop bake, so Where to buy, cart, and the gold chest stay together). Ships and ship weapons come from the ship-shop bake
 - The same lookup is available as a **UEX** chip popup on Mining Tracker (ore cards, ore detail, ledger rows) and Resource Tracker (cards + list). The chip stays hidden when the name is not a commodity
 
 ### Shopping Cart (`/shop-cart`)
@@ -216,7 +216,7 @@ A browser list of shop buys, separate from Fuzy's Ship Shop. The header cart but
 
 ### Loot Finder (`/loot-finder`)
 
-Search site loot by item name or browse a named location (Lazarus, Onyx, OLP/PAF, Checkmate / Orbituary / Ruin Contested Zones, Executive Hangar, QV Investigation, Siege of Orison). Baked from **location-true** loot slot presets plus NPC loadout worn gear into `src/data/game-site-loot.json` (`npm run bake-site-loot`, also during every `parse-game-data` / patch-day parse). Includes Clothing and an **NPC Gear** chip for worn clothing/armour that does not also drop in that site’s crates. Relative drop rates only. Open to guests and Offline Mode.
+Search site loot by item name or browse a named location (Lazarus, Onyx, OLP/PAF, Checkmate / Orbituary / Ruin Contested Zones, Executive Hangar, QV Investigation, Siege of Orison). Baked from **location-true** loot slot presets plus NPC loadout worn gear into `src/data/game-site-loot.json` (`npm run bake-site-loot`, also during every `parse-game-data` / patch-day parse). Includes Clothing and an **NPC Gear** chip for worn clothing/armour that does not also drop in that site’s crates. By location has a search box that narrows the selected category chip. Search results tag each site with that same category. An item sold in a shop shows Where to buy and Add to cart on both tabs. Relative drop rates only. Open to guests and Offline Mode.
 
 ### Executive Timer (`/executive-hangar`)
 
@@ -472,7 +472,7 @@ Never commit `service_role` / `sb_secret_` keys. Edge Functions receive platform
 | `npm run audit-ore-name-consistency` | Ore name cross-check |
 | `npm run fetch-commodity-bases` | Refresh UEX Q0 commodity DFP bases |
 | `npm run fetch-shop-data` | Refresh UEX commodity buy/sell locations for UEX Lookup (`src/data/shop-commodity-index.json`) |
-| `npm run fetch-shop-item-index` | Refresh UEX buy locations for personal guns, armor, food, and drinks (`src/data/shop-item-index.json`) |
+| `npm run fetch-shop-item-index` | Refresh UEX buy locations for personal guns, armor, clothing, food, and drinks (`src/data/shop-item-index.json`). Every patch, with the loot bake and `fetch-ship-shop-shops` |
 | `npm run fetch-mining-gear-shops` | Refresh UEX buy locations for mining heads/modules/gadgets, used by Advisor (`src/data/mining-gear-shops.json`) |
 | `npm run fetch-ship-shop-shops` | Refresh UEX buy locations for Fuzy's Ship Shop (`src/data/ship-shop-shops.json`). Every patch, after `parse-game-data` |
 | `npm run verify-dfp-premiums` | Fail if DFP bundle/premiums are stale vs `game-blueprints.json` |
@@ -528,7 +528,7 @@ Full patch-day runbook (including how to verify removals vs CIG moving records a
 | `game-commodities.json` | Cargo commodities from `resourcetypedatabase` not already tracked (Resource Tracker catalog + Q0 DFP base fetch) |
 | `dfp-commodity-bases.json` | UEX-backed Q0 bases |
 | `shop-commodity-index.json` | UEX-backed commodity buy/sell locations, per-SCU prices, and box sizes (UEX Lookup) |
-| `shop-item-index.json` | UEX buy locations for personal guns, armor, food, and drinks (UEX Lookup) |
+| `shop-item-index.json` | UEX buy locations for personal guns, armor, clothing, food, and drinks (UEX Lookup, Loot Finder, blueprint cards) |
 | `blueprint-name-lookup.json` | BP Dumper / webhook Game.log name resolution (canonical; copies at build/deploy) |
 
 What's New ticker digests are **not** bundled JSON — parse appends `extracted-data/whats-new-pending.jsonl`, pushes via `ingest_whats_new_entries` (deduped by `issue_key` + `version`), then wipes the file. **Game** rows expire after 7 days; **site** (and poll) rows after 3 days (`cleanup_expired_whats_new` daily cron). Layout categories/colors live in `ticker_categories` (super-admin **Updates Ticker** modal). Apply migrations through `151_admin_whats_new_crud.sql` (see `docs/SUPABASE_SETUP.md`).

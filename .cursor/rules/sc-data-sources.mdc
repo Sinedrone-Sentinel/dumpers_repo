@@ -47,6 +47,7 @@ Crowdsourced. Always **baked** by a script — never called at runtime, with one
 
 - Resource Tracker DFP Q0 bases — `npm run fetch-commodity-bases`
 - Commodity Lookup buy/sell terminals — `npm run fetch-shop-data`
+- UEX Lookup guns, armor, clothing, food, and drinks (Where to buy / cart) — `npm run fetch-shop-item-index` every patch, with the loot bake and the ship-shop bake
 - Smart Cracker Advisor mining-gear buy locations — `npm run fetch-mining-gear-shops`
 - Fuzy's Ship Shop Where to Buy (ships, components, weapons, racks, ordnance, gimbals) — `npm run fetch-ship-shop-shops` after `npm run parse-game-data` on patch day
 

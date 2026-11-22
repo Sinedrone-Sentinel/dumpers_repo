@@ -60,8 +60,8 @@ const PATCH_DAY_STEPS: PatchDayStep[] = [
     step: 7,
     title: 'UEX commodity buy/sell locations',
     description:
-      'Refresh UEX Lookup indexes (commodity terminals, plus guns, armor, food, and drinks) → shop-commodity-index.json and shop-item-index.json. Powered by UEX',
-    commands: ['npm run fetch-shop-data', 'npm run fetch-shop-item-index'],
+      'Refresh UEX Lookup commodity terminals and buy/sell listings → shop-commodity-index.json. Powered by UEX. Personal item shops (guns, armor, clothing, food, drinks) are the required step with the ship shops',
+    commands: ['npm run fetch-shop-data'],
     optional: true,
   },
   {
@@ -80,8 +80,8 @@ const PATCH_DAY_STEPS: PatchDayStep[] = [
     step: 9,
     title: 'UEX ship shop buy locations',
     description:
-      'Every patch, after parse. Refresh Fuzy\'s Ship Shop Where to Buy and cart → ship-shop-shops.json. Joins the catalogs parse just wrote. Powered by UEX. Do not fold this into the mining-gear bake. Price refreshes are never announced on the Updates ticker',
-    commands: ['npm run fetch-ship-shop-shops'],
+      'Every patch, after parse. Refresh Fuzy\'s Ship Shop Where to Buy and cart → ship-shop-shops.json, and personal shop icons (guns, armor, clothing, food, drinks) → shop-item-index.json. Those bakes plus the Loot Finder loot table are one set: $$$, cart, and the gold chest stay together. Joins the catalogs parse just wrote. Powered by UEX. Do not fold ship parts into the mining-gear bake. Price refreshes are never announced on the Updates ticker',
+    commands: ['npm run fetch-ship-shop-shops', 'npm run fetch-shop-item-index'],
   },
   {
     step: 10,

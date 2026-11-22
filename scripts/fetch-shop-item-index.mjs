@@ -1,6 +1,6 @@
 /**
  * Bake UEX buy locations for shop goods that are not commodities and not
- * already in the ship-shop bake: personal guns, armor, food, and drinks.
+ * already in the ship-shop bake: personal guns, armor, clothing, food, and drinks.
  *
  * The browser never calls UEX. Re-run with `npm run fetch-shop-item-index`.
  * Output: src/data/shop-item-index.json
@@ -23,8 +23,19 @@ const GROUPS = {
   7: 'Armor',
   24: 'Armor',
   18: 'Guns',
+  8: 'Clothing',
+  9: 'Clothing',
+  10: 'Clothing',
+  11: 'Clothing',
+  12: 'Clothing',
+  13: 'Clothing',
+  14: 'Clothing',
+  15: 'Clothing',
+  24: 'Clothing',
   62: 'Drinks',
   63: 'Food',
+  68: 'Clothing',
+  72: 'Clothing',
 }
 
 const AMMO_NAME = /\b(magazine|ammunition|ammo)\b/i
@@ -114,7 +125,7 @@ async function main() {
     source: 'UEX Corp',
     sourceUrl: 'https://uexcorp.space',
     attribution: 'Powered by UEX',
-    note: 'Buy locations for personal guns, armor, food, and drinks. A missing item is not sold in a shop.',
+    note: 'Buy locations for personal guns, armor, clothing, food, and drinks. A missing item is not sold in a shop.',
     itemCount: catalog.length,
     counts,
     items: catalog,

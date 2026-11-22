@@ -14,7 +14,7 @@ import {
   type TradeLocation,
 } from './shopLookup'
 
-export const UEX_GROUPS = ['Guns', 'Ammo', 'Components', 'Armor', 'Ships', 'Commodities', 'Food', 'Drinks'] as const
+export const UEX_GROUPS = ['Guns', 'Ammo', 'Components', 'Armor', 'Clothing', 'Ships', 'Commodities', 'Food', 'Drinks'] as const
 export type UexGroup = (typeof UEX_GROUPS)[number]
 
 export interface UexCatalogItem {
@@ -259,6 +259,21 @@ export function shopItemForBlueprint(entityClass: string | null | undefined, dis
   const item = byEntity || (displayName ? byName.get(nameKey(displayName)) : null)
   if (!item || item.buyAt.length === 0) return null
   return item
+}
+
+/** Loot Finder row. Class match wins; the display name is the fallback. `npc:` keys are worn gear. */
+export function shopItemForLoot(item: { key?: string | null; aliasKeys?: string[] | null; displayName?: string | null }): UexCatalogItem | null {
+  const keys = [item.key, ...(item.aliasKeys ?? [])]
+  for (const key of keys) {
+    if (!key) continue
+    const entity = key.replace(/^npc:/, '')
+    const found = byClass.get(entity.toLowerCase())
+    if (found && found.buyAt.length > 0) return found
+  }
+  if (!item.displayName) return null
+  const byLabel = byName.get(nameKey(item.displayName))
+  if (!byLabel || byLabel.buyAt.length === 0) return null
+  return byLabel
 }
 
 export function tradeResultFor(item: UexCatalogItem): CommodityTradeResult {

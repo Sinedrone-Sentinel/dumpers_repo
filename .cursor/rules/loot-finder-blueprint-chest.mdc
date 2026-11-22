@@ -1,31 +1,69 @@
 ---
-description: Gold chest on BP cards tracks Loot Finder bake locations
+description: Where to buy, cart, and gold chest stay one tool with the loot tables
 globs:
   - scripts/lib/parseSiteLoot.mjs
   - scripts/bake-site-loot.mjs
+  - scripts/fetch-shop-item-index.mjs
+  - scripts/fetch-ship-shop-shops.mjs
   - src/lib/siteLoot.ts
   - src/lib/lootBlueprintLookup.ts
+  - src/lib/uexCatalog.ts
   - src/components/BlueprintLootLocations.jsx
   - src/components/BlueprintCard.jsx
   - src/components/BlueprintDetailsModal.tsx
+  - src/components/lootFinder/LootFinderPage.tsx
+  - src/components/shop/UexItemActions.tsx
+  - src/components/shipShop/ShipShopPage.tsx
+  - src/components/shipShop/ShipShopCart.tsx
 alwaysApply: false
 ---
 
-# Loot Finder ↔ Blueprint gold chest
+# Where to buy, cart, and gold chest
 
-The Dumpers-gold **treasure chest** on blueprint cards / details is **not** a separate list.
-It reads the baked Loot Finder index (`game-site-loot.json` → `lootItemForEntityClass`).
+**$$$** (Where to buy), the green **cart**, and the Dumpers-gold **loot chest** are one combined tool. Adding, removing, or updating one of them on a surface updates the others that belong on that surface. Patch day refreshes the loot tables and every bake these icons read, in the same run.
 
-## Hard rules
+## What each icon means
 
-1. **Add or remove a Loot Finder location** → update `LOCATION_DEFS` in `scripts/lib/parseSiteLoot.mjs`, then **`npm run bake-site-loot`** (or full `parse-game-data`) and commit `src/data/game-site-loot.json`. Chest icons update from that bake alone.
-2. **Show the chest** when the blueprint `entityClass` appears in **any** tracked location (crate loot preferred over NPC-only).
-3. **Remove the chest** only when that entity has **zero** remaining tracked locations after rebake — never strip the icon because one location was deleted if others still list the item.
-4. Wire the chest through shared UI only: `BlueprintLootLocations` on `BlueprintCard`, `BlueprintDetailsModal` (Blueprints + Resource Tracker Can Craft use `BlueprintCard`), and Fuzy's Ship Shop part rows (fitted part, part list, Where to Buy, cart). Do not hardcode per-location entity lists in React. Ship Shop passes `label="Loot Chest"`.
-5. Lookup helpers live in `src/lib/lootBlueprintLookup.ts` — keep crate-over-NPC and `_scitem` alias behavior when changing them.
+| Icon | Shows when | Data |
+|---|---|---|
+| $$$ and cart | The item has at least one shop with a buy price | `shopItemForBlueprint` / `shopItemForLoot` in `src/lib/uexCatalog.ts` |
+| Gold chest | The item is in at least one tracked Loot Finder location | `game-site-loot.json` via `lootItemForEntityClass` |
+
+A missing shop row means the item is not sold. Do not invent a shop. The chest stays when any tracked location still lists the item.
+
+## Patch day (all of these, every patch)
+
+| Bake | Command | Icons it feeds |
+|---|---|---|
+| Loot tables | `npm run parse-game-data` (or `npm run bake-site-loot` for loot-only) → `src/data/game-site-loot.json` | Gold chest, Loot Finder lists |
+| Personal shops | `npm run fetch-shop-item-index` → `shop-item-index.json` | $$$ and cart for guns, ammo, armor, clothing, food, drinks |
+| Ship shops | `npm run fetch-ship-shop-shops` after parse → `ship-shop-shops.json` | $$$ and cart for ships and ship parts |
+| Mining gear | `npm run fetch-mining-gear-shops` | Advisor where-to-buy, and Components rows in the same catalog |
+
+`fetch-shop-item-index` includes UEX clothing categories (footwear, gloves, hats, jackets, jumpsuits, legwear, shirts, clothing sets, undersuits, eyewear, dresses). Leaving clothing out is how a sold loot item loses $$$ and cart.
+
+## Every surface
+
+| Surface | $$$ | Cart | Gold chest |
+|---|---|---|---|
+| Blueprint card (`BlueprintCard.jsx`) | `UexItemActions` | same | `BlueprintLootLocations` |
+| Blueprint details (`BlueprintDetailsModal.tsx`) | `UexItemActions` | same | `BlueprintLootLocations` |
+| Loot Finder, both tabs (`LootFinderPage.tsx`) | `UexItemActions` via `shopItemForLoot` when the item is sold | same | Already the loot list. Do not add a chest here |
+| UEX Lookup buy rows | The page is the shop list, so $$$ stays hidden (`showWhere={false}`) | `UexItemActions` | Not a loot surface |
+| Fuzy's Ship Shop part row, Where to Buy, and cart | The $$$ glyph is the Where to Buy control | Ship-shop cart | `BlueprintLootLocations` with `label="Loot Chest"` |
+
+Shared UI only. Do not hardcode a chest allowlist or a second shop list in React.
+
+## Loot Finder chest rules
+
+1. **Add or remove a Loot Finder location** → update `LOCATION_DEFS` in `scripts/lib/parseSiteLoot.mjs`, then bake `game-site-loot.json`. Chest icons follow that bake.
+2. **Show the chest** when the blueprint `entityClass` appears in any tracked location (crate loot preferred over NPC-only).
+3. **Remove the chest** only when that entity has zero remaining tracked locations after rebake.
+4. Lookup helpers live in `src/lib/lootBlueprintLookup.ts`. Keep crate-over-NPC and `_scitem` alias behavior.
 
 ## Do not
 
-- Maintain a second “chest allowlist” of blueprints
-- Hide the chest when removing one site if the item still drops elsewhere
-- Skip rebaking `game-site-loot.json` after LOCATION_DEFS changes
+- Ship one icon onto a surface that already shows another from this set and leave the rest behind
+- Skip `fetch-shop-item-index` on a patch that adds shop clothing, armor, guns, food, or drinks
+- Skip rebaking `game-site-loot.json` after `LOCATION_DEFS` changes
+- Widen the mining-gear bake to armor, clothing, or ships

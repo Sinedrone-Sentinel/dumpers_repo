@@ -12,6 +12,7 @@ import {
   filterItemsByQuery,
   formatRatePct,
   kindChipForItem,
+  kindChipLabel,
   kindChipsForItems,
   locationSelectGroups,
   locationTypeById,
@@ -22,6 +23,8 @@ import {
   type SiteLootLocationItem,
 } from '../../lib/siteLoot'
 import { BLUEPRINT_TAG_CHIP_CLASS } from '../../lib/blueprintTaxonomy'
+import { shopItemForLoot } from '../../lib/uexCatalog'
+import { UexItemActions } from '../shop/UexItemActions'
 
 const LOCATION_SELECT = locationSelectGroups()
 const GROUP_SORT = ['contested_zone']
@@ -54,12 +57,28 @@ function LootStatChips({ stats }: { stats?: Record<string, unknown> }) {
   )
 }
 
+function KindTag({ kind }: { kind: string }) {
+  return (
+    <span className={`px-1.5 py-0.5 rounded text-[10px] border ${BLUEPRINT_TAG_CHIP_CLASS.category}`}>
+      {kindChipLabel(kind)}
+    </span>
+  )
+}
+
+function LootShopIcons({ item }: { item: { key: string; displayName: string; aliasKeys?: string[] } }) {
+  const shopItem = shopItemForLoot(item)
+  if (!shopItem) return null
+  return <UexItemActions item={shopItem} />
+}
+
 function LocationMiniCard({
   locationTypeId,
   ratePct,
+  kind,
 }: {
   locationTypeId: string
   ratePct: number
+  kind: string
 }) {
   const loc = locationTypeById(locationTypeId)
   if (!loc) return null
@@ -70,6 +89,7 @@ function LocationMiniCard({
         <RateBadge ratePct={ratePct} />
       </div>
       <p className="text-xs text-slate-400">{systemsLabel(loc)}</p>
+      <KindTag kind={kind} />
     </div>
   )
 }
@@ -79,7 +99,10 @@ function LootMiniCard({ item }: { item: SiteLootLocationItem }) {
     <div className="site-card p-3 flex flex-col gap-1.5 min-w-0">
       <div className="flex items-start justify-between gap-2">
         <p className="font-medium text-slate-100 leading-snug">{item.displayName}</p>
-        <RateBadge ratePct={item.ratePct} />
+        <span className="flex shrink-0 items-center gap-1">
+          <LootShopIcons item={item} />
+          <RateBadge ratePct={item.ratePct} />
+        </span>
       </div>
       <p className="text-xs text-slate-400">{item.kindLabel}</p>
       <LootStatChips stats={item.stats} />
@@ -93,6 +116,7 @@ export default function LootFinderPage() {
   const [selectedItemKey, setSelectedItemKey] = React.useState<string | null>(null)
   const [locationId, setLocationId] = React.useState(SITE_LOOT_LOCATION_TYPES[0]?.id ?? '')
   const [kindChip, setKindChip] = React.useState<SiteLootKindChipId | 'all'>('all')
+  const [locationQuery, setLocationQuery] = React.useState('')
   const [suggestOpen, setSuggestOpen] = React.useState(false)
   const blurTimer = React.useRef<number | null>(null)
 
@@ -145,6 +169,7 @@ export default function LootFinderPage() {
 
   React.useEffect(() => {
     setKindChip('all')
+    setLocationQuery('')
   }, [locationId])
 
   React.useEffect(() => {
@@ -153,9 +178,11 @@ export default function LootFinderPage() {
   }, [availableKindChips, kindChip])
 
   const filteredLocationItems = React.useMemo(() => {
-    if (kindChip === 'all') return locationItems
-    return locationItems.filter((item) => kindChipForItem(item) === kindChip)
-  }, [locationItems, kindChip])
+    const inChip = kindChip === 'all' ? locationItems : locationItems.filter((item) => kindChipForItem(item) === kindChip)
+    const term = locationQuery.trim().toLowerCase()
+    if (!term) return inChip
+    return inChip.filter((item) => item.displayName.toLowerCase().includes(term))
+  }, [locationItems, kindChip, locationQuery])
 
   const pickItem = (item: SiteLootItem) => {
     setSelectedItemKey(item.key)
@@ -256,7 +283,10 @@ export default function LootFinderPage() {
             ) : (
               <>
                 <div className="mb-3 flex flex-col gap-1.5">
-                  <p className="text-lg font-medium text-slate-100">{selectedItem.displayName}</p>
+                  <div className="flex items-center gap-2">
+                    <p className="text-lg font-medium text-slate-100">{selectedItem.displayName}</p>
+                    <LootShopIcons item={selectedItem} />
+                  </div>
                   <p className="text-sm text-slate-400">{selectedItem.kindLabel}</p>
                   <LootStatChips stats={selectedItem.stats} />
                 </div>
@@ -266,6 +296,7 @@ export default function LootFinderPage() {
                       key={hit.locationTypeId}
                       locationTypeId={hit.locationTypeId}
                       ratePct={hit.ratePct}
+                      kind={selectedItem.kind}
                     />
                   ))}
                 </div>
@@ -308,6 +339,17 @@ export default function LootFinderPage() {
               <div className="site-empty">No allowlisted loot for this location.</div>
             ) : (
               <>
+                <SiteTooltip className="block w-full max-w-md" side="top" content="Narrows the category chip you have selected.">
+                  <input
+                    id="loot-finder-location-filter"
+                    className="site-input w-full px-3 py-2"
+                    placeholder="Narrow this category"
+                    value={locationQuery}
+                    autoComplete="off"
+                    aria-label="Narrow this category"
+                    onChange={(e) => setLocationQuery(e.target.value)}
+                  />
+                </SiteTooltip>
                 <div className="site-chip-strip w-fit max-w-full">
                   <button
                     type="button"
@@ -330,7 +372,9 @@ export default function LootFinderPage() {
                   ))}
                 </div>
                 {filteredLocationItems.length === 0 ? (
-                  <div className="site-empty">No loot in that filter for this location.</div>
+                  <div className="site-empty">
+                    {locationQuery.trim() ? 'Nothing in this category matches that search.' : 'No loot in that filter for this location.'}
+                  </div>
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
                     {filteredLocationItems.map((item) => (

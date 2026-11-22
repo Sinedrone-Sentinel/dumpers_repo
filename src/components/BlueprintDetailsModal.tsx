@@ -37,6 +37,8 @@ import { formatDfpAuec } from '../lib/dfp'
 import { useOrderDraft } from '../contexts/OrderDraftContext'
 import BlueprintCategoryTags from './BlueprintCategoryTags'
 import BlueprintLootLocations from './BlueprintLootLocations'
+import { UexItemActions } from './shop/UexItemActions'
+import { shopItemForBlueprint } from '../lib/uexCatalog'
 import BlueprintSlotQualityCard from './BlueprintSlotQualityCard'
 import BlueprintRewardMissionsModal from './BlueprintRewardMissionsModal'
 import BrandRevealModalShell from './layout/BrandRevealModalShell'
@@ -328,6 +330,8 @@ export default function BlueprintDetailsModal({
     return pricingForBlueprintLine(blueprintWithSlots, effectiveSlotQualities, 1)
   }, [blueprintWithSlots, effectiveSlotQualities, canAddToOrder])
 
+  const shopItem = shopItemForBlueprint(blueprint.entityClass, blueprint.blueprintName)
+
   const handleAddToOrder = () => {
     if (!orderPricing || !canAddToOrder) return
 
@@ -355,6 +359,7 @@ export default function BlueprintDetailsModal({
       <div className="space-y-4">
         <div className="flex flex-wrap gap-2 text-sm items-center">
           <BlueprintCategoryTags blueprint={blueprint} size="md" />
+          {shopItem ? <UexItemActions item={shopItem} /> : null}
           <BlueprintLootLocations entityClass={blueprint.entityClass} />
           {isStarterBlueprint ? (
             <span className="px-2.5 py-1 bg-sky-900/50 text-sky-300 rounded-lg">⚙ Default Blueprint</span>
