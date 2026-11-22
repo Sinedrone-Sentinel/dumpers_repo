@@ -55,6 +55,18 @@ function fill(target: Partial<Record<ModuleId, SlotId[]>>, family: string, slots
   }
 }
 
+function unionMounts(
+  ...maps: Array<Partial<Record<ModuleId, SlotId[]>>>
+): Partial<Record<ModuleId, SlotId[]>> {
+  const mounts: Partial<Record<ModuleId, SlotId[]>> = {}
+  for (const map of maps) {
+    for (const [id, slots] of Object.entries(map) as [ModuleId, SlotId[]][]) {
+      mounts[id] = [...new Set([...(mounts[id] ?? []), ...slots])]
+    }
+  }
+  return mounts
+}
+
 function sideBus(): Partial<Record<ModuleId, SlotId[]>> {
   const mounts: Partial<Record<ModuleId, SlotId[]>> = {
     scg: ['left', 'right'],
@@ -148,14 +160,14 @@ export const MODULE_RULES: ModuleRule[] = [
     photo: '/flight-profile/fsm.jpg',
     mounts: standaloneTop(),
   },
-  { id: 'sem', name: 'SEM-V', kind: 'attach', ready: true, photo: '/flight-profile/semv.jpg', mounts: { ...verticalOnThrottle(), ...stickTop() } },
-  { id: 'sem-h', name: 'SEM', kind: 'attach', ready: true, photo: '/flight-profile/sem.jpg', mounts: sideBus() },
+  { id: 'sem', name: 'SEM-V', kind: 'attach', ready: true, photo: '/flight-profile/semv.jpg', mounts: unionMounts(verticalOnThrottle(), stickTop()) },
+  { id: 'sem-h', name: 'SEM', kind: 'attach', ready: true, photo: '/flight-profile/sem.jpg', mounts: unionMounts(sideBus(), standaloneTop()) },
   { id: 'stem', name: 'STEM', kind: 'attach', ready: true, photo: '/flight-profile/stem.jpg', mounts: throttleBottom() },
   { id: 'atem', name: 'ATEM', kind: 'attach', ready: true, photo: '/flight-profile/gear/atem.jpg' },
-  { id: 'thq', name: 'THQ', kind: 'attach', ready: true, photo: '/flight-profile/gear/thq.jpg', mounts: sideBus() },
-  { id: 'thq-v', name: 'THQ-V', kind: 'attach', ready: true, photo: '/flight-profile/gear/thq-v.jpg', mounts: verticalOnThrottle() },
-  { id: 'thq-ww2', name: 'THQ WWII', kind: 'attach', ready: false, mounts: sideBus() },
-  { id: 'thq-v-ww2', name: 'THQ-V WWII', kind: 'attach', ready: false, mounts: verticalOnThrottle() },
+  { id: 'thq', name: 'THQ', kind: 'attach', ready: true, photo: '/flight-profile/gear/thq.jpg', mounts: unionMounts(sideBus(), standaloneTop()) },
+  { id: 'thq-v', name: 'THQ-V', kind: 'attach', ready: true, photo: '/flight-profile/gear/thq-v.jpg', mounts: unionMounts(verticalOnThrottle(), stickTop()) },
+  { id: 'thq-ww2', name: 'THQ WWII', kind: 'attach', ready: false, mounts: unionMounts(sideBus(), standaloneTop()) },
+  { id: 'thq-v-ww2', name: 'THQ-V WWII', kind: 'attach', ready: false, mounts: unionMounts(verticalOnThrottle(), stickTop()) },
 ]
 
 const RULE_IDS = new Set(MODULE_RULES.map((rule) => rule.id))
@@ -202,12 +214,13 @@ MODULE_RULES.push({
   mounts: aeromaxMounts,
 })
 
-/** ATEM uses the rear plate, which this bay draws as the front mount, and only on Mini Plus and Max. */
+/** ATEM uses the rear plate, which this bay draws as the front mount, and only on Mini Plus and Max. It can also sit on the top of either side. */
 export function mountsFor(rule: ModuleRule): Partial<Record<ModuleId, SlotId[]>> | undefined {
   if (rule.id !== 'atem') return rule.mounts
-  const mounts: Partial<Record<ModuleId, SlotId[]>> = {}
+  const mounts = unionMounts(standaloneTop())
   for (const main of MODULE_RULES) {
-    if (main.acceptsAtem) mounts[main.id] = ['bottom']
+    if (!main.acceptsAtem) continue
+    mounts[main.id] = [...new Set([...(mounts[main.id] ?? []), 'bottom' as SlotId])]
   }
   return mounts
 }
