@@ -14,7 +14,7 @@ import {
   type TradeLocation,
 } from './shopLookup'
 
-export const UEX_GROUPS = ['Guns', 'Ammo', 'Components', 'Armor', 'Clothing', 'Ships', 'Commodities', 'Food', 'Drinks'] as const
+export const UEX_GROUPS = ['Guns', 'Ammo', 'Components', 'Armor', 'Clothing', 'Ships', 'Commodities', 'Food', 'Drinks', 'Consumables', 'Plushies'] as const
 export type UexGroup = (typeof UEX_GROUPS)[number]
 
 export interface UexCatalogItem {

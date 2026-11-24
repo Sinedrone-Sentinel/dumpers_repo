@@ -36,11 +36,11 @@ A missing shop row means the item is not sold. Do not invent a shop. The chest s
 | Bake | Command | Icons it feeds |
 |---|---|---|
 | Loot tables | `npm run parse-game-data` (or `npm run bake-site-loot` for loot-only) → `src/data/game-site-loot.json` | Gold chest, Loot Finder lists |
-| Personal shops | `npm run fetch-shop-item-index` → `shop-item-index.json` | $$$ and cart for guns, ammo, armor, clothing, food, drinks |
+| Personal shops | `npm run fetch-shop-item-index` → `shop-item-index.json` | $$$ and cart for guns, ammo, armor, clothing, medpens, food, drinks, plushies |
 | Ship shops | `npm run fetch-ship-shop-shops` after parse → `ship-shop-shops.json` | $$$ and cart for ships and ship parts |
 | Mining gear | `npm run fetch-mining-gear-shops` | Advisor where-to-buy, and Components rows in the same catalog |
 
-`fetch-shop-item-index` includes UEX clothing categories (footwear, gloves, hats, jackets, jumpsuits, legwear, shirts, clothing sets, undersuits, eyewear, dresses). Leaving clothing out is how a sold loot item loses $$$ and cart.
+`fetch-shop-item-index` includes UEX clothing categories (footwear, gloves, hats, jackets, jumpsuits, legwear, shirts, clothing sets, undersuits, eyewear, dresses), medical consumables (medpens and the other pens), and plushies. Leaving a sold category out is how a loot item loses $$$ and cart.
 
 ## Every surface
 

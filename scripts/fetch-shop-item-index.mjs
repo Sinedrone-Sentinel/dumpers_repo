@@ -1,6 +1,6 @@
 /**
  * Bake UEX buy locations for shop goods that are not commodities and not
- * already in the ship-shop bake: personal guns, armor, clothing, food, and drinks.
+ * already in the ship-shop bake: personal guns, armor, clothing, medpens, food, drinks, and plushies.
  *
  * The browser never calls UEX. Re-run with `npm run fetch-shop-item-index`.
  * Output: src/data/shop-item-index.json
@@ -21,7 +21,7 @@ const GROUPS = {
   4: 'Armor',
   5: 'Armor',
   7: 'Armor',
-  24: 'Armor',
+  16: 'Consumables',
   18: 'Guns',
   8: 'Clothing',
   9: 'Clothing',
@@ -89,6 +89,7 @@ async function main() {
     const category = Number(row.id_category)
     let group = GROUPS[category] || null
     if (!group && AMMO_NAME.test(name) && category !== 36) group = 'Ammo'
+    if (!group && category === 61 && /plushie/i.test(name)) group = 'Plushies'
     if (!group) continue
     const store = clean(row.terminal_name)
     if (!store) continue
@@ -125,7 +126,7 @@ async function main() {
     source: 'UEX Corp',
     sourceUrl: 'https://uexcorp.space',
     attribution: 'Powered by UEX',
-    note: 'Buy locations for personal guns, armor, clothing, food, and drinks. A missing item is not sold in a shop.',
+    note: 'Buy locations for personal guns, armor, clothing, medpens, food, drinks, and plushies. A missing item is not sold in a shop.',
     itemCount: catalog.length,
     counts,
     items: catalog,

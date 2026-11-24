@@ -203,7 +203,7 @@ Open to everyone, including Offline Mode. Each person can keep four builds. Sign
 
 Find every shop that sells a gun, ammo, armor piece, clothing, ship, commodity, food, or drink, with **UEX** prices — **Powered by [UEX](https://uexcorp.space)**. Commodities still show **Sell to** and SCU box sizes.
 
-- Search or filter by Guns, Ammo, Armor, Clothing, Ships, Commodities, Food, or Drinks
+- Search or filter by Guns, Ammo, Armor, Clothing, Ships, Commodities, Food, Drinks, Consumables, or Plushies
 - The cart mark on each **Buy from** row adds that shop and its price to [Shopping Cart](#shopping-cart-shop-cart)
 - A blueprint card shows **$$$** and the cart mark when the item is sold in a shop
 - Commodity rows show the live UEX status (1–7 with its meaning), SCU, and report date from the `smart-hauler-availability` Edge Function, for guests and members. Only reports from the last 7 days are shown; if the check fails the row says so and the baked prices stay
@@ -472,7 +472,7 @@ Never commit `service_role` / `sb_secret_` keys. Edge Functions receive platform
 | `npm run audit-ore-name-consistency` | Ore name cross-check |
 | `npm run fetch-commodity-bases` | Refresh UEX Q0 commodity DFP bases |
 | `npm run fetch-shop-data` | Refresh UEX commodity buy/sell locations for UEX Lookup (`src/data/shop-commodity-index.json`) |
-| `npm run fetch-shop-item-index` | Refresh UEX buy locations for personal guns, armor, clothing, food, and drinks (`src/data/shop-item-index.json`). Every patch, with the loot bake and `fetch-ship-shop-shops` |
+| `npm run fetch-shop-item-index` | Refresh UEX buy locations for personal guns, armor, clothing, medpens, food, drinks, and plushies (`src/data/shop-item-index.json`). Every patch, with the loot bake and `fetch-ship-shop-shops` |
 | `npm run fetch-mining-gear-shops` | Refresh UEX buy locations for mining heads/modules/gadgets, used by Advisor (`src/data/mining-gear-shops.json`) |
 | `npm run fetch-ship-shop-shops` | Refresh UEX buy locations for Fuzy's Ship Shop (`src/data/ship-shop-shops.json`). Every patch, after `parse-game-data` |
 | `npm run verify-dfp-premiums` | Fail if DFP bundle/premiums are stale vs `game-blueprints.json` |
@@ -529,7 +529,7 @@ Full patch-day runbook (including how to verify removals vs CIG moving records a
 | `game-commodities.json` | Cargo commodities from `resourcetypedatabase` not already tracked (Resource Tracker catalog + Q0 DFP base fetch) |
 | `dfp-commodity-bases.json` | UEX-backed Q0 bases |
 | `shop-commodity-index.json` | UEX-backed commodity buy/sell locations, per-SCU prices, and box sizes (UEX Lookup) |
-| `shop-item-index.json` | UEX buy locations for personal guns, armor, clothing, food, and drinks (UEX Lookup, Loot Finder, blueprint cards) |
+| `shop-item-index.json` | UEX buy locations for personal guns, armor, clothing, medpens, food, drinks, and plushies (UEX Lookup, Loot Finder, blueprint cards) |
 | `blueprint-name-lookup.json` | BP Dumper / webhook Game.log name resolution (canonical; copies at build/deploy) |
 
 What's New ticker digests are **not** bundled JSON — parse appends `extracted-data/whats-new-pending.jsonl`, pushes via `ingest_whats_new_entries` (deduped by `issue_key` + `version`), then wipes the file. **Game** rows expire after 7 days; **site** (and poll) rows after 3 days (`cleanup_expired_whats_new` daily cron). Layout categories/colors live in `ticker_categories` (super-admin **Updates Ticker** modal). Apply migrations through `151_admin_whats_new_crud.sql` (see `docs/SUPABASE_SETUP.md`).
