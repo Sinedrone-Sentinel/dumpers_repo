@@ -2,17 +2,16 @@
  * Compact mining catalog for the Smart Cracker advisor Edge Function.
  * Display names only in member-facing fields. Internal names stay off the prompt.
  */
+import { readFileSync } from 'node:fs'
+import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 const EXCLUDED_LASER_NAME = /_test(_|$)|template|_mpuv_/i
 
-/** Ship hardpoints — display names only. Must match src/lib/miningVessels.ts. */
-const VESSELS = [
-  { displayName: 'Prospector', laserHardpoints: 1, laserSize: 1 },
-  { displayName: 'Mole', laserHardpoints: 3, laserSize: 2 },
-  { displayName: 'Golem', laserHardpoints: 1, laserSize: 1, fixedHead: 'Pitman Mining Laser' },
-  { displayName: 'ROC', laserHardpoints: 1, laserSize: 0 },
-  { displayName: 'ROC-DS', laserHardpoints: 1, laserSize: 0 },
-]
+function loadVesselCatalog() {
+  const path = join(dirname(fileURLToPath(import.meta.url)), '../../src/data/game-mining-vessels.json')
+  return JSON.parse(readFileSync(path, 'utf8'))
+}
 
 function isProductionLaser(laser) {
   return !EXCLUDED_LASER_NAME.test(laser?.name ?? '')
@@ -52,12 +51,15 @@ function compactModifiers(row) {
   }
 }
 
-export function buildMiningAdvisorCatalog(gameMining) {
+export function buildMiningAdvisorCatalog(gameMining, vesselCatalog = loadVesselCatalog()) {
+  const bespokeName = new Map(
+    (vesselCatalog.bespokeLasers ?? []).map((row) => [row.name, row.displayName])
+  )
   const seenLasers = new Set()
   const lasers = []
   for (const laser of gameMining.miningLasers ?? []) {
     if (!isProductionLaser(laser)) continue
-    const displayName = laser.displayName
+    const displayName = bespokeName.get(laser.name) || laser.displayName
     if (!displayName) continue
     const key = displayName.toLowerCase() + '|' + String(laser.size)
     if (seenLasers.has(key)) continue
@@ -110,12 +112,30 @@ export function buildMiningAdvisorCatalog(gameMining) {
     }))
     .sort((a, b) => a.displayName.localeCompare(b.displayName))
 
+  const bespokeByVessel = new Map()
+  for (const row of vesselCatalog.bespokeLasers ?? []) {
+    const list = bespokeByVessel.get(row.vesselId) || []
+    if (!list.includes(row.displayName)) list.push(row.displayName)
+    bespokeByVessel.set(row.vesselId, list)
+  }
+  const vessels = (vesselCatalog.vessels ?? []).map((vessel) => {
+    const bespokeHeads = bespokeByVessel.get(vessel.id) || []
+    const row = {
+      displayName: vessel.displayName,
+      laserHardpoints: vessel.laserSlotCount,
+      laserSize: vessel.laserSize,
+    }
+    if (bespokeHeads.length === 1) row.fixedHead = bespokeHeads[0]
+    if (bespokeHeads.length > 0) row.bespokeHeads = bespokeHeads
+    return row
+  })
+
   return {
     lasers,
     modules,
     gadgets,
     ores,
-    vessels: VESSELS,
+    vessels,
   }
 }
 

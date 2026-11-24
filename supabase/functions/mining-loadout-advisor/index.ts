@@ -61,6 +61,7 @@ type CatalogVessel = {
   laserHardpoints: number
   laserSize: number
   fixedHead?: string
+  bespokeHeads?: string[]
 }
 
 type ScanSession = {

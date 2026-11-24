@@ -1,5 +1,5 @@
 import type { LoadoutKey } from './miningLoadoutStorage'
-import type { MiningVesselId } from './miningVessels'
+import { MINING_VESSELS, type MiningVesselId } from './miningVessels'
 
 const STORAGE_KEY = 'dumpers_repo_mining_tracker_ui_v1'
 
@@ -19,7 +19,7 @@ const DEFAULT_STATE: MiningTrackerUiState = {
   chpCrewSize: 3,
 }
 
-const VESSEL_IDS: MiningVesselId[] = ['prospector', 'mole', 'golem', 'roc', 'roc-ds']
+const VESSEL_IDS: MiningVesselId[] = MINING_VESSELS.map((vessel) => vessel.id)
 
 function isLoadoutKey(value: unknown): value is LoadoutKey {
   return value === 'default' || value === 'custom-1' || value === 'custom-2' || value === 'custom-3'

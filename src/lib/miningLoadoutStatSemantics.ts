@@ -284,7 +284,7 @@ function rankHeadSwaps(
   current: number
 ): SwapCandidate[] {
   const vessel = getMiningVessel(vesselId)
-  if (!vessel || vessel.isBespoke) return []
+  if (!vessel) return []
 
   const candidates: SwapCandidate[] = []
   const minGain = MIN_SWAP_IMPROVEMENT[key]

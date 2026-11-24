@@ -16,6 +16,7 @@ export type AdvisorPromptVessel = {
   laserHardpoints: number
   laserSize: number
   fixedHead?: string
+  bespokeHeads?: string[]
 }
 
 export type AdvisorPromptHead = {
@@ -116,7 +117,8 @@ export function buildSystemPrompt(input: {
     'Hard fit rules — never violate:',
     '- Each laser "slots" value is the exact module-port count. Recommend at most that many modules for that head. A 1-port head gets 0 or 1 module, never 2 or 3.',
     '- Only recommend heads whose size matches the ship laserSize. Do not add more heads than laserHardpoints.',
-    '- Golem may only use Pitman Mining Laser. ROC and ROC-DS are size 0 only.',
+    '- Golem may only use Pitman Mining Laser. Gatac Hyun may only use Gatac Hyun Mining Laser. ROC and ROC-DS are size 0 only.',
+    '- A bespoke head belongs to one ship. Do not offer it on any other ship, and do not offer a shared head on a ship that has its own heads.',
     '- Only one gadget can be on a rock at a time. Never recommend two gadgets or stacking gadgets. If a gadget is already on the rock, the only change is to keep it, swap it for another, or drop it.',
     '- If you name modules, the count must fit that head\'s slots.',
     '',
