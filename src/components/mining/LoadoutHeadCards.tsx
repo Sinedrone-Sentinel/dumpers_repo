@@ -1,5 +1,13 @@
 import React, { useMemo, useState } from 'react'
 import BlueprintSlotQualityCard from '../BlueprintSlotQualityCard'
+import { useAuth } from '../../contexts/AuthContext'
+import { useMyStockIndex } from '../../hooks/useMyStockIndex'
+import {
+  craftMaterialOptionsForSlot,
+  craftMaterialResourceKey,
+  type BlueprintSlot,
+} from '../../lib/blueprintResources'
+import type { OwnedStockIndex } from '../../lib/craftFromStock'
 import SiteTooltip from '../SiteTooltip'
 import {
   buildDefaultSlotQualities,
@@ -386,11 +394,13 @@ function CraftSlotsPanel({
   resolvedQualities,
   onQualityChange,
   effective,
+  ownedStock,
 }: {
   blueprint: NonNullable<ReturnType<typeof getBlueprintForLaser>>
   resolvedQualities: Record<number, number>
   onQualityChange: (bpSlotIndex: number, quality: number) => void
   effective: ReturnType<typeof computeEffectiveLaserStats>
+  ownedStock: OwnedStockIndex | null
 }) {
   const [expanded, setExpanded] = useState(true)
   const slotCount = blueprint.slots?.length ?? 0
@@ -428,6 +438,11 @@ function CraftSlotsPanel({
               const quality = resolvedQualities[bpIdx]
               const modifiers = bpSlot.options?.[0]?.modifiers
               const modifierResults = calculateSlotModifiers(quality, modifiers)
+              const material = craftMaterialOptionsForSlot(bpSlot as BlueprintSlot)[0]
+              const slotStock =
+                ownedStock && material
+                  ? ownedStock.get(craftMaterialResourceKey(material)) ?? null
+                  : null
               return (
                 <BlueprintSlotQualityCard
                   key={bpIdx}
@@ -436,6 +451,7 @@ function CraftSlotsPanel({
                   quality={quality}
                   onQualityChange={onQualityChange}
                   modifierResults={modifierResults}
+                  ownedStock={slotStock}
                   compact
                 />
               )
@@ -459,6 +475,7 @@ interface HeadSlotCardsProps {
   vesselId: MiningVesselId
   editable: boolean
   moleSoloMining: boolean
+  ownedStock: OwnedStockIndex | null
   onChange: (next: MiningLaserSlotConfig) => void
   showHeadLabel: boolean
 }
@@ -469,6 +486,7 @@ function HeadSlotCards({
   vesselId,
   editable,
   moleSoloMining,
+  ownedStock,
   onChange,
   showHeadLabel,
 }: HeadSlotCardsProps) {
@@ -597,6 +615,7 @@ function HeadSlotCards({
         resolvedQualities={resolvedQualities}
         onQualityChange={handleQualityChange}
         effective={effective}
+        ownedStock={ownedStock}
       />
     ) : null
 
@@ -705,6 +724,9 @@ export default function LoadoutHeadCardsGrid({
   moleSoloMining = true,
   onSlotChange,
 }: LoadoutHeadCardsGridProps) {
+  const { user } = useAuth()
+  const ownedStock = useMyStockIndex(user?.id, slots.length > 0)
+
   if (slots.length === 0) return null
 
   const isMole = vesselId === 'mole' && slots.length > 1
@@ -725,6 +747,7 @@ export default function LoadoutHeadCardsGrid({
               vesselId={vesselId}
               editable={editable}
               moleSoloMining={moleSoloMining}
+              ownedStock={ownedStock}
               onChange={(next) => onSlotChange(index, next)}
               showHeadLabel
             />
@@ -737,6 +760,7 @@ export default function LoadoutHeadCardsGrid({
           vesselId={vesselId}
           editable={editable}
           moleSoloMining={moleSoloMining}
+          ownedStock={ownedStock}
           onChange={(next) => onSlotChange(0, next)}
           showHeadLabel={slots.length > 1}
         />

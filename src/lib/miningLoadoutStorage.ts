@@ -1,10 +1,16 @@
-import type { MiningVesselId } from './miningVessels'
 import {
   buildDefaultLaserSlots,
   type MiningLaserSlotConfig,
 } from './miningLaserStats'
 import { normalizeModuleSelection } from './miningModules'
-import { getMiningVessel, vesselCustomLoadoutLabel, vesselDefaultLoadoutLabel } from './miningVessels'
+import {
+  getMiningVessel,
+  listMiningLasersForVessel,
+  MINING_VESSELS,
+  vesselCustomLoadoutLabel,
+  vesselDefaultLoadoutLabel,
+  type MiningVesselId,
+} from './miningVessels'
 
 export function cloneLaserSlots(lasers: MiningLaserSlotConfig[]): MiningLaserSlotConfig[] {
   return lasers.map((l) => ({
@@ -74,7 +80,7 @@ export function parseMiningLoadoutStore(raw: unknown): MiningLoadoutStore {
   const vessels: Partial<Record<MiningVesselId, VesselLoadoutState>> = {}
 
   if (parsed.vessels && typeof parsed.vessels === 'object') {
-    for (const id of ['prospector', 'mole', 'golem', 'roc', 'roc-ds'] as MiningVesselId[]) {
+    for (const id of MINING_VESSELS.map((vessel) => vessel.id)) {
       if (parsed.vessels[id]) {
         vessels[id] = normalizeVesselState(id, parsed.vessels[id])
       }
@@ -284,13 +290,11 @@ function normalizeLasersForVessel(
   lasers: MiningLaserSlotConfig[],
   vessel: ReturnType<typeof getMiningVessel>
 ): MiningLaserSlotConfig[] {
-  if (vessel?.isBespoke) {
-    return lasers.map((slot) => ({
-      ...slot,
-      laserName: vessel.defaultLaserName,
-    }))
-  }
-  return cloneLaserSlots(lasers)
+  if (!vessel) return cloneLaserSlots(lasers)
+  const allowed = new Set(listMiningLasersForVessel(vessel).map((laser) => laser.name))
+  return cloneLaserSlots(lasers).map((slot) =>
+    allowed.has(slot.laserName) ? slot : { ...slot, laserName: vessel.defaultLaserName }
+  )
 }
 
 export function deleteCustomLoadoutSlot(

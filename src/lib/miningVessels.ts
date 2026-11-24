@@ -1,7 +1,8 @@
 import type { MiningLaser } from '../data'
 import { gameMining } from '../data'
+import miningVesselCatalog from '../data/game-mining-vessels.json'
 
-export type MiningVesselId = 'prospector' | 'mole' | 'golem' | 'roc' | 'roc-ds'
+export type MiningVesselId = string
 
 export interface MiningVessel {
   id: MiningVesselId
@@ -12,51 +13,25 @@ export interface MiningVessel {
   laserSize: number
   /** Stock laser `name` from game-mining.json installed on each slot in the default loadout */
   defaultLaserName: string
-  /** Single fixed mining head (Golem Pitman); no swapping to other size-class heads */
+  /**
+   * This hull has heads built for it. The picker lists only those heads.
+   * Shared heads, and other ships' bespoke heads, stay off the list.
+   */
   isBespoke?: boolean
   isGroundVehicle?: boolean
 }
 
-export const MINING_VESSELS: MiningVessel[] = [
-  {
-    id: 'prospector',
-    displayName: 'Prospector',
-    laserSlotCount: 1,
-    laserSize: 1,
-    defaultLaserName: 'Mining_Laser_GRIN_Arbor_S1',
-  },
-  {
-    id: 'mole',
-    displayName: 'Mole',
-    laserSlotCount: 3,
-    laserSize: 2,
-    defaultLaserName: 'Mining_Laser_GRIN_Arbor_S2',
-  },
-  {
-    id: 'golem',
-    displayName: 'Golem',
-    laserSlotCount: 1,
-    laserSize: 1,
-    defaultLaserName: 'Mining_Laser_DRAK_Golem_S1',
-    isBespoke: true,
-  },
-  {
-    id: 'roc',
-    displayName: 'ROC',
-    laserSlotCount: 1,
-    laserSize: 0,
-    defaultLaserName: 'Mining_Laser_GRIN_Arbor_S0',
-    isGroundVehicle: true,
-  },
-  {
-    id: 'roc-ds',
-    displayName: 'ROC-DS',
-    laserSlotCount: 1,
-    laserSize: 0,
-    defaultLaserName: 'Mining_Laser_SHIN_Hofstede_S0',
-    isGroundVehicle: true,
-  },
-]
+interface BespokeLaser {
+  name: string
+  vesselId: string
+  displayName: string
+}
+
+const BESPOKE_LASERS = miningVesselCatalog.bespokeLasers as BespokeLaser[]
+const bespokeByName = new Map(BESPOKE_LASERS.map((row) => [row.name, row]))
+const bespokeNames = new Set(BESPOKE_LASERS.map((row) => row.name))
+
+export const MINING_VESSELS: MiningVessel[] = miningVesselCatalog.vessels as MiningVessel[]
 
 export function getMiningVessel(id: MiningVesselId): MiningVessel | undefined {
   return MINING_VESSELS.find((v) => v.id === id)
@@ -66,13 +41,23 @@ export function isBespokeVessel(vesselId: MiningVesselId): boolean {
   return getMiningVessel(vesselId)?.isBespoke === true
 }
 
-/** Lasers valid for a vessel. Bespoke ships accept only their dedicated head. */
+function withBespokeName(laser: MiningLaser): MiningLaser {
+  const bespoke = bespokeByName.get(laser.name)
+  if (!bespoke || bespoke.displayName === laser.displayName) return laser
+  return { ...laser, displayName: bespoke.displayName }
+}
+
+/** Lasers valid for a vessel. Bespoke ships accept only heads built for that hull. */
 export function listMiningLasersForVessel(vessel: MiningVessel): MiningLaser[] {
   if (vessel.isBespoke) {
-    const laser = getMiningLaserByName(vessel.defaultLaserName)
-    return laser ? [laser] : []
+    return BESPOKE_LASERS.filter((row) => row.vesselId === vessel.id)
+      .map((row) => {
+        const laser = getMiningLaserByName(row.name)
+        return laser ? withBespokeName(laser) : undefined
+      })
+      .filter((laser): laser is MiningLaser => laser != null)
   }
-  return listMiningLasersForSize(vessel.laserSize)
+  return listMiningLasersForSize(vessel.laserSize).filter((laser) => !bespokeNames.has(laser.name))
 }
 
 /**
@@ -88,31 +73,35 @@ export function isProductionMiningLaser(laser: MiningLaser): boolean {
   return !EXCLUDED_LASER_NAME.test(laser.name)
 }
 
-/** Production mining lasers for a size class (excludes test / duplicate defs). */
+/** Production mining lasers for a size class (excludes test / duplicate defs and bespoke heads). */
 export function listMiningLasersForSize(size: number): MiningLaser[] {
   const seen = new Set<string>()
   return gameMining.miningLasers
     .filter((laser) => {
       if (laser.size !== size) return false
       if (!isProductionMiningLaser(laser)) return false
-      const key = laser.displayName.toLowerCase()
+      if (bespokeNames.has(laser.name)) return false
+      const key = withBespokeName(laser).displayName.toLowerCase()
       if (seen.has(key)) return false
       seen.add(key)
       return true
     })
+    .map(withBespokeName)
     .sort((a, b) => a.displayName.localeCompare(b.displayName))
 }
 
 export function getMiningLaserByName(name: string): MiningLaser | undefined {
-  return gameMining.miningLasers.find((laser) => laser.name === name)
+  const laser = gameMining.miningLasers.find((row) => row.name === name)
+  return laser ? withBespokeName(laser) : undefined
 }
 
 const lasersByBlueprintKey = new Map<string, MiningLaser>()
 const lasersByDisplayName = new Map<string, MiningLaser>()
 for (const laser of gameMining.miningLasers) {
+  const shown = withBespokeName(laser)
   const key = laser.name.replace(/^Mining_Laser_/i, 'mining_laser_').toLowerCase()
-  if (!lasersByBlueprintKey.has(key)) lasersByBlueprintKey.set(key, laser)
-  if (!lasersByDisplayName.has(laser.displayName)) lasersByDisplayName.set(laser.displayName, laser)
+  if (!lasersByBlueprintKey.has(key)) lasersByBlueprintKey.set(key, shown)
+  if (!lasersByDisplayName.has(shown.displayName)) lasersByDisplayName.set(shown.displayName, shown)
 }
 
 /** Craft blueprint → parsed mining head, by internal name or display name. */

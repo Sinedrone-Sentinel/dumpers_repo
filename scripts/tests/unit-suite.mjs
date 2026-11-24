@@ -644,6 +644,37 @@ check(
   advisorCatalog.vessels.some((v) => v.displayName === 'Prospector' && v.laserHardpoints === 1 && v.laserSize === 1),
   'catalog includes Prospector hardpoints',
 )
+check(
+  advisorCatalog.vessels.some(
+    (v) => v.displayName === 'Gatac Hyun' && v.laserHardpoints === 1 && v.fixedHead === 'Gatac Hyun Mining Laser'
+  ),
+  'catalog includes the Gatac Hyun and only its own head',
+)
+check(
+  advisorCatalog.lasers.some((l) => l.displayName === 'Gatac Hyun Mining Laser'),
+  'advisor names the Hyun head',
+)
+check(
+  !advisorCatalog.lasers.some((l) => /GAMA Hyun/i.test(l.displayName)),
+  'advisor does not show the Hyun head id',
+)
+const miningVessels = JSON.parse(readFileSync(path.join(root, 'src/data/game-mining-vessels.json'), 'utf8'))
+const bespokeFor = (id) =>
+  miningVessels.bespokeLasers.filter((row) => row.vesselId === id).map((row) => row.displayName)
+check(
+  miningVessels.vessels.find((v) => v.id === 'gama_hyun')?.isBespoke === true &&
+    bespokeFor('gama_hyun').join() === 'Gatac Hyun Mining Laser',
+  'Hyun lists only its bespoke head',
+)
+check(
+  miningVessels.vessels.find((v) => v.id === 'golem')?.isBespoke === true &&
+    bespokeFor('golem').join() === 'Pitman Mining Laser',
+  'Golem lists only Pitman',
+)
+check(
+  miningVessels.vessels.filter((v) => !v.isBespoke).every((v) => bespokeFor(v.id).length === 0),
+  'shared mining ships do not own a bespoke head',
+)
 
 // --- UEX gear shop index (where-to-buy for mining gear) ---------------------
 const gearShopsRaw = JSON.parse(
@@ -958,8 +989,9 @@ check(
   'advisor prompt keeps hard fit rules',
 )
 check(
-  advisorPromptText.includes('Golem may only use Pitman Mining Laser'),
-  'advisor prompt keeps Golem/Pitman fit rule',
+  advisorPromptText.includes('Golem may only use Pitman Mining Laser') &&
+    advisorPromptText.includes('Gatac Hyun may only use Gatac Hyun Mining Laser'),
+  'advisor prompt keeps bespoke-head fit rules',
 )
 check(
   advisorPromptText.includes('Where-to-buy rules — never violate:'),

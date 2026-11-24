@@ -1,0 +1,63 @@
+{
+  "_source": "Star Citizen Game Files (hulls with a mining laser)",
+  "vessels": [
+    {
+      "id": "prospector",
+      "displayName": "Prospector",
+      "laserSlotCount": 1,
+      "laserSize": 1,
+      "defaultLaserName": "Mining_Laser_GRIN_Arbor_S1"
+    },
+    {
+      "id": "mole",
+      "displayName": "Mole",
+      "laserSlotCount": 3,
+      "laserSize": 2,
+      "defaultLaserName": "Mining_Laser_GRIN_Arbor_S2"
+    },
+    {
+      "id": "golem",
+      "displayName": "Golem",
+      "laserSlotCount": 1,
+      "laserSize": 1,
+      "defaultLaserName": "Mining_Laser_DRAK_Golem_S1",
+      "isBespoke": true
+    },
+    {
+      "id": "roc",
+      "displayName": "ROC",
+      "laserSlotCount": 1,
+      "laserSize": 0,
+      "defaultLaserName": "Mining_Laser_GRIN_Arbor_S0",
+      "isGroundVehicle": true
+    },
+    {
+      "id": "roc-ds",
+      "displayName": "ROC-DS",
+      "laserSlotCount": 1,
+      "laserSize": 0,
+      "defaultLaserName": "Mining_Laser_SHIN_Hofstede_S0",
+      "isGroundVehicle": true
+    },
+    {
+      "id": "gama_hyun",
+      "displayName": "Gatac Hyun",
+      "laserSlotCount": 1,
+      "laserSize": 1,
+      "defaultLaserName": "Mining_Laser_GAMA_Hyun_S1",
+      "isBespoke": true
+    }
+  ],
+  "bespokeLasers": [
+    {
+      "name": "Mining_Laser_GAMA_Hyun_S1",
+      "vesselId": "gama_hyun",
+      "displayName": "Gatac Hyun Mining Laser"
+    },
+    {
+      "name": "Mining_Laser_DRAK_Golem_S1",
+      "vesselId": "golem",
+      "displayName": "Pitman Mining Laser"
+    }
+  ]
+}
