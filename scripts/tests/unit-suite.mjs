@@ -3661,15 +3661,16 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
     Math.abs(paint.beltSpeckSize(1) - 4.8) < 1e-9 && paint.beltSpeckSize(0.9) > 2.4 && paint.beltSpeckSize(0.2) < 2.4,
     'star map: the largest belt specks are twice the old rock size',
   )
+  const innerMote = { ang: 0, dist: 0.12, phase: 0.4, spin: 1 }
+  const outerMote = { ang: 0, dist: 0.86, phase: 0.4, spin: 1 }
+  const turned = (mote) => paint.starMotePlace(mote, 24000).ang - paint.starMotePlace(mote, 0).ang
+  const left = { ang: 1, dist: 0.4, phase: 0.2, spin: 0.7 }
+  const right = { ang: 1, dist: 0.4, phase: 2.4, spin: 1.3 }
   check(
-    paint.flareReach('Pyro', 1) > paint.flareReach('Stanton', 1) &&
-      paint.flareReach('Nyx', 1) === paint.flareReach('Stanton', 1) &&
-      paint.flareReach('Pyro', 0.05) < paint.flareReach('Stanton', 1),
-    'star map: Pyro flares run larger than Stanton and Nyx, and small flares still happen',
-  )
-  check(
-    paint.flareStyle(0.1) === 'arch' && paint.flareStyle(0.5) === 'fan' && paint.flareStyle(0.9) === 'spray',
-    'star map: flares pick an arch, a loop fan, or a spray',
+    turned(innerMote) > turned(outerMote) * 1.35 &&
+      Math.abs(paint.starMotePlace(left, 9000).ang - paint.starMotePlace(right, 9000).ang) > 0.15 &&
+      paint.starMotePlace(innerMote, 5000).dist < 0.95,
+    'star map: sun cells swirl faster near the center and do not move as one piece',
   )
   check(
     hl.isStarMapPath('/star-map') &&

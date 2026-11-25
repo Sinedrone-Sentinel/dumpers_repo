@@ -115,21 +115,6 @@ export function beltSpeckSize(roll: number): number {
   return 1.1 + u * 1.4
 }
 
-/** Which eruption a slot draws. Split so a run shows arches, loop fans, and sprays. */
-export function flareStyle(roll: number): 'arch' | 'fan' | 'spray' {
-  const u = Math.min(1, Math.max(0, roll))
-  if (u < 0.34) return 'arch'
-  if (u < 0.67) return 'fan'
-  return 'spray'
-}
-
-/** Flare length past the surface, in star radii. Pyro can run long. Stanton and Nyx stay medium. */
-export function flareReach(name: string, scale: number): number {
-  const u = Math.min(1, Math.max(0, scale))
-  const maxExtra = starKind(name) === 'pyro' ? 2.15 : 0.85
-  return 0.26 + u * maxExtra
-}
-
 function makeRng(seed: number): () => number {
   let s = seed % 2147483647
   if (s <= 0) s += 2147483646
@@ -145,77 +130,139 @@ function seedOf(name: string): number {
   return (h >>> 0) || 1
 }
 
-const photospheres = new Map<StarKind, HTMLCanvasElement>()
+interface StarMote {
+  ang: number
+  dist: number
+  size: number
+  roll: number
+  phase: number
+  spin: number
+  /** 0 cell, 1 dark lane, 2–5 filament index (three motes each, in order). */
+  group: number
+}
+
+const starMotes = new Map<StarKind, StarMote[]>()
+
+function motesFor(kind: StarKind): StarMote[] {
+  const cached = starMotes.get(kind)
+  if (cached) return cached
+  const rnd = makeRng(kind === 'nyx' ? 11 : kind === 'pyro' ? 29 : 5)
+  const motes: StarMote[] = []
+  for (let i = 0; i < 210; i++) {
+    motes.push({
+      ang: rnd() * Math.PI * 2,
+      dist: Math.sqrt(rnd()) * 0.9,
+      size: 0.012 + rnd() * (rnd() > 0.82 ? 0.07 : 0.04),
+      roll: rnd(),
+      phase: rnd() * Math.PI * 2,
+      spin: 0.45 + rnd() * 1.1,
+      group: 0,
+    })
+  }
+  for (let i = 0; i < 6; i++) {
+    motes.push({
+      ang: rnd() * Math.PI * 2,
+      dist: Math.sqrt(rnd()) * 0.72,
+      size: 0.14 + rnd() * 0.12,
+      roll: rnd(),
+      phase: rnd() * Math.PI * 2,
+      spin: 0.35 + rnd() * 0.4,
+      group: 1,
+    })
+  }
+  for (let thread = 0; thread < 4; thread++) {
+    const ang = rnd() * Math.PI * 2
+    const dist = 0.12 + rnd() * 0.5
+    for (let k = 0; k < 3; k++) {
+      motes.push({
+        ang: ang + (k - 1) * (0.35 + rnd() * 0.4),
+        dist: Math.min(0.88, Math.max(0.08, dist + (rnd() - 0.5) * 0.28)),
+        size: 0.02,
+        roll: rnd(),
+        phase: rnd() * Math.PI * 2,
+        spin: 0.5 + rnd() * 0.5,
+        group: 2 + thread,
+      })
+    }
+  }
+  starMotes.set(kind, motes)
+  return motes
+}
 
 /**
- * Granular photosphere. Bright cell centers, darker lanes, and a few cool
- * filaments. Baked once per star. The live frame only turns it.
+ * Where a granule sits at time `t`. The center swirls faster than the limb,
+ * and each mote has its own speed and wobble, so the disc does not turn as one piece.
  */
-function photosphere(kind: StarKind): HTMLCanvasElement | null {
-  const cached = photospheres.get(kind)
-  if (cached) return cached
-  if (typeof document === 'undefined') return null
-  const n = 256
-  const c = document.createElement('canvas')
-  c.width = n
-  c.height = n
-  const g = c.getContext('2d')
-  if (!g) return null
-  const rnd = makeRng(kind === 'nyx' ? 11 : kind === 'pyro' ? 29 : 5)
-  const base = kind === 'nyx' ? '#9a4034' : kind === 'pyro' ? '#e85d04' : '#e08820'
+export function starMotePlace(mote: { ang: number; dist: number; phase: number; spin: number }, t: number): { ang: number; dist: number } {
+  const swirl = 0.00022 * (0.35 + mote.spin) / (0.18 + mote.dist)
+  const wobble = 0.08 + 0.18 * (1 - mote.dist)
+  const ang = mote.ang + t * swirl + Math.sin(t * 0.00031 * mote.spin + mote.phase) * wobble
+  const drift = 0.018 + 0.04 * (1 - mote.dist)
+  const dist = Math.min(0.93, Math.max(0.04, mote.dist + Math.sin(t * 0.00019 * mote.spin + mote.phase * 1.3) * drift))
+  return { ang, dist }
+}
+
+function paintStarSurface(
+  ctx: CanvasRenderingContext2D,
+  sx: number,
+  sy: number,
+  r: number,
+  t: number,
+  kind: StarKind,
+): void {
   const hot = kind === 'nyx' ? '#ffd0c4' : kind === 'pyro' ? '#fff6d0' : '#ffe7a8'
   const mid = kind === 'nyx' ? '#d46858' : kind === 'pyro' ? '#ff9a2e' : '#f0a040'
   const cool = kind === 'nyx' ? '#6e2820' : kind === 'pyro' ? '#9a2808' : '#b45309'
-  g.fillStyle = base
-  g.fillRect(0, 0, n, n)
-  for (let i = 0; i < 640; i++) {
-    const x = rnd() * n
-    const y = rnd() * n
-    const rad = n * (0.01 + rnd() * 0.026)
-    const roll = rnd()
-    const core = roll > 0.86 ? hot : roll > 0.4 ? mid : cool
-    const grd = g.createRadialGradient(x, y, 0, x, y, rad)
+  const base = kind === 'nyx' ? '#9a4034' : kind === 'pyro' ? '#e85d04' : '#e08820'
+  const motes = motesFor(kind)
+  const cells = motes.filter((mote) => mote.group === 0).slice().sort((a, b) => b.size - a.size)
+  for (const mote of cells) {
+    const at = starMotePlace(mote, t)
+    const x = sx + Math.cos(at.ang) * at.dist * r
+    const y = sy + Math.sin(at.ang) * at.dist * r
+    const rad = mote.size * r
+    const core = mote.roll > 0.86 ? hot : mote.roll > 0.4 ? mid : cool
+    const grd = ctx.createRadialGradient(x, y, 0, x, y, rad)
     grd.addColorStop(0, core)
-    grd.addColorStop(0.62, roll > 0.5 ? mid : base)
+    grd.addColorStop(0.62, mote.roll > 0.5 ? mid : base)
     grd.addColorStop(1, 'rgba(80, 16, 4, 0)')
-    g.fillStyle = grd
-    g.beginPath()
-    g.arc(x, y, rad, 0, Math.PI * 2)
-    g.fill()
+    ctx.fillStyle = grd
+    ctx.beginPath()
+    ctx.arc(x, y, rad, 0, Math.PI * 2)
+    ctx.fill()
   }
-  g.globalCompositeOperation = 'multiply'
-  for (let i = 0; i < 7; i++) {
-    const x = rnd() * n
-    const y = rnd() * n
-    const rad = n * (0.12 + rnd() * 0.16)
-    const shade = g.createRadialGradient(x, y, rad * 0.2, x, y, rad)
-    shade.addColorStop(0, 'rgba(90, 24, 8, 0.85)')
+  ctx.save()
+  ctx.globalCompositeOperation = 'multiply'
+  for (const mote of motes) {
+    if (mote.group !== 1) continue
+    const at = starMotePlace(mote, t)
+    const x = sx + Math.cos(at.ang) * at.dist * r
+    const y = sy + Math.sin(at.ang) * at.dist * r
+    const rad = mote.size * r
+    const shade = ctx.createRadialGradient(x, y, rad * 0.2, x, y, rad)
+    shade.addColorStop(0, 'rgba(90, 24, 8, 0.8)')
     shade.addColorStop(1, 'rgba(255, 255, 255, 1)')
-    g.fillStyle = shade
-    g.beginPath()
-    g.arc(x, y, rad, 0, Math.PI * 2)
-    g.fill()
+    ctx.fillStyle = shade
+    ctx.beginPath()
+    ctx.arc(x, y, rad, 0, Math.PI * 2)
+    ctx.fill()
   }
-  g.globalCompositeOperation = 'source-over'
-  g.lineCap = 'round'
-  g.lineJoin = 'round'
-  for (let i = 0; i < 6; i++) {
-    const x = rnd() * n
-    const y = rnd() * n
-    const dx = (rnd() - 0.5) * n * 0.55
-    const dy = (rnd() - 0.5) * n * 0.22
-    g.beginPath()
-    g.moveTo(x, y)
-    g.bezierCurveTo(x + dx * 0.4, y + dy - n * 0.08, x + dx * 0.7, y - dy, x + dx, y + dy * 0.35)
-    g.strokeStyle = 'rgba(255, 214, 160, 0.28)'
-    g.lineWidth = 2.4 + rnd() * 2
-    g.stroke()
-    g.strokeStyle = 'rgba(42, 8, 4, 0.72)'
-    g.lineWidth = 1.1 + rnd() * 1.4
-    g.stroke()
+  ctx.restore()
+  ctx.lineCap = 'round'
+  for (let thread = 0; thread < 4; thread++) {
+    const pts = motes.filter((mote) => mote.group === 2 + thread).map((mote) => starMotePlace(mote, t))
+    if (pts.length < 3) continue
+    const xy = pts.map((at) => ({ x: sx + Math.cos(at.ang) * at.dist * r, y: sy + Math.sin(at.ang) * at.dist * r }))
+    ctx.beginPath()
+    ctx.moveTo(xy[0].x, xy[0].y)
+    ctx.quadraticCurveTo(xy[1].x, xy[1].y, xy[2].x, xy[2].y)
+    ctx.strokeStyle = 'rgba(255, 214, 160, 0.22)'
+    ctx.lineWidth = Math.max(1.4, r * 0.028)
+    ctx.stroke()
+    ctx.strokeStyle = 'rgba(42, 8, 4, 0.72)'
+    ctx.lineWidth = Math.max(0.8, r * 0.014)
+    ctx.stroke()
   }
-  photospheres.set(kind, c)
-  return c
 }
 
 const surfaces = new Map<string, HTMLCanvasElement>()
@@ -441,254 +488,7 @@ export function paintBelt(
   ctx.globalAlpha = 1
 }
 
-/** One prominence: a ribbon that leaves the limb and comes back down. `skew` leans the crest. */
-function strokeProminence(
-  ctx: CanvasRenderingContext2D,
-  r: number,
-  ang: number,
-  span: number,
-  height: number,
-  fade: number,
-  rgb: string,
-  width: number,
-  skew = 0,
-): void {
-  const a0 = ang - span / 2
-  const a1 = ang + span / 2
-  const x0 = Math.cos(a0) * r * 0.97
-  const y0 = Math.sin(a0) * r * 0.97
-  const x1 = Math.cos(a1) * r * 0.97
-  const y1 = Math.sin(a1) * r * 0.97
-  // A quadratic control sits beyond the visible crest, so the arch peaks near `height`.
-  const peak = r + height * 2
-  const crest = ang + skew
-  const cx = Math.cos(crest) * peak
-  const cy = Math.sin(crest) * peak
-  ctx.beginPath()
-  ctx.moveTo(x0, y0)
-  ctx.quadraticCurveTo(cx, cy, x1, y1)
-  ctx.lineCap = 'round'
-  ctx.lineJoin = 'round'
-  ctx.strokeStyle = `rgba(${rgb}, ${0.34 * fade})`
-  ctx.lineWidth = width * 4.2
-  ctx.stroke()
-  ctx.strokeStyle = `rgba(255, 236, 206, ${0.92 * fade})`
-  ctx.lineWidth = width
-  ctx.stroke()
-  if (height > r * 0.35) {
-    ctx.strokeStyle = `rgba(72, 14, 6, ${0.62 * fade})`
-    ctx.lineWidth = Math.max(0.8, width * 0.42)
-    ctx.stroke()
-  }
-}
-
-/** Hot foot where a fan or a spray is rooted. */
-function paintFoot(
-  ctx: CanvasRenderingContext2D,
-  r: number,
-  ang: number,
-  radius: number,
-  fade: number,
-  rgb: string,
-): void {
-  const x = Math.cos(ang) * r * 0.92
-  const y = Math.sin(ang) * r * 0.92
-  const glow = ctx.createRadialGradient(x, y, 0, x, y, radius)
-  glow.addColorStop(0, `rgba(255, 248, 230, ${0.9 * fade})`)
-  glow.addColorStop(0.28, `rgba(${rgb}, ${0.45 * fade})`)
-  glow.addColorStop(1, `rgba(${rgb}, 0)`)
-  ctx.fillStyle = glow
-  ctx.beginPath()
-  ctx.arc(x, y, radius, 0, Math.PI * 2)
-  ctx.fill()
-}
-
-/** Nested loops of different heights, sharing one bright foot. */
-function paintLoopFan(
-  ctx: CanvasRenderingContext2D,
-  r: number,
-  ang: number,
-  span: number,
-  height: number,
-  fade: number,
-  rgb: string,
-  width: number,
-  slot: number,
-  strands: number,
-): void {
-  paintFoot(ctx, r, ang, Math.min(height * 0.42, r * 0.5), fade, rgb)
-  for (let s = 0; s < strands; s++) {
-    const t = strands === 1 ? 0.5 : s / (strands - 1)
-    const lean = (t - 0.5) * span
-    const crest = height * (0.28 + 0.72 * Math.sin(t * Math.PI))
-    const loopSpan = span * (0.28 + 0.55 * (0.35 + Math.abs(t - 0.5)))
-    strokeProminence(ctx, r, ang + lean * 0.35, loopSpan, crest, fade * (0.55 + 0.45 * Math.sin(t * Math.PI)), rgb, width * 0.55, lean * 0.35)
-  }
-  for (let s = 0; s < 4; s++) {
-    const a = ang + (hash(slot * 19 + s * 2.6) - 0.5) * span
-    const len = height * (0.3 + hash(slot * 7 + s) * 0.55)
-    ctx.beginPath()
-    ctx.moveTo(Math.cos(a) * r * 0.98, Math.sin(a) * r * 0.98)
-    const bend = (hash(slot + s * 4.1) - 0.5) * 0.35
-    const end = a + bend
-    ctx.quadraticCurveTo(
-      Math.cos(a + bend * 0.4) * (r + len * 0.55),
-      Math.sin(a + bend * 0.4) * (r + len * 0.55),
-      Math.cos(end) * (r + len),
-      Math.sin(end) * (r + len),
-    )
-    ctx.strokeStyle = `rgba(${rgb}, ${0.16 * fade})`
-    ctx.lineWidth = Math.max(0.6, width * 0.35)
-    ctx.stroke()
-  }
-}
-
-/** A tangled burst: open wisps of uneven length, plus a short loop in the middle. */
-function paintSpray(
-  ctx: CanvasRenderingContext2D,
-  r: number,
-  ang: number,
-  span: number,
-  height: number,
-  fade: number,
-  rgb: string,
-  width: number,
-  slot: number,
-  strands: number,
-): void {
-  paintFoot(ctx, r, ang, Math.min(height * 0.28, r * 0.36), fade, rgb)
-  for (let s = 0; s < strands; s++) {
-    const roll = hash(slot * 23 + s * 3.3)
-    const a = ang + (roll - 0.5) * span
-    const h = height * (0.2 + hash(slot * 11 + s * 1.7) * 0.9)
-    const bend = (hash(slot * 5 + s * 8.2) - 0.5) * 1.1
-    const x0 = Math.cos(a) * r * 0.98
-    const y0 = Math.sin(a) * r * 0.98
-    const end = a + bend * 0.45
-    const x1 = Math.cos(end) * (r + h)
-    const y1 = Math.sin(end) * (r + h)
-    ctx.beginPath()
-    ctx.moveTo(x0, y0)
-    ctx.quadraticCurveTo(
-      Math.cos(a + bend * 0.25) * (r + h * (0.35 + roll * 0.4)),
-      Math.sin(a + bend * 0.25) * (r + h * (0.35 + roll * 0.4)),
-      x1,
-      y1,
-    )
-    ctx.lineCap = 'round'
-    ctx.strokeStyle = `rgba(${rgb}, ${(0.18 + roll * 0.2) * fade})`
-    ctx.lineWidth = width * (0.7 + roll * 1.3)
-    ctx.stroke()
-    ctx.strokeStyle = `rgba(255, 236, 210, ${0.4 * fade})`
-    ctx.lineWidth = Math.max(0.6, width * 0.4)
-    ctx.stroke()
-  }
-  strokeProminence(ctx, r, ang, span * 0.42, height * 0.38, fade * 0.8, rgb, width * 0.7, span * 0.08)
-}
-
-function paintFlares(
-  ctx: CanvasRenderingContext2D,
-  sx: number,
-  sy: number,
-  r: number,
-  t: number,
-  name: string,
-): void {
-  const kind = starKind(name)
-  const pyro = kind === 'pyro'
-  const slots = pyro ? 6 : 3
-  const seed = kind === 'nyx' ? 19 : pyro ? 53 : 7
-  const hot = kind === 'nyx' ? '255, 176, 140' : pyro ? '255, 120, 40' : '255, 186, 80'
-  ctx.save()
-  ctx.translate(sx, sy)
-  for (let i = 0; i < slots; i++) {
-    const period = 4200 + hash(seed * 13 + i * 3.1) * 9000
-    const life = 1400 + hash(seed + i * 9.7) * 2200
-    const local = (t + hash(i * 4.4 + seed) * period) % period
-    if (local > life) continue
-    const u = local / life
-    const fade = Math.sin(u * Math.PI)
-    const scale = hash(seed * 17 + i * 2.2) ** 2
-    const ang = hash(seed * 3 + i * 11.7) * Math.PI * 2 + u * 0.08
-    const span = (0.22 + hash(seed + i * 6.4) * (pyro ? 0.95 : 0.5)) * (0.75 + 0.25 * fade)
-    const height = r * flareReach(name, scale) * (0.35 + 0.65 * fade)
-    const width = Math.max(1.05, r * (0.018 + scale * (pyro ? 0.028 : 0.016)))
-    const style = flareStyle(hash(seed * 29 + i * 8.5))
-    if (style === 'fan') {
-      paintLoopFan(ctx, r, ang, span, height, fade, hot, width, seed + i * 13, pyro ? 7 : 5)
-    } else if (style === 'spray') {
-      paintSpray(ctx, r, ang, span * 0.85, height, fade, hot, width, seed + i * 17, pyro ? 8 : 5)
-    } else {
-      const skew = (hash(seed + i * 4.8) - 0.5) * span * 0.45
-      strokeProminence(ctx, r, ang, span, height, fade, hot, width, skew)
-      if (scale > 0.4) {
-        strokeProminence(ctx, r, ang + skew * 0.2, span * 0.7, height * 0.58, fade * 0.7, hot, width * 0.6, skew * 0.5)
-      }
-    }
-  }
-  ctx.restore()
-}
-
-/** Cool dark threads on the disc, the same plasma as a prominence seen against the surface. */
-function paintFilaments(
-  ctx: CanvasRenderingContext2D,
-  r: number,
-  t: number,
-  kind: StarKind,
-): void {
-  const n = kind === 'pyro' ? 4 : 2
-  ctx.lineCap = 'round'
-  for (let i = 0; i < n; i++) {
-    const spin = t * 0.00005 * (i % 2 === 0 ? 1 : -1)
-    const ang = hash(i * 3.7 + 1) * Math.PI * 2 + spin
-    const dist = r * (0.08 + hash(i * 1.7) * 0.5)
-    const len = r * (0.28 + hash(i * 2.4) * 0.38)
-    const x = Math.cos(ang) * dist
-    const y = Math.sin(ang) * dist
-    const bend = (hash(i * 8.1) - 0.5) * r * 0.5
-    ctx.beginPath()
-    ctx.moveTo(x - Math.cos(ang) * len * 0.5, y - Math.sin(ang) * len * 0.5)
-    ctx.quadraticCurveTo(x + bend, y - bend * 0.45, x + Math.cos(ang) * len * 0.45, y + Math.sin(ang) * len * 0.2)
-    ctx.strokeStyle = 'rgba(255, 220, 170, 0.2)'
-    ctx.lineWidth = Math.max(1.4, r * 0.03)
-    ctx.stroke()
-    ctx.strokeStyle = 'rgba(48, 10, 4, 0.78)'
-    ctx.lineWidth = Math.max(0.8, r * 0.014)
-    ctx.stroke()
-  }
-}
-
-function paintStarCells(
-  ctx: CanvasRenderingContext2D,
-  sx: number,
-  sy: number,
-  r: number,
-  t: number,
-  kind: StarKind,
-): void {
-  const n = kind === 'pyro' ? 10 : 6
-  for (let i = 0; i < n; i++) {
-    const period = 900 + hash(i * 5.2 + 2) * 1600
-    const life = 380 + hash(i * 2.1 + 4) * 700
-    const local = (t + hash(i * 8 + 1) * period) % period
-    if (local > life) continue
-    const fade = Math.sin((local / life) * Math.PI)
-    const ang = hash(i * 12.9) * Math.PI * 2 + t * 0.00012
-    const dist = hash(i * 4.7) * r * 0.72
-    const rad = r * (0.02 + hash(i * 6.3) * 0.035) * (0.7 + fade)
-    const x = sx + Math.cos(ang) * dist
-    const y = sy + Math.sin(ang) * dist
-    const cell = ctx.createRadialGradient(x, y, 0, x, y, rad)
-    cell.addColorStop(0, `rgba(255, 250, 230, ${0.55 * fade})`)
-    cell.addColorStop(1, 'rgba(255, 140, 32, 0)')
-    ctx.fillStyle = cell
-    ctx.beginPath()
-    ctx.arc(x, y, rad, 0, Math.PI * 2)
-    ctx.fill()
-  }
-}
-
-/** A star: corona, a granular photosphere, and prominences that loop off the limb. */
+/** A star: corona and a granular photosphere whose cells drift inside the limb. */
 export function paintStar(
   ctx: CanvasRenderingContext2D,
   sx: number,
@@ -711,8 +511,6 @@ export function paintStar(
   ctx.arc(sx, sy, reach, 0, Math.PI * 2)
   ctx.fill()
 
-  if (r > 4) paintFlares(ctx, sx, sy, r, t, name)
-
   ctx.beginPath()
   ctx.arc(sx, sy, r, 0, Math.PI * 2)
   ctx.clip()
@@ -733,13 +531,8 @@ export function paintStar(
   ctx.fillStyle = disc
   ctx.fillRect(sx - r, sy - r, r * 2, r * 2)
 
-  const img = r > 5 ? photosphere(kind) : null
-  if (img) {
-    ctx.save()
-    ctx.translate(sx, sy)
-    ctx.rotate(t * 0.00007)
-    ctx.drawImage(img, -r, -r, r * 2, r * 2)
-    ctx.restore()
+  if (r > 5) paintStarSurface(ctx, sx, sy, r, t, kind)
+  if (r > 5) {
     const limb = ctx.createRadialGradient(sx, sy, r * 0.42, sx, sy, r)
     limb.addColorStop(0, 'rgba(0, 0, 0, 0)')
     limb.addColorStop(0.68, 'rgba(70, 16, 0, 0.05)')
@@ -747,13 +540,6 @@ export function paintStar(
     ctx.fillStyle = limb
     ctx.fillRect(sx - r, sy - r, r * 2, r * 2)
   }
-  if (r > 8) {
-    ctx.save()
-    ctx.translate(sx, sy)
-    paintFilaments(ctx, r, t, kind)
-    ctx.restore()
-  }
-  if (r > 5) paintStarCells(ctx, sx, sy, r, t, kind)
   ctx.restore()
 
   if (r > 5) {
