@@ -137,9 +137,22 @@ interface StarMote {
   roll: number
   phase: number
   spin: number
-  /** 0 cell, 1 dark lane, 2–5 filament index (three motes each, in order). */
+  /** 0 cell, 1 dark lane. */
   group: number
 }
+
+/** Inside this radius a bouncing cell reflects off the limb. */
+const STAR_LIMB = 0.9
+
+interface StarMoteSim {
+  t: number
+  x: number
+  y: number
+  vx: number
+  vy: number
+}
+
+const moteSim = new WeakMap<object, StarMoteSim>()
 
 const starMotes = new Map<StarKind, StarMote[]>()
 
@@ -170,36 +183,131 @@ function motesFor(kind: StarKind): StarMote[] {
       group: 1,
     })
   }
-  for (let thread = 0; thread < 4; thread++) {
-    const ang = rnd() * Math.PI * 2
-    const dist = 0.12 + rnd() * 0.5
-    for (let k = 0; k < 3; k++) {
-      motes.push({
-        ang: ang + (k - 1) * (0.35 + rnd() * 0.4),
-        dist: Math.min(0.88, Math.max(0.08, dist + (rnd() - 0.5) * 0.28)),
-        size: 0.02,
-        roll: rnd(),
-        phase: rnd() * Math.PI * 2,
-        spin: 0.5 + rnd() * 0.5,
-        group: 2 + thread,
-      })
-    }
-  }
   starMotes.set(kind, motes)
   return motes
 }
 
+/** Slow turn of the whole disc, added on top of each cell's own motion. */
+export function starDiscTurn(t: number): number {
+  return t * 0.00008
+}
+
+function wanderMote(mote: { roll?: number; phase: number }): boolean {
+  const roll = mote.roll ?? ((mote.phase / (Math.PI * 2)) % 1)
+  return roll < 0.3
+}
+
+function clampLimb(x: number, y: number): { x: number; y: number } {
+  const d = Math.hypot(x, y)
+  if (d <= STAR_LIMB || d === 0) return { x, y }
+  return { x: (x * STAR_LIMB) / d, y: (y * STAR_LIMB) / d }
+}
+
+/** A cell that only travels so far, then comes back on a new heading. */
+function wanderPoint(mote: { ang: number; dist: number; phase: number; spin: number }, t: number): { x: number; y: number } {
+  const base = Math.min(Math.max(0.05, mote.dist), 0.72)
+  const pace = 0.7 + (mote.spin % 1.5) / 1.5
+  const reach = 0.06 + 0.12 * pace
+  const along = Math.sin(t * 0.00115 * pace + mote.phase)
+  const across = Math.sin(t * 0.00047 * (1.4 - pace * 0.3) + mote.phase * 1.7)
+  const head = mote.phase + Math.sin(t * 0.00018 * pace + mote.phase) * 2.1
+  const c = Math.cos(head)
+  const s = Math.sin(head)
+  return clampLimb(
+    Math.cos(mote.ang) * base + (along * c - across * s) * reach,
+    Math.sin(mote.ang) * base + (along * s + across * c) * reach,
+  )
+}
+
+function bounceStep(
+  x: number,
+  y: number,
+  vx: number,
+  vy: number,
+  dt: number,
+): { x: number; y: number; vx: number; vy: number } {
+  let px = x
+  let py = y
+  let left = dt
+  const held = clampLimb(px, py)
+  px = held.x
+  py = held.y
+  for (let n = 0; n < 64 && left > 1e-4; n++) {
+    const a = vx * vx + vy * vy
+    if (a < 1e-18) break
+    const b = 2 * (px * vx + py * vy)
+    const c = px * px + py * py - STAR_LIMB * STAR_LIMB
+    const disc = b * b - 4 * a * c
+    if (disc <= 0) {
+      px += vx * left
+      py += vy * left
+      break
+    }
+    const root = Math.sqrt(disc)
+    const r1 = (-b - root) / (2 * a)
+    const r2 = (-b + root) / (2 * a)
+    const hit = r1 > 1e-4 ? r1 : r2
+    if (!(hit > 1e-4) || hit >= left) {
+      px += vx * left
+      py += vy * left
+      break
+    }
+    px += vx * hit
+    py += vy * hit
+    left -= hit
+    const len = Math.hypot(px, py) || 1
+    const nx = px / len
+    const ny = py / len
+    const dot = vx * nx + vy * ny
+    vx -= 2 * dot * nx
+    vy -= 2 * dot * ny
+    px *= (STAR_LIMB - 0.004) / len
+    py *= (STAR_LIMB - 0.004) / len
+  }
+  const end = clampLimb(px, py)
+  return { x: end.x, y: end.y, vx, vy }
+}
+
 /**
- * Where a granule sits at time `t`. The center swirls faster than the limb,
- * and each mote has its own speed and wobble, so the disc does not turn as one piece.
+ * Where a granule sits in the sun's own frame at time `t`.
+ * About 30% wander out and come back on a new heading. The rest travel in a
+ * straight line and bounce off the limb. The disc turn is applied by the painter.
  */
-export function starMotePlace(mote: { ang: number; dist: number; phase: number; spin: number }, t: number): { ang: number; dist: number } {
-  const swirl = 0.00022 * (0.35 + mote.spin) / (0.18 + mote.dist)
-  const wobble = 0.08 + 0.18 * (1 - mote.dist)
-  const ang = mote.ang + t * swirl + Math.sin(t * 0.00031 * mote.spin + mote.phase) * wobble
-  const drift = 0.018 + 0.04 * (1 - mote.dist)
-  const dist = Math.min(0.93, Math.max(0.04, mote.dist + Math.sin(t * 0.00019 * mote.spin + mote.phase * 1.3) * drift))
-  return { ang, dist }
+export function starMotePlace(
+  mote: { ang: number; dist: number; phase: number; spin: number; roll?: number },
+  t: number,
+): { ang: number; dist: number } {
+  const at = wanderMote(mote) ? wanderPoint(mote, t) : bouncePoint(mote, t)
+  const dist = Math.hypot(at.x, at.y)
+  return { ang: Math.atan2(at.y, at.x), dist }
+}
+
+function bouncePoint(
+  mote: { ang: number; dist: number; phase: number; spin: number },
+  t: number,
+): { x: number; y: number } {
+  const speed = 0.00009 + mote.spin * 0.00005
+  let x = Math.cos(mote.ang) * Math.min(mote.dist, STAR_LIMB - 0.02)
+  let y = Math.sin(mote.ang) * Math.min(mote.dist, STAR_LIMB - 0.02)
+  let vx = Math.cos(mote.phase) * speed
+  let vy = Math.sin(mote.phase) * speed
+  let from = 0
+  const sim = moteSim.get(mote)
+  if (sim && t >= sim.t && t - sim.t <= 4000) {
+    x = sim.x
+    y = sim.y
+    vx = sim.vx
+    vy = sim.vy
+    from = sim.t
+  }
+  const moved = bounceStep(x, y, vx, vy, Math.max(0, t - from))
+  moteSim.set(mote, { t, x: moved.x, y: moved.y, vx: moved.vx, vy: moved.vy })
+  return moved
+}
+
+function starRgba(hex: string, alpha: number): string {
+  const n = Number.parseInt(hex.slice(1), 16)
+  return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${alpha})`
 }
 
 function paintStarSurface(
@@ -214,54 +322,41 @@ function paintStarSurface(
   const mid = kind === 'nyx' ? '#d46858' : kind === 'pyro' ? '#ff9a2e' : '#f0a040'
   const cool = kind === 'nyx' ? '#6e2820' : kind === 'pyro' ? '#9a2808' : '#b45309'
   const base = kind === 'nyx' ? '#9a4034' : kind === 'pyro' ? '#e85d04' : '#e08820'
+  const turn = starDiscTurn(t)
   const motes = motesFor(kind)
   const cells = motes.filter((mote) => mote.group === 0).slice().sort((a, b) => b.size - a.size)
   for (const mote of cells) {
     const at = starMotePlace(mote, t)
-    const x = sx + Math.cos(at.ang) * at.dist * r
-    const y = sy + Math.sin(at.ang) * at.dist * r
+    const ang = at.ang + turn
+    const x = sx + Math.cos(ang) * at.dist * r
+    const y = sy + Math.sin(ang) * at.dist * r
     const rad = mote.size * r
     const core = mote.roll > 0.86 ? hot : mote.roll > 0.4 ? mid : cool
     const grd = ctx.createRadialGradient(x, y, 0, x, y, rad)
-    grd.addColorStop(0, core)
-    grd.addColorStop(0.62, mote.roll > 0.5 ? mid : base)
-    grd.addColorStop(1, 'rgba(80, 16, 4, 0)')
+    grd.addColorStop(0, starRgba(core, 0.55))
+    grd.addColorStop(0.22, starRgba(core, 0.28))
+    grd.addColorStop(0.55, starRgba(mid, 0.12))
+    grd.addColorStop(1, starRgba(base, 0))
     ctx.fillStyle = grd
     ctx.beginPath()
     ctx.arc(x, y, rad, 0, Math.PI * 2)
     ctx.fill()
   }
-  ctx.save()
-  ctx.globalCompositeOperation = 'multiply'
   for (const mote of motes) {
     if (mote.group !== 1) continue
     const at = starMotePlace(mote, t)
-    const x = sx + Math.cos(at.ang) * at.dist * r
-    const y = sy + Math.sin(at.ang) * at.dist * r
+    const ang = at.ang + turn
+    const x = sx + Math.cos(ang) * at.dist * r
+    const y = sy + Math.sin(ang) * at.dist * r
     const rad = mote.size * r
-    const shade = ctx.createRadialGradient(x, y, rad * 0.2, x, y, rad)
-    shade.addColorStop(0, 'rgba(90, 24, 8, 0.8)')
-    shade.addColorStop(1, 'rgba(255, 255, 255, 1)')
+    const shade = ctx.createRadialGradient(x, y, 0, x, y, rad)
+    shade.addColorStop(0, 'rgba(48, 14, 4, 0.22)')
+    shade.addColorStop(0.4, 'rgba(48, 14, 4, 0.08)')
+    shade.addColorStop(1, 'rgba(48, 14, 4, 0)')
     ctx.fillStyle = shade
     ctx.beginPath()
     ctx.arc(x, y, rad, 0, Math.PI * 2)
     ctx.fill()
-  }
-  ctx.restore()
-  ctx.lineCap = 'round'
-  for (let thread = 0; thread < 4; thread++) {
-    const pts = motes.filter((mote) => mote.group === 2 + thread).map((mote) => starMotePlace(mote, t))
-    if (pts.length < 3) continue
-    const xy = pts.map((at) => ({ x: sx + Math.cos(at.ang) * at.dist * r, y: sy + Math.sin(at.ang) * at.dist * r }))
-    ctx.beginPath()
-    ctx.moveTo(xy[0].x, xy[0].y)
-    ctx.quadraticCurveTo(xy[1].x, xy[1].y, xy[2].x, xy[2].y)
-    ctx.strokeStyle = 'rgba(255, 214, 160, 0.22)'
-    ctx.lineWidth = Math.max(1.4, r * 0.028)
-    ctx.stroke()
-    ctx.strokeStyle = 'rgba(42, 8, 4, 0.72)'
-    ctx.lineWidth = Math.max(0.8, r * 0.014)
-    ctx.stroke()
   }
 }
 
@@ -488,7 +583,7 @@ export function paintBelt(
   ctx.globalAlpha = 1
 }
 
-/** A star: corona and a granular photosphere whose cells drift inside the limb. */
+/** A star: corona and a soft photosphere. Cells fade into the disc as it turns. */
 export function paintStar(
   ctx: CanvasRenderingContext2D,
   sx: number,

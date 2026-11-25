@@ -3674,16 +3674,43 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
     Math.abs(paint.beltSpeckSize(1) - 4.8) < 1e-9 && paint.beltSpeckSize(0.9) > 2.4 && paint.beltSpeckSize(0.2) < 2.4,
     'star map: the largest belt specks are twice the old rock size',
   )
-  const innerMote = { ang: 0, dist: 0.12, phase: 0.4, spin: 1 }
-  const outerMote = { ang: 0, dist: 0.86, phase: 0.4, spin: 1 }
-  const turned = (mote) => paint.starMotePlace(mote, 24000).ang - paint.starMotePlace(mote, 0).ang
-  const left = { ang: 1, dist: 0.4, phase: 0.2, spin: 0.7 }
-  const right = { ang: 1, dist: 0.4, phase: 2.4, spin: 1.3 }
+  const xy = (p) => [Math.cos(p.ang) * p.dist, Math.sin(p.ang) * p.dist]
+  const wander = { ang: 0.8, dist: 0.4, phase: 0.4, spin: 1, roll: 0.05 }
+  let wanderBack = false
+  let prev = xy(paint.starMotePlace(wander, 0))
+  let prevStep = null
+  for (let t = 400; t <= 14000; t += 400) {
+    const p = xy(paint.starMotePlace(wander, t))
+    const step = [p[0] - prev[0], p[1] - prev[1]]
+    if (prevStep && step[0] * prevStep[0] + step[1] * prevStep[1] < 0) wanderBack = true
+    prevStep = step
+    prev = p
+  }
+  const bounce = { ang: 0, dist: 0.5, phase: 0, spin: 1, roll: 0.8 }
+  const otherWay = { ang: 0, dist: 0.5, phase: Math.PI, spin: 1, roll: 0.85 }
+  let inside = true
+  let wentOut = false
+  let cameBack = false
+  let lastX = xy(paint.starMotePlace(bounce, 0))[0]
+  for (let t = 250; t <= 22000; t += 250) {
+    const p = paint.starMotePlace(bounce, t)
+    const [x, y] = xy(p)
+    if (Math.hypot(x, y) > 0.91) inside = false
+    if (x > lastX + 0.004) wentOut = true
+    if (wentOut && x < lastX - 0.004) cameBack = true
+    lastX = x
+  }
+  const forth = xy(paint.starMotePlace(bounce, 1800))
+  const opposite = xy(paint.starMotePlace(otherWay, 1800))
   check(
-    turned(innerMote) > turned(outerMote) * 1.35 &&
-      Math.abs(paint.starMotePlace(left, 9000).ang - paint.starMotePlace(right, 9000).ang) > 0.15 &&
-      paint.starMotePlace(innerMote, 5000).dist < 0.95,
-    'star map: sun cells swirl faster near the center and do not move as one piece',
+    wanderBack &&
+      inside &&
+      wentOut &&
+      cameBack &&
+      forth[0] > 0.55 &&
+      opposite[0] < 0.45 &&
+      paint.starDiscTurn(10000) > paint.starDiscTurn(0),
+    'star map: some sun cells turn back, the rest bounce inside the limb, and the disc turns',
   )
   check(
     hl.isStarMapPath('/star-map') &&
