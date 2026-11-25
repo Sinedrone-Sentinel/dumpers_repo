@@ -3454,12 +3454,13 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
   const iconR = starMap.ICON_PX / 2
   const moonCap = iconR * 4
   const cellin = byName(stanton, 'Cellin')
+  const daymar = byName(stanton, 'Daymar')
   check(
     starMap.orbDisplayRadiusPx(crusader, close) <= 48 &&
       starMap.orbDisplayRadiusPx(yela, close) === moonCap &&
-      starMap.orbDisplayRadiusPx(cellin, close) >= iconR &&
-      starMap.orbDisplayRadiusPx(cellin, close) < starMap.orbDisplayRadiusPx(yela, close),
-    'star map: a zoomed moon is between one icon and four, with the largest at four',
+      starMap.orbDisplayRadiusPx(cellin, close) === moonCap &&
+      starMap.orbDisplayRadiusPx(daymar, close) === moonCap,
+    'star map: zoomed moons are one size, four icons across',
   )
   check(
     starMap.ICON_PX <= starMap.orbDisplayRadiusPx(crusader, fit),
@@ -3671,8 +3672,10 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
     }
   }
   check(
-    moonsInRange && starMap.orbDisplayRadiusPx(arial, hurstonMoons) >= iconR && starMap.orbDisplayRadiusPx(arial, hurstonMoons) <= iconR * 4,
-    'star map: every moon stays between one icon and four icons as you zoom',
+    moonsInRange &&
+      starMap.orbDisplayRadiusPx(arial, hurstonMoons) === iconR * 4 &&
+      starMap.orbDisplayRadiusPx(byName(stanton, 'Aberdeen'), hurstonMoons) === iconR * 4,
+    'star map: every moon is the same size, from one icon up to four',
   )
   const crusaderMoons = at(60 / 50.9e6 / fitPx)
   check(
