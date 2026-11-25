@@ -1,6 +1,5 @@
 import { useEffect, useMemo } from 'react'
 import { useNavigate, useParams } from '@tanstack/react-router'
-import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import StarMapSystemView from '../components/starMap/StarMapSystemView'
 import { setAnalyticsSubTool } from '../lib/analytics'
 import type { StarMapMarker } from '../lib/starMap'
@@ -46,8 +45,8 @@ export default function StarMapSystemRoute() {
   }
 
   return (
-    <FeaturePageLayout title="Star Map">
-      <div className="site-surface relative h-[calc(100vh-11rem)] min-h-[480px] overflow-hidden">
+    <main className="site-shell relative z-10 py-6 min-w-0 w-full overflow-x-hidden">
+      <div className="site-surface relative h-[calc(100vh-8rem)] min-h-[480px] overflow-hidden">
         {system ? (
           <StarMapSystemView
             key={system.id}
@@ -68,6 +67,6 @@ export default function StarMapSystemRoute() {
           </div>
         )}
       </div>
-    </FeaturePageLayout>
+    </main>
   )
 }

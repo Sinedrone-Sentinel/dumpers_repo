@@ -21,6 +21,7 @@ import {
 } from '../../lib/starMap'
 import { routeSegmentsInSystem } from '../../lib/starMapHighlight'
 import { STAR_MAP_ICON_PATHS, drawStarMapIcon } from './starMapIcons'
+import { paintBelt, paintBody, paintStar, paintStarfield } from './starMapPaint'
 import SiteTooltip from '../SiteTooltip'
 
 interface Props {
@@ -41,6 +42,7 @@ const FIT_PADDING_PX = 32
 const MAX_ZOOM_FACTOR = 5_000_000
 const MIN_BELT_HALF_PX = 3
 const MIN_BOX_PX = 6
+const MIN_BELT_LABEL_RADIUS_PX = 40
 
 function systemExtentM(system: StarMapSystem, cx: number, cy: number): number {
   let ext = 0
@@ -68,7 +70,6 @@ export default function StarMapSystemView({
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [size, setSize] = useState({ w: 0, h: 0 })
   const camRef = useRef<Cam | null>(null)
-  const [camTick, setCamTick] = useState(0)
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const projectedRef = useRef<{ items: ProjectedMarker[]; visible: Set<string> }>({ items: [], visible: new Set() })
   const dragRef = useRef<{ x: number; y: number; cam: Cam; moved: boolean; box: boolean } | null>(null)
@@ -131,7 +132,6 @@ export default function StarMapSystemView({
   const setCam = useCallback(
     (cam: Cam) => {
       camRef.current = clampCam(cam)
-      setCamTick((n) => n + 1)
     },
     [clampCam],
   )
@@ -194,34 +194,27 @@ export default function StarMapSystemView({
       const ctx = canvas.getContext('2d')
       if (!ctx) return
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-      ctx.fillStyle = '#020617'
+      ctx.fillStyle = '#02040c'
       ctx.fillRect(0, 0, size.w, size.h)
+      paintStarfield(ctx, size.w, size.h)
 
       const scale = systemBodyScale(system, cam.pxPerM, fitPxPerM)
       const sc = toScreen(starX, starY, cam)
 
       // Belts: one translucent band each.
+      const beltBands: { marker: StarMapMarker; sx: number; sy: number; midPx: number }[] = []
       for (const m of system.markers) {
         if (m.kind !== 'belt' || !m.innerRadiusM || !m.outerRadiusM) continue
-        const c = toScreen(m.x, m.y, cam)
         const parent = m.parentName ? system.markers.find((p) => p.name === m.parentName && ORB_KINDS.has(p.kind)) ?? null : null
+        const centre = parent ? displayPositionM(parent, scale) : m
+        const c = toScreen(centre.x, centre.y, cam)
         const k = beltPxPerM(m, parent, scale)
         const mid = ((m.outerRadiusM + m.innerRadiusM) / 2) * k
         const half = Math.max(((m.outerRadiusM - m.innerRadiusM) / 2) * k, parent ? 1 : MIN_BELT_HALF_PX)
         const ro = mid + half
         const ri = Math.max(0, mid - half)
-        ctx.beginPath()
-        ctx.arc(c.sx, c.sy, ro, 0, Math.PI * 2)
-        ctx.arc(c.sx, c.sy, ri, 0, Math.PI * 2, true)
-        ctx.fillStyle = STAR_MAP_COLORS.belt
-        ctx.fill('evenodd')
-        if (markedIds.has(m.id)) {
-          ctx.save()
-          ctx.globalAlpha = blinkAlpha(t) * 0.45
-          ctx.fillStyle = STAR_MAP_COLORS.blink
-          ctx.fill('evenodd')
-          ctx.restore()
-        }
+        paintBelt(ctx, c.sx, c.sy, ri, ro, t, markedIds.has(m.id) ? blinkAlpha(t) : 0)
+        beltBands.push({ marker: m, sx: c.sx, sy: c.sy, midPx: mid })
       }
 
       // Project bodies and icons.
@@ -281,29 +274,11 @@ export default function StarMapSystemView({
         ctx.restore()
       }
 
-      // Orbs.
+      // Orbs. Stars carry a moving surface; planets and moons are lit from the star.
       for (const it of items) {
         if (!ORB_KINDS.has(it.marker.kind) || !visible.has(it.marker.id)) continue
-        const { sx, sy, r } = it
-        const [core, edge] =
-          it.marker.kind === 'star'
-            ? [STAR_MAP_COLORS.starCore, STAR_MAP_COLORS.star]
-            : it.marker.kind === 'planet'
-              ? [STAR_MAP_COLORS.planetCore, STAR_MAP_COLORS.planet]
-              : [STAR_MAP_COLORS.moonCore, STAR_MAP_COLORS.moon]
-        const g = ctx.createRadialGradient(sx - r * 0.3, sy - r * 0.3, r * 0.1, sx, sy, r)
-        g.addColorStop(0, core)
-        g.addColorStop(1, edge)
-        ctx.save()
-        if (it.marker.kind === 'star') {
-          ctx.shadowColor = STAR_MAP_COLORS.star
-          ctx.shadowBlur = r * 1.2
-        }
-        ctx.beginPath()
-        ctx.arc(sx, sy, r, 0, Math.PI * 2)
-        ctx.fillStyle = g
-        ctx.fill()
-        ctx.restore()
+        if (it.marker.kind === 'star') paintStar(ctx, it.sx, it.sy, it.r, t, it.marker.name)
+        else paintBody(ctx, it.sx, it.sy, it.r, it.marker.name, sc.sx, sc.sy)
       }
 
       // Icons.
@@ -350,6 +325,8 @@ export default function StarMapSystemView({
       // Labels: skip any that would overlap a marker or a label already placed.
       ctx.font = '11px ui-sans-serif, system-ui, sans-serif'
       ctx.textBaseline = 'middle'
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.85)'
+      ctx.shadowBlur = 4
       type Box = { x: number; y: number; w: number; h: number; owner: string }
       const boxes: Box[] = []
       for (const it of items) {
@@ -390,17 +367,42 @@ export default function StarMapSystemView({
         ctx.fillStyle = ORB_KINDS.has(it.marker.kind) ? '#e2e8f0' : 'rgba(203, 213, 225, 0.85)'
         ctx.fillText(text, box.x, box.y + 7)
       }
+
+      // Belt and ring names sit on the band where it crosses the view, nudged along it to dodge other labels.
+      const free = (s: Box) =>
+        s.x >= 0 &&
+        s.y >= 0 &&
+        s.x + s.w <= size.w &&
+        s.y + s.h <= size.h &&
+        !boxes.some((b) => s.x < b.x + b.w && s.x + s.w > b.x && s.y < b.y + b.h && s.y + s.h > b.y)
+      for (const band of beltBands) {
+        if (band.midPx < MIN_BELT_LABEL_RADIUS_PX && !forced.has(band.marker.id)) continue
+        const text = band.marker.name
+        const w = ctx.measureText(text).width
+        const toCentre = Math.atan2(size.h / 2 - band.sy, size.w / 2 - band.sx)
+        const base = Math.hypot(size.w / 2 - band.sx, size.h / 2 - band.sy) < 1 ? -Math.PI / 2 : toCentre
+        let placed: Box | null = null
+        for (const step of [0, 1, -1, 2, -2, 3, -3, 4, -4]) {
+          const a = base + step * (Math.PI / 24)
+          const px = band.sx + Math.cos(a) * band.midPx
+          const py = band.sy + Math.sin(a) * band.midPx
+          const s: Box = { x: px - w / 2, y: py - 7, w, h: 14, owner: band.marker.id }
+          if (free(s)) {
+            placed = s
+            break
+          }
+        }
+        if (!placed) continue
+        boxes.push(placed)
+        ctx.fillStyle = STAR_MAP_COLORS.beltLabel
+        ctx.fillText(text, placed.x, placed.y + 7)
+      }
     },
     [system, size, toScreen, starX, starY, markedIds, routeIds, selectedId, segments, planetsByName, fitPxPerM],
   )
 
-  // Animate while something blinks or a route moves; otherwise redraw on change.
-  const animated = markedIds.size > 0 || segments.length > 0
+  // The star surface and belt dust move, so the view redraws continuously.
   useEffect(() => {
-    if (!animated) {
-      draw(0)
-      return
-    }
     let raf = 0
     const loop = (t: number) => {
       draw(t)
@@ -408,7 +410,7 @@ export default function StarMapSystemView({
     }
     raf = requestAnimationFrame(loop)
     return () => cancelAnimationFrame(raf)
-  }, [animated, draw, camTick])
+  }, [draw])
 
   // Wheel zooms toward the cursor.
   useEffect(() => {

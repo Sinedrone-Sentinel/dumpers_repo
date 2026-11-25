@@ -38,6 +38,14 @@ function iconPath(kind: StarMapKind): Path2D | null {
   return p
 }
 
+function withAlpha(hex: string, alpha: number): string {
+  const n = Number.parseInt(hex.slice(1), 16)
+  const r = (n >> 16) & 255
+  const g = (n >> 8) & 255
+  const b = n & 255
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`
+}
+
 /** Draw a category icon centred on (x, y), `size` pixels across. */
 export function drawStarMapIcon(
   ctx: CanvasRenderingContext2D,
@@ -47,18 +55,29 @@ export function drawStarMapIcon(
   size: number,
 ): void {
   const path = iconPath(kind)
+  const color = STAR_MAP_ICON_COLORS[kind]
   ctx.save()
+  const glow = ctx.createRadialGradient(x, y, size * 0.15, x, y, size * 0.95)
+  glow.addColorStop(0, withAlpha(color, 0.32))
+  glow.addColorStop(1, withAlpha(color, 0))
+  ctx.fillStyle = glow
   ctx.beginPath()
-  ctx.arc(x, y, size / 2 + 2, 0, Math.PI * 2)
-  ctx.fillStyle = 'rgba(2, 6, 23, 0.82)'
+  ctx.arc(x, y, size * 0.95, 0, Math.PI * 2)
   ctx.fill()
+  ctx.beginPath()
+  ctx.arc(x, y, size / 2 + 1, 0, Math.PI * 2)
+  ctx.fillStyle = 'rgba(7, 11, 18, 0.8)'
+  ctx.fill()
+  ctx.lineWidth = 1
+  ctx.strokeStyle = withAlpha(color, 0.5)
+  ctx.stroke()
   if (path) {
     ctx.translate(x - size / 2, y - size / 2)
     ctx.scale(size / 24, size / 24)
-    ctx.lineWidth = 2
+    ctx.lineWidth = 1.65
     ctx.lineCap = 'round'
     ctx.lineJoin = 'round'
-    ctx.strokeStyle = STAR_MAP_ICON_COLORS[kind]
+    ctx.strokeStyle = color
     ctx.stroke(path)
   }
   ctx.restore()
