@@ -147,8 +147,8 @@ export function shoppingMapPayload(
     /** Stops the route line runs through, in order. The last one is the current leg when progressive. */
     stops: StarMapShopStop[]
     /**
-     * Every buy and sell to keep on the map. Defaults to `stops`.
-     * Later mission stops stay listed here before the route line reaches them.
+     * Buy and sell rows drawn on the map. Defaults to `stops`.
+     * A sell list can pass every current buyer while the route line stays short.
      */
     pins?: StarMapShopStop[]
     progressive?: boolean
@@ -180,8 +180,10 @@ export function shoppingMapPayload(
 }
 
 /**
- * The haul that is underway. Pins are the whole mission. The route line runs
- * only through the current stop, so traveled legs can dim and the current leg stays bright.
+ * The haul that is underway. Icons and the route line run only through the
+ * current stop, so a later trade stays off the map until the member reaches it.
+ * Traveled legs dim and the current leg stays bright. Pass `pins` to list
+ * stops that are all current, such as every buyer still on a sell list.
  */
 export function haulMapPayload(
   input: {
@@ -189,17 +191,20 @@ export function haulMapPayload(
     stops: StarMapShopStop[]
     /** Index into `stops` of the stop the member is on now. */
     current: number
+    /** Stops to draw even when the route has not reached them. */
+    pins?: StarMapShopStop[]
   },
   systems?: StarMapSystems,
 ): StarMapPayload {
   const stops = cleanStops(input.stops)
   const current = Math.max(0, Math.min(input.current, Math.max(0, stops.length - 1)))
+  const reached = stops.slice(0, current + 1)
   return shoppingMapPayload({
     category: 'hauler',
     from: input.from,
     progressive: true,
-    stops: stops.slice(0, current + 1),
-    pins: stops,
+    stops: reached,
+    pins: input.pins ?? reached,
   }, systems)
 }
 
