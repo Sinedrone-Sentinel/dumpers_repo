@@ -3433,7 +3433,7 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
   )
   const halo = byName(stanton, 'Aaron Halo')
   check(
-    stanton.markers.filter((m) => m.kind === 'belt').length === 1 &&
+    stanton.markers.filter((m) => m.kind === 'belt' && !m.parentName).length === 1 &&
       halo.innerRadiusM > Math.hypot(byName(stanton, 'Crusader').x, byName(stanton, 'Crusader').y) &&
       halo.outerRadiusM < Math.hypot(byName(stanton, 'ArcCorp').x, byName(stanton, 'ArcCorp').y),
     'star map: Aaron Halo is one band between Crusader and ArcCorp',
@@ -3538,6 +3538,27 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
     return d >= keeger.innerRadiusM && d <= keeger.outerRadiusM
   })
   check(onKeeger.length / nyxStations.length > 0.5, 'star map: Nyx QV and outlaw stations ride the Keeger Belt')
+
+  // Planet and moon asteroid rings are centred on their body.
+  const yelaRing = byName(stanton, 'Yela Ring')
+  check(
+    yelaRing?.kind === 'belt' && yelaRing.parentName === 'Yela' && yelaRing.x === yela.x && yelaRing.y === yela.y &&
+      yelaRing.innerRadiusM > yela.radiusM && yelaRing.outerRadiusM > yelaRing.innerRadiusM,
+    'star map: Yela Ring circles Yela outside its surface',
+  )
+  const terminus = byName(smSystems.pyro, 'Terminus')
+  const terminusRing = byName(smSystems.pyro, 'Terminus Ring')
+  check(
+    terminusRing?.parentName === 'Terminus' && terminusRing.x === terminus.x && terminusRing.innerRadiusM > terminus.radiusM,
+    'star map: Terminus Ring circles Pyro VI',
+  )
+  check(hl.matchMarkers('Yela Ring', smSystems)[0]?.id === yelaRing.id, 'star map: Yela Ring marks its own band')
+  const ringScale = starMap.systemBodyScale(stanton, 400 / 7e10)
+  check(
+    yelaRing.innerRadiusM * starMap.beltPxPerM(yelaRing, yela, ringScale) > starMap.orbDisplayRadiusPx(yela, ringScale),
+    'star map: zoomed out, Yela Ring is still drawn outside the enlarged moon',
+  )
+  check(starMap.beltPxPerM(byName(stanton, 'Aaron Halo'), null, ringScale) === ringScale.pxPerM, 'star map: star belts use map scale')
 
   // Box zoom: box top-left becomes view top-left; box width spans the view.
   const cam0 = { cx: 0, cy: 0, pxPerM: 1 }

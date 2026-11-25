@@ -5,6 +5,7 @@ import {
   STAR_MAP_COLORS,
   STAR_MAP_ICON_COLORS,
   STAR_MAP_KIND_LABELS,
+  beltPxPerM,
   blinkAlpha,
   boxZoomCamera,
   declutterMarkers,
@@ -43,7 +44,7 @@ const MIN_BOX_PX = 6
 function systemExtentM(system: StarMapSystem, cx: number, cy: number): number {
   let ext = 0
   for (const m of system.markers) {
-    const d = m.kind === 'belt' ? (m.outerRadiusM ?? 0) : Math.hypot(m.x - cx, m.y - cy)
+    const d = Math.hypot(m.x - cx, m.y - cy) + (m.kind === 'belt' ? (m.outerRadiusM ?? 0) : 0)
     ext = Math.max(ext, d)
   }
   return ext || 1
@@ -154,8 +155,9 @@ export default function StarMapSystemView({
     }
     const targets = system.markers.filter((m) => markedIds.has(m.id) || routeIds.has(m.id))
     if (targets.length) {
-      const xs = targets.map((m) => m.x)
-      const ys = targets.map((m) => m.y)
+      const reach = (m: StarMapMarker) => (m.kind === 'belt' ? (m.outerRadiusM ?? 0) : 0)
+      const xs = targets.flatMap((m) => [m.x - reach(m), m.x + reach(m)])
+      const ys = targets.flatMap((m) => [m.y - reach(m), m.y + reach(m)])
       const minX = Math.min(...xs)
       const maxX = Math.max(...xs)
       const minY = Math.min(...ys)
@@ -207,8 +209,10 @@ export default function StarMapSystemView({
       for (const m of system.markers) {
         if (m.kind !== 'belt' || !m.innerRadiusM || !m.outerRadiusM) continue
         const c = toScreen(m.x, m.y, cam)
-        const mid = ((m.outerRadiusM + m.innerRadiusM) / 2) * cam.pxPerM
-        const half = Math.max(((m.outerRadiusM - m.innerRadiusM) / 2) * cam.pxPerM, MIN_BELT_HALF_PX)
+        const parent = m.parentName ? system.markers.find((p) => p.name === m.parentName && ORB_KINDS.has(p.kind)) ?? null : null
+        const k = beltPxPerM(m, parent, scale)
+        const mid = ((m.outerRadiusM + m.innerRadiusM) / 2) * k
+        const half = Math.max(((m.outerRadiusM - m.innerRadiusM) / 2) * k, parent ? 1 : MIN_BELT_HALF_PX)
         const ro = mid + half
         const ri = Math.max(0, mid - half)
         ctx.beginPath()
@@ -216,6 +220,13 @@ export default function StarMapSystemView({
         ctx.arc(c.sx, c.sy, ri, 0, Math.PI * 2, true)
         ctx.fillStyle = STAR_MAP_COLORS.belt
         ctx.fill('evenodd')
+        if (markedIds.has(m.id)) {
+          ctx.save()
+          ctx.globalAlpha = blinkAlpha(t) * 0.45
+          ctx.fillStyle = STAR_MAP_COLORS.blink
+          ctx.fill('evenodd')
+          ctx.restore()
+        }
       }
 
       // Project bodies and icons.

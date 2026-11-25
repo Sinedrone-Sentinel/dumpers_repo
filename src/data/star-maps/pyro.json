@@ -3085,6 +3085,26 @@
     },
     {
       "systemId": "pyro",
+      "name": "Terminus Ring",
+      "aliases": [
+        "Terminus Asteroid Ring"
+      ],
+      "kind": "belt",
+      "description": null,
+      "x": -48118274316,
+      "y": 48503130950,
+      "z": 0,
+      "radiusM": null,
+      "innerRadiusM": 385000,
+      "outerRadiusM": 700000,
+      "toSystem": null,
+      "toMarkerName": null,
+      "notes": [],
+      "parentName": "Terminus",
+      "id": "pyro:terminus-ring"
+    },
+    {
+      "systemId": "pyro",
       "name": "Gaslight",
       "aliases": [
         "PYR5 L2"

@@ -1122,6 +1122,26 @@
     },
     {
       "systemId": "stanton",
+      "name": "Yela Ring",
+      "aliases": [
+        "Yela Asteroid Ring"
+      ],
+      "kind": "belt",
+      "description": null,
+      "x": -19022916799,
+      "y": -2613996152,
+      "z": 0,
+      "radiusM": null,
+      "innerRadiusM": 482000,
+      "outerRadiusM": 782000,
+      "toSystem": null,
+      "toMarkerName": null,
+      "notes": [],
+      "parentName": "Yela",
+      "id": "stanton:yela-ring"
+    },
+    {
+      "systemId": "stanton",
       "name": "HUR-L1 Green Glade Station",
       "aliases": [
         "HUR L1",

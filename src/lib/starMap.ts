@@ -205,6 +205,15 @@ export function orbDisplayRadiusPx(marker: StarMapMarker, scale: BodyScale): num
   return Math.max(display, realPx, floor)
 }
 
+/**
+ * Pixels per meter for a belt. A star belt uses the map scale. A planet ring
+ * uses its planet's drawn scale, so the ring stays outside the enlarged planet.
+ */
+export function beltPxPerM(belt: StarMapMarker, parent: StarMapMarker | null, scale: BodyScale): number {
+  if (!parent?.radiusM) return scale.pxPerM
+  return Math.max(orbDisplayRadiusPx(parent, scale) / parent.radiusM, scale.pxPerM)
+}
+
 // ── 2D camera ──────────────────────────────────────────────────────────────
 
 /** Map point at the view centre (meters, y up) and zoom. */

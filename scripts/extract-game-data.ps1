@@ -239,10 +239,13 @@ try {
 
     # Sub-folders the Star Map reads: Lagrange point containers, and segmented
     # belts / rings (Nyx Keeger Belt segments + _bg bounds give the band edge).
+    # p4k filters are case-sensitive (Nyx ships "glaciemRing/"), so list both cases.
     foreach ($subFilter in @(
         "Data/ObjectContainers/PU/system/*/lagrangepoints/*.socpak",
         "Data/ObjectContainers/PU/system/*/*belt*/**/*.socpak",
-        "Data/ObjectContainers/PU/system/*/*ring*/**/*.socpak"
+        "Data/ObjectContainers/PU/system/*/*Belt*/**/*.socpak",
+        "Data/ObjectContainers/PU/system/*/*ring*/**/*.socpak",
+        "Data/ObjectContainers/PU/system/*/*Ring*/**/*.socpak"
     )) {
         & $StarBreakerPath p4k extract `
             --p4k $DataP4kPath `

@@ -234,6 +234,22 @@ function ringRadiiFromSoc(socpakPath) {
   return { innerRadiusM: innerKm * 1000, outerRadiusM: outerKm * 1000 }
 }
 
+/** Asteroid ring placed inside a planet or moon container (Yela, Pyro VI). */
+function bodyRingFromSoc(socpakPath) {
+  const bytes = readSocpakBytes(socpakPath, `${basename(socpakPath, '.socpak')}.soc`)
+  if (!bytes) return null
+  const text = bytes.toString('latin1')
+  const at = text.indexOf('SAsteroidRingComponentParams')
+  if (at < 0) return null
+  const block = text.slice(at, at + 2000)
+  const inner = /innerRadiusKm[^0-9]*([0-9.eE+-]+)/.exec(block)
+  const outer = /outerRadiusKm[^0-9]*([0-9.eE+-]+)/.exec(block)
+  const innerKm = Number(inner?.[1])
+  const outerKm = Number(outer?.[1])
+  if (!(innerKm > 0) || !(outerKm > innerKm)) return null
+  return { innerRadiusM: innerKm * 1000, outerRadiusM: outerKm * 1000 }
+}
+
 function classifyMarker({ path, record, name, entity }) {
   const p = path
   const n = String(name || '').toLowerCase()
@@ -350,6 +366,7 @@ export function parseStarMaps({ extractedRoot, localization }) {
     const markers = []
     const systemRoot = dirname(systemFile)
     const ringSegmentDistances = { glaciemring: [], keegerbelt: [] }
+    const bodyRings = []
 
     walkChildren(xml, (world) => {
       const socpak = world.attr.name || ''
@@ -426,6 +443,13 @@ export function parseStarMaps({ extractedRoot, localization }) {
       if (kind === 'planet' || kind === 'moon' || kind === 'star') {
         radiusM = typeof record?.size === 'number' ? record.size : null
       }
+      if (kind === 'planet' || kind === 'moon') {
+        const abs = path.startsWith('data/')
+          ? join(extractedRoot, ...path.split('/'))
+          : join(systemRoot, basename(path))
+        const ring = existsSync(abs) ? bodyRingFromSoc(abs) : null
+        if (ring) bodyRings.push({ parentName: name, pos: world.pos, ...ring })
+      }
       if (kind === 'belt') {
         const abs = path.startsWith('data/')
           ? join(extractedRoot, ...path.split('/'))
@@ -464,6 +488,26 @@ export function parseStarMaps({ extractedRoot, localization }) {
         parentName: null,
       })
     })
+
+    for (const ring of bodyRings) {
+      addMarker(markers, {
+        systemId,
+        name: `${ring.parentName} Ring`,
+        aliases: [`${ring.parentName} Asteroid Ring`],
+        kind: 'belt',
+        description: null,
+        x: Math.round(ring.pos[0]),
+        y: Math.round(ring.pos[1]),
+        z: Math.round(ring.pos[2]),
+        radiusM: null,
+        innerRadiusM: Math.round(ring.innerRadiusM),
+        outerRadiusM: Math.round(ring.outerRadiusM),
+        toSystem: null,
+        toMarkerName: null,
+        notes: [],
+        parentName: ring.parentName,
+      })
+    }
 
     // Nyx belts are segment fields, not one ring socpak. The orbit is where the
     // segments sit (Levski rides Glaciem; QV / outlaw / social stations ride Keeger).
