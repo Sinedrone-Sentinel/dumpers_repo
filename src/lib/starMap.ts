@@ -461,25 +461,16 @@ const MOON_SPREAD_SHARE = 0.6
 /**
  * Planet radius in pixels. Positions stay true to distance. A planet is not
  * scaled against the other planets in the system — a rocky world stays a disc
- * beside a gas giant. It grows as the view zooms. It stops growing only when
- * the next step would cover the moons and there is no room to push them out,
- * or when pushing the moons out would run into a neighbour.
+ * beside a gas giant. Zooming in only makes it larger, up to the on-screen
+ * ceiling. Moons spread around that disc when the gap allows; the disc is
+ * never shrunk to make that gap.
  */
 function planetPx(marker: StarMapMarker, scale: BodyScale): number {
   const floor = scale.maxPlanetPx * (GAS_GIANT_NAMES.has(marker.name) ? 1 : 0.9)
   const zoom = Math.max(1, scale.pxPerM / scale.fitPxPerM)
   // Grow from the first zoom step, then stop at the on-screen ceiling.
   // Further zoom opens space around the disc instead of filling the view.
-  let size = Math.min(floor * Math.pow(zoom, 0.65), planetCeilingPx(marker, scale))
-  const span = scale.layout.moonSpanM.get(marker.id)
-  const neighbour = scale.layout.neighbourM.get(marker.id)
-  if (span && neighbour !== undefined && Number.isFinite(neighbour)) {
-    const room = neighbour * scale.pxPerM * MOON_SPREAD_SHARE
-    // A hair under the limit so moonSpread's <= room check still passes.
-    const spreadMax = room * (span.inner / span.outer) - MOON_GAP_PX - 0.25
-    if (spreadMax > floor) size = Math.min(size, spreadMax)
-  }
-  return size
+  return Math.min(floor * Math.pow(zoom, 0.65), planetCeilingPx(marker, scale))
 }
 
 /**

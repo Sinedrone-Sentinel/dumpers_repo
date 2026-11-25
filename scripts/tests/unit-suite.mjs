@@ -3635,6 +3635,17 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
       starMap.orbDisplayRadiusPx(hurston, at(4)) > starMap.orbDisplayRadiusPx(hurston, at(2)),
     'star map: each zoom step from the system view grows Hurston',
   )
+  const planets = stanton.markers.filter((m) => m.kind === 'planet')
+  let planetGrew = true
+  for (const planet of planets) {
+    let prev = 0
+    for (let step = 0; step < 24; step++) {
+      const px = starMap.orbDisplayRadiusPx(planet, at(Math.pow(1.38, step)))
+      if (px + 1e-6 < prev) planetGrew = false
+      prev = px
+    }
+  }
+  check(planetGrew, 'star map: zooming in never shrinks a planet')
   check(
     starMap.orbDisplayRadiusPx(hurston, at(50)) >= hurstonFit &&
       starMap.orbDisplayRadiusPx(hurston, hurstonMoons) > hurstonFit &&
