@@ -481,9 +481,32 @@ export function moonSpread(planet: StarMapMarker, scale: BodyScale): number {
 }
 
 /**
- * Map position to draw a marker at. Moons follow their planet's spread. A
- * station or comm array close in to a planet or moon keeps its direction but
- * moves out with the enlarged body, so it is never hidden under the disc.
+ * A station this many planet radii from a planet is that planet's orbital station.
+ * Farther stations (Lagrange, Grim HEX) keep their map position.
+ */
+const ORBITAL_STATION_RADII = 3
+
+function orbitalPlanet(marker: StarMapMarker, scale: BodyScale): StarMapMarker | null {
+  if (marker.kind !== 'station') return null
+  let best: StarMapMarker | null = null
+  let bestRatio = ORBITAL_STATION_RADII
+  for (const body of scale.layout.byName.values()) {
+    if (body.kind !== 'planet' || !body.radiusM) continue
+    const ratio = Math.hypot(marker.x - body.x, marker.y - body.y) / body.radiusM
+    if (ratio < bestRatio) {
+      best = body
+      bestRatio = ratio
+    }
+  }
+  return best
+}
+
+/**
+ * Map position to draw a marker at. Moons follow their planet's spread. An
+ * orbital station stays on its bearing from the planet and sits just outside
+ * the disc, so Seraphim and the other harbors stay visible and named. A
+ * station or comm array close in to a moon keeps its direction and moves out
+ * with the enlarged body.
  */
 export function displayPositionM(marker: StarMapMarker, scale: BodyScale): { x: number; y: number } {
   if (marker.kind === 'moon' && marker.parentName) {
@@ -491,6 +514,18 @@ export function displayPositionM(marker: StarMapMarker, scale: BodyScale): { x: 
     if (!parent) return { x: marker.x, y: marker.y }
     const s = moonSpread(parent, scale)
     return { x: parent.x + (marker.x - parent.x) * s, y: parent.y + (marker.y - parent.y) * s }
+  }
+  const planet = orbitalPlanet(marker, scale)
+  if (planet) {
+    const dx = marker.x - planet.x
+    const dy = marker.y - planet.y
+    const dist = Math.hypot(dx, dy) || planet.radiusM || 1
+    const truePx = dist * scale.pxPerM
+    const needPx = orbDisplayRadiusPx(planet, scale) + ICON_PX + 18
+    if (truePx < needPx) {
+      const reach = needPx / scale.pxPerM
+      return { x: planet.x + (dx / dist) * reach, y: planet.y + (dy / dist) * reach }
+    }
   }
   const body = scale.layout.attachedTo.get(marker.id)
   if (!body) return { x: marker.x, y: marker.y }

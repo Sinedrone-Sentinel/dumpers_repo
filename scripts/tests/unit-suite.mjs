@@ -3464,20 +3464,36 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
     'star map: star is larger than any planet but inside the first orbit',
   )
 
-  // Declutter: zoomed out, a station sitting on its planet is hidden.
+  // Orbital stations are drawn just outside the planet and stay on the map.
   const project = (scale) =>
     stanton.markers
       .filter((m) => m.kind !== 'belt')
-      .map((m) => ({
-        marker: m,
-        sx: 450 + m.x * scale.pxPerM,
-        sy: 350 - m.y * scale.pxPerM,
-        r: starMap.ORB_KINDS.has(m.kind) ? starMap.orbDisplayRadiusPx(m, scale) : starMap.ICON_PX / 2,
-      }))
+      .map((m) => {
+        const at = starMap.displayPositionM(m, scale)
+        return {
+          marker: m,
+          sx: 450 + at.x * scale.pxPerM,
+          sy: 350 - at.y * scale.pxPerM,
+          r: starMap.ORB_KINDS.has(m.kind) ? starMap.orbDisplayRadiusPx(m, scale) : starMap.ICON_PX / 2,
+        }
+      })
   const seraphim = stanton.markers.find((m) => /seraphim/i.test(m.name))
   const visibleFar = starMap.declutterMarkers(project(fit))
-  check(seraphim && !visibleFar.has(seraphim.id), 'star map: zoomed-out view hides a station on its planet')
+  const clearsPlanet = (station, planet) => {
+    const at = starMap.displayPositionM(station, fit)
+    const d = Math.hypot(at.x - planet.x, at.y - planet.y) * fit.pxPerM
+    return d > starMap.orbDisplayRadiusPx(planet, fit) + starMap.ICON_PX / 2
+  }
+  const everus = byName(stanton, 'Everus Harbor')
+  const baijini = byName(stanton, 'Baijini Point')
+  const tressler = byName(stanton, 'Port Tressler')
   check(visibleFar.has(crusader.id), 'star map: planets always show')
+  check(
+    seraphim && visibleFar.has(seraphim.id) && clearsPlanet(seraphim, crusader) &&
+      clearsPlanet(everus, hurston) && clearsPlanet(baijini, byName(stanton, 'ArcCorp')) &&
+      clearsPlanet(tressler, byName(stanton, 'microTech')),
+    'star map: orbital stations show just outside their planet',
+  )
   check(
     seraphim && starMap.declutterMarkers(project(fit), new Set([seraphim.id])).has(seraphim.id),
     'star map: a highlighted marker always shows',

@@ -351,8 +351,9 @@ export default function StarMapSystemView({
         if (it.marker.kind === 'star') return 0
         if (forced.has(it.marker.id)) return 1
         if (it.marker.kind === 'planet') return 2
-        if (it.marker.kind === 'moon') return 3
-        return 4
+        if (it.marker.kind === 'station') return 3
+        if (it.marker.kind === 'moon') return 4
+        return 5
       }
       const labelOrder = items.filter((it) => visible.has(it.marker.id)).sort((a, b) => rank(a) - rank(b))
       for (const it of labelOrder) {
@@ -366,16 +367,17 @@ export default function StarMapSystemView({
           { x: it.sx - w / 2, y: it.sy - gap - 14, w, h: 14, owner: it.marker.id },
           { x: it.sx - w / 2, y: it.sy + gap, w, h: 14, owner: it.marker.id },
         ]
-        const box = spots.find(
+        const onScreen = spots.filter(
+          (s) => s.x >= 0 && s.y >= 0 && s.x + s.w <= size.w && s.y + s.h <= size.h,
+        )
+        const clear = onScreen.find(
           (s) =>
-            s.x >= 0 &&
-            s.y >= 0 &&
-            s.x + s.w <= size.w &&
-            s.y + s.h <= size.h &&
             !boxes.some(
               (b) => b.owner !== it.marker.id && s.x < b.x + b.w && s.x + s.w > b.x && s.y < b.y + b.h && s.y + s.h > b.y,
             ),
         )
+        // Orbital stations keep a name even when the planet disc is the only thing nearby.
+        const box = clear ?? (it.marker.kind === 'station' ? onScreen[0] : undefined)
         if (!box) continue
         boxes.push(box)
         ctx.fillStyle = ORB_KINDS.has(it.marker.kind) ? '#e2e8f0' : 'rgba(203, 213, 225, 0.85)'
