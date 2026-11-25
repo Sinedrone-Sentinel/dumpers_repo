@@ -4,6 +4,7 @@ export type StarMapKind =
   | 'moon'
   | 'belt'
   | 'station'
+  | 'landing'
   | 'jump_point'
   | 'wikelo'
   | 'comm_array'
@@ -75,6 +76,7 @@ export const STAR_MAP_KIND_LABELS: Record<StarMapKind, string> = {
   moon: 'Moon',
   belt: 'Asteroid Belt',
   station: 'Station',
+  landing: 'Landing Zone',
   jump_point: 'Jump Point',
   wikelo: 'Wikelo Station',
   comm_array: 'Comm Array',
@@ -109,6 +111,7 @@ export const STAR_MAP_ICON_COLORS: Record<StarMapKind, string> = {
   moon: STAR_MAP_COLORS.moon,
   belt: '#4ade80',
   station: '#a78bfa',
+  landing: '#f0c674',
   jump_point: '#ef4444',
   wikelo: '#fbbf24',
   comm_array: '#67e8f9',
@@ -250,6 +253,7 @@ export function starMapMarkerReadout(marker: StarMapMarker): { subtitle: string;
 export const STAR_MAP_POI_ORDER = [
   'jump_point',
   'station',
+  'landing',
   'wikelo',
   'comm_array',
   'executive_hangar',
@@ -272,6 +276,7 @@ const ICON_PRIORITY: Partial<Record<StarMapKind, number>> = {
   wikelo: 1,
   executive_hangar: 1,
   supervisor: 2,
+  landing: 2,
   station: 3,
   pa_station: 3,
   outlaw: 4,

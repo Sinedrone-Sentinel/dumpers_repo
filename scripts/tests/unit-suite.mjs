@@ -3552,6 +3552,18 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
   const glaciem = byName(nyx, 'Glaciem Ring')
   const keeger = byName(nyx, 'Keeger Belt')
   check(glaciem && keeger && glaciem.outerRadiusM < keeger.innerRadiusM, 'star map: Glaciem Ring is inside Keeger Belt')
+  const levski = byName(nyx, 'Levski')
+  const levskiD = levski ? Math.hypot(levski.x, levski.y, levski.z) : 0
+  check(
+    levski?.kind === 'landing' &&
+      levski.aliases.includes('Delamar') &&
+      levskiD > glaciem.innerRadiusM &&
+      levskiD < glaciem.outerRadiusM &&
+      starMap.STAR_MAP_KIND_LABELS.landing === 'Landing Zone' &&
+      starMap.starMapPoiGroup(levski)?.startsHidden === false &&
+      !stanton.markers.some((m) => m.name === 'Lorville' || m.name === 'Orison' || m.name === 'Area18' || m.name === 'New Babbage'),
+    'star map: Levski is a landing zone in the Glaciem Ring, and planet cities stay off the map',
+  )
   const nyxStations = nyx.markers.filter((m) => m.kind === 'qv' || m.kind === 'outlaw')
   const onKeeger = nyxStations.filter((m) => {
     const d = Math.hypot(m.x, m.y)
