@@ -906,6 +906,23 @@ check(
 const miningLocationData = JSON.parse(
   readFileSync(path.join(root, 'src/data/game-mining-locations.json'), 'utf8')
 )
+const akiroAlias = miningLocationData.locationAliases['Akiro Cluster']
+check(
+  akiroAlias?.notInGame === true && akiroAlias.displayName === 'Akiro Cluster (Not in game)',
+  'Akiro Cluster is labelled Not in game'
+)
+check(!/PYAM|L3/.test(akiroAlias?.navHint ?? ''), 'Akiro Cluster hint points nowhere in game')
+check(miningLocationData.oreLocations.Riccite.includes('Akiro Cluster'), 'Akiro Cluster keeps its ore list')
+const akiroBestPicks = []
+const miningSpawnData = JSON.parse(readFileSync(path.join(root, 'src/data/game-mining-spawns.json'), 'utf8'))
+for (const [oreName, ore] of Object.entries(miningSpawnData.ores)) {
+  for (const profile of Object.values(ore.overallByType)) {
+    if (!profile) continue
+    if (profile.bestLocation === 'Akiro Cluster') akiroBestPicks.push(oreName)
+    if (profile.clusterRows.some((row) => row.bestAtLocation === 'Akiro Cluster')) akiroBestPicks.push(oreName)
+  }
+}
+check(akiroBestPicks.length === 0, `Akiro Cluster never wins a best-at pick (${akiroBestPicks.join(', ')})`)
 const hepSites = miningLocationData.oreLocations.Hephaestanite
 for (const site of ['CRU-L3', 'MIC-L1', 'MIC-L2', 'MIC-L5', 'HUR-L5']) {
   check(hepSites.includes(site), `Hephaestanite lists ${site}`)

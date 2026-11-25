@@ -35,7 +35,11 @@ import {
   formatMineableInstability,
   getMineableElementStats,
 } from './mineableElementStats'
-import { getNavHintForGuideLocation, isSingleBeltMarker } from './miningLocationNames'
+import {
+  getNavHintForGuideLocation,
+  guideLocationDisplayName,
+  isSingleBeltMarker,
+} from './miningLocationNames'
 function pct(n: number | null | undefined, digits = 2): string {
   if (n == null || !Number.isFinite(n)) return '—'
   return `${n.toFixed(digits)}%`
@@ -355,7 +359,7 @@ export function guideLocationOreTooltip(
   return (
     <div className="space-y-1">
       <div className="font-semibold text-orange-300">{oreName}</div>
-      <div>{depositTypeLabel(profile.depositType)} at {locationName}</div>
+      <div>{depositTypeLabel(profile.depositType)} at {guideLocationDisplayName(locationName)}</div>
       <div>Spawn ~{pct(profile.effectiveSpawnPercent)}</div>
       <div className="text-slate-400">
         Base RS {formatRsReading(profile.clusterRows[0]?.rs ? profile.clusterRows[0].rs / profile.clusterRows[0].nodes : overall?.clusterRows[0]?.rs ? overall.clusterRows[0].rs / overall.clusterRows[0].nodes : 0)}

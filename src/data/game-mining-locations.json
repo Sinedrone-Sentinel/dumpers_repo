@@ -5046,10 +5046,11 @@
       "guideNames": [
         "Akiro Cluster"
       ],
-      "displayName": "Akiro Cluster",
+      "displayName": "Akiro Cluster (Not in game)",
       "system": "Pyro",
       "source": "spawn_code_table+hpp_path_audit",
-      "navHint": "Starmap search \"Akiro Cluster\" — sits near Pyro I L3 (closest station: PYAM-FARSTAT-1-3)"
+      "navHint": "Removed from the game. There is no QT marker for it.",
+      "notInGame": true
     },
     "Glaciem Ring": {
       "spawnKey": "Glaciem Ring",

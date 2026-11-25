@@ -276,7 +276,7 @@ function classifyMarker({ path, record, name, entity }) {
   if (nav === 'Station' || /\/station\//.test(p) || /reststop|leo|grim|hex|gaslight|patch city|endgame|rats nest|ruin station/.test(blob)) {
     return 'station'
   }
-  if (/akirocluster\.socpak$/.test(p) || (/asteroidcluster/.test(p) && /cluster [a-z0-9-]+/i.test(name || ''))) {
+  if (/asteroidcluster/.test(p) && /cluster [a-z0-9-]+/i.test(name || '')) {
     return 'cluster'
   }
   return null
@@ -376,8 +376,6 @@ export function parseStarMaps({ extractedRoot, localization }) {
       if (!name && /aaronhalo/.test(path)) name = 'Aaron Halo'
       if (!name && /glaciemring/.test(path) && !/segment/.test(path)) name = 'Glaciem Ring'
       if (!name && /keegerbelt/.test(path) && !/segment/.test(path)) name = 'Keeger Belt'
-      if (!name && /akiro/.test(path)) name = 'Akiro Cluster'
-
       let kind = classifyMarker({
         path,
         record,

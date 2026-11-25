@@ -796,7 +796,7 @@ export default function MiningTrackerRoute() {
                           </div>
                           {isLocationEntry && entry.locationName ? (
                             <div className="text-xs font-medium text-orange-300/90 mt-1">
-                              At {entry.locationName}
+                              At {guideLocationDisplayName(entry.locationName)}
                             </div>
                           ) : null}
                           <div className="text-[11px] text-slate-500 mt-1">{subtitle}</div>
@@ -1617,7 +1617,7 @@ function GuideOreModal({
                 )}
                 {guideLocationName && (
                   <span className="text-xs text-orange-300/90 whitespace-nowrap">
-                    At {guideLocationName}
+                    At {guideLocationDisplayName(guideLocationName)}
                   </span>
                 )}
                 <UexLookupButton commodityName={ore.ore_name} emphasis="sell" size="sm" />

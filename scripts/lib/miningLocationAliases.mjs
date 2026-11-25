@@ -39,6 +39,14 @@ export const SPAWN_CODE_GUIDE_NAMES = {
   'Keeger Belt': 'Keeger Belt',
 }
 
+/**
+ * Spawn presets that still ship ore tables but have no reachable site in game
+ * (Akiro Cluster: no placed container and no QT marker). Ores keep the chip,
+ * labelled Not in game, and never win a "best at" pick.
+ */
+export const NOT_IN_GAME_SPAWN_KEYS = new Set(['Akiro Cluster'])
+const NOT_IN_GAME_NAV_HINT = 'Removed from the game. There is no QT marker for it.'
+
 /** Compendium Lagrange station → internal belt template (ore-overlap verified; not in game files). */
 export const GUIDE_TO_SPAWN_KEYS = {
   'ARC-L1': ['Lagrange F'],
@@ -473,7 +481,6 @@ function pyroRegionGroups(localization) {
  * geography (which belt sits at which Lagrange point) is curated.
  */
 export function buildNavHints(localization) {
-  const val = (key) => locValue(localization, key)
   const nav = {}
 
   // ── Pyro Lagrange belts (PYR# L# markers on the starmap) ──────────────────
@@ -492,14 +499,6 @@ export function buildNavHints(localization) {
   nav['Pyro Cool02'] = {
     navHint: 'QT to the PYR6 L1–L5 Lagrange markers around Terminus',
     navMarkers: [pyroBeltGroup(localization, 6)],
-  }
-
-  // ── Named Pyro clusters ────────────────────────────────────────────────────
-  const akiroStation = val('RR_P1_L3')
-  nav['Akiro Cluster'] = {
-    navHint:
-      'Starmap search "Akiro Cluster" — sits near Pyro I L3' +
-      (akiroStation ? ` (closest station: ${akiroStation})` : ''),
   }
 
   nav['Pyro Deepspaceasteroids'] = {
@@ -561,6 +560,14 @@ function applyNavHints(aliases, localization) {
   for (const [spawnKey, alias] of aliases) {
     if (!/^Lagrange [A-F]$/i.test(spawnKey)) continue
     delete alias.navHint
+    delete alias.navMarkers
+  }
+
+  for (const [spawnKey, alias] of aliases) {
+    if (!NOT_IN_GAME_SPAWN_KEYS.has(spawnKey)) continue
+    alias.notInGame = true
+    alias.displayName = `${alias.guideName ?? spawnKey} (Not in game)`
+    alias.navHint = NOT_IN_GAME_NAV_HINT
     delete alias.navMarkers
   }
 }
@@ -658,6 +665,7 @@ export function resolveAliasForSpawnKey(spawnKey, locationAliases = {}) {
       guideName: alias.guideName ?? alias.guideNames?.[0],
       guideNames: alias.guideNames,
       system: alias.system ?? inferSystemFromSpawnKey(spawnKey),
+      notInGame: alias.notInGame === true || NOT_IN_GAME_SPAWN_KEYS.has(spawnKey),
     }
   }
   const guideName = SPAWN_CODE_GUIDE_NAMES[spawnKey]
@@ -670,6 +678,7 @@ export function resolveAliasForSpawnKey(spawnKey, locationAliases = {}) {
     guideName,
     guideNames,
     system: inferSystemFromSpawnKey(spawnKey),
+    notInGame: NOT_IN_GAME_SPAWN_KEYS.has(spawnKey),
   }
 }
 

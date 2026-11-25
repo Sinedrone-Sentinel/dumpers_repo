@@ -31,6 +31,7 @@ export interface MiningLocationsData {
       navHint?: string
       /** Structured QT marker/station lists grouped by belt/region. */
       navMarkers?: Array<{ label: string; note?: string; markers: string[] }>
+      notInGame?: boolean
     }
   >
   guideToSpawnKeys?: Record<string, string[]>
