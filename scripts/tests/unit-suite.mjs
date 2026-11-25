@@ -3613,9 +3613,14 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
     stops: [{ place: 'Area18', lines: [{ action: 'buy', label: 'Carbon' }] }],
   }, smSystems)
   check(haulMark.category === 'hauler' && shopHere.category === 'shopping', 'star map: a haul uses the hauler icon and a cart stays a cart')
+  const yelaRatio = (782000 - 482000) / ((482000 + 782000) / 2)
+  const yelaMid = 80 / yelaRatio
   check(
-    paint.beltSpeckCount(80) === 100 && paint.beltSpeckCount(10) === 48 && paint.beltSpeckCount(400) === 360,
-    'star map: belt specks are twice as dense',
+    paint.beltSpeckCount(yelaMid) === 100 &&
+      paint.beltSpeckCount(yelaMid * 4) === 400 &&
+      paint.beltSpeckCount(yelaMid) < paint.beltSpeckCount(yelaMid * 4) &&
+      paint.beltSpeckCount(8) < paint.beltSpeckCount(yelaMid),
+    'star map: belt specks scale with ring length, using Yela as the density',
   )
   check(
     Math.abs(paint.beltSpeckSize(1) - 4.8) < 1e-9 && paint.beltSpeckSize(0.9) > 2.4 && paint.beltSpeckSize(0.2) < 2.4,
@@ -3892,9 +3897,14 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
   )
   const pyroStantonJump = byName(smSystems.pyro, 'Pyro-Stanton Jump Point')
   const pyroNyxJump = byName(smSystems.pyro, 'Pyro - Nyx Jump Point')
+  const pyroVBody = byName(pyroMap, 'Pyro V')
+  const terminusBody = byName(pyroMap, 'Terminus')
   check(
-    pyroStantonJump.x < 0 && pyroStantonJump.y > 0 && pyroNyxJump.x > 0 && pyroNyxJump.y < 0,
-    'star map: Pyro jump points sit on the starmap side of the star',
+    pyroStantonJump.x > 0 && pyroStantonJump.y > 0 &&
+      pyroNyxJump.x < 0 && pyroNyxJump.y < 0 &&
+      pyroVBody.y < 0 && Math.abs(pyroVBody.y) > Math.abs(pyroVBody.x) &&
+      terminusBody.x < 0 && terminusBody.y > 0,
+    'star map: Pyro matches the in-game starmap (Stanton gate upper right, Nyx lower left, Pyro V south, Terminus upper left)',
   )
 
   const transits = nyx.markers.filter((m) => m.kind === 'transit').map((m) => m.name).sort()

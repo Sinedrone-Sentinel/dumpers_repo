@@ -126,8 +126,10 @@ function walkChildren(xml, visit) {
     const attr = attrs(match[1])
     const local = parsePos(attr.pos)
     const localRot = parseRot(attr.rot)
-    // The star container's spin is the star mesh, not the starmap frame. Pyro's
-    // star is rotated, and folding that in parks jump points on the wrong side.
+    // Keep the star's own spin out of the child walk. Nav records already include
+    // it, and stations are named against the unspun containers. The whole map is
+    // turned by that spin once, after names are settled, so planets, stations,
+    // and jump points stay together. Stanton and Nyx stars are identity.
     const basis = /star\.socpak$/i.test(String(parent.attr?.name || '')) ? [1, 0, 0, 0] : parent.rot
     const rotated = quatRot(basis, local)
     const world = {
@@ -399,6 +401,7 @@ export function parseStarMaps({ extractedRoot, localization }) {
     const xml = readSocpakXml(systemFile, `${basename(systemFile, '.socpak')}.xml`)
     if (!xml) continue
     const markers = []
+    let starSpin = [1, 0, 0, 0]
     const systemRoot = dirname(systemFile)
     const ringSegmentDistances = { glaciemring: [], keegerbelt: [] }
     const bodyRings = []
@@ -436,6 +439,7 @@ export function parseStarMaps({ extractedRoot, localization }) {
       })
       if (!kind && /jumppoints\/jumppoint_/.test(path)) kind = 'jump_point'
       if (!kind && /star\.socpak$/.test(path)) kind = 'star'
+      if (kind === 'star') starSpin = world.rot
       if (!kind && (/transitpoint/i.test(String(world.attr.entityName || '')) || /TransitPoint/.test(record?.recordName || ''))) {
         kind = 'transit'
       }
@@ -638,8 +642,9 @@ export function parseStarMaps({ extractedRoot, localization }) {
 
     // Parent moons to nearest planet for orbit rings.
     // Named stations (Checkmate, Seraphim, …) come from the nav bake. Pyro's nav
-    // coordinates include the star mesh spin; the map does not, so those points
-    // are turned back onto the containers before they are placed. A city on a
+    // coordinates already include the star spin. They are turned back onto the
+    // unspun containers so a short code can take the station name, then the
+    // finished map is spun to the in-game starmap. A city on a
     // planet stays off the map. Levski is the station inside Delamar.
     try {
       const navPath = join(ROOT, 'src', 'data', 'nav-systems.json')
@@ -740,6 +745,17 @@ export function parseStarMaps({ extractedRoot, localization }) {
         }
       }
       if (best) moon.parentName = best.name
+    }
+
+    // Pyro's star quaternion is the in-game starmap frame (~85° about Z).
+    // Stanton and Nyx are identity, so this leaves them where they are.
+    if (Math.hypot(starSpin[1], starSpin[2], starSpin[3]) > 1e-6) {
+      for (const marker of markers) {
+        const moved = quatRot(starSpin, [marker.x, marker.y, marker.z || 0])
+        marker.x = Math.round(moved[0])
+        marker.y = Math.round(moved[1])
+        marker.z = Math.round(moved[2])
+      }
     }
 
     if (!markers.length) continue
