@@ -3592,6 +3592,32 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
     shopOn.start === 'ArcCorp' && shopOn.route?.join() === 'Seraphim Station' && shopOn.active === 'Seraphim Station' && shopOn.shops?.[0]?.place === 'Area18',
     'star map: a haul in progress routes from the start to the current stop',
   )
+  const haulMark = hl.shoppingMapPayload({
+    category: 'hauler',
+    from: 'Seraphim Station',
+    progressive: true,
+    stops: [{ place: 'Area18', lines: [{ action: 'buy', label: 'Carbon' }] }],
+  }, smSystems)
+  check(haulMark.category === 'hauler' && shopHere.category === 'shopping', 'star map: a haul uses the hauler icon and a cart stays a cart')
+  check(
+    hl.isStarMapPath('/star-map') &&
+      hl.isStarMapPath('/star-map/') &&
+      hl.isStarMapPath('/star-map/stanton') &&
+      !hl.isStarMapPath('/star-maps') &&
+      !hl.isStarMapPath('/'),
+    'star map: the dedicated tab only stays on the map',
+  )
+  const haulPins = hl.groupShopPins([
+    { place: 'Area18', lines: [{ action: 'buy', label: '100 SCU of Steel' }] },
+    { place: 'Seraphim Station', lines: [{ action: 'sell', label: '100 SCU of Steel' }] },
+    { place: 'Area18', lines: [{ action: 'buy', label: '592 SCU of Carbon' }] },
+  ], smSystems, 'stanton')
+  check(
+    haulPins.length === 2 &&
+      haulPins[0].lines.map((line) => line.label).join('|') === '100 SCU of Steel|592 SCU of Carbon' &&
+      haulPins[1].lines[0]?.label === '100 SCU of Steel',
+    'star map: a later haul commodity is added to that place, not hidden behind the first',
+  )
   const cart = hl.shoppingMapPayload({
     from: 'Area18',
     stops: [

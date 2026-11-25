@@ -25,6 +25,8 @@ import AppChrome from './layout/AppChrome'
 import AnalyticsTracker from './AnalyticsTracker'
 import AppBootstrapScreen from './bootstrap/AppBootstrapScreen'
 import FriendInviteRedeemer from './FriendInviteRedeemer'
+import StarMapTabShell from './starMap/StarMapTabShell'
+import { isDedicatedStarMapWindow } from '../lib/starMapHighlight'
 
 /** Signed-out visitors may open these without Offline Mode (crawlable SEO surfaces). */
 function isPublicSeoPath(pathname) {
@@ -279,12 +281,24 @@ export default function Layout() {
     }
   }, [userId, isApproved, isGuestPreview])
 
+  const dedicatedMap = isDedicatedStarMapWindow()
+
   if (loading) {
+    if (dedicatedMap) return <div className="site-page-bg h-screen w-screen" />
     return <AppBootstrapScreen steps={bootstrapSteps} />
   }
 
   if (isBanned) {
     return <BannedAccount />
+  }
+
+  // The View Map tab is only the map. Header, sidebar, ticker, and footer stay on the site tab.
+  if (dedicatedMap) {
+    return (
+      <UiOverlayProvider>
+        <StarMapTabShell />
+      </UiOverlayProvider>
+    )
   }
 
   // Approved members must finish welcome before any member shell (including SEO catalog).

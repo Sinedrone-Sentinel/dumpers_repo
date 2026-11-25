@@ -33,7 +33,7 @@ import DumperAppsRoute from './DumperApps.index'
 import StarMapIndexRoute from './StarMap.index'
 import StarMapSystemRoute from './StarMap.system'
 import { validateStarMapSearch } from '../lib/starMapHighlight'
-import { requireFeature, requireSuperAdmin } from '../lib/routeGuards'
+import { requireFeature, requireStarMapFeature, requireSuperAdmin } from '../lib/routeGuards'
 import type { FeatureId } from '../lib/featureAccess'
 
 const rootRoute = createRootRoute({
@@ -284,7 +284,7 @@ const starMapRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/star-map',
   component: StarMapIndexRoute,
-  beforeLoad: requireFeature('star_map'),
+  beforeLoad: requireStarMapFeature(),
   validateSearch: validateStarMapSearch,
 })
 
@@ -292,7 +292,7 @@ const starMapSystemRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/star-map/$systemId',
   component: StarMapSystemRoute,
-  beforeLoad: requireFeature('star_map'),
+  beforeLoad: requireStarMapFeature(),
   validateSearch: validateStarMapSearch,
 })
 

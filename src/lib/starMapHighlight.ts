@@ -102,6 +102,9 @@ function shopRouteName(place: string, systems?: StarMapSystems): string {
 
 // ── Payload (search params) ────────────────────────────────────────────────
 
+/** Which tool sent the pins. The glyph is that tool's menu icon. The frame is shared. */
+export type StarMapTelemetry = 'shopping' | 'hauler'
+
 export interface StarMapShopLine {
   action: 'buy' | 'sell'
   label: string
@@ -120,8 +123,8 @@ export interface StarMapPayload {
   route?: string[]
   /** Where the route starts; defaults to the first matched stop. */
   start?: string
-  /** Shopping stops keep a temporary icon and a buy/sell list. Not put in the URL. */
-  category?: 'shopping'
+  /** Which tool's menu icon to draw. Not put in the URL. */
+  category?: StarMapTelemetry
   shops?: StarMapShopStop[]
   /** Place the bright leg ends at. Earlier legs are dim. Carts omit this. */
   active?: string
@@ -137,6 +140,7 @@ export function shoppingMapPayload(
     from?: string | null
     stops: StarMapShopStop[]
     progressive?: boolean
+    category?: StarMapTelemetry
   },
   systems?: StarMapSystems,
 ): StarMapPayload {
@@ -155,13 +159,56 @@ export function shoppingMapPayload(
   for (const stop of stops) push(stop.place)
   const blink = places.length <= 1
   return {
-    category: 'shopping',
+    category: input.category ?? 'shopping',
     shops: stops,
     marks: blink && places[0] ? [places[0]] : undefined,
     start: blink ? undefined : places[0],
     route: blink ? undefined : places.slice(1),
     active: input.progressive && !blink ? places[places.length - 1] : undefined,
   }
+}
+
+export interface StarMapShopPin {
+  markerId: string
+  /** The place, or the body several places share. */
+  title: string
+  lines: { action: 'buy' | 'sell'; label: string; where?: string }[]
+}
+
+/**
+ * One pin per map body. Later stops at that body add their lines, so a second
+ * commodity does not open the first stop's list.
+ */
+export function groupShopPins(shops: StarMapShopStop[], systems: StarMapSystems, systemId: string): StarMapShopPin[] {
+  const order: string[] = []
+  const pins = new Map<string, { markerName: string; lines: { action: 'buy' | 'sell'; label: string; where: string }[] }>()
+  for (const shop of shops) {
+    const marker = resolveShopMarker(shop.place, systems)
+    if (!marker || marker.systemId !== systemId) continue
+    let pin = pins.get(marker.id)
+    if (!pin) {
+      pin = { markerName: marker.name, lines: [] }
+      pins.set(marker.id, pin)
+      order.push(marker.id)
+    }
+    for (const line of shop.lines) {
+      pin.lines.push({ action: line.action, label: line.label, where: shop.place })
+    }
+  }
+  return order.map((id) => {
+    const pin = pins.get(id) as { markerName: string; lines: { action: 'buy' | 'sell'; label: string; where: string }[] }
+    const places = [...new Set(pin.lines.map((line) => line.where))]
+    const shared = places.length === 1
+    return {
+      markerId: id,
+      title: shared ? places[0] : pin.markerName,
+      lines: pin.lines.map((line) => ({
+        action: line.action,
+        label: line.label,
+        where: shared ? undefined : line.where,
+      })),
+    }
+  })
 }
 
 /** Bright on the leg that arrives at `active`, including the jumps in that leg. Earlier legs are dim. */
@@ -230,6 +277,18 @@ export function validateStarMapSearch(search: Record<string, unknown>): StarMapS
 const HANDOFF_KEY = 'dumper-star-map-handoff'
 export const STAR_MAP_CHANNEL = 'dumper-star-map'
 export const STAR_MAP_WINDOW = 'dumper-star-map'
+
+/** The named tab View Map opens. That tab is the map alone. */
+export function isDedicatedStarMapWindow(): boolean {
+  return typeof window !== 'undefined' && window.name === STAR_MAP_WINDOW
+}
+
+/** `/star-map` and `/star-map/stanton`. A trailing slash still counts. */
+export function isStarMapPath(pathname: string): boolean {
+  const bare = (pathname || '/').split('?')[0].split('#')[0] || '/'
+  const normalized = bare.length > 1 && bare.endsWith('/') ? bare.slice(0, -1) : bare
+  return normalized === '/star-map' || normalized.startsWith('/star-map/')
+}
 
 /** Park a shopping run where the Star Map tab can read it. Returns its id. */
 export function publishStarMapHandoff(payload: StarMapPayload): string {

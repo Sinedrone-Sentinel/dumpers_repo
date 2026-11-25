@@ -1,8 +1,11 @@
 import { useEffect, useMemo } from 'react'
 import { useNavigate, useSearch } from '@tanstack/react-router'
+import StarMapHandoffListener from '../components/starMap/StarMapHandoffListener'
 import StarMapOverview from '../components/starMap/StarMapOverview'
+import { starMapCanvasClass, starMapStageClass } from '../components/starMap/starMapFrame'
+import { useAuth } from '../contexts/AuthContext'
 import { setAnalyticsSubTool } from '../lib/analytics'
-import { payloadFromSearch, readStarMapHandoff, resolveStarMapSystem, type StarMapSearch } from '../lib/starMapHighlight'
+import { isDedicatedStarMapWindow, payloadFromSearch, readStarMapHandoff, resolveStarMapSystem, type StarMapSearch } from '../lib/starMapHighlight'
 import { getStarMapData } from '../lib/starMapData'
 import {
   clearStarMapSessionIfLeft,
@@ -15,6 +18,8 @@ import {
 export default function StarMapIndexRoute() {
   const search = useSearch({ strict: false }) as StarMapSearch
   const navigate = useNavigate()
+  const { canUseFeature } = useAuth()
+  const mapOnly = isDedicatedStarMapWindow() && !canUseFeature('star_map')
   const { index, systems } = getStarMapData()
   const session = useStarMapSession()
   const hasIncoming = !!(search.marks || search.route || search.start)
@@ -82,9 +87,20 @@ export default function StarMapIndexRoute() {
       : null
   const nameOf = (id: string) => index.systems.find((s) => s.id === id)?.name ?? id
 
+  if (mapOnly) {
+    return (
+      <main className={starMapStageClass()}>
+        <div className={`${starMapCanvasClass()} flex items-center justify-center`}>
+          <p className="text-sm text-slate-300">Star Map is not available.</p>
+        </div>
+      </main>
+    )
+  }
+
   return (
-    <main className="site-shell relative z-10 py-6 min-w-0 w-full overflow-x-hidden">
-      <div className="site-surface relative h-[calc(100vh-8rem)] min-h-[480px] overflow-hidden">
+    <main className={starMapStageClass()}>
+      <div className={starMapCanvasClass()}>
+        <StarMapHandoffListener />
         <StarMapOverview index={index} onEnter={enter} />
         {choice && (
           <div className="site-tooltip-panel absolute top-4 left-1/2 -translate-x-1/2 z-20 w-[min(92%,26rem)]" role="dialog">
