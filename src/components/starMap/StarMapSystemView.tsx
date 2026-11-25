@@ -28,7 +28,8 @@ interface Props {
   index: StarMapIndex
   markedIds: ReadonlySet<string>
   routePoints: StarMapMarker[]
-  focusMarkerId?: string
+  /** Open zoomed out to the whole system, ignoring marks and route. */
+  wholeSystem?: boolean
   onBack: () => void
   onJump: (marker: StarMapMarker) => void
 }
@@ -37,8 +38,7 @@ type Cam = StarMapCamera
 
 const DRAG_THRESHOLD_PX = 4
 const FIT_PADDING_PX = 32
-const MAX_ZOOM_FACTOR = 20000
-const FOCUS_ZOOM_FACTOR = 300
+const MAX_ZOOM_FACTOR = 5_000_000
 const MIN_BELT_HALF_PX = 3
 const MIN_BOX_PX = 6
 
@@ -60,7 +60,7 @@ export default function StarMapSystemView({
   index,
   markedIds,
   routePoints,
-  focusMarkerId,
+  wholeSystem,
   onBack,
   onJump,
 }: Props) {
@@ -145,16 +145,10 @@ export default function StarMapSystemView({
     return () => ro.disconnect()
   }, [])
 
-  // Initial camera: focus marker, then marks, then route, else the whole system.
+  // Initial camera: marks, then route, else the whole system. A jump always opens the whole system.
   useEffect(() => {
     if (!fitPxPerM || camRef.current) return
-    const focus = focusMarkerId ? system.markers.find((m) => m.id === focusMarkerId) : undefined
-    if (focus) {
-      setCam({ cx: focus.x, cy: focus.y, pxPerM: fitPxPerM * FOCUS_ZOOM_FACTOR })
-      setSelectedId(focus.id)
-      return
-    }
-    const targets = system.markers.filter((m) => markedIds.has(m.id) || routeIds.has(m.id))
+    const targets = wholeSystem ? [] : system.markers.filter((m) => markedIds.has(m.id) || routeIds.has(m.id))
     if (targets.length) {
       const reach = (m: StarMapMarker) => (m.kind === 'belt' ? (m.outerRadiusM ?? 0) : 0)
       const xs = targets.flatMap((m) => [m.x - reach(m), m.x + reach(m)])
@@ -172,7 +166,7 @@ export default function StarMapSystemView({
       return
     }
     setCam({ cx: starX, cy: starY, pxPerM: fitPxPerM })
-  }, [fitPxPerM, focusMarkerId, system, markedIds, routeIds, extentM, size, starX, starY, setCam])
+  }, [fitPxPerM, wholeSystem, system, markedIds, routeIds, extentM, size, starX, starY, setCam])
 
   // Re-clamp when the box resizes.
   useEffect(() => {

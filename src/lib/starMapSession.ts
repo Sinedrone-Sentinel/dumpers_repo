@@ -7,8 +7,8 @@ import type { StarMapPayload } from './starMapHighlight'
  */
 export interface StarMapSession {
   payload: StarMapPayload
-  /** Marker to centre on when a system opens (arrival jump point). */
-  focusMarkerId?: string
+  /** After a jump, the next system opens fully zoomed out with nothing selected. */
+  wholeSystem?: boolean
   /** The overview still owes the member a which-system choice. */
   choicePending: boolean
 }

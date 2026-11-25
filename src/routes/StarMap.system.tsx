@@ -23,7 +23,7 @@ export default function StarMapSystemRoute() {
   const system = systems[systemId]
   const session = useStarMapSession()
   const payload = session?.payload ?? EMPTY_PAYLOAD
-  const focusMarkerId = session?.focusMarkerId
+  const wholeSystem = session?.wholeSystem === true
   const markedIds = useMemo(() => markedIdsInSystem(payload, systems, systemId), [payload, systems, systemId])
   const routePoints = useMemo(() => expandRoute(payload, systems, index.links), [payload, systems, index])
 
@@ -34,14 +34,14 @@ export default function StarMapSystemRoute() {
   }, [system])
 
   const back = () => {
-    updateStarMapSession({ focusMarkerId: undefined, choicePending: false })
+    updateStarMapSession({ wholeSystem: undefined, choicePending: false })
     navigate({ to: '/star-map', search: {} })
   }
 
   const jump = (marker: StarMapMarker) => {
     if (!marker.toSystem || !systems[marker.toSystem]) return
     if (!getStarMapSession()) startStarMapSession({})
-    updateStarMapSession({ focusMarkerId: marker.toMarkerId ?? undefined, choicePending: false })
+    updateStarMapSession({ wholeSystem: true, choicePending: false })
     navigate({ to: '/star-map/$systemId', params: { systemId: marker.toSystem }, search: {} })
   }
 
@@ -50,12 +50,12 @@ export default function StarMapSystemRoute() {
       <div className="site-surface relative h-[calc(100vh-11rem)] min-h-[480px] overflow-hidden">
         {system ? (
           <StarMapSystemView
-            key={`${system.id}:${focusMarkerId ?? ''}`}
+            key={system.id}
             system={system}
             index={index}
             markedIds={markedIds}
             routePoints={routePoints}
-            focusMarkerId={focusMarkerId}
+            wholeSystem={wholeSystem}
             onBack={back}
             onJump={jump}
           />
