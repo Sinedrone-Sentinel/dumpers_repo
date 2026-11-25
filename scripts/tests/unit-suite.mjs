@@ -3613,6 +3613,41 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
     stops: [{ place: 'Area18', lines: [{ action: 'buy', label: 'Carbon' }] }],
   }, smSystems)
   check(haulMark.category === 'hauler' && shopHere.category === 'shopping', 'star map: a haul uses the hauler icon and a cart stays a cart')
+  const liveHaul = hl.haulMapPayload({
+    from: 'Area18',
+    current: 1,
+    stops: [
+      { place: 'Seraphim Station', lines: [{ action: 'buy', label: '40 SCU of Chlorine' }] },
+      { place: 'HUR-L5 High Course Station', lines: [{ action: 'sell', label: '40 SCU of Chlorine' }] },
+      { place: 'Everus Harbor', lines: [{ action: 'buy', label: '20 SCU of Gold' }] },
+    ],
+  }, smSystems)
+  const livePoints = hl.expandRoute(JSON.parse(JSON.stringify(liveHaul)), smSystems, smIndex.links)
+  const liveLegs = hl.routeSegmentsInSystem(livePoints, 'stanton')
+  check(
+    liveHaul.category === 'hauler' &&
+      liveHaul.active === 'HUR-L5 High Course Station' &&
+      liveHaul.shops.length === 3 &&
+      liveHaul.shops[2].lines[0].label === '20 SCU of Gold' &&
+      !liveHaul.route.includes('Everus Harbor') &&
+      hl.routeLegTone(livePoints, livePoints.findIndex((p) => p.name === 'ArcCorp'), liveHaul.active) === 'dim' &&
+      liveLegs.some(([a, b]) => a.name === 'Seraphim Station' && b.name === 'HUR-L5 High Course Station') &&
+      hl.routeLegTone(livePoints, livePoints.findIndex((p) => p.name === 'Seraphim Station'), liveHaul.active) === 'bright',
+    'star map: a stored haul keeps every stop, dims the traveled leg, and leaves the current leg bright',
+  )
+  const movedHaul = hl.haulMapPayload({
+    from: 'Hurston',
+    current: 1,
+    stops: [
+      { place: 'Seraphim Station', lines: [{ action: 'buy', label: '10 SCU of Steel' }] },
+      { place: 'Monox', lines: [{ action: 'sell', label: '10 SCU of Steel' }] },
+    ],
+  }, smSystems)
+  const movedOpen = hl.resolveStarMapSystem(movedHaul, smSystems, smIndex)
+  check(
+    movedOpen.kind === 'single' && movedOpen.systemId === 'pyro',
+    'star map: reopening a haul opens the system of the current stop',
+  )
   check(
     paint.beltSpeckCount(80) === 100 && paint.beltSpeckCount(10) === 48 && paint.beltSpeckCount(400) === 360,
     'star map: belt specks are twice as dense',

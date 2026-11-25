@@ -1,6 +1,6 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { navMap, pointById } from '../../lib/navSystems'
-import { shoppingMapPayload } from '../../lib/starMapHighlight'
+import { haulMapPayload, writeLiveHaul } from '../../lib/starMapHighlight'
 import { getStarMapData } from '../../lib/starMapData'
 import StarMapViewButton from '../starMap/StarMapViewButton'
 import {
@@ -75,6 +75,24 @@ export default function SellCargoPanel({
     for (const offer of sells) if (!byName.has(offer.commodity)) byName.set(offer.commodity, offer.commodityId)
     return [...byName.entries()].map(([name, id]) => ({ name, id })).sort((a, b) => a.name.localeCompare(b.name))
   }, [sells])
+  const haulPayload = useMemo(() => {
+    const stops = rows.flatMap((row) => {
+      if (!row.buyer || row.status === 'done') return []
+      return [{
+        place: row.buyer.offer.place,
+        lines: [{ action: 'sell' as const, label: `${row.buyer.scu} SCU of ${row.commodity}` }],
+      }]
+    })
+    if (!stops.length) return null
+    return haulMapPayload({
+      from: pointById(navMap, startId)?.name,
+      current: 0,
+      stops,
+    }, getStarMapData().systems)
+  }, [rows, startId])
+  useEffect(() => {
+    writeLiveHaul(haulPayload)
+  }, [haulPayload])
 
   function update(id: number, patch: Partial<SellRow>) {
     setRows((prev) => prev.map((row) => (row.id === id ? { ...row, ...patch } : row)))
@@ -223,17 +241,7 @@ export default function SellCargoPanel({
               <div className="space-y-1 text-sm text-white">
                 <div className="flex items-center justify-between gap-3">
                   <p className="text-blue-400">Go to {row.buyer.offer.place}{from ? ` from ${from.name}` : ''}.</p>
-                  <StarMapViewButton
-                    payload={shoppingMapPayload({
-                      category: 'hauler',
-                      from: from?.name,
-                      progressive: true,
-                      stops: [{
-                        place: row.buyer.offer.place,
-                        lines: [{ action: 'sell', label: `${row.buyer.scu} SCU of ${row.commodity}` }],
-                      }],
-                    }, getStarMapData().systems)}
-                  />
+                  {haulPayload && <StarMapViewButton payload={haulPayload} />}
                 </div>
                 {travel && <p>{travel}</p>}
                 <p>

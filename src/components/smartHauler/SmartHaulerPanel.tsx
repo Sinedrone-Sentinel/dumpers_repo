@@ -1,11 +1,11 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import AppModal from '../layout/AppModal'
 import SiteTooltip from '../SiteTooltip'
 import ShipHangarModal from '../shipHangar/ShipHangarModal'
 import SellCargoPanel from './SellCargoPanel'
 import { SHIPS, getShip } from '../../lib/shipShopData'
 import { navMap, pointById, searchNavPoints } from '../../lib/navSystems'
-import { shoppingMapPayload } from '../../lib/starMapHighlight'
+import { haulMapPayload, writeLiveHaul } from '../../lib/starMapHighlight'
 import { getStarMapData } from '../../lib/starMapData'
 import StarMapViewButton from '../starMap/StarMapViewButton'
 import {
@@ -203,6 +203,22 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
   }
 
   const current = route?.stops[step]
+  const haulPayload = useMemo(() => {
+    if (sellMode || !route || !route.stops[step]) return null
+    return haulMapPayload({
+      from: pointById(navMap, startId)?.name,
+      current: step,
+      stops: route.stops.map((stop) => ({
+        place: stop.place,
+        lines: [{ action: stop.kind, label: `${stop.scu} SCU of ${stop.commodity}` }],
+      })),
+    }, getStarMapData().systems)
+  }, [sellMode, route, step, startId])
+  useEffect(() => {
+    if (sellMode) return
+    writeLiveHaul(haulPayload)
+  }, [sellMode, haulPayload])
+  useEffect(() => () => writeLiveHaul(null), [])
   const headerCash = current?.cashBefore ?? 0
   const runningProfit = route ? runningHaulProfit(route.stops, step) : 0
 
@@ -631,17 +647,7 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
           <div className="space-y-3 text-sm text-white">
             <div className="flex items-center justify-between gap-3">
               <p className="text-blue-400">Go to {current.place}.</p>
-              <StarMapViewButton
-                payload={shoppingMapPayload({
-                  category: 'hauler',
-                  from: pointById(navMap, startId)?.name,
-                  progressive: true,
-                  stops: route.stops.slice(0, step + 1).map((stop) => ({
-                    place: stop.place,
-                    lines: [{ action: stop.kind, label: `${stop.scu} SCU of ${stop.commodity}` }],
-                  })),
-                }, getStarMapData().systems)}
-              />
+              {haulPayload && <StarMapViewButton payload={haulPayload} />}
             </div>
             {travelText(step === 0 ? startId : route.stops[step - 1]?.pointId || startId, current.pointId) && (
               <p>{travelText(step === 0 ? startId : route.stops[step - 1]?.pointId || startId, current.pointId)}</p>

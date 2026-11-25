@@ -1,25 +1,50 @@
 import { useEffect } from 'react'
 import { useNavigate } from '@tanstack/react-router'
-import { STAR_MAP_CHANNEL, resolveStarMapSystem, type StarMapPayload } from '../../lib/starMapHighlight'
+import { STAR_MAP_CHANNEL, readLiveHaul, resolveStarMapSystem, type StarMapPayload } from '../../lib/starMapHighlight'
 import { getStarMapData } from '../../lib/starMapData'
-import { startStarMapSession, updateStarMapSession } from '../../lib/starMapSession'
+import { getStarMapSession, showStarMapPayload, startStarMapSession, updateStarMapSession } from '../../lib/starMapSession'
 
 /**
- * The hauler keeps its own tab. Each View Map replaces the run in this tab,
- * including when the browser only focuses the named tab and does not navigate.
+ * The map tab follows View Map, and a Smart Hauler run that is still going.
+ * Closing the tab does not end the run. Opening the map again reads it back.
  */
 export default function StarMapHandoffListener({ systemId }: { systemId?: string }) {
   const navigate = useNavigate()
   const { systems, index } = getStarMapData()
 
   useEffect(() => {
+    const showingCart = () => {
+      const current = getStarMapSession()
+      const payload = current?.payload
+      return payload?.category === 'shopping' && !!(payload.shops?.length || payload.route?.length || payload.marks?.length || payload.start)
+    }
+    const adoptHaul = (payload: StarMapPayload | null) => {
+      if (payload && showingCart()) return
+      if (!payload) {
+        if (getStarMapSession()?.payload.category === 'hauler') showStarMapPayload({})
+        return
+      }
+      showStarMapPayload(payload)
+      const res = resolveStarMapSystem(payload, systems, index)
+      if (res.kind === 'single' && res.systemId !== systemId) {
+        void navigate({ to: '/star-map/$systemId', params: { systemId: res.systemId }, search: {} })
+      }
+    }
+
+    const params = new URLSearchParams(window.location.search)
+    if (!params.get('handoff')) adoptHaul(readLiveHaul())
+
     let channel: BroadcastChannel | null = null
     try {
       channel = new BroadcastChannel(STAR_MAP_CHANNEL)
     } catch {
       return
     }
-    channel.onmessage = (event: MessageEvent<{ payload?: StarMapPayload }>) => {
+    channel.onmessage = (event: MessageEvent<{ kind?: string; payload?: StarMapPayload | null }>) => {
+      if (event.data?.kind === 'haul') {
+        adoptHaul(event.data.payload ?? null)
+        return
+      }
       const payload = event.data?.payload
       if (!payload) return
       startStarMapSession(payload)
