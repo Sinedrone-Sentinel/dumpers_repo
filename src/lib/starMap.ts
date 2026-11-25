@@ -486,27 +486,11 @@ function moonWantPx(scale: BodyScale): number {
 }
 
 /**
- * Moon radius in pixels. The icon-size floor applies once the moon's center
- * is outside its planet. While the center is still inside the planet, the
- * disc stays inside too, so it does not cover stations parked on the rim.
- */
-function moonRadiusPx(marker: StarMapMarker, scale: BodyScale): number {
-  const want = moonWantPx(scale)
-  const parent = marker.parentName ? scale.layout.byName.get(marker.parentName) : undefined
-  if (!parent) return want
-  const centerPx = Math.hypot(marker.x - parent.x, marker.y - parent.y) * moonSpread(parent, scale) * scale.pxPerM
-  const parentR = orbDisplayRadiusPx(parent, scale)
-  if (centerPx >= parentR + 1) return want
-  return Math.max(Math.min(want, parentR - centerPx - 1), 1.5)
-}
-
-/**
- * Orb radius in pixels. Planets share one readable size (gas giants a step
- * larger). Every moon is the same disc and grows from one icon up to four.
- * The star is
- * larger than any planet but never past half the innermost planet orbit.
- * True pixel size takes over for the star only when the view is zoomed in
- * that far.
+ * Orb radius in pixels. Every system uses this. Rocky planets share one disc.
+ * Gas giants share one slightly larger disc. Every moon is the same disc and
+ * grows from one icon up to four. The star is larger than any planet but
+ * never past half the innermost planet orbit. True pixel size takes over for
+ * the star only when the view is zoomed in that far.
  */
 export function orbDisplayRadiusPx(marker: StarMapMarker, scale: BodyScale): number {
   const realPx = (marker.radiusM || 0) * scale.pxPerM
@@ -515,7 +499,7 @@ export function orbDisplayRadiusPx(marker: StarMapMarker, scale: BodyScale): num
     const want = scale.maxPlanetPx * 1.6
     return Math.max(Math.min(want, cap), realPx, 3)
   }
-  if (marker.kind === 'moon') return moonRadiusPx(marker, scale)
+  if (marker.kind === 'moon') return moonWantPx(scale)
   return Math.min(Math.max(planetPx(marker, scale), 10), planetCeilingPx(marker, scale))
 }
 

@@ -3677,6 +3677,25 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
       starMap.orbDisplayRadiusPx(byName(stanton, 'Aberdeen'), hurstonMoons) === iconR * 4,
     'star map: every moon is the same size, from one icon up to four',
   )
+  const gasNames = new Set(['Crusader', 'Pyro V', 'Nyx III'])
+  let mapsShareScale = true
+  for (const zoom of [1, 8, 80]) {
+    const rocky = []
+    const gas = []
+    const moons = []
+    for (const id of ['stanton', 'pyro', 'nyx']) {
+      const sys = smSystems[id]
+      const scale = starMap.systemBodyScale(sys, fitPx * zoom, fitPx)
+      for (const marker of sys.markers) {
+        const px = starMap.orbDisplayRadiusPx(marker, scale)
+        if (marker.kind === 'planet') (gasNames.has(marker.name) ? gas : rocky).push(px)
+        if (marker.kind === 'moon') moons.push(px)
+      }
+    }
+    const same = (vals) => vals.length > 0 && vals.every((n) => Math.abs(n - vals[0]) < 1e-6)
+    if (!same(rocky) || !same(gas) || !same(moons)) mapsShareScale = false
+  }
+  check(mapsShareScale, 'star map: Stanton, Pyro, and Nyx share one planet size and one moon size')
   const crusaderMoons = at(60 / 50.9e6 / fitPx)
   check(
     starMap.orbDisplayRadiusPx(crusader, crusaderMoons) <= starMap.orbDisplayRadiusPx(crusader, at(200)) &&
