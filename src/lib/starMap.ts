@@ -37,6 +37,24 @@ export interface StarMapMarker {
   toMarkerId?: string | null
   notes: string[]
   parentName: string | null
+  /** Starmap amenities at this place (Clinic, Hangar (L), Refinery, …). */
+  amenities?: string[]
+  /** Places on this body that are not on the map, each with its own amenities. */
+  services?: { place: string; amenities: string[] }[]
+  jurisdiction?: string
+  /** Surface conditions from the planet or moon container. */
+  environment?: StarMapEnvironment
+  /** Harvestables and hand mineables the game lists as caves only. */
+  caveOnly?: string[]
+}
+
+export interface StarMapEnvironment {
+  gravityG?: number
+  dayHours?: number
+  temperatureC?: number
+  pressureBar?: number
+  humidityPct?: number
+  atmosphere?: { gas: string; symbol: string | null; percent: number }[]
 }
 
 export interface StarMapSystem {

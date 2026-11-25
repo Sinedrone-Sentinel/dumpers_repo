@@ -58,6 +58,7 @@ const modules = [
   'src/lib/lootBlueprintLookup.ts',
   'src/lib/starMap.ts',
   'src/lib/starMapHighlight.ts',
+  'src/lib/starMapLocationInfo.ts',
   'src/components/starMap/starMapPaint.ts',
 ]
 
@@ -4055,6 +4056,89 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
   )
   const tall = starMap.boxZoomCamera(cam0, view, { left: 0, top: 0, width: 400, height: 600 })
   check(tall.pxPerM === 1, 'box zoom: a tall rectangle is not cropped')
+}
+
+{
+  const info = await import(pathToFileURL(path.join(outDir, 'starMapLocationInfo.mjs')).href)
+  const mapDir = path.join(root, 'src/data/star-maps')
+  const idx = JSON.parse(readFileSync(path.join(mapDir, 'index.json'), 'utf8'))
+  const systems = {}
+  for (const s of idx.systems) systems[s.id] = JSON.parse(readFileSync(path.join(mapDir, `${s.id}.json`), 'utf8'))
+  const find = (sys, name) => systems[sys].markers.find((m) => m.name === name)
+  const card = (sys, name) => info.buildLocationInfo(find(sys, name), systems)
+  const names = (rows) => rows.map((r) => r.name)
+
+  const allDescriptions = Object.values(systems).flatMap((s) => s.markers.map((m) => m.description || ''))
+  check(
+    !allDescriptions.some((d) => /Potential (Mineables|Harvestables|Creatures)/i.test(d)),
+    'location card: descriptions drop the in-game Potential lists',
+  )
+
+  const hurston = card('stanton', 'Hurston')
+  const hurstonEnv = find('stanton', 'Hurston').environment
+  check(
+    hurstonEnv?.gravityG === 1 && hurstonEnv.dayHours > 0 && typeof hurstonEnv.temperatureC === 'number' &&
+      hurstonEnv.atmosphere?.[0]?.gas === 'Nitrogen',
+    'location card: Hurston has gravity, day length, temperature and a nitrogen atmosphere',
+  )
+  check(
+    hurston.services.some((b) => b.place === 'Lorville' && b.groups.some((g) => g.group === 'Medical')) &&
+      hurston.facts.some((f) => f.label === 'Jurisdiction' && /Hurston/.test(f.value)),
+    'location card: Lorville services roll up onto Hurston under its jurisdiction',
+  )
+  check(
+    hurston.trade.some((t) => t.place && /Lorville|Teasa|Central Business/i.test(t.place)) &&
+      hurston.shops.length > 0,
+    'location card: Hurston lists trade terminals and stores on the planet',
+  )
+  check(names(hurston.ship).length > 0 && hurston.hand.length > 0 && hurston.harvestables.length > 0, 'location card: Hurston lists ores, gems and harvestables')
+
+  const daymar = card('stanton', 'Daymar')
+  check(
+    daymar.caves?.total > 0 && daymar.caves.biomes.length > 0 && daymar.ground.length > 0 &&
+      daymar.facts.some((f) => f.label === 'Orbits' && f.value === 'Crusader') &&
+      daymar.facts.some((f) => f.label === 'Jurisdiction'),
+    'location card: Daymar shows caves, ROC ores and Crusader as parent and jurisdiction',
+  )
+  check(
+    daymar.harvestables.some((h) => h.caves) && daymar.environment?.gravityG > 0,
+    'location card: cave-only harvestables are flagged and moons carry gravity',
+  )
+
+  const halo = card('stanton', 'Aaron Halo')
+  check(
+    halo.ship.length > 0 && halo.ship.every((o) => o.rarity) && !halo.hand.length && !halo.caves && !halo.environment,
+    'location card: Aaron Halo lists ship ores with rarity only',
+  )
+
+  const bloom = card('pyro', 'Bloom')
+  check(
+    bloom.ship.length > 0 && bloom.hand.length > 0 && bloom.environment?.temperatureC !== undefined,
+    'location card: Bloom lists mining and its surface conditions',
+  )
+  const pyroV = card('pyro', 'Pyro V')
+  check(!pyroV.ship.length && !pyroV.hand.length, 'location card: Pyro V gets no mining borrowed from All Pyro Planets')
+
+  const nyxBody = systems.nyx.markers.find((m) => m.kind === 'planet')
+  const nyxCard = info.buildLocationInfo(nyxBody, systems)
+  check(nyxCard && Array.isArray(nyxCard.facts) && nyxCard.facts.length > 0, 'location card: Nyx bodies still build a card')
+
+  const levski = systems.nyx.markers.find((m) => /levski/i.test(m.name) || (m.services || []).some((s) => /levski/i.test(s.place)))
+  check(!!levski, 'location card: Levski services land on a Nyx marker')
+
+  const grim = card('stanton', 'Grim HEX')
+  const gate = info.buildLocationInfo(systems.stanton.markers.find((m) => m.kind === 'jump_point' && /pyro/i.test(m.name)), systems)
+  check(
+    grim.trade.length > 0 && grim.shops.length > 0 && grim.shops.every((s) => !s.place) &&
+      gate.shops.length > 0 && gate.shops.every((s) => !s.place) &&
+      !card('stanton', 'Yela').shops.some((s) => /grim/i.test(s.store)),
+    'location card: Grim HEX and gateway stores land on their own marker, not the nearby body',
+  )
+
+  check(
+    info.groupServices(['Hangar (L)', 'Clinic', 'Refinery', 'Buy Armor']).map((g) => g.group).join() === 'Medical,Ships,Trade,Shopping',
+    'location card: services group as Medical, Ships, Trade, Shopping',
+  )
 }
 
 console.log(`Unit tests: ${pass} passed`)

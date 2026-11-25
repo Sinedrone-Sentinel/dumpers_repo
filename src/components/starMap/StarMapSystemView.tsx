@@ -15,7 +15,6 @@ import {
   starMapFocusHalfM,
   starMapJumpDestination,
   starMapMarkerLabel,
-  starMapMarkerReadout,
   starMapMarkerShown,
   starMapPoiGroup,
   systemBodyScale,
@@ -30,6 +29,7 @@ import { groupShopPins, jumpContinuations, placeCallout, routeLegTone, routeSegm
 import { STAR_MAP_ICON_PATHS, drawStarMapIcon, drawTelemetryIcon, paintJumpCallout, strokeTelemetryLink } from './starMapIcons'
 import { paintBelt, paintBody, paintStar, paintStarfield } from './starMapPaint'
 import SiteTooltip from '../SiteTooltip'
+import StarMapLocationCard from './StarMapLocationCard'
 
 interface Props {
   system: StarMapSystem
@@ -624,7 +624,6 @@ export default function StarMapSystemView({
   const shopStop = selectedShop != null ? shopPins[selectedShop] : undefined
   const shopHit = shopStop ? shopHitsRef.current.find((hit) => hit.index === selectedShop) : undefined
   const selected = selectedId ? system.markers.find((m) => m.id === selectedId && starMapMarkerShown(m, poiOn)) : undefined
-  const readout = selected ? starMapMarkerReadout(selected) : null
   const cam = camRef.current
   let readoutPos: { left: number; top: number } | null = null
   const anchor = selected && cam && size.w
@@ -762,54 +761,27 @@ export default function StarMapSystemView({
         </div>
       )}
 
-      {selected && readoutPos && (
-        <div
-          className="site-tooltip-panel absolute z-10 w-[280px] max-w-[280px]"
-          style={{ left: readoutPos.left, top: readoutPos.top }}
-          role="dialog"
-          aria-label={starMapMarkerLabel(selected)}
-        >
-          <div className="flex items-start justify-between gap-2">
-            <div className="min-w-0">
-              <div className="text-sm font-semibold text-slate-100">{starMapMarkerLabel(selected)}</div>
-              <div className="text-[11px] uppercase tracking-wide text-slate-400">
-                {readout?.subtitle}
-                {selected.parentName ? ` · ${selected.parentName}` : ''}
-              </div>
-            </div>
-            <button
-              type="button"
-              className="site-btn-icon !p-1"
-              aria-label="Close"
-              onClick={() => setSelectedId(null)}
-            >
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeWidth={2} d="M6 6l12 12M18 6L6 18" />
-              </svg>
-            </button>
-          </div>
-          {readout?.mission && <p className="mt-2 text-slate-300">{readout.mission}</p>}
-          {readout?.description && <p className="mt-2 text-slate-300">{readout.description}</p>}
-          {selected.notes.length > 0 && (
-            <ul className="mt-2 list-disc pl-4 text-slate-300">
-              {selected.notes.map((n) => (
-                <li key={n}>{n}</li>
-              ))}
-            </ul>
-          )}
-          {jumpTarget &&
+      {selected && anchor && size.w > 0 && (
+        <StarMapLocationCard
+          marker={selected}
+          anchor={anchor}
+          bounds={size}
+          onClose={() => setSelectedId(null)}
+          footer={
+            jumpTarget &&
             (jumpTargetName ? (
               <button
                 type="button"
-                className="site-btn-primary mt-3 w-full !px-3 !py-2 text-xs"
+                className="site-btn-primary w-full !px-3 !py-2 text-xs"
                 onClick={() => onJump(jumpTarget && jumpTarget !== selected.toSystem ? { ...selected, toSystem: jumpTarget } : selected)}
               >
                 Jump to {jumpTargetName}
               </button>
             ) : (
-              <p className="mt-2 text-slate-400">Leads to {titleCase(jumpTarget)}</p>
-            ))}
-        </div>
+              <p className="text-xs text-slate-400">Leads to {titleCase(jumpTarget)}</p>
+            ))
+          }
+        />
       )}
     </div>
   )

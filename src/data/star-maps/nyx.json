@@ -19,7 +19,8 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": null,
-      "id": "nyx:nyx"
+      "id": "nyx:nyx",
+      "jurisdiction": "Ungoverned"
     },
     {
       "systemId": "nyx",
@@ -76,6 +77,23 @@
       "notes": [],
       "parentName": null,
       "id": "nyx:nyx-pyro-jump-point",
+      "jurisdiction": "UEE",
+      "amenities": [
+        "Clinic",
+        "Docking",
+        "Landing Pad (M)",
+        "Hangar (L)",
+        "Vehicle Services",
+        "Refinery",
+        "Commodity Trading",
+        "Loading Dock",
+        "Buy Weapons",
+        "Buy Ship Items/Weapons",
+        "Buy Armor",
+        "Buy Clothing",
+        "Rent Vehicles",
+        "Food Court"
+      ],
       "toMarkerId": "pyro:pyro-nyx-jump-point"
     },
     {
@@ -83,7 +101,7 @@
       "name": "Nyx II",
       "aliases": [],
       "kind": "planet",
-      "description": null,
+      "description": "[NOT CURRENTLY ACCESSIBLE] A high-pressure atmosphere and thick clouds of acid and carbon dioxide make Nyx II not worth terraforming.",
       "x": -3591210931,
       "y": 9866771447,
       "z": 0,
@@ -148,7 +166,24 @@
       "toMarkerName": "Nyx - Castra Jump Point",
       "notes": [],
       "parentName": null,
-      "id": "nyx:nyx-castra-jump-point"
+      "id": "nyx:nyx-castra-jump-point",
+      "jurisdiction": "UEE",
+      "amenities": [
+        "Clinic",
+        "Docking",
+        "Landing Pad (M)",
+        "Hangar (L)",
+        "Vehicle Services",
+        "Refinery",
+        "Commodity Trading",
+        "Loading Dock",
+        "Buy Weapons",
+        "Buy Ship Items/Weapons",
+        "Buy Armor",
+        "Buy Clothing",
+        "Rent Vehicles",
+        "Food Court"
+      ]
     },
     {
       "systemId": "nyx",
@@ -407,7 +442,7 @@
       "name": "Nyx I",
       "aliases": [],
       "kind": "planet",
-      "description": null,
+      "description": "[NOT CURRENTLY ACCESSIBLE] Nyx I is a coreless planet that orbits closest to the sun in the Nyx system. Once considered impossible to terraform, Nyx I has undergone a drastic transformation thanks to new experimental technology developed by Genesis Terraforming.",
       "x": 6495194199,
       "y": -3749995462,
       "z": 0,

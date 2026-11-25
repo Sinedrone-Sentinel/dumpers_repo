@@ -19,7 +19,8 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": null,
-      "id": "pyro:pyro"
+      "id": "pyro:pyro",
+      "jurisdiction": "Ungoverned"
     },
     {
       "systemId": "pyro",
@@ -55,6 +56,25 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": null,
+      "environment": {
+        "gravityG": 1,
+        "dayHours": 5.1,
+        "temperatureC": 77,
+        "pressureBar": 3,
+        "humidityPct": 0,
+        "atmosphere": [
+          {
+            "gas": "Hydrogen",
+            "symbol": "H",
+            "percent": 73.7
+          },
+          {
+            "gas": "Helium",
+            "symbol": "He",
+            "percent": 26.3
+          }
+        ]
+      },
       "id": "pyro:pyro-v"
     },
     {
@@ -260,7 +280,7 @@
       "name": "Adir",
       "aliases": [],
       "kind": "moon",
-      "description": null,
+      "description": "The crater-ridden surface of Adir is interspersed with rocky hills and jagged mountains.",
       "x": -3815640767,
       "y": -42729093410,
       "z": 0,
@@ -271,14 +291,52 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": "Pyro V",
-      "id": "pyro:adir"
+      "environment": {
+        "gravityG": 1,
+        "dayHours": 2.37,
+        "temperatureC": -71,
+        "pressureBar": 0.05,
+        "humidityPct": 0,
+        "atmosphere": [
+          {
+            "gas": "Carbon Dioxide",
+            "symbol": "CO2",
+            "percent": 97.9
+          },
+          {
+            "gas": "Nitrogen",
+            "symbol": "N",
+            "percent": 1.1
+          },
+          {
+            "gas": "Hydrogen",
+            "symbol": "H",
+            "percent": 1.1
+          }
+        ]
+      },
+      "caveOnly": [
+        "Janalite",
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
+      ],
+      "id": "pyro:adir",
+      "services": [
+        {
+          "place": "Prophet's Peak",
+          "amenities": [
+            "Landing Pad (S)"
+          ]
+        }
+      ]
     },
     {
       "systemId": "pyro",
       "name": "Ignis",
       "aliases": [],
       "kind": "moon",
-      "description": null,
+      "description": "This innermost moon of Pyro V is covered in deep canyons and dried riverbeds. No other signs of water remain on its desiccated surface.",
       "x": -3965334859,
       "y": -42774798593,
       "z": 0,
@@ -289,7 +347,61 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": "Pyro V",
-      "id": "pyro:ignis"
+      "environment": {
+        "gravityG": 1,
+        "dayHours": 3.44,
+        "temperatureC": -3,
+        "pressureBar": 0.5,
+        "humidityPct": 0,
+        "atmosphere": [
+          {
+            "gas": "Oxygen",
+            "symbol": "O2",
+            "percent": 51.7
+          },
+          {
+            "gas": "Carbon Dioxide",
+            "symbol": "CO2",
+            "percent": 46.4
+          },
+          {
+            "gas": "Nitrogen",
+            "symbol": "N",
+            "percent": 1.9
+          }
+        ]
+      },
+      "caveOnly": [
+        "Janalite",
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
+      ],
+      "id": "pyro:ignis",
+      "services": [
+        {
+          "place": "Ashland",
+          "amenities": [
+            "Landing Pad (L)",
+            "Commodity Trading",
+            "Buy Weapons",
+            "Buy Ship Items/Weapons",
+            "Buy Armor",
+            "Buy Vehicles"
+          ]
+        },
+        {
+          "place": "Kabir's Post",
+          "amenities": [
+            "Landing Pad (M)",
+            "Commodity Trading",
+            "Buy Weapons",
+            "Buy Ship Items/Weapons",
+            "Buy Armor",
+            "Buy Vehicles"
+          ]
+        }
+      ]
     },
     {
       "systemId": "pyro",
@@ -314,7 +426,7 @@
       "name": "Pyro IV",
       "aliases": [],
       "kind": "planet",
-      "description": null,
+      "description": "Astronomers theorize that in the distant past, Pyro IV collided with a planet-sized mass, warping the landscape and knocking it into the orbit of Pyro V.",
       "x": -3704136995,
       "y": -43071659155,
       "z": 0,
@@ -325,7 +437,84 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": null,
-      "id": "pyro:pyro-iv"
+      "environment": {
+        "gravityG": 1,
+        "dayHours": 4.09,
+        "temperatureC": 52,
+        "pressureBar": 0.51,
+        "humidityPct": 0,
+        "atmosphere": [
+          {
+            "gas": "Nitrogen",
+            "symbol": "N",
+            "percent": 68.3
+          },
+          {
+            "gas": "Oxygen",
+            "symbol": "O2",
+            "percent": 29.6
+          },
+          {
+            "gas": "Methane",
+            "symbol": "CH4",
+            "percent": 2.1
+          }
+        ]
+      },
+      "caveOnly": [
+        "Janalite",
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
+      ],
+      "id": "pyro:pyro-iv",
+      "services": [
+        {
+          "place": "Chawla's Beach",
+          "amenities": [
+            "Landing Pad (L)",
+            "Vehicle Services",
+            "Commodity Trading",
+            "Buy Weapons",
+            "Buy Ship Items/Weapons",
+            "Buy Armor",
+            "Buy Vehicles"
+          ]
+        },
+        {
+          "place": "Fallow Field",
+          "amenities": [
+            "Landing Pad (L)",
+            "Commodity Trading",
+            "Buy Weapons",
+            "Buy Ship Items/Weapons",
+            "Buy Armor",
+            "Buy Vehicles"
+          ]
+        },
+        {
+          "place": "Goner's Deal",
+          "amenities": [
+            "Landing Pad (M)",
+            "Commodity Trading",
+            "Buy Weapons",
+            "Buy Ship Items/Weapons",
+            "Buy Armor",
+            "Buy Vehicles"
+          ]
+        },
+        {
+          "place": "Sacren's Plot",
+          "amenities": [
+            "Landing Pad (L)",
+            "Commodity Trading",
+            "Buy Weapons",
+            "Buy Ship Items/Weapons",
+            "Buy Armor",
+            "Buy Vehicles"
+          ]
+        }
+      ]
     },
     {
       "systemId": "pyro",
@@ -422,7 +611,7 @@
       "name": "Vatra",
       "aliases": [],
       "kind": "moon",
-      "description": null,
+      "description": "The thick, high-pressure nitrogen-methane atmosphere of this moon hides a dark and eerie landscape.",
       "x": -3889836650,
       "y": -42688068260,
       "z": 0,
@@ -433,14 +622,58 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": "Pyro V",
-      "id": "pyro:vatra"
+      "environment": {
+        "gravityG": 1,
+        "dayHours": 3.42,
+        "temperatureC": -86,
+        "pressureBar": 2.84,
+        "humidityPct": 0,
+        "atmosphere": [
+          {
+            "gas": "Nitrogen",
+            "symbol": "N",
+            "percent": 93
+          },
+          {
+            "gas": "Methane",
+            "symbol": "CH4",
+            "percent": 6
+          },
+          {
+            "gas": "Hydrogen",
+            "symbol": "H",
+            "percent": 1
+          }
+        ]
+      },
+      "caveOnly": [
+        "Janalite",
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
+      ],
+      "id": "pyro:vatra",
+      "services": [
+        {
+          "place": "Seer's Canyon",
+          "amenities": [
+            "Landing Pad (L)",
+            "Vehicle Services",
+            "Commodity Trading",
+            "Buy Weapons",
+            "Buy Ship Items/Weapons",
+            "Buy Armor",
+            "Buy Vehicles"
+          ]
+        }
+      ]
     },
     {
       "systemId": "pyro",
       "name": "Vuur",
       "aliases": [],
       "kind": "moon",
-      "description": null,
+      "description": "The carbon-rich soil of Vuur supports unique forms of plant life that use crystalline carbon in their base structures.",
       "x": -4049991719,
       "y": -42648947152,
       "z": 0,
@@ -451,6 +684,31 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": "Pyro V",
+      "environment": {
+        "gravityG": 1,
+        "dayHours": 5.16,
+        "temperatureC": 28,
+        "pressureBar": 1.57,
+        "humidityPct": 0,
+        "atmosphere": [
+          {
+            "gas": "Carbon Dioxide",
+            "symbol": "CO2",
+            "percent": 98
+          },
+          {
+            "gas": "Nitrogen",
+            "symbol": "N",
+            "percent": 2
+          }
+        ]
+      },
+      "caveOnly": [
+        "Janalite",
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
+      ],
       "id": "pyro:vuur"
     },
     {
@@ -458,7 +716,7 @@
       "name": "Fairo",
       "aliases": [],
       "kind": "moon",
-      "description": null,
+      "description": "Frequent earthquakes rock Fairo, causing spectacular waves in its brackish seas.",
       "x": -3946434500,
       "y": -42879838568,
       "z": 0,
@@ -469,6 +727,41 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": "Pyro V",
+      "environment": {
+        "gravityG": 1,
+        "dayHours": 5.08,
+        "temperatureC": 14,
+        "pressureBar": 1.78,
+        "humidityPct": 30,
+        "atmosphere": [
+          {
+            "gas": "Carbon Dioxide",
+            "symbol": "CO2",
+            "percent": 88.8
+          },
+          {
+            "gas": "Oxygen",
+            "symbol": "O2",
+            "percent": 6.5
+          },
+          {
+            "gas": "Sulphur Dioxide",
+            "symbol": "SO2",
+            "percent": 3.7
+          },
+          {
+            "gas": "Hydrogen",
+            "symbol": "H",
+            "percent": 0.9
+          }
+        ]
+      },
+      "caveOnly": [
+        "Janalite",
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
+      ],
       "id": "pyro:fairo"
     },
     {
@@ -476,7 +769,7 @@
       "name": "Fuego",
       "aliases": [],
       "kind": "moon",
-      "description": null,
+      "description": "High amounts of iron-sulfide in Fuego’s soil turn it a livid shade of yellow-black.",
       "x": -3780111825,
       "y": -42827195910,
       "z": 0,
@@ -487,6 +780,29 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": "Pyro V",
+      "environment": {
+        "gravityG": 1,
+        "temperatureC": 6,
+        "pressureBar": 0.61,
+        "humidityPct": 0,
+        "atmosphere": [
+          {
+            "gas": "Hydrogen",
+            "symbol": "H",
+            "percent": 98
+          },
+          {
+            "gas": "Ammonia",
+            "symbol": "NH3",
+            "percent": 2
+          }
+        ]
+      },
+      "caveOnly": [
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
+      ],
       "id": "pyro:fuego"
     },
     {
@@ -1354,7 +1670,7 @@
       "name": "Pyro I",
       "aliases": [],
       "kind": "planet",
-      "description": null,
+      "description": "Orbiting very close to Pyro's volatile star, Pyro I has high temperatures and atmospheric pressure.",
       "x": -7920920786,
       "y": -2386976563,
       "z": 0,
@@ -1365,7 +1681,54 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": null,
-      "id": "pyro:pyro-i"
+      "environment": {
+        "gravityG": 1,
+        "dayHours": 2.42,
+        "temperatureC": 226,
+        "pressureBar": 2.62,
+        "humidityPct": 0,
+        "atmosphere": [
+          {
+            "gas": "Carbon Dioxide",
+            "symbol": "CO2",
+            "percent": 95.5
+          },
+          {
+            "gas": "Nitrogen",
+            "symbol": "N",
+            "percent": 4.5
+          }
+        ]
+      },
+      "caveOnly": [
+        "Janalite",
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
+      ],
+      "id": "pyro:pyro-i",
+      "services": [
+        {
+          "place": "Rustville",
+          "amenities": [
+            "Landing Pad (S)",
+            "Landing Pad (M)",
+            "Landing Pad (L)",
+            "Vehicle Services",
+            "Commodity Trading",
+            "Buy Weapons",
+            "Buy Armor"
+          ]
+        },
+        {
+          "place": "Stag's Rut",
+          "amenities": [
+            "Landing Pad (L)",
+            "Buy Weapons",
+            "Buy Armor"
+          ]
+        }
+      ]
     },
     {
       "systemId": "pyro",
@@ -1950,7 +2313,7 @@
       "name": "Terminus",
       "aliases": [],
       "kind": "planet",
-      "description": null,
+      "description": "Terminus is a frigid, barely-habitable planet with a methane-laced atmosphere.",
       "x": -48118274316,
       "y": 48503130951,
       "z": 0,
@@ -1961,7 +2324,107 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": null,
-      "id": "pyro:terminus"
+      "environment": {
+        "gravityG": 1,
+        "dayHours": 2.87,
+        "temperatureC": -133,
+        "pressureBar": 1.13,
+        "humidityPct": 10,
+        "atmosphere": [
+          {
+            "gas": "Nitrogen",
+            "symbol": "N",
+            "percent": 81
+          },
+          {
+            "gas": "Oxygen",
+            "symbol": "O2",
+            "percent": 13
+          },
+          {
+            "gas": "Methane",
+            "symbol": "CH4",
+            "percent": 4
+          },
+          {
+            "gas": "Carbon Dioxide",
+            "symbol": "CO2",
+            "percent": 1
+          },
+          {
+            "gas": "Argon",
+            "symbol": "Ar",
+            "percent": 1
+          }
+        ]
+      },
+      "caveOnly": [
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
+      ],
+      "id": "pyro:terminus",
+      "services": [
+        {
+          "place": "Blackrock Exchange",
+          "amenities": [
+            "Landing Pad (M)",
+            "Commodity Trading",
+            "Buy Weapons",
+            "Buy Ship Items/Weapons",
+            "Buy Armor",
+            "Buy Vehicles"
+          ]
+        },
+        {
+          "place": "Bullock's Reach",
+          "amenities": [
+            "Landing Pad (M)",
+            "Buy Vehicles"
+          ]
+        },
+        {
+          "place": "Canard View",
+          "amenities": [
+            "Landing Pad (L)",
+            "Commodity Trading",
+            "Buy Weapons",
+            "Buy Ship Items/Weapons",
+            "Buy Armor",
+            "Buy Vehicles"
+          ]
+        },
+        {
+          "place": "Kinder Plots",
+          "amenities": [
+            "Landing Pad (M)",
+            "Buy Vehicles"
+          ]
+        },
+        {
+          "place": "Last Landings",
+          "amenities": [
+            "Landing Pad (L)",
+            "Vehicle Services",
+            "Commodity Trading",
+            "Buy Weapons",
+            "Buy Ship Items/Weapons",
+            "Buy Armor",
+            "Buy Vehicles"
+          ]
+        },
+        {
+          "place": "Rough Landing",
+          "amenities": [
+            "Landing Pad (M)",
+            "Commodity Trading",
+            "Buy Weapons",
+            "Buy Ship Items/Weapons",
+            "Buy Armor",
+            "Buy Vehicles"
+          ]
+        }
+      ]
     },
     {
       "systemId": "pyro",
@@ -2096,7 +2559,7 @@
       "name": "Monox",
       "aliases": [],
       "kind": "planet",
-      "description": null,
+      "description": "The coreless Monox, nicknamed for the toxic carbon monoxide in its part-oxygen atmosphere, bears the scars of old mining operations.",
       "x": 6057267247,
       "y": -8724931001,
       "z": 0,
@@ -2107,7 +2570,114 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": null,
-      "id": "pyro:monox"
+      "environment": {
+        "gravityG": 1,
+        "dayHours": 3.11,
+        "temperatureC": 94,
+        "pressureBar": 0.91,
+        "humidityPct": 30,
+        "atmosphere": [
+          {
+            "gas": "Nitrogen",
+            "symbol": "N",
+            "percent": 79.7
+          },
+          {
+            "gas": "Oxygen",
+            "symbol": "O2",
+            "percent": 18.2
+          },
+          {
+            "gas": "Carbon Dioxide",
+            "symbol": "CO2",
+            "percent": 2
+          },
+          {
+            "gas": "Carbon Monoxide",
+            "symbol": "CO",
+            "percent": 0.1
+          }
+        ]
+      },
+      "caveOnly": [
+        "Janalite",
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
+      ],
+      "id": "pyro:monox",
+      "services": [
+        {
+          "place": "Arid Reach",
+          "amenities": [
+            "Landing Pad (S)",
+            "Landing Pad (M)",
+            "Commodity Trading",
+            "Buy Weapons",
+            "Buy Armor"
+          ]
+        },
+        {
+          "place": "Jackson's Swap",
+          "amenities": [
+            "Landing Pad (S)",
+            "Landing Pad (M)",
+            "Landing Pad (L)",
+            "Commodity Trading",
+            "Buy Weapons",
+            "Buy Armor"
+          ]
+        },
+        {
+          "place": "Ostler's Claim",
+          "amenities": [
+            "Landing Pad (S)",
+            "Landing Pad (M)",
+            "Buy Weapons",
+            "Buy Armor"
+          ]
+        },
+        {
+          "place": "PYAM-FARSTAT-2-0",
+          "amenities": [
+            "Clinic",
+            "Docking",
+            "Landing Pad (M)",
+            "Hangar (L)",
+            "Vehicle Services",
+            "Refinery",
+            "Commodity Trading",
+            "Loading Dock",
+            "Buy Weapons",
+            "Buy Ship Items/Weapons",
+            "Buy Armor",
+            "Buy Clothing",
+            "Rent Vehicles",
+            "Food Court"
+          ]
+        },
+        {
+          "place": "Sunset Mesa",
+          "amenities": [
+            "Landing Pad (S)",
+            "Landing Pad (M)",
+            "Landing Pad (L)",
+            "Vehicle Services",
+            "Commodity Trading",
+            "Buy Weapons",
+            "Buy Armor"
+          ]
+        },
+        {
+          "place": "Yang's Place",
+          "amenities": [
+            "Landing Pad (S)",
+            "Landing Pad (M)",
+            "Buy Weapons",
+            "Buy Armor"
+          ]
+        }
+      ]
     },
     {
       "systemId": "pyro",
@@ -2296,7 +2866,7 @@
       "name": "Bloom",
       "aliases": [],
       "kind": "planet",
-      "description": null,
+      "description": "This icy terrestrial world has a breathable atmosphere of nitrogen and oxygen and has been overrun by outlaws.",
       "x": -16103894598,
       "y": 7587938565,
       "z": 0,
@@ -2307,7 +2877,113 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": null,
-      "id": "pyro:bloom"
+      "environment": {
+        "gravityG": 1,
+        "dayHours": 5.03,
+        "temperatureC": 12,
+        "pressureBar": 0.99,
+        "humidityPct": 65,
+        "atmosphere": [
+          {
+            "gas": "Carbon Dioxide",
+            "symbol": "CO2",
+            "percent": 68
+          },
+          {
+            "gas": "Nitrogen",
+            "symbol": "N",
+            "percent": 23
+          },
+          {
+            "gas": "Oxygen",
+            "symbol": "O2",
+            "percent": 9
+          }
+        ]
+      },
+      "caveOnly": [
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
+      ],
+      "id": "pyro:bloom",
+      "services": [
+        {
+          "place": "Bueno Ravine",
+          "amenities": [
+            "Landing Pad (S)",
+            "Landing Pad (M)",
+            "Landing Pad (L)",
+            "Commodity Trading",
+            "Buy Weapons",
+            "Buy Armor"
+          ]
+        },
+        {
+          "place": "Carver's Ridge",
+          "amenities": [
+            "Buy Weapons",
+            "Buy Ship Items/Weapons",
+            "Buy Armor",
+            "Buy Vehicles"
+          ]
+        },
+        {
+          "place": "Frigid Knot",
+          "amenities": [
+            "Landing Pad (M)",
+            "Commodity Trading",
+            "Buy Weapons",
+            "Buy Ship Items/Weapons",
+            "Buy Armor",
+            "Buy Vehicles"
+          ]
+        },
+        {
+          "place": "Narena's Rest",
+          "amenities": [
+            "Landing Pad (S)",
+            "Buy Weapons",
+            "Buy Armor"
+          ]
+        },
+        {
+          "place": "Shepherd's Rest",
+          "amenities": [
+            "Landing Pad (L)",
+            "Commodity Trading",
+            "Buy Vehicles"
+          ]
+        },
+        {
+          "place": "The Golden Riviera",
+          "amenities": [
+            "Landing Pad (L)",
+            "Commodity Trading",
+            "Buy Weapons",
+            "Buy Ship Items/Weapons",
+            "Buy Armor",
+            "Buy Vehicles"
+          ]
+        },
+        {
+          "place": "The Yard",
+          "amenities": [
+            "Buy Vehicles"
+          ]
+        },
+        {
+          "place": "Windfall",
+          "amenities": [
+            "Landing Pad (M)",
+            "Vehicle Services",
+            "Buy Weapons",
+            "Buy Ship Items/Weapons",
+            "Buy Armor",
+            "Buy Vehicles"
+          ]
+        }
+      ]
     },
     {
       "systemId": "pyro",
@@ -3066,6 +3742,23 @@
       "notes": [],
       "parentName": null,
       "id": "pyro:pyro-nyx-jump-point",
+      "jurisdiction": "UEE",
+      "amenities": [
+        "Clinic",
+        "Docking",
+        "Landing Pad (M)",
+        "Hangar (L)",
+        "Vehicle Services",
+        "Refinery",
+        "Commodity Trading",
+        "Loading Dock",
+        "Buy Weapons",
+        "Buy Ship Items/Weapons",
+        "Buy Armor",
+        "Buy Clothing",
+        "Rent Vehicles",
+        "Food Court"
+      ],
       "toMarkerId": "nyx:nyx-pyro-jump-point"
     },
     {
@@ -3085,6 +3778,23 @@
       "notes": [],
       "parentName": null,
       "id": "pyro:pyro-stanton-jump-point",
+      "jurisdiction": "UEE",
+      "amenities": [
+        "Clinic",
+        "Docking",
+        "Landing Pad (M)",
+        "Hangar (L)",
+        "Vehicle Services",
+        "Refinery",
+        "Commodity Trading",
+        "Loading Dock",
+        "Buy Weapons",
+        "Buy Ship Items/Weapons",
+        "Buy Armor",
+        "Buy Clothing",
+        "Rent Vehicles",
+        "Food Court"
+      ],
       "toMarkerId": "stanton:stanton-pyro-jump-point"
     },
     {
@@ -3141,7 +3851,23 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": null,
-      "id": "pyro:ruin-station"
+      "id": "pyro:ruin-station",
+      "amenities": [
+        "Clinic",
+        "Docking",
+        "Landing Pad (M)",
+        "Hangar (L)",
+        "Vehicle Services",
+        "Refinery",
+        "Commodity Trading",
+        "Loading Dock",
+        "Buy Weapons",
+        "Buy Ship Items/Weapons",
+        "Buy Armor",
+        "Buy Clothing",
+        "Rent Vehicles",
+        "Food Court"
+      ]
     },
     {
       "systemId": "pyro",
@@ -3159,7 +3885,23 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": null,
-      "id": "pyro:orbituary"
+      "id": "pyro:orbituary",
+      "amenities": [
+        "Clinic",
+        "Docking",
+        "Landing Pad (M)",
+        "Hangar (L)",
+        "Vehicle Services",
+        "Refinery",
+        "Commodity Trading",
+        "Loading Dock",
+        "Buy Weapons",
+        "Buy Ship Items/Weapons",
+        "Buy Armor",
+        "Buy Clothing",
+        "Rent Vehicles",
+        "Food Court"
+      ]
     }
   ]
 }

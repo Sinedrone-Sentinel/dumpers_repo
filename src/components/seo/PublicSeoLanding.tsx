@@ -59,7 +59,7 @@ const FEATURES: FeatureCard[] = [
   },
   {
     title: 'Star Map',
-    body: 'Open Stanton, Pyro, and Nyx. Planets, moons, stations, and jump points are on each system map. Smart Hauler and the Shopping Cart can open the map on the stops in a run.',
+    body: 'Open Stanton, Pyro, and Nyx. Click any planet, moon, or station for its gravity, temperature, atmosphere, services, ores, gems, harvestables, caves, trade terminals, and stores. Smart Hauler and the Shopping Cart can open the map on the stops in a run.',
     href: '/star-map',
     action: 'offline',
     cta: 'Open Star Map offline →',

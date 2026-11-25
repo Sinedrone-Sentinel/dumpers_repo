@@ -88,7 +88,7 @@ const pages: Record<string, SeoPageConfig> = {
   '/star-map': {
     title: "Star Map | Dumper's Repo",
     description:
-      'Star Citizen star map for Stanton, Pyro, and Nyx. Open a system to see planets, moons, stations, belts, and jump points. Works signed out.',
+      'Star Citizen star map for Stanton, Pyro, and Nyx. Click a planet, moon, or station for gravity, temperature, atmosphere, services, ores, gems, caves, trade terminals, and stores. Works signed out.',
     canonicalPath: '/star-map/',
   },
   '/mining-tracker': {
