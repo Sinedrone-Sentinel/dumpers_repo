@@ -3503,6 +3503,30 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
     hl.systemPath('stanton', 'nyx', smIndex.links)?.join('>') === 'stanton>pyro>nyx',
     'route: crosses systems through jump links',
   )
+
+  // Nyx belts sit on their own segment orbits.
+  const nyx = smSystems.nyx
+  const glaciem = byName(nyx, 'Glaciem Ring')
+  const keeger = byName(nyx, 'Keeger Belt')
+  check(glaciem && keeger && glaciem.outerRadiusM < keeger.innerRadiusM, 'star map: Glaciem Ring is inside Keeger Belt')
+  const nyxStations = nyx.markers.filter((m) => m.kind === 'qv' || m.kind === 'outlaw')
+  const onKeeger = nyxStations.filter((m) => {
+    const d = Math.hypot(m.x, m.y)
+    return d >= keeger.innerRadiusM && d <= keeger.outerRadiusM
+  })
+  check(onKeeger.length / nyxStations.length > 0.5, 'star map: Nyx QV and outlaw stations ride the Keeger Belt')
+
+  // Box zoom: box top-left becomes view top-left; box width spans the view.
+  const cam0 = { cx: 0, cy: 0, pxPerM: 1 }
+  const view = { w: 800, h: 600 }
+  const zoomed = starMap.boxZoomCamera(cam0, view, { left: 100, top: 50, width: 200 })
+  const worldTopLeft = { x: cam0.cx + (100 - 400), y: cam0.cy - (50 - 300) }
+  const newTopLeft = { x: zoomed.cx - 400 / zoomed.pxPerM, y: zoomed.cy + 300 / zoomed.pxPerM }
+  check(zoomed.pxPerM === 4, 'box zoom: width spans the view')
+  check(
+    Math.abs(newTopLeft.x - worldTopLeft.x) < 1e-9 && Math.abs(newTopLeft.y - worldTopLeft.y) < 1e-9,
+    'box zoom: box top-left becomes the view top-left',
+  )
 }
 
 console.log(`Unit tests: ${pass} passed`)

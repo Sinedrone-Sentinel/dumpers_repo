@@ -6,10 +6,12 @@ import {
   STAR_MAP_ICON_COLORS,
   STAR_MAP_KIND_LABELS,
   blinkAlpha,
+  boxZoomCamera,
   declutterMarkers,
   orbDisplayRadiusPx,
   systemBodyScale,
   type ProjectedMarker,
+  type StarMapCamera,
   type StarMapIndex,
   type StarMapKind,
   type StarMapMarker,
@@ -17,6 +19,7 @@ import {
 } from '../../lib/starMap'
 import { routeSegmentsInSystem } from '../../lib/starMapHighlight'
 import { STAR_MAP_ICON_PATHS, drawStarMapIcon } from './starMapIcons'
+import SiteTooltip from '../SiteTooltip'
 
 interface Props {
   system: StarMapSystem
@@ -28,12 +31,14 @@ interface Props {
   onJump: (marker: StarMapMarker) => void
 }
 
-type Cam = { cx: number; cy: number; pxPerM: number }
+type Cam = StarMapCamera
 
 const DRAG_THRESHOLD_PX = 4
 const FIT_PADDING_PX = 32
 const MAX_ZOOM_FACTOR = 20000
 const FOCUS_ZOOM_FACTOR = 300
+const MIN_BELT_HALF_PX = 3
+const MIN_BOX_PX = 6
 
 function systemExtentM(system: StarMapSystem, cx: number, cy: number): number {
   let ext = 0
@@ -64,7 +69,29 @@ export default function StarMapSystemView({
   const [camTick, setCamTick] = useState(0)
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const projectedRef = useRef<{ items: ProjectedMarker[]; visible: Set<string> }>({ items: [], visible: new Set() })
-  const dragRef = useRef<{ x: number; y: number; cam: Cam; moved: boolean } | null>(null)
+  const dragRef = useRef<{ x: number; y: number; cam: Cam; moved: boolean; box: boolean } | null>(null)
+  const leftShiftRef = useRef(false)
+  const [box, setBox] = useState<{ x0: number; y0: number; x1: number; y1: number } | null>(null)
+
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.code === 'ShiftLeft') leftShiftRef.current = true
+    }
+    const up = (e: KeyboardEvent) => {
+      if (e.code === 'ShiftLeft') leftShiftRef.current = false
+    }
+    const reset = () => {
+      leftShiftRef.current = false
+    }
+    window.addEventListener('keydown', down)
+    window.addEventListener('keyup', up)
+    window.addEventListener('blur', reset)
+    return () => {
+      window.removeEventListener('keydown', down)
+      window.removeEventListener('keyup', up)
+      window.removeEventListener('blur', reset)
+    }
+  }, [])
 
   const star = useMemo(() => system.markers.find((m) => m.kind === 'star'), [system])
   const starX = star?.x ?? 0
@@ -180,8 +207,10 @@ export default function StarMapSystemView({
       for (const m of system.markers) {
         if (m.kind !== 'belt' || !m.innerRadiusM || !m.outerRadiusM) continue
         const c = toScreen(m.x, m.y, cam)
-        const ro = m.outerRadiusM * cam.pxPerM
-        const ri = m.innerRadiusM * cam.pxPerM
+        const mid = ((m.outerRadiusM + m.innerRadiusM) / 2) * cam.pxPerM
+        const half = Math.max(((m.outerRadiusM - m.innerRadiusM) / 2) * cam.pxPerM, MIN_BELT_HALF_PX)
+        const ro = mid + half
+        const ri = Math.max(0, mid - half)
         ctx.beginPath()
         ctx.arc(c.sx, c.sy, ro, 0, Math.PI * 2)
         ctx.arc(c.sx, c.sy, ri, 0, Math.PI * 2, true)
@@ -410,12 +439,18 @@ export default function StarMapSystemView({
   const onPointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (e.button !== 0 || !camRef.current) return
     e.currentTarget.setPointerCapture(e.pointerId)
-    dragRef.current = { x: e.clientX, y: e.clientY, cam: camRef.current, moved: false }
+    dragRef.current = {
+      x: e.clientX,
+      y: e.clientY,
+      cam: camRef.current,
+      moved: false,
+      box: leftShiftRef.current && e.shiftKey,
+    }
   }
   const onPointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
     const drag = dragRef.current
+    const rect = e.currentTarget.getBoundingClientRect()
     if (!drag) {
-      const rect = e.currentTarget.getBoundingClientRect()
       e.currentTarget.style.cursor = hitTest(e.clientX - rect.left, e.clientY - rect.top) ? 'pointer' : 'grab'
       return
     }
@@ -423,6 +458,16 @@ export default function StarMapSystemView({
     const dy = e.clientY - drag.y
     if (!drag.moved && Math.hypot(dx, dy) < DRAG_THRESHOLD_PX) return
     drag.moved = true
+    if (drag.box) {
+      e.currentTarget.style.cursor = 'crosshair'
+      setBox({
+        x0: drag.x - rect.left,
+        y0: drag.y - rect.top,
+        x1: e.clientX - rect.left,
+        y1: e.clientY - rect.top,
+      })
+      return
+    }
     e.currentTarget.style.cursor = 'grabbing'
     setCam({
       pxPerM: drag.cam.pxPerM,
@@ -434,8 +479,17 @@ export default function StarMapSystemView({
     const drag = dragRef.current
     dragRef.current = null
     e.currentTarget.style.cursor = 'grab'
-    if (!drag || drag.moved) return
     const rect = e.currentTarget.getBoundingClientRect()
+    if (drag?.box && drag.moved) {
+      setBox(null)
+      const left = Math.min(drag.x, e.clientX) - rect.left
+      const top = Math.min(drag.y, e.clientY) - rect.top
+      const width = Math.abs(e.clientX - drag.x)
+      if (width < MIN_BOX_PX) return
+      setCam(boxZoomCamera(drag.cam, size, { left, top, width }))
+      return
+    }
+    if (!drag || drag.moved) return
     const hit = hitTest(e.clientX - rect.left, e.clientY - rect.top)
     setSelectedId(hit ? hit.id : null)
   }
@@ -465,17 +519,44 @@ export default function StarMapSystemView({
         onPointerUp={onPointerUp}
         onPointerCancel={() => {
           dragRef.current = null
+          setBox(null)
         }}
         onContextMenu={(e) => e.preventDefault()}
       />
+
+      {box && (
+        <div
+          className="absolute pointer-events-none border-2 border-dashed border-slate-100/80"
+          style={{
+            left: Math.min(box.x0, box.x1),
+            top: Math.min(box.y0, box.y1),
+            width: Math.abs(box.x1 - box.x0),
+            height: Math.abs(box.y1 - box.y0),
+          }}
+        />
+      )}
 
       <div className="absolute top-3 left-3 pointer-events-none">
         <div className="text-lg font-semibold text-slate-100">{system.name}</div>
       </div>
 
-      <button type="button" onClick={onBack} className="site-btn-secondary absolute top-3 right-3 rounded-lg text-sm">
-        Back
-      </button>
+      <div className="absolute top-3 right-3 flex items-center gap-2">
+        <SiteTooltip
+          side="bottom"
+          content="Scroll to zoom and drag to pan. Hold left Shift and drag a box to zoom into that area."
+        >
+          <span
+            className="site-btn-icon !p-1.5 rounded-lg text-xs font-semibold text-slate-300 cursor-help"
+            tabIndex={0}
+            aria-label="Map controls"
+          >
+            ?
+          </span>
+        </SiteTooltip>
+        <button type="button" onClick={onBack} className="site-btn-secondary rounded-lg text-sm">
+          Back
+        </button>
+      </div>
 
       {kindsPresent.length > 0 && (
         <div className="absolute bottom-3 left-3 site-tooltip-panel pointer-events-none max-w-[16rem]">

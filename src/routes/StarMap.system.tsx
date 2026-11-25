@@ -1,40 +1,48 @@
 import { useEffect, useMemo } from 'react'
-import { useNavigate, useParams, useSearch } from '@tanstack/react-router'
+import { useNavigate, useParams } from '@tanstack/react-router'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import StarMapSystemView from '../components/starMap/StarMapSystemView'
 import { setAnalyticsSubTool } from '../lib/analytics'
 import type { StarMapMarker } from '../lib/starMap'
-import {
-  expandRoute,
-  markedIdsInSystem,
-  payloadFromSearch,
-  type StarMapSearch,
-} from '../lib/starMapHighlight'
+import { expandRoute, markedIdsInSystem, type StarMapPayload } from '../lib/starMapHighlight'
 import { getStarMapData } from '../lib/starMapData'
+import {
+  clearStarMapSessionIfLeft,
+  getStarMapSession,
+  startStarMapSession,
+  updateStarMapSession,
+  useStarMapSession,
+} from '../lib/starMapSession'
+
+const EMPTY_PAYLOAD: StarMapPayload = {}
 
 export default function StarMapSystemRoute() {
   const { systemId = '' } = useParams({ strict: false }) as { systemId?: string }
-  const search = useSearch({ strict: false }) as StarMapSearch
   const navigate = useNavigate()
   const { index, systems } = getStarMapData()
   const system = systems[systemId]
-  const payload = useMemo(() => payloadFromSearch(search), [search])
+  const session = useStarMapSession()
+  const payload = session?.payload ?? EMPTY_PAYLOAD
+  const focusMarkerId = session?.focusMarkerId
   const markedIds = useMemo(() => markedIdsInSystem(payload, systems, systemId), [payload, systems, systemId])
   const routePoints = useMemo(() => expandRoute(payload, systems, index.links), [payload, systems, index])
+
+  useEffect(() => () => clearStarMapSessionIfLeft(), [])
 
   useEffect(() => {
     if (system) setAnalyticsSubTool(system.id)
   }, [system])
 
-  const back = () => navigate({ to: '/star-map', search: {} })
+  const back = () => {
+    updateStarMapSession({ focusMarkerId: undefined, choicePending: false })
+    navigate({ to: '/star-map', search: {} })
+  }
 
   const jump = (marker: StarMapMarker) => {
     if (!marker.toSystem || !systems[marker.toSystem]) return
-    navigate({
-      to: '/star-map/$systemId',
-      params: { systemId: marker.toSystem },
-      search: { ...search, focus: marker.toMarkerId ?? undefined },
-    })
+    if (!getStarMapSession()) startStarMapSession({})
+    updateStarMapSession({ focusMarkerId: marker.toMarkerId ?? undefined, choicePending: false })
+    navigate({ to: '/star-map/$systemId', params: { systemId: marker.toSystem }, search: {} })
   }
 
   return (
@@ -42,12 +50,12 @@ export default function StarMapSystemRoute() {
       <div className="site-surface relative h-[calc(100vh-11rem)] min-h-[480px] overflow-hidden">
         {system ? (
           <StarMapSystemView
-            key={`${system.id}:${search.focus ?? ''}`}
+            key={`${system.id}:${focusMarkerId ?? ''}`}
             system={system}
             index={index}
             markedIds={markedIds}
             routePoints={routePoints}
-            focusMarkerId={search.focus}
+            focusMarkerId={focusMarkerId}
             onBack={back}
             onJump={jump}
           />

@@ -211,6 +211,16 @@ function loadGatewayRecords(extractedRoot, localization) {
   return out
 }
 
+/** In-plane outer edge of a ring background container (`<ObjectContainer maxBounds="x,y,z">`). */
+function ringBgOuterRadiusM(socpakPath) {
+  if (!existsSync(socpakPath)) return null
+  const xml = readSocpakXml(socpakPath, `${basename(socpakPath, '.socpak')}.xml`)
+  const m = xml && /maxBounds="([-0-9.eE+]+),([-0-9.eE+]+),/.exec(xml)
+  if (!m) return null
+  const r = Math.max(Math.abs(Number(m[1])), Math.abs(Number(m[2])))
+  return Number.isFinite(r) && r > 0 ? r : null
+}
+
 function ringRadiiFromSoc(socpakPath) {
   const bytes = readSocpakBytes(socpakPath, `${basename(socpakPath, '.socpak')}.soc`)
   if (!bytes) return null
@@ -339,11 +349,14 @@ export function parseStarMaps({ extractedRoot, localization }) {
     if (!xml) continue
     const markers = []
     const systemRoot = dirname(systemFile)
+    const ringSegmentDistances = { glaciemring: [], keegerbelt: [] }
 
     walkChildren(xml, (world) => {
       const socpak = world.attr.name || ''
       const path = norm(socpak)
       if (!path) return
+      const ringSegment = path.match(/\/(glaciemring|keegerbelt)\/[^/]*segment[^/]*\.socpak$/)
+      if (ringSegment) ringSegmentDistances[ringSegment[1]].push(Math.hypot(world.pos[0], world.pos[1]))
       if (path.endsWith('skybox.socpak') || path.endsWith('system.socpak')) return
       const recordId = String(world.attr.starMapRecord || '').toLowerCase()
       const record = recordId ? starmap.get(recordId) : null
@@ -454,11 +467,13 @@ export function parseStarMaps({ extractedRoot, localization }) {
       })
     })
 
-    // Nyx belts are segment fields, not one ring socpak — add map belts from starmap / segment radii.
+    // Nyx belts are segment fields, not one ring socpak. The orbit is where the
+    // segments sit (Levski rides Glaciem; QV / outlaw / social stations ride Keeger).
+    // The outer edge comes from the ring's _bg container bounds when it ships.
     if (systemId === 'nyx') {
-      for (const [label, filePart] of [
-        ['Glaciem Ring', 'glaciem'],
-        ['Keeger Belt', 'keeger'],
+      for (const [label, filePart, ringKey] of [
+        ['Glaciem Ring', 'glaciem', 'glaciemring'],
+        ['Keeger Belt', 'keeger', 'keegerbelt'],
       ]) {
         if (markers.some((m) => m.kind === 'belt' && m.name === label)) continue
         let record = null
@@ -481,15 +496,13 @@ export function parseStarMaps({ extractedRoot, localization }) {
         let innerRadiusM = ring?.innerRadius ?? null
         let outerRadiusM = ring?.outerRadius ?? null
         if (innerRadiusM == null || outerRadiusM == null) {
-          const dists = markers
-            .filter((m) => m.kind === 'qv' || m.kind === 'outlaw')
-            .map((m) => Math.hypot(m.x, m.y))
-            .filter((d) => d > 1e6)
-            .sort((a, b) => a - b)
+          const dists = ringSegmentDistances[ringKey].filter((d) => d > 1e6).sort((a, b) => a - b)
           if (dists.length) {
             const mid = dists[Math.floor(dists.length / 2)]
-            innerRadiusM = mid * 0.92
-            outerRadiusM = mid * 1.08
+            const bgOuter = ringBgOuterRadiusM(join(systemRoot, ringKey, `${ringKey}_bg.socpak`))
+            const half = Math.max((dists[dists.length - 1] - dists[0]) / 2, bgOuter ? bgOuter - mid : 0)
+            innerRadiusM = mid - half
+            outerRadiusM = mid + half
           }
         }
         if (innerRadiusM && outerRadiusM) {

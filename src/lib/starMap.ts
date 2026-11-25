@@ -205,6 +205,30 @@ export function orbDisplayRadiusPx(marker: StarMapMarker, scale: BodyScale): num
   return Math.max(display, realPx, floor)
 }
 
+// ── 2D camera ──────────────────────────────────────────────────────────────
+
+/** Map point at the view centre (meters, y up) and zoom. */
+export interface StarMapCamera {
+  cx: number
+  cy: number
+  pxPerM: number
+}
+
+/**
+ * Camera after a box zoom: the box's top-left becomes the view's top-left and
+ * the box width spans the view width. Box height does not matter.
+ */
+export function boxZoomCamera(
+  cam: StarMapCamera,
+  view: { w: number; h: number },
+  box: { left: number; top: number; width: number },
+): StarMapCamera {
+  const wx = cam.cx + (box.left - view.w / 2) / cam.pxPerM
+  const wy = cam.cy - (box.top - view.h / 2) / cam.pxPerM
+  const pxPerM = cam.pxPerM * (view.w / box.width)
+  return { pxPerM, cx: wx + view.w / 2 / pxPerM, cy: wy - view.h / 2 / pxPerM }
+}
+
 // ── Declutter ──────────────────────────────────────────────────────────────
 
 export interface ProjectedMarker {

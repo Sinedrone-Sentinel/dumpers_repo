@@ -78,7 +78,6 @@ export interface StarMapSearch {
   marks?: string
   route?: string
   start?: string
-  focus?: string
 }
 
 const LIST_SEP = '|'
@@ -108,7 +107,6 @@ export function validateStarMapSearch(search: Record<string, unknown>): StarMapS
     marks: str(search.marks),
     route: str(search.route),
     start: str(search.start),
-    focus: str(search.focus),
   }
 }
 
