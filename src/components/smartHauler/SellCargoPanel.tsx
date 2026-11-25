@@ -88,6 +88,7 @@ export default function SellCargoPanel({
       from: pointById(navMap, startId)?.name,
       current: 0,
       stops,
+      pins: stops,
     }, getStarMapData().systems)
   }, [rows, startId])
   useEffect(() => {

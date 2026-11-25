@@ -3629,13 +3629,26 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
   check(
     liveHaul.category === 'hauler' &&
       liveHaul.active === 'HUR-L5 High Course Station' &&
-      liveHaul.shops.length === 3 &&
-      liveHaul.shops[2].lines[0].label === '20 SCU of Gold' &&
+      liveHaul.shops.length === 2 &&
+      !liveHaul.shops.some((shop) => shop.place === 'Everus Harbor') &&
       !liveHaul.route.includes('Everus Harbor') &&
       hl.routeLegTone(livePoints, livePoints.findIndex((p) => p.name === 'ArcCorp'), liveHaul.active) === 'dim' &&
       liveLegs.some(([a, b]) => a.name === 'Seraphim Station' && b.name === 'HUR-L5 High Course Station') &&
       hl.routeLegTone(livePoints, livePoints.findIndex((p) => p.name === 'Seraphim Station'), liveHaul.active) === 'bright',
-    'star map: a stored haul keeps every stop, dims the traveled leg, and leaves the current leg bright',
+    'star map: a stored haul shows stops through the current one, dims the traveled leg, and leaves the current leg bright',
+  )
+  const listedHaul = hl.haulMapPayload({
+    from: 'Area18',
+    current: 0,
+    stops: liveHaul.shops,
+    pins: [
+      { place: 'Seraphim Station', lines: [{ action: 'buy', label: '40 SCU of Chlorine' }] },
+      { place: 'Everus Harbor', lines: [{ action: 'sell', label: '20 SCU of Gold' }] },
+    ],
+  }, smSystems)
+  check(
+    listedHaul.shops.length === 2 && listedHaul.shops[1].place === 'Everus Harbor' && !listedHaul.route?.includes('Everus Harbor'),
+    'star map: an explicit pin list can show stops the route line has not reached',
   )
   const movedHaul = hl.haulMapPayload({
     from: 'Hurston',
