@@ -357,8 +357,8 @@ export function starVelocityNudge(
   const speed = Math.hypot(vx, vy)
   const away = Math.hypot(awayX, awayY)
   if (speed < 1e-12 || away < 1e-12 || radians <= 0) return { vx, vy }
-  let nx = vx / speed + (awayX / away) * radians
-  let ny = vy / speed + (awayY / away) * radians
+  const nx = vx / speed + (awayX / away) * radians
+  const ny = vy / speed + (awayY / away) * radians
   const nm = Math.hypot(nx, ny) || 1
   return { vx: (nx / nm) * speed, vy: (ny / nm) * speed }
 }
