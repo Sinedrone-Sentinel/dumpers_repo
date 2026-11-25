@@ -527,9 +527,11 @@
     },
     {
       "systemId": "pyro",
-      "name": "PYR3 L4",
-      "aliases": [],
-      "kind": "station",
+      "name": "PYAM-SUPVISR-3-4",
+      "aliases": [
+        "PYR3 L4"
+      ],
+      "kind": "supervisor",
       "description": "A Lagrangian gravity well located in the orbit of Pyro III.",
       "x": -14623507669,
       "y": -10152318684,
@@ -541,7 +543,7 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": null,
-      "id": "pyro:pyr3-l4"
+      "id": "pyro:pyam-supvisr-3-4"
     },
     {
       "systemId": "pyro",
@@ -635,9 +637,11 @@
     },
     {
       "systemId": "pyro",
-      "name": "PYR3 L5",
-      "aliases": [],
-      "kind": "station",
+      "name": "PYAM-SUPVISR-3-5",
+      "aliases": [
+        "PYR3 L5"
+      ],
+      "kind": "supervisor",
       "description": "A Lagrangian gravity well located in the orbit of Pyro III.",
       "x": 12638431339,
       "y": 12537403511,
@@ -649,7 +653,7 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": null,
-      "id": "pyro:pyr3-l5"
+      "id": "pyro:pyam-supvisr-3-5"
     },
     {
       "systemId": "pyro",
@@ -3125,6 +3129,26 @@
     },
     {
       "systemId": "pyro",
+      "name": "PYR3 L4",
+      "aliases": [
+        "PYR3-L4"
+      ],
+      "kind": "station",
+      "description": null,
+      "x": -14623507669,
+      "y": -10152318684,
+      "z": 0,
+      "radiusM": null,
+      "innerRadiusM": null,
+      "outerRadiusM": null,
+      "toSystem": null,
+      "toMarkerName": null,
+      "notes": [],
+      "parentName": null,
+      "id": "pyro:pyr3-l4"
+    },
+    {
+      "systemId": "pyro",
       "name": "Starlight Service Station",
       "aliases": [
         "PYR3 L1"
@@ -3142,6 +3166,26 @@
       "notes": [],
       "parentName": null,
       "id": "pyro:starlight-service-station"
+    },
+    {
+      "systemId": "pyro",
+      "name": "PYR3 L5",
+      "aliases": [
+        "PYR3-L5"
+      ],
+      "kind": "station",
+      "description": null,
+      "x": 12638431339,
+      "y": 12537403511,
+      "z": 0,
+      "radiusM": null,
+      "innerRadiusM": null,
+      "outerRadiusM": null,
+      "toSystem": null,
+      "toMarkerName": null,
+      "notes": [],
+      "parentName": null,
+      "id": "pyro:pyr3-l5"
     },
     {
       "systemId": "pyro",
@@ -3249,7 +3293,7 @@
       "aliases": [
         "PYR2 L4"
       ],
-      "kind": "supervisor",
+      "kind": "station",
       "description": null,
       "x": 10577229334,
       "y": -968166325,
@@ -3305,7 +3349,7 @@
       "systemId": "pyro",
       "name": "Orbituary",
       "aliases": [],
-      "kind": "supervisor",
+      "kind": "station",
       "description": null,
       "x": -16104579245,
       "y": 7587500264,

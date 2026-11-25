@@ -3591,12 +3591,17 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
       grimD > starMap.orbDisplayRadiusPx(yela, yelaZoom),
     'star map: Grim HEX is drawn inside Yela Ring and off the moon',
   )
+  const supervisors = smSystems.pyro.markers.filter((m) => m.kind === 'supervisor').map((m) => m.name).sort()
   check(
-    ['Checkmate', 'Orbituary'].every((n) => byName(smSystems.pyro, n)?.kind === 'supervisor') &&
-      byName(smSystems.pyro, 'Ruin Station')?.kind === 'station' &&
+    supervisors.join() === 'PYAM-SUPVISR-3-4,PYAM-SUPVISR-3-5' &&
       starMap.STAR_MAP_KIND_LABELS.supervisor === 'Supervisor Station',
-    'star map: Checkmate and Orbituary are Supervisor Stations',
+    `star map: only the two PYAM supervisor stations use the Supervisor icon (${supervisors.join(', ')})`,
   )
+  check(
+    ['Checkmate', 'Orbituary', 'Ruin Station'].every((n) => byName(smSystems.pyro, n)?.kind === 'station'),
+    'star map: Checkmate, Orbituary and Ruin Station are plain stations',
+  )
+  check(hl.matchMarkers('PYR3 L4', smSystems)[0]?.name === 'PYAM-SUPVISR-3-4', 'star map: PYR3 L4 finds PYAM-SUPVISR-3-4')
 
   // Box zoom: box top-left becomes view top-left; box width spans the view.
   const cam0 = { cx: 0, cy: 0, pxPerM: 1 }

@@ -250,9 +250,6 @@ function bodyRingFromSoc(socpakPath) {
   return { innerRadiusM: innerKm * 1000, outerRadiusM: outerKm * 1000 }
 }
 
-/** Pyro's supervisor stations. */
-const SUPERVISOR_STATIONS = /^(checkmate|orbituary)$/i
-
 function classifyMarker({ path, record, name, entity }) {
   const p = path
   const n = String(name || '').toLowerCase()
@@ -267,7 +264,6 @@ function classifyMarker({ path, record, name, entity }) {
   if (/thecollector|collector_station|wikelo/.test(blob)) return 'wikelo'
   if (/commarray|comm_array|_comm\d/.test(blob) || /comm array/.test(n)) return 'comm_array'
   if (/executive/.test(blob)) return 'executive_hangar'
-  if (SUPERVISOR_STATIONS.test(n) || /checkmate|orbituary/.test(rec + file)) return 'supervisor'
   if (/outpost_olp|_olp_|orbital.?laser|\bolp\b/.test(blob)) return 'olp'
   if (/outpost_paf|_paf_|people.?s alliance|\bpaf\b/.test(blob)) return 'pa_station'
   if (/outlaw/.test(blob)) return 'outlaw'
@@ -421,7 +417,6 @@ export function parseStarMaps({ extractedRoot, localization }) {
         name = name || 'QV Breaker Station'
       }
       if (!name || /[_@]/.test(name) || name.startsWith('LOC_')) return
-      if (SUPERVISOR_STATIONS.test(name)) kind = 'supervisor'
       let toSystem = null
       let toMarkerName = null
       if (kind === 'jump_point') {
@@ -490,6 +485,18 @@ export function parseStarMaps({ extractedRoot, localization }) {
         parentName: null,
       })
     })
+
+    // PYAM supervisor stations sit on an L-point (AsteroidBase_P3_L4 = PYAM-SUPVISR-3-4).
+    for (const marker of markers) {
+      const lpoint = marker.name.match(/^PYR(\d) L(\d)$/)
+      if (!lpoint) continue
+      const base = locName(localization, `AsteroidBase_P${lpoint[1]}_L${lpoint[2]}`)
+      if (!base || !/SUPVISR/i.test(base)) continue
+      marker.aliases = [...new Set([...marker.aliases, marker.name])]
+      marker.name = base
+      marker.kind = 'supervisor'
+      marker.id = `${systemId}:${slug(base)}`
+    }
 
     for (const ring of bodyRings) {
       addMarker(markers, {
@@ -584,7 +591,7 @@ export function parseStarMaps({ extractedRoot, localization }) {
             systemId,
             name: point.name,
             aliases: point.aliases || [],
-            kind: SUPERVISOR_STATIONS.test(point.name) ? 'supervisor' : 'station',
+            kind: 'station',
             description: null,
             x: point.x,
             y: point.y,
