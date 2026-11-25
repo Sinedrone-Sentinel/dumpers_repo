@@ -4,7 +4,7 @@
  * contradict HPP when the ore has per-location spawn data.
  */
 
-import { REDUNDANT_SUBSITE_GUIDE_LOCATIONS } from './miningLocationAliases.mjs'
+import { REDUNDANT_SUBSITE_GUIDE_LOCATIONS, memberChipsForSpawn } from './miningLocationAliases.mjs'
 import { normalizeMineableLabel } from './miningOreNames.mjs'
 
 const BROAD_GUIDE_LOCATIONS = new Set([
@@ -58,6 +58,7 @@ function ensureLocationMineable(locationMineables, guideLoc, ore, spawnKey) {
  * @param {Record<string, { name: string, rarity: string }[]>} params.locationOres
  * @param {Record<string, object>} [params.locationMineables]
  * @param {Record<string, object>} params.spawnOres - parseMiningSpawns().ores
+ * @param {Record<string, object>} [params.locationAliases]
  * @param {Record<string, object[]>} params.rarityTiers
  * @param {(ore: string) => string} [params.assignOreRarity]
  * @param {boolean} [params.pruneUnsupportedCompendiumSites=true]
@@ -68,6 +69,7 @@ export function mergeSpawnOreLocations({
   locationOres,
   locationMineables = null,
   spawnOres,
+  locationAliases = null,
   rarityTiers,
   assignOreRarity = (ore) => assignOreRarityFromTiers(ore, rarityTiers),
   pruneUnsupportedCompendiumSites = true,
@@ -78,7 +80,10 @@ export function mergeSpawnOreLocations({
   for (const [ore, profile] of Object.entries(spawnOres ?? {})) {
     const spawnGuideSites = new Set()
     for (const loc of Object.values(profile.locations ?? {})) {
-      if (loc.guideName) spawnGuideSites.add(loc.guideName)
+      const alias = locationAliases?.[loc.spawnKey]
+      const chips = memberChipsForSpawn(loc.spawnKey, alias)
+      const sites = chips.length ? chips : loc.guideName ? [loc.guideName] : []
+      for (const site of sites) spawnGuideSites.add(site)
     }
     if (spawnGuideSites.size === 0) continue
 
@@ -93,9 +98,11 @@ export function mergeSpawnOreLocations({
       }
       ensureLocationOre(locationOres, guideLoc, ore, rarity)
       if (locationMineables) {
-        const spawnKey = Object.values(profile.locations ?? {}).find(
-          (loc) => loc.guideName === guideLoc
-        )?.spawnKey
+        const spawnKey = Object.values(profile.locations ?? {}).find((loc) => {
+          const alias = locationAliases?.[loc.spawnKey]
+          const chips = memberChipsForSpawn(loc.spawnKey, alias)
+          return chips.includes(guideLoc) || loc.guideName === guideLoc
+        })?.spawnKey
         ensureLocationMineable(locationMineables, guideLoc, ore, spawnKey)
       }
     }
@@ -104,6 +111,7 @@ export function mergeSpawnOreLocations({
 
     const before = oreLocations[ore].length
     oreLocations[ore] = oreLocations[ore].filter((guideLoc) => {
+      if (guideLoc === 'Pyro Asteroid Clusters') return spawnGuideSites.has(guideLoc)
       if (BROAD_GUIDE_LOCATIONS.has(guideLoc)) return true
       if (REDUNDANT_SUBSITE_GUIDE_LOCATIONS.has(guideLoc)) return false
       return spawnGuideSites.has(guideLoc)
@@ -114,7 +122,9 @@ export function mergeSpawnOreLocations({
       const idx = rows.findIndex((entry) => entry.name === ore)
       if (idx === -1) continue
       const keep =
-        BROAD_GUIDE_LOCATIONS.has(guideLoc) ||
+        (guideLoc === 'Pyro Asteroid Clusters'
+          ? spawnGuideSites.has(guideLoc)
+          : BROAD_GUIDE_LOCATIONS.has(guideLoc)) ||
         (!REDUNDANT_SUBSITE_GUIDE_LOCATIONS.has(guideLoc) && spawnGuideSites.has(guideLoc))
       if (!keep) {
         rows.splice(idx, 1)
@@ -122,10 +132,19 @@ export function mergeSpawnOreLocations({
     }
   }
 
+  const nyxBelts = ['Glaciem Ring', 'Keeger Belt']
+  const qvChip = 'QV Breaker Stations (Nyx)'
   for (const [ore, locations] of Object.entries(oreLocations)) {
-    oreLocations[ore] = [...new Set(locations)].filter(
+    const unique = [...new Set(locations)].filter(
       (loc) => !REDUNDANT_SUBSITE_GUIDE_LOCATIONS.has(loc)
     )
+    const hasNyxBelt = nyxBelts.some((belt) => unique.includes(belt))
+    oreLocations[ore] = hasNyxBelt ? unique.filter((loc) => loc !== qvChip) : unique
+    if (!hasNyxBelt) continue
+    const rows = locationOres[qvChip]
+    if (!rows) continue
+    const idx = rows.findIndex((entry) => entry.name === ore)
+    if (idx !== -1) rows.splice(idx, 1)
   }
 
   return { added, pruned }

@@ -55,7 +55,7 @@ export const GUIDE_TO_SPAWN_KEYS = {
   'HUR-L2': ['Lagrange F'],
   'HUR-L3': ['Lagrange E'],
   'HUR-L4': ['Lagrange A'],
-  'HUR-L5': ['Lagrange A'],
+  'HUR-L5': ['Lagrange C'],
   'MIC-L1': ['Lagrange C'],
   'MIC-L2': ['Lagrange C'],
   'MIC-L3': ['Lagrange B'],
@@ -302,6 +302,7 @@ export function buildLocationAliases(localization, extractedDataRoot) {
   applyVerifiedOverlays(aliases)
   auditHppProviderPresets(extractedDataRoot, aliases)
   applyNavHints(aliases, localization)
+  decoratePyroBeltChipNames(aliases)
 
   return Object.fromEntries(
     [...aliases.entries()].sort(([a], [b]) => a.localeCompare(b))
@@ -310,7 +311,7 @@ export function buildLocationAliases(localization, extractedDataRoot) {
 
 /**
  * Compendium / guide name → spawn profile keys (runtime lookup table).
- * Excludes broad buckets and PYR nav labels used only for belt template display.
+ * Excludes the Pyro Asteroid Clusters bucket. Pyro L-points and Stanton stations are included.
  */
 export function buildGuideToSpawnKeys(locationAliases = {}) {
   const map = {}
@@ -330,7 +331,6 @@ export function buildGuideToSpawnKeys(locationAliases = {}) {
     const names = alias.guideNames ?? (alias.guideName ? [alias.guideName] : [])
     for (const name of names) {
       if (name === 'Pyro Asteroid Clusters') continue
-      if (/^PYR\d/i.test(name)) continue
       if (!map[name]) map[name] = []
       if (!map[name].includes(spawnKey)) map[name].push(spawnKey)
     }
@@ -557,20 +557,65 @@ function applyNavHints(aliases, localization) {
     upsertAlias(aliases, spawnKey, patch)
   }
 
-  // Stanton Lagrange belts A–F surround their named station markers (ARC-L5 etc.)
+  // Stanton stations are separate chips. Do not hang a joined station list on the belt.
   for (const [spawnKey, alias] of aliases) {
-    if (!/^Lagrange [A-F]$/i.test(spawnKey) || alias.navHint) continue
-    const stations = (alias.guideNames ?? []).filter((name) => /-L\d$/.test(name)).sort()
-    if (stations.length) {
-      alias.navHint = `QT straight to ${stations.join(' / ')} — the belt surrounds the station`
-      alias.navMarkers = [
-        {
-          label: 'Lagrange stations with this belt profile',
-          markers: stations,
-        },
-      ]
-    }
+    if (!/^Lagrange [A-F]$/i.test(spawnKey)) continue
+    delete alias.navHint
+    delete alias.navMarkers
   }
+}
+
+const PYRO_BELT_PLANETS = {
+  'Pyro Warm01': [1, 2],
+  'Pyro Warm02': [3],
+  'Pyro Cool01': [5],
+  'Pyro Cool02': [6],
+}
+
+/** Turn "L3 · Endgame" into the chip label "PYR6 L3 · Endgame". */
+function decoratePyroBeltChipNames(aliases) {
+  for (const [spawnKey, alias] of aliases) {
+    const planets = PYRO_BELT_PLANETS[spawnKey]
+    if (!planets?.length) continue
+    const labels = []
+    planets.forEach((planet, index) => {
+      const group = alias.navMarkers?.[index]
+      for (const marker of group?.markers ?? []) {
+        const match = /^L(\d)(?: · (.+))?$/.exec(marker)
+        if (!match) continue
+        labels.push(match[2] ? `PYR${planet} L${match[1]} · ${match[2]}` : `PYR${planet} L${match[1]}`)
+      }
+    })
+    if (!labels.length) continue
+    alias.guideNames = labels
+    delete alias.guideName
+  }
+}
+
+const PYR_L_POINT = /^PYR\d+ L\d+(?: · .+)?$/
+const STANTON_STATION = /^[A-Z]{2,4}-L\d$/
+
+/**
+ * Member-facing chips for one spawn preset.
+ * Belt presets expand to every station or Pyro L-point. RAB/RMB stay one chip.
+ * @param {string} spawnKey
+ * @param {{ guideName?: string, guideNames?: string[], displayName?: string } | undefined} alias
+ * @returns {string[]}
+ */
+export function memberChipsForSpawn(spawnKey, alias) {
+  const names = alias?.guideNames ?? (alias?.guideName ? [alias.guideName] : [])
+  if (PYRO_BELT_PLANETS[spawnKey]) {
+    return names.filter((name) => PYR_L_POINT.test(name))
+  }
+  if (/^Lagrange [A-F]$/i.test(spawnKey)) {
+    return names.filter((name) => STANTON_STATION.test(name))
+  }
+  if (spawnKey === 'Pyro Deepspaceasteroids') return ['Pyro Asteroid Clusters']
+  if (alias?.guideName && alias.guideName !== 'Pyro Asteroid Clusters') return [alias.guideName]
+  const rest = names.filter((name) => name !== 'Pyro Asteroid Clusters' && !PYR_L_POINT.test(name))
+  if (rest.length) return rest
+  if (alias?.displayName) return [alias.displayName]
+  return alias?.guideName ? [alias.guideName] : []
 }
 
 function auditHppProviderPresets(extractedDataRoot, aliases) {

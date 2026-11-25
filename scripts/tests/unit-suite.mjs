@@ -27,6 +27,7 @@ const modules = [
   'src/lib/miningAdvisorCrypto.ts',
   'src/lib/bazaarStockDeduct.ts',
   'src/lib/miningLocationAliases.ts',
+  'src/lib/miningLocationNames.ts',
   'src/lib/miningClusterProfiles.ts',
   'src/lib/miningSignatures.ts',
   'supabase/functions/mining-loadout-advisor/gearShopLookup.ts',
@@ -80,6 +81,7 @@ const relink = await import(pathToFileURL(path.join(outDir, 'canonicalizeBluepri
 const advisorCrypto = await import(pathToFileURL(path.join(outDir, 'miningAdvisorCrypto.mjs')).href)
 const bazaarDeduct = await import(pathToFileURL(path.join(outDir, 'bazaarStockDeduct.mjs')).href)
 const miningAliases = await import(pathToFileURL(path.join(outDir, 'miningLocationAliases.mjs')).href)
+const miningNames = await import(pathToFileURL(path.join(outDir, 'miningLocationNames.mjs')).href)
 const miningChips = await import(pathToFileURL(path.join(outDir, 'miningClusterProfiles.mjs')).href)
 const miningSignatures = await import(pathToFileURL(path.join(outDir, 'miningSignatures.mjs')).href)
 const gearShop = await import(pathToFileURL(path.join(outDir, 'gearShopLookup.mjs')).href)
@@ -890,10 +892,64 @@ check(
 const pyroScope = miningChips.spawnScopeForGuideLocation('Pyro Asteroid Clusters')
 check(pyroScope.system === 'Pyro', 'Pyro Asteroid Clusters scope is Pyro')
 const pyroWTag = miningChips.getOverallSpawnTag('Tungsten', 'asteroid', pyroScope)
-check(!/ARC-L1/i.test(pyroWTag.label), 'Pyro Tungsten asteroid Best-at is not ARC-L1')
 check(
-  /Pyro III|Lagrange/i.test(pyroWTag.label),
-  `Pyro Tungsten asteroid Best-at stays in Pyro (got ${pyroWTag.label})`
+  pyroWTag.label === 'Overall',
+  `Tungsten belt is not rolled into Pyro Asteroid Clusters (got ${pyroWTag.label})`
+)
+check(
+  miningAliases.isAsteroidFieldGuideLocation('PYR6 L3 · Endgame'),
+  'Pyro L-point chips are asteroid-field'
+)
+
+const miningLocationData = JSON.parse(
+  readFileSync(path.join(root, 'src/data/game-mining-locations.json'), 'utf8')
+)
+const hepSites = miningLocationData.oreLocations.Hephaestanite
+for (const site of ['CRU-L3', 'MIC-L1', 'MIC-L2', 'MIC-L5', 'HUR-L5']) {
+  check(hepSites.includes(site), `Hephaestanite lists ${site}`)
+}
+check(
+  miningNames.getNavHintForGuideLocation('CRU-L3') ===
+    'QT straight to CRU-L3 — the belt surrounds the station',
+  'CRU-L3 hint names only CRU-L3'
+)
+check(
+  !miningNames.getNavHintForGuideLocation('CRU-L3').includes('MIC-L1'),
+  'CRU-L3 hint does not list MIC-L1'
+)
+check(miningNames.getNavMarkersForGuideLocation('CRU-L3').length === 0, 'CRU-L3 has no sibling marker list')
+const taraniteSites = miningLocationData.oreLocations.Taranite
+check(
+  taraniteSites.some((site) => site.startsWith('PYR6 L1')) &&
+    taraniteSites.some((site) => site.startsWith('PYR6 L5')) &&
+    !taraniteSites.includes('Pyro Asteroid Clusters'),
+  'Taranite lists PYR6 L-points and not Pyro Asteroid Clusters'
+)
+check(
+  miningNames.getNavHintForGuideLocation('PYR6 L3 · Endgame') === 'QT to PYR6 L3 · Endgame',
+  'PYR6 L3 hint names only that marker'
+)
+const tungstenSites = miningLocationData.oreLocations.Tungsten
+check(
+  tungstenSites.some((site) => site.startsWith('PYR3 L')) &&
+    !tungstenSites.includes('Pyro Asteroid Clusters'),
+  'Tungsten lists its Pyro III markers and not the cluster bucket'
+)
+check(
+  miningLocationData.oreLocations.Aluminum.includes('Pyro Asteroid Clusters'),
+  'Deep-space ores still list Pyro Asteroid Clusters'
+)
+check(
+  miningLocationData.oreLocations.Savrilium.includes('Glaciem Ring') &&
+    miningLocationData.oreLocations.Savrilium.includes('Keeger Belt') &&
+    !miningLocationData.oreLocations.Savrilium.includes('QV Breaker Stations (Nyx)'),
+  'Savrilium keeps the two Nyx belts and drops the breaker rollup'
+)
+check(
+  !Object.values(miningLocationData.oreLocations).some((sites) =>
+    sites.some((site) => /^BRK-/.test(site))
+  ),
+  'Breaker stations stay off the chip list'
 )
 
 const pyroWSurface = miningChips.depositTypesForOreAtGuideLocation(

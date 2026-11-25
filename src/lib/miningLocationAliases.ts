@@ -66,6 +66,7 @@ export function isSurfaceBodyGuideLocation(guideLocationName: string): boolean {
 export function isAsteroidFieldGuideLocation(guideLocationName: string): boolean {
   if (isSurfaceBodyGuideLocation(guideLocationName)) return false
   if (ASTEROID_FIELD_GUIDE_LOCATIONS.has(guideLocationName)) return true
+  if (/^PYR\d+ L\d+/i.test(guideLocationName)) return true
   return ASTEROID_FIELD_NAME_RE.test(guideLocationName)
 }
 

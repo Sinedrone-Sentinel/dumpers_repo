@@ -35,7 +35,7 @@ import {
   formatMineableInstability,
   getMineableElementStats,
 } from './mineableElementStats'
-import { getNavHintForGuideLocation, getNavHintForSpawnKey } from './miningLocationNames'
+import { getNavHintForGuideLocation, isSingleBeltMarker } from './miningLocationNames'
 function pct(n: number | null | undefined, digits = 2): string {
   if (n == null || !Number.isFinite(n)) return '—'
   return `${n.toFixed(digits)}%`
@@ -247,7 +247,9 @@ export function guideLocationChipTooltip(
   return (
     <div className="space-y-1">
       <div className="font-semibold text-orange-300">
-        {profile.displayName ?? guideLocationName}
+        {isSingleBeltMarker(guideLocationName)
+          ? guideLocationName
+          : (profile.displayName ?? guideLocationName)}
       </div>
       <div className="text-orange-300/80">
         {depositTypeLabel(depositType)} · {profile.system} System
@@ -260,9 +262,7 @@ export function guideLocationChipTooltip(
       </div>
       <div>Cluster: {clusterPreview(profile.clusterRows)}</div>
       <div className="text-slate-400">Composition: {compositionSummary(profile.compositionParts)}</div>
-      {navHintLine(
-        getNavHintForSpawnKey(profile.spawnKey) ?? getNavHintForGuideLocation(guideLocationName)
-      )}
+      {navHintLine(getNavHintForGuideLocation(guideLocationName))}
       {oreMineableStatsTooltipBlock(oreName)}
     </div>
   )
