@@ -98,6 +98,7 @@ export const STAR_MAP_COLORS = {
   moonCore: '#e0f2fe',
   orbit: 'rgba(148, 148, 148, 0.55)',
   belt: 'rgba(74, 222, 128, 0.16)',
+  beltLabel: 'rgba(134, 239, 172, 0.9)',
   route: '#facc15',
   blink: '#facc15',
 } as const
@@ -164,6 +165,10 @@ interface BodyLayout {
   clearM: Map<string, number>
   /** Station / comm array / other marker id → the body it orbits close in. */
   attachedTo: Map<string, StarMapMarker>
+  /** Planet id → its closest and farthest moon, meters. */
+  moonSpanM: Map<string, { inner: number; outer: number }>
+  /** Planet id → closest marker that is not the planet, its moons, or anything riding on them, meters. */
+  neighbourM: Map<string, number>
 }
 
 export interface BodyScale {
@@ -196,11 +201,15 @@ function bodyLayout(system: StarMapSystem): BodyLayout {
   const dist = (a: StarMapMarker, b: StarMapMarker) => Math.hypot(a.x - b.x, a.y - b.y)
 
   const firstMoonM = new Map<string, number>()
+  const moonSpanM = new Map<string, { inner: number; outer: number }>()
   for (const moon of bodies) {
     if (moon.kind !== 'moon' || !moon.parentName) continue
     const parent = byName.get(moon.parentName)
     if (!parent) continue
-    firstMoonM.set(parent.id, Math.min(firstMoonM.get(parent.id) ?? Infinity, dist(moon, parent)))
+    const d = dist(moon, parent)
+    firstMoonM.set(parent.id, Math.min(firstMoonM.get(parent.id) ?? Infinity, d))
+    const span = moonSpanM.get(parent.id) ?? { inner: Infinity, outer: 0 }
+    moonSpanM.set(parent.id, { inner: Math.min(span.inner, d), outer: Math.max(span.outer, d) })
   }
 
   const attachedTo = new Map<string, StarMapMarker>()
@@ -233,7 +242,20 @@ function bodyLayout(system: StarMapSystem): BodyLayout {
     clearM.set(b.id, clear)
   }
 
-  const layout = { byName, clearM, attachedTo }
+  const neighbourM = new Map<string, number>()
+  for (const planet of bodies) {
+    if (planet.kind !== 'planet' || !moonSpanM.has(planet.id)) continue
+    const family = (m: StarMapMarker | undefined): boolean =>
+      !!m && (m.id === planet.id || (m.kind === 'moon' && m.parentName === planet.name))
+    let near = Infinity
+    for (const m of system.markers) {
+      if (m.kind === 'star' || m.kind === 'belt' || family(m) || family(attachedTo.get(m.id))) continue
+      near = Math.min(near, dist(m, planet))
+    }
+    neighbourM.set(planet.id, near)
+  }
+
+  const layout = { byName, clearM, attachedTo, moonSpanM, neighbourM }
   layoutCache.set(system, layout)
   return layout
 }
@@ -312,16 +334,44 @@ export function beltPxPerM(belt: StarMapMarker, parent: StarMapMarker | null, sc
   return scale.pxPerM * bodyEnlargement(parent, scale)
 }
 
+/** Pixels between a planet's disc and its first moon once the moons spread out. */
+const MOON_GAP_PX = 12
+/** The spread moons stay inside this share of the gap to the planet's nearest neighbour. */
+const MOON_SPREAD_SHARE = 0.6
+
 /**
- * Map position to draw a marker at. A station or comm array close in to a
- * planet or moon keeps its direction but moves out with the enlarged body,
- * so it is never hidden under the disc.
+ * How far a planet's moons are pushed out from it (1 = true distance). When the
+ * view has room around the planet, the first moon sits just past the disc and
+ * the other moons keep their distance ratios. With no room the moons stay put
+ * (and hide behind the planet) until the view zooms in further.
+ */
+export function moonSpread(planet: StarMapMarker, scale: BodyScale): number {
+  const span = scale.layout.moonSpanM.get(planet.id)
+  if (!span) return 1
+  const p = scale.pxPerM
+  const want = (orbDisplayRadiusPx(planet, scale) + MOON_GAP_PX) / (span.inner * p)
+  if (want <= 1) return 1
+  const room = (scale.layout.neighbourM.get(planet.id) ?? Infinity) * p * MOON_SPREAD_SHARE
+  return span.outer * p * want <= room ? want : 1
+}
+
+/**
+ * Map position to draw a marker at. Moons follow their planet's spread. A
+ * station or comm array close in to a planet or moon keeps its direction but
+ * moves out with the enlarged body, so it is never hidden under the disc.
  */
 export function displayPositionM(marker: StarMapMarker, scale: BodyScale): { x: number; y: number } {
+  if (marker.kind === 'moon' && marker.parentName) {
+    const parent = scale.layout.byName.get(marker.parentName)
+    if (!parent) return { x: marker.x, y: marker.y }
+    const s = moonSpread(parent, scale)
+    return { x: parent.x + (marker.x - parent.x) * s, y: parent.y + (marker.y - parent.y) * s }
+  }
   const body = scale.layout.attachedTo.get(marker.id)
   if (!body) return { x: marker.x, y: marker.y }
+  const at = displayPositionM(body, scale)
   const k = bodyEnlargement(body, scale)
-  return { x: body.x + (marker.x - body.x) * k, y: body.y + (marker.y - body.y) * k }
+  return { x: at.x + (marker.x - body.x) * k, y: at.y + (marker.y - body.y) * k }
 }
 
 // ── 2D camera ──────────────────────────────────────────────────────────────

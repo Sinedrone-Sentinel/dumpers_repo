@@ -3581,6 +3581,22 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
     starMap.orbDisplayRadiusPx(crusader, crusaderMoons) <= 50.9e6 * crusaderMoons.pxPerM * 0.5,
     'star map: Crusader never covers its first moon orbit',
   )
+  // Zoomed to Crusader with Aaron Halo crossing the view: the moons spread past the disc.
+  const crusaderArea = at(140 / (halo.outerRadiusM - halo.innerRadiusM) / fitPx)
+  const crusaderPx = starMap.orbDisplayRadiusPx(crusader, crusaderArea)
+  const moonPx = (m) => {
+    const p = starMap.displayPositionM(m, crusaderArea)
+    return Math.hypot(p.x - crusader.x, p.y - crusader.y) * crusaderArea.pxPerM
+  }
+  const crusaderMoonsOut = ['Cellin', 'Daymar', 'Yela'].map((n) => moonPx(byName(stanton, n)))
+  check(
+    crusaderMoonsOut.every((d) => d > crusaderPx + 6) && crusaderMoonsOut[0] < crusaderMoonsOut[1] && crusaderMoonsOut[1] < crusaderMoonsOut[2],
+    "star map: at Crusader's zoom its moons show past the disc, in their true order",
+  )
+  check(
+    starMap.moonSpread(crusader, at(1)) === 1,
+    'star map: at the whole-system view the moons stay tucked in',
+  )
   const grimHex = byName(stanton, 'Grim HEX')
   const yelaZoom = at(150 / 782e3 / fitPx)
   const grimAt = starMap.displayPositionM(grimHex, yelaZoom)
