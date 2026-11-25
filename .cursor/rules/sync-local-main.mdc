@@ -1,0 +1,33 @@
+---
+description: Fetch and fast-forward local main before GitHub claims or a new branch
+alwaysApply: true
+---
+
+# Keep local main current
+
+`git fetch` updates `origin/main` only. The local `main` branch stays where it was last checked out until it is fast-forwarded. Feature-branch work does not move it.
+
+## When
+
+Before any of these:
+
+- Saying what is on `main`, or whether a pull request is open, merged, or missing
+- Starting a new branch
+- Comparing this checkout to GitHub
+
+Do not answer those from an earlier turn. Fetch first.
+
+## Steps
+
+1. `git fetch origin`
+2. If this branch has a pull request, read `gh pr view` for its state. Memory of an earlier turn is not the state.
+3. If local `main` is behind `origin/main`, fast-forward it:
+
+```bash
+git checkout main
+git pull --ff-only origin main
+```
+
+4. When the previous branch is already merged, cut the next branch from that updated `main`. Do not keep working on the merged branch.
+5. Leave uncommitted files alone while switching. Do not commit `public/dumper-apps/VIRUSTOTAL.json` or `scripts/_tmp-*`.
+6. If the fast-forward is not possible, say so and stop. Do not merge or rebase to force it.
