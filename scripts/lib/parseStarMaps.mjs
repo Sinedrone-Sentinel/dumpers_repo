@@ -24,13 +24,17 @@ function norm(path) {
   return path.replace(/\\/g, '/').toLowerCase()
 }
 
-function locName(localization, key) {
+function locText(localization, key, max) {
   if (!key) return null
   const raw = localization[key] || localization[key.split(',')[0]]
   if (!raw) return null
   const text = String(raw).replace(/\\n/g, ' ').replace(/\s+/g, ' ').trim()
-  if (!text || text.startsWith('@') || text.length > 120) return null
+  if (!text || text.startsWith('@') || text.length > max) return null
   return text
+}
+
+function locName(localization, key) {
+  return locText(localization, key, 120)
 }
 
 function quatMul(a, b) {
@@ -583,19 +587,27 @@ export function parseStarMaps({ extractedRoot, localization }) {
 
     // Parent moons to nearest planet for orbit rings.
     // Fill manned stations that live under planet interiors (Checkmate, Seraphim, …).
+    // A city on a planet stays off the map. Levski is a city in the Glaciem Ring, so it stays.
     try {
       const navPath = join(ROOT, 'src', 'data', 'nav-systems.json')
       if (existsSync(navPath)) {
         const nav = JSON.parse(readFileSync(navPath, 'utf8'))
+        const onBody = (point) => markers.some((m) => {
+          if ((m.kind !== 'planet' && m.kind !== 'moon') || !m.radiusM) return false
+          return Math.hypot(point.x - m.x, point.y - m.y, (point.z || 0) - (m.z || 0)) < m.radiusM * 4
+        })
         for (const point of nav.points || []) {
-          if (point.system !== systemId || point.kind !== 'station') continue
+          if (point.system !== systemId) continue
+          if (point.kind !== 'station' && point.kind !== 'city') continue
+          if (point.kind === 'city' && onBody(point)) continue
           if (markers.some((m) => m.name.toLowerCase() === String(point.name).toLowerCase())) continue
+          const landing = point.kind === 'city'
           addMarker(markers, {
             systemId,
             name: point.name,
             aliases: point.aliases || [],
-            kind: 'station',
-            description: null,
+            kind: landing ? 'landing' : 'station',
+            description: landing && point.name === 'Levski' ? locText(localization, 'Delamar_Desc', 400) : null,
             x: point.x,
             y: point.y,
             z: point.z,
