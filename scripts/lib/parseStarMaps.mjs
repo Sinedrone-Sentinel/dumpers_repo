@@ -250,6 +250,9 @@ function bodyRingFromSoc(socpakPath) {
   return { innerRadiusM: innerKm * 1000, outerRadiusM: outerKm * 1000 }
 }
 
+/** Pyro's supervisor stations. */
+const SUPERVISOR_STATIONS = /^(checkmate|orbituary)$/i
+
 function classifyMarker({ path, record, name, entity }) {
   const p = path
   const n = String(name || '').toLowerCase()
@@ -264,7 +267,7 @@ function classifyMarker({ path, record, name, entity }) {
   if (/thecollector|collector_station|wikelo/.test(blob)) return 'wikelo'
   if (/commarray|comm_array|_comm\d/.test(blob) || /comm array/.test(n)) return 'comm_array'
   if (/executive/.test(blob)) return 'executive_hangar'
-  if (/\b(checkmate|orbituary)\b/.test(n) || /checkmate|orbituary/.test(rec + file)) return 'admin_base'
+  if (SUPERVISOR_STATIONS.test(n) || /checkmate|orbituary/.test(rec + file)) return 'supervisor'
   if (/outpost_olp|_olp_|orbital.?laser|\bolp\b/.test(blob)) return 'olp'
   if (/outpost_paf|_paf_|people.?s alliance|\bpaf\b/.test(blob)) return 'pa_station'
   if (/outlaw/.test(blob)) return 'outlaw'
@@ -418,8 +421,7 @@ export function parseStarMaps({ extractedRoot, localization }) {
         name = name || 'QV Breaker Station'
       }
       if (!name || /[_@]/.test(name) || name.startsWith('LOC_')) return
-      if (/^(checkmate|orbituary)$/i.test(name)) kind = 'admin_base'
-
+      if (SUPERVISOR_STATIONS.test(name)) kind = 'supervisor'
       let toSystem = null
       let toMarkerName = null
       if (kind === 'jump_point') {
@@ -578,13 +580,11 @@ export function parseStarMaps({ extractedRoot, localization }) {
         for (const point of nav.points || []) {
           if (point.system !== systemId || point.kind !== 'station') continue
           if (markers.some((m) => m.name.toLowerCase() === String(point.name).toLowerCase())) continue
-          let kind = 'station'
-          if (/^(checkmate|orbituary)$/i.test(point.name)) kind = 'admin_base'
           addMarker(markers, {
             systemId,
             name: point.name,
             aliases: point.aliases || [],
-            kind,
+            kind: SUPERVISOR_STATIONS.test(point.name) ? 'supervisor' : 'station',
             description: null,
             x: point.x,
             y: point.y,

@@ -3249,7 +3249,7 @@
       "aliases": [
         "PYR2 L4"
       ],
-      "kind": "admin_base",
+      "kind": "supervisor",
       "description": null,
       "x": 10577229334,
       "y": -968166325,
@@ -3305,7 +3305,7 @@
       "systemId": "pyro",
       "name": "Orbituary",
       "aliases": [],
-      "kind": "admin_base",
+      "kind": "supervisor",
       "description": null,
       "x": -16104579245,
       "y": 7587500264,

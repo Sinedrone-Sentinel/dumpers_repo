@@ -9,6 +9,7 @@ import {
   blinkAlpha,
   boxZoomCamera,
   declutterMarkers,
+  displayPositionM,
   orbDisplayRadiusPx,
   systemBodyScale,
   type ProjectedMarker,
@@ -202,7 +203,7 @@ export default function StarMapSystemView({
       ctx.fillStyle = '#020617'
       ctx.fillRect(0, 0, size.w, size.h)
 
-      const scale = systemBodyScale(system, cam.pxPerM)
+      const scale = systemBodyScale(system, cam.pxPerM, fitPxPerM)
       const sc = toScreen(starX, starY, cam)
 
       // Belts: one translucent band each.
@@ -233,7 +234,8 @@ export default function StarMapSystemView({
       const items: ProjectedMarker[] = []
       for (const m of system.markers) {
         if (m.kind === 'belt') continue
-        const p = toScreen(m.x, m.y, cam)
+        const at = displayPositionM(m, scale)
+        const p = toScreen(at.x, at.y, cam)
         const r = ORB_KINDS.has(m.kind) ? orbDisplayRadiusPx(m, scale) : ICON_PX / 2
         items.push({ marker: m, sx: p.sx, sy: p.sy, r })
       }
@@ -371,23 +373,31 @@ export default function StarMapSystemView({
       for (const it of labelOrder) {
         const text = it.marker.name
         const w = ctx.measureText(text).width
-        const box: Box = { x: it.sx + it.r + 4, y: it.sy - 7, w, h: 14, owner: it.marker.id }
-        if (box.x < 0 || box.y < 0 || box.x + box.w > size.w || box.y + box.h > size.h) continue
-        const hit = boxes.some(
-          (b) =>
-            b.owner !== it.marker.id &&
-            box.x < b.x + b.w &&
-            box.x + box.w > b.x &&
-            box.y < b.y + b.h &&
-            box.y + box.h > b.y,
+        const gap = it.r + 4
+        // Right of the marker first, then left, above, below.
+        const spots: Box[] = [
+          { x: it.sx + gap, y: it.sy - 7, w, h: 14, owner: it.marker.id },
+          { x: it.sx - gap - w, y: it.sy - 7, w, h: 14, owner: it.marker.id },
+          { x: it.sx - w / 2, y: it.sy - gap - 14, w, h: 14, owner: it.marker.id },
+          { x: it.sx - w / 2, y: it.sy + gap, w, h: 14, owner: it.marker.id },
+        ]
+        const box = spots.find(
+          (s) =>
+            s.x >= 0 &&
+            s.y >= 0 &&
+            s.x + s.w <= size.w &&
+            s.y + s.h <= size.h &&
+            !boxes.some(
+              (b) => b.owner !== it.marker.id && s.x < b.x + b.w && s.x + s.w > b.x && s.y < b.y + b.h && s.y + s.h > b.y,
+            ),
         )
-        if (hit) continue
+        if (!box) continue
         boxes.push(box)
         ctx.fillStyle = ORB_KINDS.has(it.marker.kind) ? '#e2e8f0' : 'rgba(203, 213, 225, 0.85)'
-        ctx.fillText(text, box.x, it.sy)
+        ctx.fillText(text, box.x, box.y + 7)
       }
     },
-    [system, size, toScreen, starX, starY, markedIds, routeIds, selectedId, segments, planetsByName],
+    [system, size, toScreen, starX, starY, markedIds, routeIds, selectedId, segments, planetsByName, fitPxPerM],
   )
 
   // Animate while something blinks or a route moves; otherwise redraw on change.
