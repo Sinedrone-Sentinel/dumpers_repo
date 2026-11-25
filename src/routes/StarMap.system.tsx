@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from 'react'
 import { useNavigate, useParams } from '@tanstack/react-router'
+import StarMapHandoffListener from '../components/starMap/StarMapHandoffListener'
 import StarMapSystemView from '../components/starMap/StarMapSystemView'
 import { setAnalyticsSubTool } from '../lib/analytics'
 import type { StarMapMarker } from '../lib/starMap'
@@ -47,6 +48,7 @@ export default function StarMapSystemRoute() {
   return (
     <main className="site-shell relative z-10 py-6 min-w-0 w-full overflow-x-hidden">
       <div className="site-surface relative h-[calc(100vh-8rem)] min-h-[480px] overflow-hidden">
+        <StarMapHandoffListener systemId={system?.id} />
         {system ? (
           <StarMapSystemView
             key={system.id}

@@ -164,6 +164,49 @@ export function shoppingMapPayload(
   }
 }
 
+export interface StarMapShopPin {
+  markerId: string
+  /** The place, or the body several places share. */
+  title: string
+  lines: { action: 'buy' | 'sell'; label: string; where?: string }[]
+}
+
+/**
+ * One pin per map body. Later stops at that body add their lines, so a second
+ * commodity does not open the first stop's list.
+ */
+export function groupShopPins(shops: StarMapShopStop[], systems: StarMapSystems, systemId: string): StarMapShopPin[] {
+  const order: string[] = []
+  const pins = new Map<string, { markerName: string; lines: { action: 'buy' | 'sell'; label: string; where: string }[] }>()
+  for (const shop of shops) {
+    const marker = resolveShopMarker(shop.place, systems)
+    if (!marker || marker.systemId !== systemId) continue
+    let pin = pins.get(marker.id)
+    if (!pin) {
+      pin = { markerName: marker.name, lines: [] }
+      pins.set(marker.id, pin)
+      order.push(marker.id)
+    }
+    for (const line of shop.lines) {
+      pin.lines.push({ action: line.action, label: line.label, where: shop.place })
+    }
+  }
+  return order.map((id) => {
+    const pin = pins.get(id) as { markerName: string; lines: { action: 'buy' | 'sell'; label: string; where: string }[] }
+    const places = [...new Set(pin.lines.map((line) => line.where))]
+    const shared = places.length === 1
+    return {
+      markerId: id,
+      title: shared ? places[0] : pin.markerName,
+      lines: pin.lines.map((line) => ({
+        action: line.action,
+        label: line.label,
+        where: shared ? undefined : line.where,
+      })),
+    }
+  })
+}
+
 /** Bright on the leg that arrives at `active`, including the jumps in that leg. Earlier legs are dim. */
 export function routeLegTone(
   points: { name: string; aliases?: string[]; kind?: string }[],

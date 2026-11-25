@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from 'react'
 import { useNavigate, useSearch } from '@tanstack/react-router'
+import StarMapHandoffListener from '../components/starMap/StarMapHandoffListener'
 import StarMapOverview from '../components/starMap/StarMapOverview'
 import { setAnalyticsSubTool } from '../lib/analytics'
 import { payloadFromSearch, readStarMapHandoff, resolveStarMapSystem, type StarMapSearch } from '../lib/starMapHighlight'
@@ -85,6 +86,7 @@ export default function StarMapIndexRoute() {
   return (
     <main className="site-shell relative z-10 py-6 min-w-0 w-full overflow-x-hidden">
       <div className="site-surface relative h-[calc(100vh-8rem)] min-h-[480px] overflow-hidden">
+        <StarMapHandoffListener />
         <StarMapOverview index={index} onEnter={enter} />
         {choice && (
           <div className="site-tooltip-panel absolute top-4 left-1/2 -translate-x-1/2 z-20 w-[min(92%,26rem)]" role="dialog">

@@ -26,7 +26,7 @@ import {
   type StarMapPoiGroup,
   type StarMapSystem,
 } from '../../lib/starMap'
-import { resolveShopMarker, routeLegTone, routeSegmentsInSystem, type StarMapShopStop } from '../../lib/starMapHighlight'
+import { groupShopPins, routeLegTone, routeSegmentsInSystem, type StarMapShopStop } from '../../lib/starMapHighlight'
 import { STAR_MAP_ICON_PATHS, drawShoppingIcon, drawStarMapIcon, strokeTelemetryLink } from './starMapIcons'
 import { paintBelt, paintBody, paintStar, paintStarfield } from './starMapPaint'
 import SiteTooltip from '../SiteTooltip'
@@ -87,14 +87,22 @@ export default function StarMapSystemView({
   const [size, setSize] = useState({ w: 0, h: 0 })
   const camRef = useRef<Cam | null>(null)
   const [selectedId, setSelectedId] = useState<string | null>(null)
-  const [selectedShop, setSelectedShop] = useState<string | null>(null)
-  const shopHitsRef = useRef<{ place: string; sx: number; sy: number }[]>([])
+  const [selectedShop, setSelectedShop] = useState<number | null>(null)
+  const shopHitsRef = useRef<{ index: number; sx: number; sy: number }[]>([])
+  const shopPins = useMemo(
+    () => groupShopPins(shops ?? [], { [system.id]: system }, system.id),
+    [shops, system],
+  )
   const [poiOn, setPoiOn] = useState<Record<string, boolean>>({})
   const projectedRef = useRef<{ items: ProjectedMarker[]; visible: Set<string> }>({ items: [], visible: new Set() })
   const dragRef = useRef<{ x: number; y: number; cam: Cam; moved: boolean; box: boolean } | null>(null)
   const leftShiftRef = useRef(false)
   const boxElRef = useRef<HTMLDivElement>(null)
   const boxingRef = useRef(false)
+
+  useEffect(() => {
+    setSelectedShop(null)
+  }, [focusId])
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -317,27 +325,22 @@ export default function StarMapSystemView({
         drawStarMapIcon(ctx, it.marker.kind, it.sx, it.sy, ICON_PX, starMapPoiGroup(it.marker)?.color)
       }
 
-      // Telemetry pins. Each one is twice an icon, shimmering, with a gold line to its place.
-      const shopHits: { place: string; sx: number; sy: number }[] = []
-      if (shops?.length) {
-        const seen = new Map<string, number>()
-        for (const shop of shops) {
-          const marker = resolveShopMarker(shop.place, { [system.id]: system })
-          if (!marker) continue
-          const at = displayPositionM(marker, scale)
-          const p = toScreen(at.x, at.y, cam)
-          const body = byId.get(marker.id)
-          const fromR = body?.r ?? ICON_PX / 2
-          const gap = fromR + TELEMETRY_ICON_PX * 0.75 + 16
-          const n = seen.get(marker.id) ?? 0
-          seen.set(marker.id, n + 1)
-          const sx = p.sx + gap
-          const sy = p.sy - gap - n * (TELEMETRY_ICON_PX + 8)
-          strokeTelemetryLink(ctx, p.sx, p.sy, fromR, sx, sy)
-          drawShoppingIcon(ctx, sx, sy, t)
-          shopHits.push({ place: shop.place, sx, sy })
-        }
-      }
+      // One pin per body. Every buy and sell there is on that pin, in haul order.
+      const shopHits: { index: number; sx: number; sy: number }[] = []
+      shopPins.forEach((pin, index) => {
+        const marker = system.markers.find((row) => row.id === pin.markerId)
+        if (!marker) return
+        const at = displayPositionM(marker, scale)
+        const p = toScreen(at.x, at.y, cam)
+        const body = byId.get(marker.id)
+        const fromR = body?.r ?? ICON_PX / 2
+        const gap = fromR + TELEMETRY_ICON_PX * 0.75 + 16
+        const sx = p.sx + gap
+        const sy = p.sy - gap
+        strokeTelemetryLink(ctx, p.sx, p.sy, fromR, sx, sy)
+        drawShoppingIcon(ctx, sx, sy, t)
+        shopHits.push({ index, sx, sy })
+      })
       shopHitsRef.current = shopHits
 
       // Blink.
@@ -460,7 +463,7 @@ export default function StarMapSystemView({
         ctx.fillText(text, placed.x, placed.y + 7)
       }
     },
-    [system, size, toScreen, starX, starY, markedIds, routeIds, selectedId, segments, routePoints, shops, active, planetsByName, fitPxPerM, poiOn],
+    [system, size, toScreen, starX, starY, markedIds, routeIds, selectedId, segments, routePoints, shopPins, active, planetsByName, fitPxPerM, poiOn],
   )
 
   // The star surface and belt dust move, so the view redraws continuously.
@@ -500,10 +503,10 @@ export default function StarMapSystemView({
     return () => canvas.removeEventListener('wheel', onWheel)
   }, [size, clampCam, setCam])
 
-  const shopAt = (mx: number, my: number): string | null => {
+  const shopAt = (mx: number, my: number): number | null => {
     for (let i = shopHitsRef.current.length - 1; i >= 0; i--) {
       const hit = shopHitsRef.current[i]
-      if (Math.hypot(mx - hit.sx, my - hit.sy) <= TELEMETRY_ICON_PX * 0.72) return hit.place
+      if (Math.hypot(mx - hit.sx, my - hit.sy) <= TELEMETRY_ICON_PX * 0.72) return hit.index
     }
     return null
   }
@@ -597,8 +600,8 @@ export default function StarMapSystemView({
     setSelectedId(hit ? hit.id : null)
   }
 
-  const shopStop = selectedShop ? shops?.find((shop) => shop.place === selectedShop) : undefined
-  const shopHit = shopStop ? shopHitsRef.current.find((hit) => hit.place === shopStop.place) : undefined
+  const shopStop = selectedShop != null ? shopPins[selectedShop] : undefined
+  const shopHit = shopStop ? shopHitsRef.current.find((hit) => hit.index === selectedShop) : undefined
   const selected = selectedId ? system.markers.find((m) => m.id === selectedId && starMapMarkerShown(m, poiOn)) : undefined
   const readout = selected ? starMapMarkerReadout(selected) : null
   const cam = camRef.current
@@ -712,11 +715,11 @@ export default function StarMapSystemView({
           className="site-tooltip-panel absolute z-10 w-[280px] max-w-[280px]"
           style={{ left: readoutPos.left, top: readoutPos.top }}
           role="dialog"
-          aria-label={shopStop.place}
+          aria-label={shopStop.title}
         >
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">
-              <div className="text-sm font-semibold text-slate-100">{shopStop.place}</div>
+              <div className="text-sm font-semibold text-slate-100">{shopStop.title}</div>
               <div className="text-[11px] uppercase tracking-wide text-amber-300">Shopping</div>
             </div>
             <button type="button" className="site-btn-icon !p-1" aria-label="Close" onClick={() => setSelectedShop(null)}>
@@ -726,9 +729,10 @@ export default function StarMapSystemView({
             </button>
           </div>
           <ul className="mt-2 space-y-1">
-            {shopStop.lines.map((line) => (
-              <li key={`${line.action}:${line.label}`} className="text-sm text-slate-200">
+            {shopStop.lines.map((line, index) => (
+              <li key={`${index}:${line.action}:${line.label}:${line.where || ''}`} className="text-sm text-slate-200">
                 <span className="text-amber-300">{line.action === 'buy' ? 'Buy' : 'Sell'}</span> {line.label}
+                {line.where ? <span className="text-slate-400"> at {line.where}</span> : null}
               </li>
             ))}
           </ul>

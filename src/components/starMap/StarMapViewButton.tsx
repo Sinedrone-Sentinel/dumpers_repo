@@ -16,13 +16,20 @@ export default function StarMapViewButton({ payload }: { payload: StarMapPayload
         className="site-btn-secondary rounded-md !px-2 !py-0.5 text-[11px]"
         onClick={() => {
           const id = publishStarMapHandoff(payload)
-          const opened = window.open(`/star-map?handoff=${encodeURIComponent(id)}`, STAR_MAP_WINDOW)
+          const href = `/star-map?handoff=${encodeURIComponent(id)}`
+          const opened = window.open(href, STAR_MAP_WINDOW)
           if (opened) {
+            // A named tab that is already open is often only focused. Load this run into it.
+            try {
+              if (!opened.location.href.includes(`handoff=${encodeURIComponent(id)}`)) opened.location.href = href
+            } catch {
+              // The new page has not committed yet.
+            }
             opened.focus()
             return
           }
           startStarMapSession(payload)
-          void navigate({ to: '/star-map', search: {} })
+          void navigate({ to: '/star-map', search: { handoff: id } })
         }}
       >
         View Map
