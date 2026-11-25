@@ -3467,6 +3467,12 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
   check(hl.matchMarkers('CRU-L3', smSystems).some((m) => m.systemId === 'stanton'), 'star map: CRU-L3 finds the station')
   check(hl.matchMarkers('Daymar', smSystems)[0]?.kind === 'moon', 'star map: surface ore resolves to its moon')
   check(hl.matchMarkers('microTech', smSystems)[0]?.kind === 'planet', 'star map: surface ore resolves to its planet')
+  const poolG = hl.matchMarkers('Lagrange G', smSystems)
+  check(
+    poolG.length > 0 && poolG.every((m) => m.systemId === 'pyro' && (m.kind === 'rab' || m.kind === 'rmb')) &&
+      hl.matchMarkers('Lagrange Occupied', smSystems).length === poolG.length,
+    'star map: Lagrange G / Occupied pools blink the Pyro RAB and RMB sites',
+  )
   const two = hl.resolveStarMapSystem({ marks: ['Hurston', 'Monox'] }, smSystems, smIndex)
   check(
     two.kind === 'multiple' && two.systemIds.length === 2 && two.systemIds.includes('stanton') && two.systemIds.includes('pyro'),

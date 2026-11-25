@@ -15,6 +15,8 @@ export function normalizeMapName(value: string): string {
 
 const GROUP_NAME_KINDS: { pattern: RegExp; kinds: StarMapKind[]; systemId?: string }[] = [
   { pattern: /^pyro asteroid clusters?$/i, kinds: ['rab', 'rmb'], systemId: 'pyro' },
+  // Spawn pools for Pyro's unnamed asteroid clusters (the RAB / RMB sites), filed under Stanton by CIG.
+  { pattern: /^lagrange (g|occupied)$/i, kinds: ['rab', 'rmb'], systemId: 'pyro' },
   { pattern: /^qv breaker stations?\b/i, kinds: ['qv'] },
   { pattern: /^outlaw stations?\b/i, kinds: ['outlaw'] },
   { pattern: /^rockcracker sites?\b/i, kinds: ['qv'] },
