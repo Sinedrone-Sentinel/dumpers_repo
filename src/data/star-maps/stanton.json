@@ -19,14 +19,15 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": null,
-      "id": "stanton:stanton"
+      "id": "stanton:stanton",
+      "jurisdiction": "UEE"
     },
     {
       "systemId": "stanton",
       "name": "Hurston",
       "aliases": [],
       "kind": "planet",
-      "description": null,
+      "description": "A wealth of ore and other resources are mined on Hurston to manufacture the company’s line of munitions and weapons. Heavy industry has resulted in severe pollution across the planet.",
       "x": 12850457093,
       "y": 0,
       "z": 0,
@@ -37,14 +38,175 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": null,
-      "id": "stanton:hurston"
+      "environment": {
+        "gravityG": 1,
+        "dayHours": 2.48,
+        "temperatureC": 50,
+        "pressureBar": 0.9,
+        "humidityPct": 60,
+        "atmosphere": [
+          {
+            "gas": "Nitrogen",
+            "symbol": "N",
+            "percent": 78.2
+          },
+          {
+            "gas": "Oxygen",
+            "symbol": "O2",
+            "percent": 21
+          },
+          {
+            "gas": "Carbon Monoxide",
+            "symbol": "CO",
+            "percent": 0.7
+          },
+          {
+            "gas": "Carbon Dioxide",
+            "symbol": "CO2",
+            "percent": 0.1
+          },
+          {
+            "gas": "Sulphur Dioxide",
+            "symbol": "SO2",
+            "percent": 0
+          }
+        ]
+      },
+      "caveOnly": [
+        "Janalite",
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
+      ],
+      "id": "stanton:hurston",
+      "jurisdiction": "Hurston Dynamics",
+      "services": [
+        {
+          "place": "Covalex Distribution Centre S1DC06",
+          "amenities": [
+            "Landing Pad (M)",
+            "Hangar (L)",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "Dupree Industrial Manufacturing Facility",
+          "amenities": [
+            "Landing Pad (M)",
+            "Hangar (L)",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "Greycat Stanton I Production Complex-B",
+          "amenities": [
+            "Landing Pad (M)",
+            "Hangar (L)",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "HDMS-Edmond",
+          "amenities": [
+            "Landing Pad (M)",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "HDMS-Hadley",
+          "amenities": [
+            "Landing Pad (M)",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "HDMS-Oparei",
+          "amenities": [
+            "Landing Pad (M)",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "HDMS-Pinewood",
+          "amenities": [
+            "Landing Pad (M)",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "HDMS-Stanhope",
+          "amenities": [
+            "Landing Pad (M)",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "HDMS-Thedus",
+          "amenities": [
+            "Landing Pad (M)",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "HDPC-Cassillo",
+          "amenities": [
+            "Landing Pad (M)",
+            "Hangar (L)",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "HDPC-Farnesway",
+          "amenities": [
+            "Landing Pad (M)",
+            "Hangar (L)",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "Lorville",
+          "amenities": [
+            "Hospital",
+            "Hangar (XL)",
+            "Garage",
+            "Vehicle Services",
+            "Commodity Trading",
+            "Buy Weapons",
+            "Buy Ship Items/Weapons",
+            "Buy Armor",
+            "Buy Clothing",
+            "Buy/Rent Vehicles",
+            "Food Court"
+          ]
+        },
+        {
+          "place": "Sakura Sun Magnolia Workcenter",
+          "amenities": [
+            "Landing Pad (M)",
+            "Hangar (L)",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        }
+      ]
     },
     {
       "systemId": "stanton",
       "name": "Arial",
       "aliases": [],
       "kind": "moon",
-      "description": null,
+      "description": "This moon was named after the 3rd CEO of Hurston Dynamics, Arial Hurston, who was known for creating the controversial Life/Labor-style employee contract.",
       "x": 12892673309,
       "y": -31476129,
       "z": 0,
@@ -55,7 +217,57 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": "Hurston",
-      "id": "stanton:arial"
+      "environment": {
+        "gravityG": 0.36,
+        "dayHours": 5.51,
+        "temperatureC": 225,
+        "pressureBar": 0.9,
+        "humidityPct": 0,
+        "atmosphere": [
+          {
+            "gas": "Nitrogen",
+            "symbol": "N",
+            "percent": 97.7
+          },
+          {
+            "gas": "Methane",
+            "symbol": "CH4",
+            "percent": 1.8
+          },
+          {
+            "gas": "Hydrogen",
+            "symbol": "H",
+            "percent": 0.5
+          }
+        ]
+      },
+      "caveOnly": [
+        "Janalite",
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
+      ],
+      "id": "stanton:arial",
+      "services": [
+        {
+          "place": "HDMS-Bezdek",
+          "amenities": [
+            "Landing Pad (M)",
+            "Garage",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "HDMS-Lathan",
+          "amenities": [
+            "Landing Pad (M)",
+            "Garage",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        }
+      ]
     },
     {
       "systemId": "stanton",
@@ -80,7 +292,7 @@
       "name": "Aberdeen",
       "aliases": [],
       "kind": "moon",
-      "description": null,
+      "description": "This moon was named after scientist Aberdeen Hurston who was credited with designing the company's first antimatter warhead.",
       "x": 12905757636,
       "y": 40955551,
       "z": 0,
@@ -91,7 +303,57 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": "Hurston",
-      "id": "stanton:aberdeen"
+      "environment": {
+        "gravityG": 0.36,
+        "dayHours": 2.6,
+        "temperatureC": 250,
+        "pressureBar": 1.45,
+        "humidityPct": 0,
+        "atmosphere": [
+          {
+            "gas": "Sulphur Dioxide",
+            "symbol": "SO2",
+            "percent": 89.8
+          },
+          {
+            "gas": "Sulphur Monoxide",
+            "symbol": "SO",
+            "percent": 9.3
+          },
+          {
+            "gas": "Sodium Chloride",
+            "symbol": "NaCl",
+            "percent": 0.9
+          }
+        ]
+      },
+      "caveOnly": [
+        "Janalite",
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
+      ],
+      "id": "stanton:aberdeen",
+      "services": [
+        {
+          "place": "HDMS-Anderson",
+          "amenities": [
+            "Landing Pad (M)",
+            "Garage",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "HDMS-Norgaard",
+          "amenities": [
+            "Landing Pad (M)",
+            "Garage",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        }
+      ]
     },
     {
       "systemId": "stanton",
@@ -116,7 +378,7 @@
       "name": "Ita",
       "aliases": [],
       "kind": "moon",
-      "description": null,
+      "description": "This moon was named after Ita Hurston, who died during the First Tevarin War, as a reminder of why “the products Hurston Dynamics makes are so important.”",
       "x": 12830194716,
       "y": 114913609,
       "z": 0,
@@ -127,7 +389,57 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": "Hurston",
-      "id": "stanton:ita"
+      "environment": {
+        "gravityG": 0.36,
+        "dayHours": 4.85,
+        "temperatureC": 10,
+        "pressureBar": 0.15,
+        "humidityPct": 0,
+        "atmosphere": [
+          {
+            "gas": "Nitrogen",
+            "symbol": "N",
+            "percent": 98.5
+          },
+          {
+            "gas": "Methane",
+            "symbol": "CH4",
+            "percent": 1.4
+          },
+          {
+            "gas": "Carbon Monoxide",
+            "symbol": "CO",
+            "percent": 0.1
+          }
+        ]
+      },
+      "caveOnly": [
+        "Janalite",
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
+      ],
+      "id": "stanton:ita",
+      "services": [
+        {
+          "place": "HDMS-Ryder",
+          "amenities": [
+            "Landing Pad (M)",
+            "Garage",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "HDMS-Woodruff",
+          "amenities": [
+            "Landing Pad (M)",
+            "Garage",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        }
+      ]
     },
     {
       "systemId": "stanton",
@@ -152,7 +464,7 @@
       "name": "Magda",
       "aliases": [],
       "kind": "moon",
-      "description": null,
+      "description": "This moon was named after Hurston Dynamics CEO Magda Hurston who made the decision to purchase Stanton I from the UEE. Magda is the mother of current CEO “Colonel” Gavin E. Hurston.",
       "x": 12792686359,
       "y": -74464581,
       "z": 0,
@@ -163,7 +475,62 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": "Hurston",
-      "id": "stanton:magda"
+      "environment": {
+        "gravityG": 0.36,
+        "dayHours": 1.94,
+        "temperatureC": 40,
+        "pressureBar": 0.35,
+        "humidityPct": 0,
+        "atmosphere": [
+          {
+            "gas": "Nitrogen",
+            "symbol": "N",
+            "percent": 98.1
+          },
+          {
+            "gas": "Methane",
+            "symbol": "CH4",
+            "percent": 1.5
+          },
+          {
+            "gas": "Hydrogen",
+            "symbol": "H",
+            "percent": 0.2
+          },
+          {
+            "gas": "Carbon Dioxide",
+            "symbol": "CO2",
+            "percent": 0.2
+          }
+        ]
+      },
+      "caveOnly": [
+        "Janalite",
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
+      ],
+      "id": "stanton:magda",
+      "services": [
+        {
+          "place": "HDMS-Hahn",
+          "amenities": [
+            "Landing Pad (M)",
+            "Garage",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "HDMS-Perlman",
+          "amenities": [
+            "Landing Pad (M)",
+            "Garage",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        }
+      ]
     },
     {
       "systemId": "stanton",
@@ -206,7 +573,7 @@
       "name": "ArcCorp",
       "aliases": [],
       "kind": "planet",
-      "description": null,
+      "description": "Buildings cover a majority of the planet’s surface with residential areas relegated to the poles while ArcCorp’s factories, business headquarters, financial and commercial districts are located in between.",
       "x": 18587664740,
       "y": -22151916920,
       "z": 0,
@@ -217,14 +584,39 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": null,
-      "id": "stanton:arccorp"
+      "environment": {
+        "gravityG": 1,
+        "dayHours": 3.11,
+        "temperatureC": 30,
+        "pressureBar": 0.9,
+        "humidityPct": 30
+      },
+      "id": "stanton:arccorp",
+      "jurisdiction": "ArcCorp",
+      "services": [
+        {
+          "place": "Area18",
+          "amenities": [
+            "Hospital",
+            "Hangar (XL)",
+            "Vehicle Services",
+            "Commodity Trading",
+            "Buy Weapons",
+            "Buy Ship Items/Weapons",
+            "Buy Armor",
+            "Buy Clothing",
+            "Buy/Rent Vehicles",
+            "Food Court"
+          ]
+        }
+      ]
     },
     {
       "systemId": "stanton",
       "name": "Wala",
       "aliases": [],
       "kind": "moon",
-      "description": null,
+      "description": "The low density of Wala is particularly susceptible to tidal forces which result in the moon being noticeably prolate.",
       "x": 18379649310,
       "y": -22000466768,
       "z": 0,
@@ -235,7 +627,70 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": "ArcCorp",
-      "id": "stanton:wala"
+      "environment": {
+        "gravityG": 0.36,
+        "dayHours": 6.32,
+        "temperatureC": -3,
+        "pressureBar": 0.1,
+        "humidityPct": 0,
+        "atmosphere": [
+          {
+            "gas": "Nitrogen",
+            "symbol": "N",
+            "percent": 77.4
+          },
+          {
+            "gas": "Oxygen",
+            "symbol": "O2",
+            "percent": 21.1
+          },
+          {
+            "gas": "Water Vapour",
+            "symbol": "H2O",
+            "percent": 1.5
+          }
+        ]
+      },
+      "caveOnly": [
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
+      ],
+      "id": "stanton:wala",
+      "services": [
+        {
+          "place": "ArcCorp Mining Area 045",
+          "amenities": [
+            "Landing Pad (L)",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "ArcCorp Mining Area 048",
+          "amenities": [
+            "Landing Pad (L)",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "ArcCorp Mining Area 056",
+          "amenities": [
+            "Landing Pad (L)",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "ArcCorp Mining Area 061",
+          "amenities": [
+            "Landing Pad (L)",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        }
+      ]
     },
     {
       "systemId": "stanton",
@@ -260,7 +715,7 @@
       "name": "Lyria",
       "aliases": [],
       "kind": "moon",
-      "description": null,
+      "description": "This icy moon features active cryogeysers and cryovolcanoes.",
       "x": 18703607172,
       "y": -22121650134,
       "z": 0,
@@ -271,7 +726,60 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": "ArcCorp",
-      "id": "stanton:lyria"
+      "environment": {
+        "gravityG": 0.36,
+        "dayHours": 6.43,
+        "temperatureC": -5,
+        "pressureBar": 0.1,
+        "humidityPct": 0,
+        "atmosphere": [
+          {
+            "gas": "Oxygen",
+            "symbol": "O2",
+            "percent": 97.7
+          },
+          {
+            "gas": "Water Vapour",
+            "symbol": "H2O",
+            "percent": 1.5
+          },
+          {
+            "gas": "Ammonia",
+            "symbol": "NH3",
+            "percent": 0.8
+          }
+        ]
+      },
+      "id": "stanton:lyria",
+      "services": [
+        {
+          "place": "Humboldt Mines",
+          "amenities": [
+            "Landing Pad (M)",
+            "Garage",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "Shubin Mining Facility SAL-2",
+          "amenities": [
+            "Landing Pad (M)",
+            "Garage",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "Shubin Mining Facility SAL-5",
+          "amenities": [
+            "Landing Pad (M)",
+            "Garage",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        }
+      ]
     },
     {
       "systemId": "stanton",
@@ -314,7 +822,7 @@
       "name": "microTech",
       "aliases": [],
       "kind": "planet",
-      "description": null,
+      "description": "A terraforming error left the planet with an unnaturally dense cloud cover and a colder than average climate making it an ideal location for owner microTech to house its heat-sensitive computing and manufacturing centers.",
       "x": 22462085252,
       "y": 37185744965,
       "z": 0,
@@ -325,14 +833,180 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": null,
-      "id": "stanton:microtech"
+      "environment": {
+        "gravityG": 1,
+        "dayHours": 4.12,
+        "temperatureC": -7,
+        "pressureBar": 1.1,
+        "humidityPct": 65
+      },
+      "caveOnly": [
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
+      ],
+      "id": "stanton:microtech",
+      "jurisdiction": "microTech",
+      "services": [
+        {
+          "place": "Calhoun Pass Emergency Shelter",
+          "amenities": [
+            "Landing Pad (M)",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "Clear View Emergency Shelter",
+          "amenities": [
+            "Landing Pad (M)",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "Covalex Distribution Centre S4DC05",
+          "amenities": [
+            "Landing Pad (M)",
+            "Hangar (L)",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "Cry-Astro Processing Plant 19-02",
+          "amenities": [
+            "Landing Pad (M)",
+            "Hangar (L)",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "Cry-Astro Processing Plant 34-12",
+          "amenities": [
+            "Landing Pad (M)",
+            "Hangar (L)",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "Greycat Stanton IV Production Complex-A",
+          "amenities": [
+            "Landing Pad (M)",
+            "Hangar (L)",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "microTech Logistics Depot S4LD01",
+          "amenities": [
+            "Landing Pad (M)",
+            "Hangar (L)",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "microTech Logistics Depot S4LD13",
+          "amenities": [
+            "Landing Pad (M)",
+            "Hangar (L)",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "New Babbage",
+          "amenities": [
+            "Hospital",
+            "Hangar (XL)",
+            "Garage",
+            "Vehicle Services",
+            "Commodity Trading",
+            "Buy Weapons",
+            "Buy Ship Items/Weapons",
+            "Buy Armor",
+            "Buy Clothing",
+            "Rent Vehicles",
+            "Food Court"
+          ]
+        },
+        {
+          "place": "Nuiqsut Emergency Shelter",
+          "amenities": [
+            "Landing Pad (M)",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "Point Wain Emergency Shelter",
+          "amenities": [
+            "Landing Pad (M)",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "Rayari Deltana Research Outpost",
+          "amenities": [
+            "Landing Pad (M)",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "Sakura Sun Goldenrod Workcenter",
+          "amenities": [
+            "Landing Pad (M)",
+            "Hangar (L)",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "Shubin Mining Facility SM0-10",
+          "amenities": [
+            "Landing Pad (M)",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "Shubin Mining Facility SM0-13",
+          "amenities": [
+            "Landing Pad (M)",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "Shubin Mining Facility SM0-18",
+          "amenities": [
+            "Landing Pad (M)",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "Shubin Mining Facility SM0-22",
+          "amenities": [
+            "Landing Pad (M)",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        }
+      ]
     },
     {
       "systemId": "stanton",
       "name": "Calliope",
       "aliases": [],
       "kind": "moon",
-      "description": null,
+      "description": "Named after the ancient Greek muse who inspires eloquence to supposedly remind those gazing upon the moon from microTech to ‘strive for pure expression of thought.’",
       "x": 22398369308,
       "y": 37168840679,
       "z": 0,
@@ -343,7 +1017,46 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": "microTech",
-      "id": "stanton:calliope"
+      "environment": {
+        "gravityG": 0.36,
+        "dayHours": 4.59,
+        "temperatureC": -50,
+        "pressureBar": 0.8,
+        "humidityPct": 50,
+        "atmosphere": [
+          {
+            "gas": "Oxygen",
+            "symbol": "O2",
+            "percent": 99.8
+          },
+          {
+            "gas": "Water Vapour",
+            "symbol": "H2O",
+            "percent": 0.2
+          }
+        ]
+      },
+      "id": "stanton:calliope",
+      "services": [
+        {
+          "place": "Rayari Anvik Research Outpost",
+          "amenities": [
+            "Landing Pad (M)",
+            "Garage",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "Rayari Kaltag Research Outpost",
+          "amenities": [
+            "Landing Pad (M)",
+            "Garage",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        }
+      ]
     },
     {
       "systemId": "stanton",
@@ -368,7 +1081,7 @@
       "name": "Euterpe",
       "aliases": [],
       "kind": "moon",
-      "description": null,
+      "description": "Named after the ancient Greek muse of music to supposedly remind those gazing upon the moon from microTech to be guided by ‘the natural rhythm of the universe in their designs.’",
       "x": 22488109736,
       "y": 37081123565,
       "z": 0,
@@ -379,6 +1092,30 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": "microTech",
+      "environment": {
+        "gravityG": 0.36,
+        "dayHours": 4.28,
+        "temperatureC": -73,
+        "pressureBar": 0.8,
+        "humidityPct": 30,
+        "atmosphere": [
+          {
+            "gas": "Oxygen",
+            "symbol": "O2",
+            "percent": 99.8
+          },
+          {
+            "gas": "Water Vapour",
+            "symbol": "H2O",
+            "percent": 0.2
+          }
+        ]
+      },
+      "caveOnly": [
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
+      ],
       "id": "stanton:euterpe"
     },
     {
@@ -404,7 +1141,7 @@
       "name": "Clio",
       "aliases": [],
       "kind": "moon",
-      "description": null,
+      "description": "Named after the ancient Greek muse of history to supposedly remind those gazing upon the moon from microTech to remember that ‘their work stands on those who came before them.’",
       "x": 22476728221,
       "y": 37091020074,
       "z": 0,
@@ -415,7 +1152,46 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": "microTech",
-      "id": "stanton:clio"
+      "environment": {
+        "gravityG": 0.36,
+        "dayHours": 3.25,
+        "temperatureC": -24,
+        "pressureBar": 0.7,
+        "humidityPct": 10,
+        "atmosphere": [
+          {
+            "gas": "Nitrogen",
+            "symbol": "N",
+            "percent": 99.2
+          },
+          {
+            "gas": "Oxygen",
+            "symbol": "O2",
+            "percent": 0.8
+          }
+        ]
+      },
+      "id": "stanton:clio",
+      "services": [
+        {
+          "place": "Rayari Cantwell Research Outpost",
+          "amenities": [
+            "Landing Pad (M)",
+            "Garage",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "Rayari McGrath Research Outpost",
+          "amenities": [
+            "Landing Pad (M)",
+            "Garage",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        }
+      ]
     },
     {
       "systemId": "stanton",
@@ -469,14 +1245,29 @@
       "toMarkerName": "Stanton - Magnus Jump Point",
       "notes": [],
       "parentName": null,
-      "id": "stanton:stanton-magnus-jump-point"
+      "id": "stanton:stanton-magnus-jump-point",
+      "amenities": [
+        "Clinic",
+        "Docking",
+        "Landing Pad (M)",
+        "Hangar (L)",
+        "Vehicle Services",
+        "Refinery",
+        "Commodity Trading",
+        "Loading Dock",
+        "Buy Weapons",
+        "Buy Ship Items/Weapons",
+        "Buy Armor",
+        "Rent Vehicles",
+        "Food Court"
+      ]
     },
     {
       "systemId": "stanton",
       "name": "Crusader",
       "aliases": [],
       "kind": "planet",
-      "description": null,
+      "description": "A low mass gas giant that features a breathable atmosphere at high altitudes. This was an ideal situation for ship manufacturer Crusader, who now occupies the planet’s floating platforms to build massive ships like the Starliner.",
       "x": -18962176000,
       "y": -2664960000,
       "z": 0,
@@ -487,14 +1278,40 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": null,
-      "id": "stanton:crusader"
+      "environment": {
+        "gravityG": 1,
+        "dayHours": 5.1,
+        "temperatureC": 77,
+        "pressureBar": 3,
+        "humidityPct": 50
+      },
+      "id": "stanton:crusader",
+      "jurisdiction": "Crusader Industries",
+      "services": [
+        {
+          "place": "Orison",
+          "amenities": [
+            "Hospital",
+            "Docking",
+            "Hangar (XL)",
+            "Vehicle Services",
+            "Commodity Trading",
+            "Buy Weapons",
+            "Buy Ship Items/Weapons",
+            "Buy Armor",
+            "Buy Clothing",
+            "Buy/Rent Vehicles",
+            "Food Court"
+          ]
+        }
+      ]
     },
     {
       "systemId": "stanton",
       "name": "Yela",
       "aliases": [],
       "kind": "moon",
-      "description": null,
+      "description": "Named after the oldest of the three siblings featured in the 25th century children’s morality tale, 'A Gift for Baba,' this moon has a water-ice crust said to represent Yela’s cool and calculating mannerisms.",
       "x": -19022916799,
       "y": -2613996152,
       "z": 0,
@@ -505,7 +1322,41 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": "Crusader",
-      "id": "stanton:yela"
+      "environment": {
+        "gravityG": 0.36,
+        "dayHours": 1.82,
+        "temperatureC": -23,
+        "pressureBar": 0.2,
+        "humidityPct": 20,
+        "atmosphere": [
+          {
+            "gas": "Oxygen",
+            "symbol": "O2",
+            "percent": 100
+          }
+        ]
+      },
+      "id": "stanton:yela",
+      "services": [
+        {
+          "place": "ArcCorp Mining Area 157",
+          "amenities": [
+            "Landing Pad (M)",
+            "Garage",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "Deakins Research Outpost",
+          "amenities": [
+            "Landing Pad (M)",
+            "Garage",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        }
+      ]
     },
     {
       "systemId": "stanton",
@@ -530,7 +1381,7 @@
       "name": "Daymar",
       "aliases": [],
       "kind": "moon",
-      "description": null,
+      "description": "Named after the middle brother of the three siblings featured in the 25th century children’s morality tale, 'A Gift for Baba,' this is the largest of Crusader’s moons. Daymar’s slightly eccentric orbit is said to represent his ease at getting lost in the story.",
       "x": -18930539540,
       "y": -2610158765,
       "z": 0,
@@ -541,7 +1392,58 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": "Crusader",
-      "id": "stanton:daymar"
+      "environment": {
+        "gravityG": 0.36,
+        "dayHours": 2.48,
+        "temperatureC": 160,
+        "pressureBar": 0.6,
+        "humidityPct": 0,
+        "atmosphere": [
+          {
+            "gas": "Nitrogen",
+            "symbol": "N",
+            "percent": 98.4
+          },
+          {
+            "gas": "Methane",
+            "symbol": "CH4",
+            "percent": 1.4
+          },
+          {
+            "gas": "Hydrogen",
+            "symbol": "H",
+            "percent": 0.2
+          }
+        ]
+      },
+      "caveOnly": [
+        "Janalite",
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus",
+        "Stone Bug Shell"
+      ],
+      "id": "stanton:daymar",
+      "services": [
+        {
+          "place": "ArcCorp Mining Area 141",
+          "amenities": [
+            "Landing Pad (M)",
+            "Garage",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "Shubin Mining Facility SCD-1",
+          "amenities": [
+            "Landing Pad (M)",
+            "Garage",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        }
+      ]
     },
     {
       "systemId": "stanton",
@@ -566,7 +1468,7 @@
       "name": "Covalex Shipping Hub Gundo",
       "aliases": [],
       "kind": "station",
-      "description": null,
+      "description": "Formerly Covalex’s prime shipping hub for the system, Gundo suffered an unfortunate accident and have since moved operations to Orison directly for the time being.",
       "x": -18930780738,
       "y": -2609720788,
       "z": -300000,
@@ -584,7 +1486,7 @@
       "name": "Cellin",
       "aliases": [],
       "kind": "moon",
-      "description": null,
+      "description": "Named after the youngest of the three siblings featured in the 25th century children’s morality tale, 'A Gift for Baba,' this moon features over a hundred currently dormant volcanoes that are said to represent Cellin’s simmering anger.",
       "x": -18987611119,
       "y": -2709009661,
       "z": 0,
@@ -595,14 +1497,73 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": "Crusader",
-      "id": "stanton:cellin"
+      "environment": {
+        "gravityG": 0.36,
+        "dayHours": 4.45,
+        "temperatureC": 25,
+        "pressureBar": 0.2,
+        "humidityPct": 10,
+        "atmosphere": [
+          {
+            "gas": "Sulphur Dioxide",
+            "symbol": "SO2",
+            "percent": 90
+          },
+          {
+            "gas": "Sulphur Monoxide",
+            "symbol": "SO",
+            "percent": 7
+          },
+          {
+            "gas": "Oxygen",
+            "symbol": "O2",
+            "percent": 3
+          }
+        ]
+      },
+      "caveOnly": [
+        "Janalite",
+        "Ranta Dung",
+        "Amioshi Plague",
+        "Bluemoon Fungus"
+      ],
+      "id": "stanton:cellin",
+      "services": [
+        {
+          "place": "Hickes Research Outpost",
+          "amenities": [
+            "Landing Pad (M)",
+            "Garage",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "Terra Mills HydroFarm",
+          "amenities": [
+            "Landing Pad (M)",
+            "Garage",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        },
+        {
+          "place": "Tram & Myers Mining",
+          "amenities": [
+            "Landing Pad (M)",
+            "Garage",
+            "Vehicle Services",
+            "Commodity Trading"
+          ]
+        }
+      ]
     },
     {
       "systemId": "stanton",
       "name": "Security Post Kareah",
       "aliases": [],
       "kind": "station",
-      "description": null,
+      "description": "A brand new outpost built to house an extended Crusader Security presence in this sector. It is expected to be open and operating soon.",
       "x": -18987599499,
       "y": -2709429500,
       "z": 200000,
@@ -704,6 +1665,23 @@
       "notes": [],
       "parentName": null,
       "id": "stanton:stanton-pyro-jump-point",
+      "jurisdiction": "UEE",
+      "amenities": [
+        "Clinic",
+        "Docking",
+        "Landing Pad (M)",
+        "Hangar (L)",
+        "Vehicle Services",
+        "Refinery",
+        "Commodity Trading",
+        "Loading Dock",
+        "Buy Weapons",
+        "Buy Ship Items/Weapons",
+        "Buy Armor",
+        "Buy Clothing",
+        "Rent Vehicles",
+        "Food Court"
+      ],
       "toMarkerId": "pyro:pyro-stanton-jump-point"
     },
     {
@@ -776,14 +1754,30 @@
       "toMarkerName": "Stanton - Terra Jump Point",
       "notes": [],
       "parentName": null,
-      "id": "stanton:stanton-terra-jump-point"
+      "id": "stanton:stanton-terra-jump-point",
+      "amenities": [
+        "Clinic",
+        "Docking",
+        "Landing Pad (M)",
+        "Hangar (L)",
+        "Vehicle Services",
+        "Refinery",
+        "Commodity Trading",
+        "Loading Dock",
+        "Buy Weapons",
+        "Buy Ship Items/Weapons",
+        "Buy Armor",
+        "Buy Clothing",
+        "Rent Vehicles",
+        "Food Court"
+      ]
     },
     {
       "systemId": "stanton",
       "name": "HUR L1",
       "aliases": [],
       "kind": "station",
-      "description": null,
+      "description": "A Lagrangian gravity well located in the orbit of Hurston. Beside being home to a collection of asteroids, a convenient R&R rest stop is available for refueling and repairs.",
       "x": 11565411328,
       "y": 0,
       "z": 0,
@@ -801,7 +1795,7 @@
       "name": "HUR L5",
       "aliases": [],
       "kind": "station",
-      "description": null,
+      "description": "A Lagrangian gravity well located in the orbit of Hurston. Beside being home to a collection of asteroids, a convenient R&R rest stop is available for refueling and repairs.",
       "x": 6425227776,
       "y": -11128823808,
       "z": 0,
@@ -819,7 +1813,7 @@
       "name": "CRU L4",
       "aliases": [],
       "kind": "station",
-      "description": null,
+      "description": "A Lagrangian gravity well located in the orbit of Crusader. Beside being home to a collection of asteroids, a convenient R&R rest stop is available for refueling and repairs.",
       "x": -7173168640,
       "y": -17754204160,
       "z": 0,
@@ -837,7 +1831,7 @@
       "name": "HUR L3",
       "aliases": [],
       "kind": "station",
-      "description": null,
+      "description": "A Lagrangian gravity well located in the orbit of Hurston. Beside being home to a collection of asteroids, a convenient R&R rest stop is available for refueling and repairs.",
       "x": -12850457600,
       "y": -1123,
       "z": 0,
@@ -909,7 +1903,7 @@
       "name": "CRU L5",
       "aliases": [],
       "kind": "station",
-      "description": null,
+      "description": "A Lagrangian gravity well located in the orbit of Crusader. Beside being home to a collection of asteroids, a convenient R&R rest stop is available for refueling and repairs.",
       "x": -11789008988,
       "y": 15089246107,
       "z": 0,
@@ -945,7 +1939,7 @@
       "name": "HUR L4",
       "aliases": [],
       "kind": "station",
-      "description": null,
+      "description": "A Lagrangian gravity well located in the orbit of Hurston. Beside being home to a collection of asteroids, a convenient R&R rest stop is available for refueling and repairs.",
       "x": 6425228288,
       "y": 11128823808,
       "z": 0,
@@ -999,7 +1993,7 @@
       "name": "ARC L1",
       "aliases": [],
       "kind": "station",
-      "description": null,
+      "description": "A Lagrangian gravity well located in the orbit of ArcCorp. Beside being home to a collection of asteroids, a convenient R&R rest stop is available for refueling and repairs.",
       "x": 16729134637,
       "y": -19937006925,
       "z": 8077,
@@ -1035,7 +2029,7 @@
       "name": "MIC L1",
       "aliases": [],
       "kind": "station",
-      "description": null,
+      "description": "A Lagrangian gravity well located in the orbit of microTech. Beside being home to a collection of asteroids, a convenient R&R rest stop is available for refueling and repairs.",
       "x": 20215824238,
       "y": 33467065008,
       "z": 0,
@@ -1053,7 +2047,7 @@
       "name": "CRU L1",
       "aliases": [],
       "kind": "station",
-      "description": null,
+      "description": "A Lagrangian gravity well located in the orbit of Crusader. Beside being home to a collection of asteroids, a convenient R&R rest stop is available for refueling and repairs.",
       "x": -17065957376,
       "y": -2398464000,
       "z": 0,
@@ -1534,7 +2528,19 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": null,
-      "id": "stanton:everus-harbor"
+      "id": "stanton:everus-harbor",
+      "amenities": [
+        "Clinic",
+        "Docking",
+        "Landing Pad (M)",
+        "Hangar (L)",
+        "Vehicle Services",
+        "Commodity Trading",
+        "Loading Dock",
+        "Buy Armor",
+        "Buy Clothing",
+        "Food Court"
+      ]
     },
     {
       "systemId": "stanton",
@@ -1552,7 +2558,20 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": null,
-      "id": "stanton:baijini-point"
+      "id": "stanton:baijini-point",
+      "amenities": [
+        "Clinic",
+        "Docking",
+        "Landing Pad (M)",
+        "Hangar (L)",
+        "Vehicle Services",
+        "Commodity Trading",
+        "Loading Dock",
+        "Buy Weapons",
+        "Buy Armor",
+        "Buy Clothing",
+        "Food Court"
+      ]
     },
     {
       "systemId": "stanton",
@@ -1570,7 +2589,19 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": null,
-      "id": "stanton:port-tressler"
+      "id": "stanton:port-tressler",
+      "amenities": [
+        "Clinic",
+        "Docking",
+        "Landing Pad (M)",
+        "Hangar (L)",
+        "Vehicle Services",
+        "Commodity Trading",
+        "Loading Dock",
+        "Buy Armor",
+        "Buy Clothing",
+        "Food Court"
+      ]
     },
     {
       "systemId": "stanton",
@@ -1588,7 +2619,20 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": null,
-      "id": "stanton:seraphim-station"
+      "id": "stanton:seraphim-station",
+      "amenities": [
+        "Clinic",
+        "Docking",
+        "Landing Pad (M)",
+        "Hangar (L)",
+        "Vehicle Services",
+        "Commodity Trading",
+        "Loading Dock",
+        "Buy Weapons",
+        "Buy Armor",
+        "Buy Clothing",
+        "Food Court"
+      ]
     },
     {
       "systemId": "stanton",
@@ -1606,7 +2650,19 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": null,
-      "id": "stanton:grim-hex"
+      "id": "stanton:grim-hex",
+      "amenities": [
+        "Hospital",
+        "Landing Pad (L)",
+        "Hangar (XL)",
+        "Vehicle Services",
+        "Commodity Trading",
+        "Buy Weapons",
+        "Buy Ship Items/Weapons",
+        "Buy Armor",
+        "Buy Clothing",
+        "Food Court"
+      ]
     }
   ]
 }

@@ -37,6 +37,192 @@ function locName(localization, key) {
   return locText(localization, key, 120)
 }
 
+/**
+ * Body prose without the "Potential Ship Mineables / Harvestables / Creatures"
+ * lists. The location card shows those from mining data instead.
+ */
+export function locProse(localization, key, max = 900) {
+  if (!key) return null
+  const raw = localization[key] || localization[key.split(',')[0]]
+  if (!raw) return null
+  const cut = String(raw).split(/(?:\\n|\n)\s*Potential [A-Za-z ]+:?/)[0]
+  const text = cut.replace(/\\n/g, ' ').replace(/\s+/g, ' ').trim()
+  if (!text || text.startsWith('@') || /UNINITIALIZED/i.test(text)) return null
+  return text.length > max ? `${text.slice(0, max - 1).replace(/\s+\S*$/, '')}…` : text
+}
+
+/** Names the body description marks "(Caves)" or "(Caves only)" in its Potential lists. */
+export function caveOnlyNames(localization, key) {
+  const raw = key ? localization[key] || localization[key.split(',')[0]] : null
+  if (!raw) return []
+  const out = new Set()
+  for (const line of String(raw).split(/\\n|\n/)) {
+    const m = line.trim().match(/^(.+?)\s*\(caves?(?: only)?\)\s*$/i)
+    if (m) out.add(m[1].trim())
+  }
+  return [...out]
+}
+
+/** `file://./../../libs/foundry/records/x.json` and absolute paths both key as `libs/foundry/records/x.json`. */
+function recordKey(path) {
+  const n = norm(String(path || ''))
+  const at = n.indexOf('libs/foundry/records/')
+  return at < 0 ? null : n.slice(at)
+}
+
+function loadAmenityTypes(extractedRoot, localization) {
+  const path = join(extractedRoot, 'libs', 'foundry', 'records', 'starmapamenitytypes', 'starmapamenitytypes.json')
+  const out = new Map()
+  if (!existsSync(path)) return out
+  try {
+    const doc = JSON.parse(readFileSync(path, 'utf8'))
+    for (const row of doc?._RecordValue_?.amenityTypes || []) {
+      const id = String(row?._RecordId_ || '').toLowerCase()
+      const label = locName(localization, String(row?.displayName || '').replace(/^@/, '')) || row?.name
+      if (id && label && !/^event$/i.test(label)) out.set(id, label)
+    }
+  } catch {
+    // amenities optional
+  }
+  return out
+}
+
+const AMENITY_ORDER = [
+  'Hospital', 'Clinic',
+  'Docking', 'Landing Pad (S)', 'Landing Pad (M)', 'Landing Pad (L)', 'Landing Pad (XL)',
+  'Hangar (S)', 'Hangar (M)', 'Hangar (L)', 'Hangar (XL)', 'Garage', 'Vehicle Services',
+  'Refinery', 'Commodity Trading', 'Loading Dock',
+  'Buy Weapons', 'Buy Ship Items/Weapons', 'Buy Armor', 'Buy Clothing',
+  'Buy Vehicles', 'Rent Vehicles', 'Buy/Rent Vehicles', 'Food Court',
+]
+
+function sortAmenities(list) {
+  const rank = (label) => {
+    const i = AMENITY_ORDER.indexOf(label)
+    return i < 0 ? AMENITY_ORDER.length : i
+  }
+  return [...new Set(list)].sort((a, b) => rank(a) - rank(b) || a.localeCompare(b))
+}
+
+const GAS_NAMES = { HydrogenDioxide: 'Water Vapour', FineParticulateMatter: 'Fine Particulates' }
+
+function loadRecordsById(dir) {
+  const files = []
+  walkFiles(dir, files)
+  const out = new Map()
+  for (const path of files) {
+    if (!path.toLowerCase().endsWith('.json')) continue
+    try {
+      const doc = JSON.parse(readFileSync(path, 'utf8'))
+      const id = String(doc?._RecordId_ || '').toLowerCase()
+      if (id) out.set(id, doc._RecordValue_ || {})
+      const key = recordKey(path)
+      if (key) out.set(key, doc._RecordValue_ || {})
+    } catch {
+      // skip unreadable record
+    }
+  }
+  return out
+}
+
+/**
+ * `CO<font size="%d">2</font>` → `CO2`. Only formula characters are kept, so no
+ * markup can reach the output. Text inside a tag never matches the formula shape.
+ */
+export function chemicalSymbol(raw) {
+  const parts = String(raw || '').match(/(?:^|>)[A-Za-z0-9.]+/g) || []
+  const symbol = parts.map((part) => part.replace(/[^A-Za-z0-9.]/g, '')).join('')
+  return /^[A-Za-z0-9.]{1,16}$/.test(symbol) ? symbol : null
+}
+
+/** Atmosphere state + gas mix records the planet containers point at. */
+function loadEnvironmentRecords(extractedRoot, localization) {
+  const room = join(extractedRoot, 'libs', 'foundry', 'records', 'roomsystem')
+  const gases = new Map()
+  const gasFiles = []
+  walkFiles(join(room, 'gasparams'), gasFiles)
+  for (const path of gasFiles) {
+    try {
+      const value = JSON.parse(readFileSync(path, 'utf8'))?._RecordValue_ || {}
+      const symKey = String(value.chemicalSymbol || '').replace(/^@/, '')
+      const stem = symKey.replace(/^ui_chemsymbol_/i, '')
+      if (!stem) continue
+      const symbol = chemicalSymbol(localization[symKey])
+      const name = GAS_NAMES[stem] || stem.replace(/([a-z])([A-Z])/g, '$1 $2')
+      gases.set(recordKey(path), { name, symbol })
+    } catch {
+      // skip
+    }
+  }
+  return {
+    states: loadRecordsById(join(room, 'atmospherestatetemplates')),
+    mixes: loadRecordsById(join(room, 'gascompositiontemplates')),
+    gases,
+  }
+}
+
+const UUID_RE = '([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})'
+
+/**
+ * Surface conditions for a planet or moon container. Bodies whose container
+ * names no atmosphere state and no gas mix are placeholders and get nothing.
+ */
+function bodyEnvironment(socpakPath, env) {
+  const base = basename(socpakPath, '.socpak')
+  const ale = readSocpakBytes(socpakPath, `${base}.ale`)?.toString('latin1') || ''
+  const pivot = readSocpakBytes(socpakPath, `${base}/pivot.entxml`)?.toString('latin1') || ''
+  const stateId = new RegExp(`AtmosphereStateRef\\W+stateTemplate\\W+${UUID_RE}`).exec(pivot)?.[1]
+  const mixId = new RegExp(`compositionRecord\\W+${UUID_RE}`).exec(pivot)?.[1]
+  const system = norm(socpakPath).match(/\/system\/([^/]+)\//)?.[1]
+  const named = (dir) => `libs/foundry/records/roomsystem/${dir}/system/${system}/${base.toLowerCase()}.json`
+  const state = (stateId && env.states.get(stateId)?.state) || env.states.get(named('atmospherestatetemplates'))?.state || null
+  const mix = (mixId && env.mixes.get(mixId)?.composition) || env.mixes.get(named('gascompositiontemplates'))?.composition || null
+  if (!state && !mix) return null
+  const out = {}
+  const g = Number(/"fGravity":\s*(-?[0-9.]+)/.exec(ale)?.[1])
+  if (Number.isFinite(g) && g !== 0) out.gravityG = Math.round((Math.abs(g) / 9.81) * 100) / 100
+  const day = Number(/"fRotationSpeed":\s*(-?[0-9.]+)/.exec(ale)?.[1])
+  if (Number.isFinite(day) && day > 0) out.dayHours = Math.round(day * 100) / 100
+  if (state) {
+    if (typeof state.temperature === 'number') out.temperatureC = Math.round(state.temperature - 273.15)
+    if (typeof state.pressure === 'number') out.pressureBar = Math.round(state.pressure * 100) / 100
+    if (typeof state.humidity === 'number') out.humidityPct = Math.round(state.humidity * 100)
+  }
+  const byGas = new Map()
+  for (const row of mix?.gases || []) {
+    const gas = env.gases.get(recordKey(row?.gasParams))
+    if (!gas || !(Number(row?.parts) > 0)) continue
+    const prev = byGas.get(gas.name)
+    byGas.set(gas.name, { ...gas, parts: (prev?.parts || 0) + Number(row.parts) })
+  }
+  const parts = [...byGas.values()]
+  const total = parts.reduce((sum, row) => sum + row.parts, 0)
+  if (total > 0 && out.pressureBar !== 0) {
+    out.atmosphere = parts
+      .map((row) => ({ gas: row.name, symbol: row.symbol, percent: Math.round((row.parts / total) * 1000) / 10 }))
+      .sort((a, b) => b.percent - a.percent)
+  }
+  return Object.keys(out).length ? out : null
+}
+
+function jurisdictionName(extractedRoot, localization, ref, cache) {
+  const key = recordKey(ref)
+  if (!key) return null
+  if (cache.has(key)) return cache.get(key)
+  let name = null
+  const abs = join(extractedRoot, ...key.split('/'))
+  if (existsSync(abs)) {
+    try {
+      const doc = JSON.parse(readFileSync(abs, 'utf8'))
+      name = locName(localization, String(doc?._RecordValue_?.name || '').replace(/^@/, ''))
+    } catch {
+      name = null
+    }
+  }
+  cache.set(key, name)
+  return name
+}
+
 function quatMul(a, b) {
   const [aw, ax, ay, az] = a
   const [bw, bx, by, bz] = b
@@ -160,6 +346,8 @@ function loadStarmapRecords(extractedRoot, localization) {
   const dir = join(extractedRoot, 'libs', 'foundry', 'records', 'starmap')
   const files = []
   walkFiles(dir, files)
+  const amenityTypes = loadAmenityTypes(extractedRoot, localization)
+  const jurisdictions = new Map()
   const byId = new Map()
   for (const path of files) {
     if (!path.toLowerCase().endsWith('.json')) continue
@@ -175,11 +363,18 @@ function loadStarmapRecords(extractedRoot, localization) {
     const nameKey = String(value.name || '').replace(/^@/, '')
     const descKey = String(value.description || '').replace(/^@/, '')
     const name = locName(localization, nameKey)
-    const description = locName(localization, descKey)
+    const description = locProse(localization, descKey)
     const navIcon = String(value.navIcon || '')
     const size = typeof value.size === 'number' ? value.size : null
     const rings = Array.isArray(value.asteroidRings) ? value.asteroidRings : []
     const file = norm(path)
+    const amenities = value.hideInStarmap
+      ? []
+      : sortAmenities(
+        (Array.isArray(value.amenities) ? value.amenities : [])
+          .map((row) => amenityTypes.get(String(row?._RecordId_ || '').toLowerCase()))
+          .filter(Boolean),
+      )
     byId.set(id, {
       id,
       name,
@@ -188,6 +383,11 @@ function loadStarmapRecords(extractedRoot, localization) {
       size,
       rings,
       file,
+      key: recordKey(path),
+      parentKey: recordKey(value.parent),
+      amenities,
+      caveOnly: caveOnlyNames(localization, descKey),
+      jurisdiction: value.jurisdiction ? jurisdictionName(extractedRoot, localization, value.jurisdiction, jurisdictions) : null,
       recordName: String(doc?._RecordName_ || ''),
     })
   }
@@ -322,6 +522,69 @@ function bodyKey(base) {
   return match[1][0].toUpperCase() + match[1].slice(1).toLowerCase() + match[2].toLowerCase()
 }
 
+/**
+ * Starmap amenities land on the marker for that record. A landing zone, city or
+ * outpost that is not on the map rolls up to the nearest ancestor that is
+ * (Lorville onto Hurston), listed under its own place name.
+ */
+function attachServices(markers, markerByRecord, starmap, systemId) {
+  const byKey = new Map()
+  for (const row of starmap.values()) if (row.key) byKey.set(row.key, row)
+  const orb = (m) => m.kind === 'planet' || m.kind === 'moon' || m.kind === 'star'
+  const same = (a, b) => String(a || '').toLowerCase() === String(b || '').toLowerCase()
+  const ancestor = (row) => {
+    let cur = row
+    for (let depth = 0; depth < 8 && cur?.parentKey; depth++) {
+      cur = byKey.get(cur.parentKey)
+      if (!cur) return null
+      const hit = markerByRecord.get(cur.id)
+      if (hit) return hit
+    }
+    return null
+  }
+
+  for (const [recordId, marker] of markerByRecord) {
+    const row = starmap.get(recordId)
+    if (row?.jurisdiction) marker.jurisdiction = row.jurisdiction
+  }
+
+  const gatewayJump = (name) => {
+    const dest = String(name || '').match(/^(\w+) Gateway$/i)?.[1]?.toLowerCase()
+    if (!dest) return null
+    return markers.find((m) => m.kind === 'jump_point' && (
+      m.toSystem === dest
+      || (dest === 'nyx' && m.toSystem === 'magnus')
+      || (dest === 'stanton' && m.toSystem === 'castra')
+    )) || null
+  }
+
+  for (const row of starmap.values()) {
+    if (!row.amenities?.length || !row.name || /UNINITIALIZED/i.test(row.name)) continue
+    let own = markerByRecord.get(row.id)
+    let up = own ? null : ancestor(row)
+    if (up?.kind === 'star') {
+      own = gatewayJump(row.name)
+      up = null
+      if (!own) continue
+    }
+    if (!own && (up || row.file.includes(`/system/${systemId}/`))) {
+      own = markers.find((m) => !orb(m) && [m.name, ...(m.aliases || [])].some((label) => same(label, row.name)))
+    }
+    if (own) {
+      own.amenities = sortAmenities([...(own.amenities || []), ...row.amenities])
+      continue
+    }
+    if (!up) continue
+    const services = up.services || (up.services = [])
+    const place = services.find((s) => same(s.place, row.name))
+    if (place) place.amenities = sortAmenities([...place.amenities, ...row.amenities])
+    else services.push({ place: row.name, amenities: row.amenities })
+  }
+  for (const marker of markers) {
+    if (marker.services) marker.services.sort((a, b) => a.place.localeCompare(b.place))
+  }
+}
+
 function addMarker(markers, marker) {
   const idBase = `${marker.systemId}:${slug(marker.name)}`
   let id = idBase
@@ -394,6 +657,7 @@ export function parseStarMaps({ extractedRoot, localization }) {
 
   const starmap = loadStarmapRecords(extractedRoot, localization)
   const gateways = loadGatewayRecords(extractedRoot, localization)
+  const envRecords = loadEnvironmentRecords(extractedRoot, localization)
   const systemsOut = []
   const maps = []
 
@@ -405,6 +669,7 @@ export function parseStarMaps({ extractedRoot, localization }) {
     const systemRoot = dirname(systemFile)
     const ringSegmentDistances = { glaciemring: [], keegerbelt: [] }
     const bodyRings = []
+    const markerByRecord = new Map()
 
     walkChildren(xml, (world) => {
       const socpak = world.attr.name || ''
@@ -502,12 +767,14 @@ export function parseStarMaps({ extractedRoot, localization }) {
       if (kind === 'planet' || kind === 'moon' || kind === 'star') {
         radiusM = typeof record?.size === 'number' ? record.size : null
       }
+      let environment = null
       if (kind === 'planet' || kind === 'moon') {
         const abs = path.startsWith('data/')
           ? join(extractedRoot, ...path.split('/'))
           : join(systemRoot, basename(path))
         const ring = existsSync(abs) ? bodyRingFromSoc(abs) : null
         if (ring) bodyRings.push({ parentName: name, pos: world.pos, ...ring })
+        if (existsSync(abs)) environment = bodyEnvironment(abs, envRecords)
       }
       if (kind === 'belt') {
         const abs = path.startsWith('data/')
@@ -545,7 +812,10 @@ export function parseStarMaps({ extractedRoot, localization }) {
         toMarkerName,
         notes,
         parentName: null,
+        ...(environment ? { environment } : {}),
+        ...(record?.caveOnly?.length ? { caveOnly: record.caveOnly } : {}),
       })
+      if (recordId) markerByRecord.set(recordId, markers[markers.length - 1])
     })
 
     // PYAM supervisor stations sit on an L-point (AsteroidBase_P3_L4 = PYAM-SUPVISR-3-4).
@@ -746,6 +1016,8 @@ export function parseStarMaps({ extractedRoot, localization }) {
       }
       if (best) moon.parentName = best.name
     }
+
+    attachServices(markers, markerByRecord, starmap, systemId)
 
     // Pyro's star quaternion is the in-game starmap frame (~85° about Z).
     // Stanton and Nyx are identity, so this leaves them where they are.
