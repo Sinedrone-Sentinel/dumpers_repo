@@ -165,7 +165,7 @@ function motesFor(kind: StarKind): StarMote[] {
     motes.push({
       ang: rnd() * Math.PI * 2,
       dist: Math.sqrt(rnd()) * 0.82,
-      size: 0.2 + rnd() * 0.07,
+      size: 0.1 + rnd() * 0.24,
       roll: rnd(),
       phase: rnd() * Math.PI * 2,
       spin: 0.45 + rnd() * 1.1,
@@ -321,7 +321,6 @@ function paintStarSurface(
   const hot = kind === 'nyx' ? '#ffd0c4' : kind === 'pyro' ? '#fff6d0' : '#ffe7a8'
   const mid = kind === 'nyx' ? '#d46858' : kind === 'pyro' ? '#ff9a2e' : '#f0a040'
   const cool = kind === 'nyx' ? '#6e2820' : kind === 'pyro' ? '#9a2808' : '#b45309'
-  const base = kind === 'nyx' ? '#9a4034' : kind === 'pyro' ? '#e85d04' : '#e08820'
   const turn = starDiscTurn(t)
   const motes = motesFor(kind)
   const cells = motes.filter((mote) => mote.group === 0).slice().sort((a, b) => b.size - a.size)
@@ -332,11 +331,13 @@ function paintStarSurface(
     const y = sy + Math.sin(ang) * at.dist * r
     const rad = mote.size * r
     const core = mote.roll > 0.86 ? hot : mote.roll > 0.4 ? mid : cool
+    const peak = 0.16 + mote.roll * 0.2
     const grd = ctx.createRadialGradient(x, y, 0, x, y, rad)
-    grd.addColorStop(0, starRgba(core, 0.92))
-    grd.addColorStop(0.46, starRgba(core, 0.78))
-    grd.addColorStop(0.72, starRgba(mid, 0.2))
-    grd.addColorStop(1, starRgba(base, 0))
+    grd.addColorStop(0, starRgba(core, peak))
+    grd.addColorStop(0.16, starRgba(core, peak * 0.45))
+    grd.addColorStop(0.4, starRgba(core, peak * 0.16))
+    grd.addColorStop(0.7, starRgba(core, peak * 0.04))
+    grd.addColorStop(1, starRgba(core, 0))
     ctx.fillStyle = grd
     ctx.beginPath()
     ctx.arc(x, y, rad, 0, Math.PI * 2)
@@ -350,8 +351,9 @@ function paintStarSurface(
     const y = sy + Math.sin(ang) * at.dist * r
     const rad = mote.size * r
     const shade = ctx.createRadialGradient(x, y, 0, x, y, rad)
-    shade.addColorStop(0, 'rgba(48, 14, 4, 0.22)')
-    shade.addColorStop(0.4, 'rgba(48, 14, 4, 0.08)')
+    shade.addColorStop(0, 'rgba(48, 14, 4, 0.1)')
+    shade.addColorStop(0.28, 'rgba(48, 14, 4, 0.04)')
+    shade.addColorStop(0.62, 'rgba(48, 14, 4, 0.012)')
     shade.addColorStop(1, 'rgba(48, 14, 4, 0)')
     ctx.fillStyle = shade
     ctx.beginPath()
