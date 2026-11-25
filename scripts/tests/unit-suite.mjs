@@ -3452,7 +3452,7 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
   )
   const close = starMap.systemBodyScale(stanton, 200 / crusader.radiusM, 400 / 7e10)
   const iconR = starMap.ICON_PX / 2
-  const moonCap = iconR * 4
+  const moonCap = iconR * 2
   const cellin = byName(stanton, 'Cellin')
   const daymar = byName(stanton, 'Daymar')
   check(
@@ -3460,7 +3460,7 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
       starMap.orbDisplayRadiusPx(yela, close) === moonCap &&
       starMap.orbDisplayRadiusPx(cellin, close) === moonCap &&
       starMap.orbDisplayRadiusPx(daymar, close) === moonCap,
-    'star map: zoomed moons are one size, four icons across',
+    'star map: zoomed moons are one size, two icons across',
   )
   check(
     starMap.ICON_PX <= starMap.orbDisplayRadiusPx(crusader, fit),
@@ -3637,14 +3637,14 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
   const levski = byName(nyx, 'Levski')
   const levskiD = levski ? Math.hypot(levski.x, levski.y, levski.z) : 0
   check(
-    levski?.kind === 'landing' &&
+    levski?.kind === 'station' &&
       levski.aliases.includes('Delamar') &&
       levskiD > glaciem.innerRadiusM &&
       levskiD < glaciem.outerRadiusM &&
-      starMap.STAR_MAP_KIND_LABELS.landing === 'Landing Zone' &&
+      starMap.starMapPoiGroup(levski)?.label === 'Station' &&
       starMap.starMapPoiGroup(levski)?.startsHidden === false &&
       !stanton.markers.some((m) => m.name === 'Lorville' || m.name === 'Orison' || m.name === 'Area18' || m.name === 'New Babbage'),
-    'star map: Levski is a landing zone in the Glaciem Ring, and planet cities stay off the map',
+    'star map: Levski is a station in the Glaciem Ring, and planet cities stay off the map',
   )
   const nyxQv = nyx.markers.filter((m) => m.kind === 'qv')
   const onKeeger = nyxQv.filter((m) => {
@@ -3727,14 +3727,14 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
     for (const moon of sys.markers.filter((m) => m.kind === 'moon')) {
       const near = starMap.orbDisplayRadiusPx(moon, wide)
       const far = starMap.orbDisplayRadiusPx(moon, tight)
-      if (far + 1e-6 < iconR || far > iconR * 4 + 1e-6 || far + 1e-6 < near) moonsInRange = false
+      if (far + 1e-6 < iconR || far > iconR * 2 + 1e-6 || far + 1e-6 < near) moonsInRange = false
     }
   }
   check(
     moonsInRange &&
-      starMap.orbDisplayRadiusPx(arial, hurstonMoons) === iconR * 4 &&
-      starMap.orbDisplayRadiusPx(byName(stanton, 'Aberdeen'), hurstonMoons) === iconR * 4,
-    'star map: every moon is the same size, from one icon up to four',
+      starMap.orbDisplayRadiusPx(arial, hurstonMoons) === iconR * 2 &&
+      starMap.orbDisplayRadiusPx(byName(stanton, 'Aberdeen'), hurstonMoons) === iconR * 2,
+    'star map: every moon is the same size, from one icon up to two',
   )
   const gasNames = new Set(['Crusader', 'Pyro V', 'Nyx III'])
   let mapsShareScale = true
@@ -3820,6 +3820,20 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
   check(
     ['Checkmate', 'Orbituary', 'Ruin Station'].every((n) => byName(smSystems.pyro, n)?.kind === 'station'),
     'star map: Checkmate, Orbituary and Ruin Station are plain stations',
+  )
+  const pyroMap = smSystems.pyro
+  const checkmate = byName(pyroMap, 'Checkmate')
+  const gaslight = byName(pyroMap, 'Gaslight')
+  const pyroV = byName(pyroMap, 'Pyro V')
+  const ruin = byName(pyroMap, 'Ruin Station')
+  const bearing = (marker) => Math.atan2(marker.y, marker.x)
+  check(
+    checkmate?.aliases.includes('PYR2 L4') &&
+      gaslight?.aliases.includes('PYR5 L2') &&
+      Math.abs(bearing(gaslight) - bearing(pyroV)) < 0.2 &&
+      Math.hypot(ruin.x - terminus.x, ruin.y - terminus.y) < 2e6 &&
+      !pyroMap.markers.some((m) => m.name === 'PYR5 L2' || m.name === 'PYR3 L4' || m.name === 'PYR3 L5'),
+    'star map: Pyro stations sit with their planets, not on the spun frame',
   )
   check(hl.matchMarkers('PYR3 L4', smSystems)[0]?.name === 'PYAM-SUPVISR-3-4', 'star map: PYR3 L4 finds PYAM-SUPVISR-3-4')
   const magnus = byName(stanton, 'Stanton - Magnus Jump Point')

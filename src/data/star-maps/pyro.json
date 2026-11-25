@@ -509,8 +509,10 @@
     },
     {
       "systemId": "pyro",
-      "name": "PYR5 L2",
-      "aliases": [],
+      "name": "Gaslight",
+      "aliases": [
+        "PYR5 L2"
+      ],
       "kind": "station",
       "description": "A Lagrangian gravity well located in the orbit of Pyro V.",
       "x": 46513574526,
@@ -523,7 +525,7 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": null,
-      "id": "pyro:pyr5-l2"
+      "id": "pyro:gaslight"
     },
     {
       "systemId": "pyro",
@@ -601,8 +603,10 @@
     },
     {
       "systemId": "pyro",
-      "name": "PYR3 L1",
-      "aliases": [],
+      "name": "Starlight Service Station",
+      "aliases": [
+        "PYR3 L1"
+      ],
       "kind": "station",
       "description": "A Lagrangian gravity well located in the orbit of Pyro III.",
       "x": -7767541295,
@@ -615,7 +619,7 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": null,
-      "id": "pyro:pyr3-l1"
+      "id": "pyro:starlight-service-station"
     },
     {
       "systemId": "pyro",
@@ -657,8 +661,10 @@
     },
     {
       "systemId": "pyro",
-      "name": "PYR3 L3",
-      "aliases": [],
+      "name": "Patch City",
+      "aliases": [
+        "PYR3 L3"
+      ],
       "kind": "station",
       "description": "A Lagrangian gravity well located in the orbit of Pyro III.",
       "x": 11443001610,
@@ -671,7 +677,7 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": null,
-      "id": "pyro:pyr3-l3"
+      "id": "pyro:patch-city"
     },
     {
       "systemId": "pyro",
@@ -729,8 +735,10 @@
     },
     {
       "systemId": "pyro",
-      "name": "PYR6 L5",
-      "aliases": [],
+      "name": "Megumi Refueling",
+      "aliases": [
+        "PYR6 L5"
+      ],
       "kind": "station",
       "description": "A Lagrangian gravity well located in the orbit of Pyro VI.",
       "x": -59169086144,
@@ -743,12 +751,14 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": null,
-      "id": "pyro:pyr6-l5"
+      "id": "pyro:megumi-refueling"
     },
     {
       "systemId": "pyro",
-      "name": "PYR6 L3",
-      "aliases": [],
+      "name": "Endgame",
+      "aliases": [
+        "PYR6 L3"
+      ],
       "kind": "station",
       "description": "A Lagrangian gravity well located in the orbit of Pyro VI.",
       "x": 48311253893,
@@ -761,7 +771,7 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": null,
-      "id": "pyro:pyr6-l3"
+      "id": "pyro:endgame"
     },
     {
       "systemId": "pyro",
@@ -1881,8 +1891,10 @@
     },
     {
       "systemId": "pyro",
-      "name": "PYR5 L4",
-      "aliases": [],
+      "name": "Rod's Fuel 'N Supplies",
+      "aliases": [
+        "PYR5 L4"
+      ],
       "kind": "station",
       "description": "A Lagrangian gravity well located in the orbit of Pyro V.",
       "x": 14685416672,
@@ -1895,7 +1907,7 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": null,
-      "id": "pyro:pyr5-l4"
+      "id": "pyro:rod-s-fuel-n-supplies"
     },
     {
       "systemId": "pyro",
@@ -1971,8 +1983,10 @@
     },
     {
       "systemId": "pyro",
-      "name": "PYR6 L4",
-      "aliases": [],
+      "name": "Dudley & Daughters",
+      "aliases": [
+        "PYR6 L4"
+      ],
       "kind": "station",
       "description": "A Lagrangian gravity well located in the orbit of Pyro VI.",
       "x": 23368016469,
@@ -1985,7 +1999,7 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": null,
-      "id": "pyro:pyr6-l4"
+      "id": "pyro:dudley-daughters"
     },
     {
       "systemId": "pyro",
@@ -2259,8 +2273,10 @@
     },
     {
       "systemId": "pyro",
-      "name": "PYR2 L4",
-      "aliases": [],
+      "name": "Checkmate",
+      "aliases": [
+        "PYR2 L4"
+      ],
       "kind": "station",
       "description": "A Lagrangian gravity well located in the orbit of Pyro II.",
       "x": 1844386069,
@@ -2273,7 +2289,7 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": null,
-      "id": "pyro:pyr2-l4"
+      "id": "pyro:checkmate"
     },
     {
       "systemId": "pyro",
@@ -2691,8 +2707,10 @@
     },
     {
       "systemId": "pyro",
-      "name": "PYR5 L5",
-      "aliases": [],
+      "name": "Rat's Nest",
+      "aliases": [
+        "PYR5 L5"
+      ],
       "kind": "station",
       "description": "A Lagrangian gravity well located in the orbit of Pyro V.",
       "x": 3742466610,
@@ -2705,7 +2723,7 @@
       "toMarkerName": null,
       "notes": [],
       "parentName": null,
-      "id": "pyro:pyr5-l5"
+      "id": "pyro:rat-s-nest"
     },
     {
       "systemId": "pyro",
@@ -3109,232 +3127,12 @@
     },
     {
       "systemId": "pyro",
-      "name": "Gaslight",
-      "aliases": [
-        "PYR5 L2"
-      ],
-      "kind": "station",
-      "description": null,
-      "x": -4305013180,
-      "y": -47034474329,
-      "z": 0,
-      "radiusM": null,
-      "innerRadiusM": null,
-      "outerRadiusM": null,
-      "toSystem": null,
-      "toMarkerName": null,
-      "notes": [],
-      "parentName": null,
-      "id": "pyro:gaslight"
-    },
-    {
-      "systemId": "pyro",
-      "name": "PYR3 L4",
-      "aliases": [
-        "PYR3-L4"
-      ],
-      "kind": "station",
-      "description": null,
-      "x": -14623507669,
-      "y": -10152318684,
-      "z": 0,
-      "radiusM": null,
-      "innerRadiusM": null,
-      "outerRadiusM": null,
-      "toSystem": null,
-      "toMarkerName": null,
-      "notes": [],
-      "parentName": null,
-      "id": "pyro:pyr3-l4"
-    },
-    {
-      "systemId": "pyro",
-      "name": "Starlight Service Station",
-      "aliases": [
-        "PYR3 L1"
-      ],
-      "kind": "station",
-      "description": null,
-      "x": -14610506643,
-      "y": 6575346218,
-      "z": 0,
-      "radiusM": null,
-      "innerRadiusM": null,
-      "outerRadiusM": null,
-      "toSystem": null,
-      "toMarkerName": null,
-      "notes": [],
-      "parentName": null,
-      "id": "pyro:starlight-service-station"
-    },
-    {
-      "systemId": "pyro",
-      "name": "PYR3 L5",
-      "aliases": [
-        "PYR3-L5"
-      ],
-      "kind": "station",
-      "description": null,
-      "x": 12638431339,
-      "y": 12537403511,
-      "z": 0,
-      "radiusM": null,
-      "innerRadiusM": null,
-      "outerRadiusM": null,
-      "toSystem": null,
-      "toMarkerName": null,
-      "notes": [],
-      "parentName": null,
-      "id": "pyro:pyr3-l5"
-    },
-    {
-      "systemId": "pyro",
-      "name": "Patch City",
-      "aliases": [
-        "PYR3 L3"
-      ],
-      "kind": "station",
-      "description": null,
-      "x": 14541573613,
-      "y": -10269333168,
-      "z": 0,
-      "radiusM": null,
-      "innerRadiusM": null,
-      "outerRadiusM": null,
-      "toSystem": null,
-      "toMarkerName": null,
-      "notes": [],
-      "parentName": null,
-      "id": "pyro:patch-city"
-    },
-    {
-      "systemId": "pyro",
-      "name": "Megumi Refueling",
-      "aliases": [
-        "PYR6 L5"
-      ],
-      "kind": "station",
-      "description": null,
-      "x": 29122470164,
-      "y": 61804895101,
-      "z": 0,
-      "radiusM": null,
-      "innerRadiusM": null,
-      "outerRadiusM": null,
-      "toSystem": null,
-      "toMarkerName": null,
-      "notes": [],
-      "parentName": null,
-      "id": "pyro:megumi-refueling"
-    },
-    {
-      "systemId": "pyro",
-      "name": "Endgame",
-      "aliases": [
-        "PYR6 L3"
-      ],
-      "kind": "station",
-      "description": null,
-      "x": 52161403642,
-      "y": -44126491136,
-      "z": 0,
-      "radiusM": null,
-      "innerRadiusM": null,
-      "outerRadiusM": null,
-      "toSystem": null,
-      "toMarkerName": null,
-      "notes": [],
-      "parentName": null,
-      "id": "pyro:endgame"
-    },
-    {
-      "systemId": "pyro",
-      "name": "Rod's Fuel 'N Supplies",
-      "aliases": [
-        "PYR5 L4"
-      ],
-      "kind": "station",
-      "description": null,
-      "x": 41429351313,
-      "y": -11279333425,
-      "z": 0,
-      "radiusM": null,
-      "innerRadiusM": null,
-      "outerRadiusM": null,
-      "toSystem": null,
-      "toMarkerName": null,
-      "notes": [],
-      "parentName": null,
-      "id": "pyro:rod-s-fuel-n-supplies"
-    },
-    {
-      "systemId": "pyro",
-      "name": "Dudley & Daughters",
-      "aliases": [
-        "PYR6 L4"
-      ],
-      "kind": "station",
-      "description": null,
-      "x": -62036440806,
-      "y": -28625942536,
-      "z": 0,
-      "radiusM": null,
-      "innerRadiusM": null,
-      "outerRadiusM": null,
-      "toSystem": null,
-      "toMarkerName": null,
-      "notes": [],
-      "parentName": null,
-      "id": "pyro:dudley-daughters"
-    },
-    {
-      "systemId": "pyro",
-      "name": "Checkmate",
-      "aliases": [
-        "PYR2 L4"
-      ],
-      "kind": "station",
-      "description": null,
-      "x": 10577229334,
-      "y": -968166325,
-      "z": 0,
-      "radiusM": null,
-      "innerRadiusM": null,
-      "outerRadiusM": null,
-      "toSystem": null,
-      "toMarkerName": null,
-      "notes": [],
-      "parentName": null,
-      "id": "pyro:checkmate"
-    },
-    {
-      "systemId": "pyro",
-      "name": "Rat's Nest",
-      "aliases": [
-        "PYR5 L5"
-      ],
-      "kind": "station",
-      "description": null,
-      "x": -42314565584,
-      "y": -7286465628,
-      "z": 0,
-      "radiusM": null,
-      "innerRadiusM": null,
-      "outerRadiusM": null,
-      "toSystem": null,
-      "toMarkerName": null,
-      "notes": [],
-      "parentName": null,
-      "id": "pyro:rat-s-nest"
-    },
-    {
-      "systemId": "pyro",
       "name": "Ruin Station",
       "aliases": [],
       "kind": "station",
       "description": null,
-      "x": -48117999178,
-      "y": 48503470352,
+      "x": -52336834996.4297,
+      "y": -43917925538.87128,
       "z": -100478,
       "radiusM": null,
       "innerRadiusM": null,
@@ -3351,8 +3149,8 @@
       "aliases": [],
       "kind": "station",
       "description": null,
-      "x": -16104579245,
-      "y": 7587500264,
+      "x": -8900432636.941586,
+      "y": -15417844589.628925,
       "z": 226044,
       "radiusM": null,
       "innerRadiusM": null,
