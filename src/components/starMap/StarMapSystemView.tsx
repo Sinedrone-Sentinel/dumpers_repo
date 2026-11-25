@@ -319,7 +319,7 @@ export default function StarMapSystemView({
       for (const it of items) {
         if (!ORB_KINDS.has(it.marker.kind) || !visible.has(it.marker.id)) continue
         if (it.marker.kind === 'star') paintStar(ctx, it.sx, it.sy, it.r, t, it.marker.name)
-        else paintBody(ctx, it.sx, it.sy, it.r, it.marker.name, sc.sx, sc.sy)
+        else paintBody(ctx, it.sx, it.sy, it.r, it.marker.name, sc.sx, sc.sy, t)
       }
 
       // Icons.
