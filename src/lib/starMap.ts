@@ -264,7 +264,7 @@ export function systemBodyScale(
   system: StarMapSystem,
   pxPerM: number,
   fitPxPerM: number = pxPerM,
-  maxPlanetPx = 16,
+  maxPlanetPx = 28,
 ): BodyScale {
   const star = system.markers.find((m) => m.kind === 'star')
   const cx = star?.x ?? 0
@@ -286,20 +286,28 @@ export function systemBodyScale(
   }
 }
 
-/** Planet radius in pixels before the true-size and minimum-size floors. */
+/** Gas giants read a little larger. Every other planet is the same disc. */
+const GAS_GIANT_NAMES = new Set(['Crusader', 'Pyro V', 'Nyx III'])
+
+/**
+ * Planet radius in pixels. Positions stay true to distance. A planet is not
+ * scaled against the other planets in the system — a rocky world stays a disc
+ * beside a gas giant. It grows as the view zooms, and once its first moon
+ * orbit is on screen it stays inside that orbit. Moons are sized from their
+ * own planet, not from this.
+ */
 function planetPx(marker: StarMapMarker, scale: BodyScale): number {
-  const fitPx = scale.maxPlanetPx * ((marker.radiusM || 0) / scale.maxPlanetRadiusM)
-  const grown = fitPx * Math.sqrt(Math.max(1, scale.pxPerM / scale.fitPxPerM))
-  const clear = scale.layout.clearM.get(marker.id) ?? Infinity
-  return Math.min(grown, Math.max(fitPx, clear * scale.pxPerM * BODY_CLEAR_SHARE))
+  const floor = scale.maxPlanetPx * (GAS_GIANT_NAMES.has(marker.name) ? 1 : 0.9)
+  const zoom = Math.sqrt(Math.max(1, scale.pxPerM / scale.fitPxPerM))
+  const cap = (scale.layout.clearM.get(marker.id) ?? Infinity) * scale.pxPerM * BODY_CLEAR_SHARE
+  return Math.max(floor, Math.min(floor * zoom, cap))
 }
 
 /**
- * Orb radius in pixels. Every planet and moon shares one size scale, so
- * planet-to-planet and moon-to-planet ratios match the game. Bodies grow as
- * the view zooms in, but a planet never covers its first moon orbit, and true
- * size wins once the view is zoomed in that far. The star is larger than any
- * planet but never past half the innermost planet orbit.
+ * Orb radius in pixels. Planets share one readable size (gas giants a step
+ * larger). A moon is its true share of its own planet. The star is larger
+ * than any planet but never past half the innermost planet orbit. True pixel
+ * size takes over only when the view is zoomed in that far.
  */
 export function orbDisplayRadiusPx(marker: StarMapMarker, scale: BodyScale): number {
   const realPx = (marker.radiusM || 0) * scale.pxPerM
@@ -310,13 +318,11 @@ export function orbDisplayRadiusPx(marker: StarMapMarker, scale: BodyScale): num
   }
   if (marker.kind === 'moon') {
     const parent = marker.parentName ? scale.layout.byName.get(marker.parentName) : undefined
-    const own = planetPx(marker, scale)
-    const px = parent?.radiusM
-      ? Math.min(own, orbDisplayRadiusPx(parent, scale) * ((marker.radiusM || 0) / parent.radiusM))
-      : own
-    return Math.max(px, realPx, 1.5)
+    if (!parent?.radiusM) return Math.max(realPx, 1.5)
+    const share = (marker.radiusM || 0) / parent.radiusM
+    return Math.max(orbDisplayRadiusPx(parent, scale) * share, 1.5)
   }
-  return Math.max(planetPx(marker, scale), realPx, 2)
+  return Math.max(planetPx(marker, scale), realPx, 10)
 }
 
 /** How much a body is drawn larger than true size (1 = true size). */
