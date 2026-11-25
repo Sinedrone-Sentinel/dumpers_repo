@@ -66,6 +66,25 @@ export function getSpawnKeysForGuideName(guideName: string): string[] {
   return mapped?.length ? [...mapped] : []
 }
 
+/** One Stanton station or one Pyro belt L-point. RAB/RMB and BRK lists are not these. */
+export function isSingleBeltMarker(guideLocationName: string): boolean {
+  return (
+    /^[A-Z]{2,4}-L\d$/.test(guideLocationName) ||
+    /^PYR\d+ L\d+(?: · .+)?$/i.test(guideLocationName)
+  )
+}
+
+/** QT line for one station or one Pyro L-point. */
+export function singleMarkerNavHint(guideLocationName: string): string | null {
+  if (/^[A-Z]{2,4}-L\d$/.test(guideLocationName)) {
+    return `QT straight to ${guideLocationName} — the belt surrounds the station`
+  }
+  if (/^PYR\d+ L\d+/i.test(guideLocationName)) {
+    return `QT to ${guideLocationName}`
+  }
+  return null
+}
+
 /** In-game nav hint (QT markers / starmap search) for a spawn key. */
 export function getNavHintForSpawnKey(spawnKey: string | undefined): string | null {
   if (!spawnKey) return null
@@ -87,11 +106,14 @@ function resolveNavSpawnKey(guideLocationName: string): string | null {
 
 /** Nav hint for a guide/compendium location name. */
 export function getNavHintForGuideLocation(guideLocationName: string): string | null {
+  const single = singleMarkerNavHint(guideLocationName)
+  if (single) return single
   return getNavHintForSpawnKey(resolveNavSpawnKey(guideLocationName) ?? undefined)
 }
 
 /** Structured QT marker groups for a guide/compendium location name. */
 export function getNavMarkersForGuideLocation(guideLocationName: string): NavMarkerGroup[] {
+  if (isSingleBeltMarker(guideLocationName)) return []
   const spawnKey = resolveNavSpawnKey(guideLocationName)
   if (!spawnKey) return []
   return locationAliases[spawnKey]?.navMarkers ?? []

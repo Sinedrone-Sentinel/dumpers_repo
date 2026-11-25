@@ -5120,6 +5120,7 @@ async function main() {
     locationOres: miningLocations.locationOres,
     locationMineables: miningLocations.locationMineables,
     spawnOres: miningSpawns.ores,
+    locationAliases: miningLocations.locationAliases,
     rarityTiers: miningLocations.rarityTiers,
     assignOreRarity,
   })

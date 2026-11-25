@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted localization)",
-  "_extracted": "2026-11-20T00:34:23.916Z",
+  "_extracted": "2026-11-25T04:05:41.840Z",
   "rarityTiers": {
     "legendary": [
       {
@@ -28,8 +28,7 @@
         "name": "Savrilium",
         "locations": [
           "Glaciem Ring",
-          "Keeger Belt",
-          "QV Breaker Stations (Nyx)"
+          "Keeger Belt"
         ]
       },
       {
@@ -61,7 +60,11 @@
           "Hurston",
           "Yela Ring",
           "Ita",
-          "Terminus"
+          "PYR6 L1",
+          "PYR6 L2 · PYAM-FARSTAT-6-2",
+          "PYR6 L3 · Endgame",
+          "PYR6 L4 · Dudley & Daughters",
+          "PYR6 L5 · Megumi Refueling"
         ]
       },
       {
@@ -84,12 +87,23 @@
           "ARC-L3",
           "Cellin",
           "Daymar",
-          "Pyro Asteroid Clusters",
           "Terminus",
           "Vuur",
           "Yela",
           "Lagrange G",
-          "Lagrange Occupied"
+          "Lagrange Occupied",
+          "PYR1 L1",
+          "PYR1 L2 · PYAM-FARSTAT-1-2",
+          "PYR1 L3 · PYAM-FARSTAT-1-3",
+          "PYR1 L4",
+          "PYR1 L5 · PYAM-FARSTAT-1-5",
+          "PYR2 L1",
+          "PYR2 L2",
+          "PYR2 L3 · PYAM-FARSTAT-2-3",
+          "PYR2 L4 · Checkmate",
+          "PYR2 L5",
+          "CRU-L5",
+          "MIC-L4"
         ]
       },
       {
@@ -99,9 +113,15 @@
           "ARC-L5",
           "Fuego",
           "Magda",
-          "Pyro Asteroid Clusters",
           "Vuur",
-          "Arial"
+          "Arial",
+          "PYR6 L1",
+          "PYR6 L2 · PYAM-FARSTAT-6-2",
+          "PYR6 L3 · Endgame",
+          "PYR6 L4 · Dudley & Daughters",
+          "PYR6 L5 · Megumi Refueling",
+          "CRU-L4",
+          "MIC-L3"
         ]
       },
       {
@@ -109,10 +129,11 @@
         "locations": [
           "Aaron Halo",
           "ARC-L3",
-          "Pyro Asteroid Clusters",
           "Wala",
           "Lagrange G",
-          "Lagrange Occupied"
+          "Lagrange Occupied",
+          "CRU-L5",
+          "MIC-L4"
         ]
       },
       {
@@ -123,8 +144,19 @@
           "Fuego",
           "Glaciem Ring",
           "Keeger Belt",
-          "Pyro Asteroid Clusters",
-          "Vuur"
+          "Vuur",
+          "PYR1 L1",
+          "PYR1 L2 · PYAM-FARSTAT-1-2",
+          "PYR1 L3 · PYAM-FARSTAT-1-3",
+          "PYR1 L4",
+          "PYR1 L5 · PYAM-FARSTAT-1-5",
+          "PYR2 L1",
+          "PYR2 L2",
+          "PYR2 L3 · PYAM-FARSTAT-2-3",
+          "PYR2 L4 · Checkmate",
+          "PYR2 L5",
+          "CRU-L2",
+          "HUR-L3"
         ]
       },
       {
@@ -134,8 +166,13 @@
           "Bloom",
           "Fuego",
           "HUR-L1",
-          "Pyro Asteroid Clusters",
-          "Pyro IV"
+          "Pyro IV",
+          "PYR5 L1 · PYAM-FARSTAT-5-1",
+          "PYR5 L2 · Gaslight",
+          "PYR5 L3 · PYAM-FARSTAT-5-3",
+          "PYR5 L4 · Rod's Fuel 'N Supplies",
+          "PYR5 L5 · Rat's Nest",
+          "HUR-L4"
         ]
       },
       {
@@ -144,9 +181,15 @@
           "ARC-L5",
           "Fairo",
           "Ignis",
-          "Pyro Asteroid Clusters",
           "Terminus",
-          "Vatra"
+          "Vatra",
+          "PYR3 L1 · Starlight Service Station",
+          "PYR3 L2",
+          "PYR3 L3 · Patch City",
+          "PYR3 L4 · PYAM-SUPVISR-3-4",
+          "PYR3 L5 · PYAM-FARSTAT-3-5, PYAM-SUPVISR-3-5",
+          "CRU-L4",
+          "MIC-L3"
         ]
       },
       {
@@ -159,9 +202,16 @@
           "HUR-L1",
           "microTech",
           "Monox",
-          "Pyro Asteroid Clusters",
           "Vuur",
-          "Ita"
+          "Ita",
+          "HUR-L4",
+          "HUR-L5",
+          "MIC-L1",
+          "MIC-L2",
+          "MIC-L5",
+          "ARC-L2",
+          "ARC-L4",
+          "HUR-L2"
         ]
       },
       {
@@ -170,7 +220,8 @@
           "HUR-L1",
           "Lyria",
           "Pyro IV",
-          "Wala"
+          "Wala",
+          "HUR-L4"
         ]
       }
     ],
@@ -183,7 +234,15 @@
           "CRU-L3",
           "HUR-L1",
           "Pyro Asteroid Clusters",
-          "Ita"
+          "Ita",
+          "HUR-L4",
+          "HUR-L5",
+          "MIC-L1",
+          "MIC-L2",
+          "MIC-L5",
+          "ARC-L2",
+          "ARC-L4",
+          "HUR-L2"
         ]
       },
       {
@@ -203,8 +262,15 @@
           "Cellin",
           "Clio",
           "Euterpe",
-          "Pyro Asteroid Clusters",
-          "Yela"
+          "Yela",
+          "PYR6 L1",
+          "PYR6 L2 · PYAM-FARSTAT-6-2",
+          "PYR6 L3 · Endgame",
+          "PYR6 L4 · Dudley & Daughters",
+          "PYR6 L5 · Megumi Refueling",
+          "ARC-L2",
+          "ARC-L4",
+          "HUR-L2"
         ]
       },
       {
@@ -213,10 +279,16 @@
           "Aaron Halo",
           "Aberdeen",
           "CRU-L1",
-          "Pyro Asteroid Clusters",
           "Terminus",
           "Yela Ring",
-          "Arial"
+          "Arial",
+          "PYR5 L1 · PYAM-FARSTAT-5-1",
+          "PYR5 L2 · Gaslight",
+          "PYR5 L3 · PYAM-FARSTAT-5-3",
+          "PYR5 L4 · Rod's Fuel 'N Supplies",
+          "PYR5 L5 · Rat's Nest",
+          "CRU-L2",
+          "HUR-L3"
         ]
       },
       {
@@ -227,7 +299,10 @@
           "Glaciem Ring",
           "Keeger Belt",
           "Pyro Asteroid Clusters",
-          "QV Breaker Stations (Nyx)"
+          "HUR-L5",
+          "MIC-L1",
+          "MIC-L2",
+          "MIC-L5"
         ]
       },
       {
@@ -236,7 +311,14 @@
           "Adir",
           "ARC-L1",
           "Fairo",
-          "Pyro Asteroid Clusters"
+          "PYR3 L1 · Starlight Service Station",
+          "PYR3 L2",
+          "PYR3 L3 · Patch City",
+          "PYR3 L4 · PYAM-SUPVISR-3-4",
+          "PYR3 L5 · PYAM-FARSTAT-3-5, PYAM-SUPVISR-3-5",
+          "ARC-L2",
+          "ARC-L4",
+          "HUR-L2"
         ]
       }
     ],
@@ -254,7 +336,15 @@
           "Keeger Belt",
           "Magda",
           "Pyro Asteroid Clusters",
-          "Hurston"
+          "Hurston",
+          "HUR-L4",
+          "HUR-L5",
+          "MIC-L1",
+          "MIC-L2",
+          "MIC-L5",
+          "ARC-L2",
+          "ARC-L4",
+          "HUR-L2"
         ]
       },
       {
@@ -268,14 +358,34 @@
           "CRU-L1",
           "Euterpe",
           "Lyria",
-          "Pyro Asteroid Clusters",
           "Pyro I",
           "Pyro IV",
           "Terminus",
           "Wala",
           "Yela Ring",
           "Lagrange G",
-          "Lagrange Occupied"
+          "Lagrange Occupied",
+          "PYR1 L1",
+          "PYR1 L2 · PYAM-FARSTAT-1-2",
+          "PYR1 L3 · PYAM-FARSTAT-1-3",
+          "PYR1 L4",
+          "PYR1 L5 · PYAM-FARSTAT-1-5",
+          "PYR2 L1",
+          "PYR2 L2",
+          "PYR2 L3 · PYAM-FARSTAT-2-3",
+          "PYR2 L4 · Checkmate",
+          "PYR2 L5",
+          "PYR3 L1 · Starlight Service Station",
+          "PYR3 L2",
+          "PYR3 L3 · Patch City",
+          "PYR3 L4 · PYAM-SUPVISR-3-4",
+          "PYR3 L5 · PYAM-FARSTAT-3-5, PYAM-SUPVISR-3-5",
+          "CRU-L4",
+          "MIC-L3",
+          "CRU-L5",
+          "MIC-L4",
+          "CRU-L2",
+          "HUR-L3"
         ]
       },
       {
@@ -291,12 +401,27 @@
           "Glaciem Ring",
           "Keeger Belt",
           "microTech",
-          "Pyro Asteroid Clusters",
           "Yela Ring",
           "Terminus",
           "CRU-L1",
           "Lagrange G",
-          "Lagrange Occupied"
+          "Lagrange Occupied",
+          "PYR5 L1 · PYAM-FARSTAT-5-1",
+          "PYR5 L2 · Gaslight",
+          "PYR5 L3 · PYAM-FARSTAT-5-3",
+          "PYR5 L4 · Rod's Fuel 'N Supplies",
+          "PYR5 L5 · Rat's Nest",
+          "PYR6 L1",
+          "PYR6 L2 · PYAM-FARSTAT-6-2",
+          "PYR6 L3 · Endgame",
+          "PYR6 L4 · Dudley & Daughters",
+          "PYR6 L5 · Megumi Refueling",
+          "CRU-L4",
+          "MIC-L3",
+          "CRU-L5",
+          "MIC-L4",
+          "CRU-L2",
+          "HUR-L3"
         ]
       },
       {
@@ -316,7 +441,6 @@
           "Lyria",
           "microTech",
           "Monox",
-          "Pyro Asteroid Clusters",
           "Pyro I",
           "Pyro IV",
           "Vatra",
@@ -325,7 +449,28 @@
           "Yela Ring",
           "Lagrange G",
           "Lagrange Occupied",
-          "Arial"
+          "Arial",
+          "PYR1 L1",
+          "PYR1 L2 · PYAM-FARSTAT-1-2",
+          "PYR1 L3 · PYAM-FARSTAT-1-3",
+          "PYR1 L4",
+          "PYR1 L5 · PYAM-FARSTAT-1-5",
+          "PYR2 L1",
+          "PYR2 L2",
+          "PYR2 L3 · PYAM-FARSTAT-2-3",
+          "PYR2 L4 · Checkmate",
+          "PYR2 L5",
+          "PYR3 L1 · Starlight Service Station",
+          "PYR3 L2",
+          "PYR3 L3 · Patch City",
+          "PYR3 L4 · PYAM-SUPVISR-3-4",
+          "PYR3 L5 · PYAM-FARSTAT-3-5, PYAM-SUPVISR-3-5",
+          "CRU-L4",
+          "MIC-L3",
+          "CRU-L5",
+          "MIC-L4",
+          "CRU-L2",
+          "HUR-L3"
         ]
       },
       {
@@ -337,9 +482,18 @@
           "Daymar",
           "Fairo",
           "Ignis",
-          "Pyro Asteroid Clusters",
           "Vatra",
-          "Yela"
+          "Yela",
+          "PYR5 L1 · PYAM-FARSTAT-5-1",
+          "PYR5 L2 · Gaslight",
+          "PYR5 L3 · PYAM-FARSTAT-5-3",
+          "PYR5 L4 · Rod's Fuel 'N Supplies",
+          "PYR5 L5 · Rat's Nest",
+          "PYR6 L1",
+          "PYR6 L2 · PYAM-FARSTAT-6-2",
+          "PYR6 L3 · Endgame",
+          "PYR6 L4 · Dudley & Daughters",
+          "PYR6 L5 · Megumi Refueling"
         ]
       },
       {
@@ -558,12 +712,23 @@
       "ARC-L3",
       "Cellin",
       "Daymar",
-      "Pyro Asteroid Clusters",
       "Terminus",
       "Vuur",
       "Yela",
       "Lagrange G",
-      "Lagrange Occupied"
+      "Lagrange Occupied",
+      "PYR1 L1",
+      "PYR1 L2 · PYAM-FARSTAT-1-2",
+      "PYR1 L3 · PYAM-FARSTAT-1-3",
+      "PYR1 L4",
+      "PYR1 L5 · PYAM-FARSTAT-1-5",
+      "PYR2 L1",
+      "PYR2 L2",
+      "PYR2 L3 · PYAM-FARSTAT-2-3",
+      "PYR2 L4 · Checkmate",
+      "PYR2 L5",
+      "CRU-L5",
+      "MIC-L4"
     ],
     "Aluminum": [
       "Aaron Halo",
@@ -576,7 +741,15 @@
       "Keeger Belt",
       "Magda",
       "Pyro Asteroid Clusters",
-      "Hurston"
+      "Hurston",
+      "HUR-L4",
+      "HUR-L5",
+      "MIC-L1",
+      "MIC-L2",
+      "MIC-L5",
+      "ARC-L2",
+      "ARC-L4",
+      "HUR-L2"
     ],
     "Aphorite": [
       "All Moons/Planets/Caves",
@@ -611,9 +784,15 @@
       "ARC-L5",
       "Fuego",
       "Magda",
-      "Pyro Asteroid Clusters",
       "Vuur",
-      "Arial"
+      "Arial",
+      "PYR6 L1",
+      "PYR6 L2 · PYAM-FARSTAT-6-2",
+      "PYR6 L3 · Endgame",
+      "PYR6 L4 · Dudley & Daughters",
+      "PYR6 L5 · Megumi Refueling",
+      "CRU-L4",
+      "MIC-L3"
     ],
     "Beradom": [
       "Bloom",
@@ -638,10 +817,11 @@
     "Beryl": [
       "Aaron Halo",
       "ARC-L3",
-      "Pyro Asteroid Clusters",
       "Wala",
       "Lagrange G",
-      "Lagrange Occupied"
+      "Lagrange Occupied",
+      "CRU-L5",
+      "MIC-L4"
     ],
     "Bexalite": [
       "CRU-L1",
@@ -649,16 +829,32 @@
       "Fuego",
       "Glaciem Ring",
       "Keeger Belt",
-      "Pyro Asteroid Clusters",
-      "Vuur"
+      "Vuur",
+      "PYR1 L1",
+      "PYR1 L2 · PYAM-FARSTAT-1-2",
+      "PYR1 L3 · PYAM-FARSTAT-1-3",
+      "PYR1 L4",
+      "PYR1 L5 · PYAM-FARSTAT-1-5",
+      "PYR2 L1",
+      "PYR2 L2",
+      "PYR2 L3 · PYAM-FARSTAT-2-3",
+      "PYR2 L4 · Checkmate",
+      "PYR2 L5",
+      "CRU-L2",
+      "HUR-L3"
     ],
     "Borase": [
       "Adir",
       "Bloom",
       "Fuego",
       "HUR-L1",
-      "Pyro Asteroid Clusters",
-      "Pyro IV"
+      "Pyro IV",
+      "PYR5 L1 · PYAM-FARSTAT-5-1",
+      "PYR5 L2 · Gaslight",
+      "PYR5 L3 · PYAM-FARSTAT-5-3",
+      "PYR5 L4 · Rod's Fuel 'N Supplies",
+      "PYR5 L5 · Rat's Nest",
+      "HUR-L4"
     ],
     "Carinite": [
       "Aberdeen",
@@ -673,14 +869,34 @@
       "CRU-L1",
       "Euterpe",
       "Lyria",
-      "Pyro Asteroid Clusters",
       "Pyro I",
       "Pyro IV",
       "Terminus",
       "Wala",
       "Yela Ring",
       "Lagrange G",
-      "Lagrange Occupied"
+      "Lagrange Occupied",
+      "PYR1 L1",
+      "PYR1 L2 · PYAM-FARSTAT-1-2",
+      "PYR1 L3 · PYAM-FARSTAT-1-3",
+      "PYR1 L4",
+      "PYR1 L5 · PYAM-FARSTAT-1-5",
+      "PYR2 L1",
+      "PYR2 L2",
+      "PYR2 L3 · PYAM-FARSTAT-2-3",
+      "PYR2 L4 · Checkmate",
+      "PYR2 L5",
+      "PYR3 L1 · Starlight Service Station",
+      "PYR3 L2",
+      "PYR3 L3 · Patch City",
+      "PYR3 L4 · PYAM-SUPVISR-3-4",
+      "PYR3 L5 · PYAM-FARSTAT-3-5, PYAM-SUPVISR-3-5",
+      "CRU-L4",
+      "MIC-L3",
+      "CRU-L5",
+      "MIC-L4",
+      "CRU-L2",
+      "HUR-L3"
     ],
     "Corundum": [
       "Aberdeen",
@@ -688,7 +904,15 @@
       "CRU-L3",
       "HUR-L1",
       "Pyro Asteroid Clusters",
-      "Ita"
+      "Ita",
+      "HUR-L4",
+      "HUR-L5",
+      "MIC-L1",
+      "MIC-L2",
+      "MIC-L5",
+      "ARC-L2",
+      "ARC-L4",
+      "HUR-L2"
     ],
     "Dolivine": [
       "All Moons/Planets/Caves",
@@ -762,9 +986,15 @@
       "ARC-L5",
       "Fairo",
       "Ignis",
-      "Pyro Asteroid Clusters",
       "Terminus",
-      "Vatra"
+      "Vatra",
+      "PYR3 L1 · Starlight Service Station",
+      "PYR3 L2",
+      "PYR3 L3 · Patch City",
+      "PYR3 L4 · PYAM-SUPVISR-3-4",
+      "PYR3 L5 · PYAM-FARSTAT-3-5, PYAM-SUPVISR-3-5",
+      "CRU-L4",
+      "MIC-L3"
     ],
     "Hadanite": [
       "All Moons/Planets/Caves",
@@ -793,9 +1023,16 @@
       "HUR-L1",
       "microTech",
       "Monox",
-      "Pyro Asteroid Clusters",
       "Vuur",
-      "Ita"
+      "Ita",
+      "HUR-L4",
+      "HUR-L5",
+      "MIC-L1",
+      "MIC-L2",
+      "MIC-L5",
+      "ARC-L2",
+      "ARC-L4",
+      "HUR-L2"
     ],
     "Ice": [
       "Aaron Halo",
@@ -808,12 +1045,27 @@
       "Glaciem Ring",
       "Keeger Belt",
       "microTech",
-      "Pyro Asteroid Clusters",
       "Yela Ring",
       "Terminus",
       "CRU-L1",
       "Lagrange G",
-      "Lagrange Occupied"
+      "Lagrange Occupied",
+      "PYR5 L1 · PYAM-FARSTAT-5-1",
+      "PYR5 L2 · Gaslight",
+      "PYR5 L3 · PYAM-FARSTAT-5-3",
+      "PYR5 L4 · Rod's Fuel 'N Supplies",
+      "PYR5 L5 · Rat's Nest",
+      "PYR6 L1",
+      "PYR6 L2 · PYAM-FARSTAT-6-2",
+      "PYR6 L3 · Endgame",
+      "PYR6 L4 · Dudley & Daughters",
+      "PYR6 L5 · Megumi Refueling",
+      "CRU-L4",
+      "MIC-L3",
+      "CRU-L5",
+      "MIC-L4",
+      "CRU-L2",
+      "HUR-L3"
     ],
     "Iron": [
       "Aaron Halo",
@@ -830,7 +1082,6 @@
       "Lyria",
       "microTech",
       "Monox",
-      "Pyro Asteroid Clusters",
       "Pyro I",
       "Pyro IV",
       "Vatra",
@@ -839,7 +1090,28 @@
       "Yela Ring",
       "Lagrange G",
       "Lagrange Occupied",
-      "Arial"
+      "Arial",
+      "PYR1 L1",
+      "PYR1 L2 · PYAM-FARSTAT-1-2",
+      "PYR1 L3 · PYAM-FARSTAT-1-3",
+      "PYR1 L4",
+      "PYR1 L5 · PYAM-FARSTAT-1-5",
+      "PYR2 L1",
+      "PYR2 L2",
+      "PYR2 L3 · PYAM-FARSTAT-2-3",
+      "PYR2 L4 · Checkmate",
+      "PYR2 L5",
+      "PYR3 L1 · Starlight Service Station",
+      "PYR3 L2",
+      "PYR3 L3 · Patch City",
+      "PYR3 L4 · PYAM-SUPVISR-3-4",
+      "PYR3 L5 · PYAM-FARSTAT-3-5, PYAM-SUPVISR-3-5",
+      "CRU-L4",
+      "MIC-L3",
+      "CRU-L5",
+      "MIC-L4",
+      "CRU-L2",
+      "HUR-L3"
     ],
     "Janalite": [
       "Daymar",
@@ -871,7 +1143,8 @@
       "HUR-L1",
       "Lyria",
       "Pyro IV",
-      "Wala"
+      "Wala",
+      "HUR-L4"
     ],
     "Lindinium": [
       "Glaciem Ring",
@@ -882,7 +1155,11 @@
       "Hurston",
       "Yela Ring",
       "Ita",
-      "Terminus"
+      "PYR6 L1",
+      "PYR6 L2 · PYAM-FARSTAT-6-2",
+      "PYR6 L3 · Endgame",
+      "PYR6 L4 · Dudley & Daughters",
+      "PYR6 L5 · Megumi Refueling"
     ],
     "Quantainium": [
       "Found in All Stanton Deposits (Rare)",
@@ -923,8 +1200,7 @@
     ],
     "Savrilium": [
       "Glaciem Ring",
-      "Keeger Belt",
-      "QV Breaker Stations (Nyx)"
+      "Keeger Belt"
     ],
     "Silicon": [
       "Aaron Halo",
@@ -933,9 +1209,18 @@
       "Daymar",
       "Fairo",
       "Ignis",
-      "Pyro Asteroid Clusters",
       "Vatra",
-      "Yela"
+      "Yela",
+      "PYR5 L1 · PYAM-FARSTAT-5-1",
+      "PYR5 L2 · Gaslight",
+      "PYR5 L3 · PYAM-FARSTAT-5-3",
+      "PYR5 L4 · Rod's Fuel 'N Supplies",
+      "PYR5 L5 · Rat's Nest",
+      "PYR6 L1",
+      "PYR6 L2 · PYAM-FARSTAT-6-2",
+      "PYR6 L3 · Endgame",
+      "PYR6 L4 · Dudley & Daughters",
+      "PYR6 L5 · Megumi Refueling"
     ],
     "Stileron": [
       "All Pyro Planets",
@@ -952,8 +1237,15 @@
       "Cellin",
       "Clio",
       "Euterpe",
-      "Pyro Asteroid Clusters",
-      "Yela"
+      "Yela",
+      "PYR6 L1",
+      "PYR6 L2 · PYAM-FARSTAT-6-2",
+      "PYR6 L3 · Endgame",
+      "PYR6 L4 · Dudley & Daughters",
+      "PYR6 L5 · Megumi Refueling",
+      "ARC-L2",
+      "ARC-L4",
+      "HUR-L2"
     ],
     "Tin": [
       "Hurston",
@@ -968,10 +1260,16 @@
       "Aaron Halo",
       "Aberdeen",
       "CRU-L1",
-      "Pyro Asteroid Clusters",
       "Terminus",
       "Yela Ring",
-      "Arial"
+      "Arial",
+      "PYR5 L1 · PYAM-FARSTAT-5-1",
+      "PYR5 L2 · Gaslight",
+      "PYR5 L3 · PYAM-FARSTAT-5-3",
+      "PYR5 L4 · Rod's Fuel 'N Supplies",
+      "PYR5 L5 · Rat's Nest",
+      "CRU-L2",
+      "HUR-L3"
     ],
     "Torite": [
       "Akiro Cluster",
@@ -979,13 +1277,23 @@
       "Glaciem Ring",
       "Keeger Belt",
       "Pyro Asteroid Clusters",
-      "QV Breaker Stations (Nyx)"
+      "HUR-L5",
+      "MIC-L1",
+      "MIC-L2",
+      "MIC-L5"
     ],
     "Tungsten": [
       "Adir",
       "ARC-L1",
       "Fairo",
-      "Pyro Asteroid Clusters"
+      "PYR3 L1 · Starlight Service Station",
+      "PYR3 L2",
+      "PYR3 L3 · Patch City",
+      "PYR3 L4 · PYAM-SUPVISR-3-4",
+      "PYR3 L5 · PYAM-FARSTAT-3-5, PYAM-SUPVISR-3-5",
+      "ARC-L2",
+      "ARC-L4",
+      "HUR-L2"
     ]
   },
   "locationOres": {
@@ -1061,7 +1369,28 @@
         "rarity": "handMineable"
       }
     ],
-    "CRU-L5": [],
+    "CRU-L5": [
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Ice",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      },
+      {
+        "name": "Beryl",
+        "rarity": "rare"
+      },
+      {
+        "name": "Agricium",
+        "rarity": "rare"
+      }
+    ],
     "Daymar": [
       {
         "name": "Agricium",
@@ -1112,47 +1441,10 @@
         "rarity": "handMineable"
       }
     ],
-    "MIC-L4": [],
-    "Pyro Asteroid Clusters": [
-      {
-        "name": "Agricium",
-        "rarity": "rare"
-      },
-      {
-        "name": "Aluminum",
-        "rarity": "common"
-      },
-      {
-        "name": "Aslarite",
-        "rarity": "rare"
-      },
-      {
-        "name": "Beryl",
-        "rarity": "rare"
-      },
-      {
-        "name": "Bexalite",
-        "rarity": "rare"
-      },
-      {
-        "name": "Borase",
-        "rarity": "rare"
-      },
+    "MIC-L4": [
       {
         "name": "Copper",
         "rarity": "common"
-      },
-      {
-        "name": "Corundum",
-        "rarity": "uncommon"
-      },
-      {
-        "name": "Gold",
-        "rarity": "rare"
-      },
-      {
-        "name": "Hephaestanite",
-        "rarity": "rare"
       },
       {
         "name": "Ice",
@@ -1163,6 +1455,24 @@
         "rarity": "common"
       },
       {
+        "name": "Beryl",
+        "rarity": "rare"
+      },
+      {
+        "name": "Agricium",
+        "rarity": "rare"
+      }
+    ],
+    "Pyro Asteroid Clusters": [
+      {
+        "name": "Aluminum",
+        "rarity": "common"
+      },
+      {
+        "name": "Corundum",
+        "rarity": "uncommon"
+      },
+      {
         "name": "Quartz",
         "rarity": "uncommon"
       },
@@ -1171,31 +1481,15 @@
         "rarity": "epic"
       },
       {
-        "name": "Silicon",
-        "rarity": "common"
-      },
-      {
         "name": "Stileron",
         "rarity": "legendary"
-      },
-      {
-        "name": "Taranite",
-        "rarity": "uncommon"
       },
       {
         "name": "Tin",
         "rarity": "common"
       },
       {
-        "name": "Titanium",
-        "rarity": "uncommon"
-      },
-      {
         "name": "Torite",
-        "rarity": "uncommon"
-      },
-      {
-        "name": "Tungsten",
         "rarity": "uncommon"
       }
     ],
@@ -1243,10 +1537,6 @@
       {
         "name": "Feynmaline",
         "rarity": "handMineable"
-      },
-      {
-        "name": "Ouratite",
-        "rarity": "epic"
       }
     ],
     "Vuur": [
@@ -1451,7 +1741,28 @@
         "rarity": "uncommon"
       }
     ],
-    "ARC-L2": [],
+    "ARC-L2": [
+      {
+        "name": "Aluminum",
+        "rarity": "common"
+      },
+      {
+        "name": "Corundum",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Hephaestanite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Taranite",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Tungsten",
+        "rarity": "uncommon"
+      }
+    ],
     "Arial": [
       {
         "name": "Aluminum",
@@ -1542,9 +1853,68 @@
         "rarity": "rare"
       }
     ],
-    "HUR-L2": [],
-    "HUR-L4": [],
-    "HUR-L5": [],
+    "HUR-L2": [
+      {
+        "name": "Aluminum",
+        "rarity": "common"
+      },
+      {
+        "name": "Corundum",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Hephaestanite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Taranite",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Tungsten",
+        "rarity": "uncommon"
+      }
+    ],
+    "HUR-L4": [
+      {
+        "name": "Aluminum",
+        "rarity": "common"
+      },
+      {
+        "name": "Corundum",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Hephaestanite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Borase",
+        "rarity": "rare"
+      },
+      {
+        "name": "Laranite",
+        "rarity": "rare"
+      }
+    ],
+    "HUR-L5": [
+      {
+        "name": "Aluminum",
+        "rarity": "common"
+      },
+      {
+        "name": "Corundum",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Hephaestanite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Torite",
+        "rarity": "uncommon"
+      }
+    ],
     "Ita": [
       {
         "name": "Aluminum",
@@ -1671,9 +2041,60 @@
         "rarity": "handMineable"
       }
     ],
-    "MIC-L1": [],
-    "MIC-L2": [],
-    "MIC-L5": [],
+    "MIC-L1": [
+      {
+        "name": "Aluminum",
+        "rarity": "common"
+      },
+      {
+        "name": "Corundum",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Hephaestanite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Torite",
+        "rarity": "uncommon"
+      }
+    ],
+    "MIC-L2": [
+      {
+        "name": "Aluminum",
+        "rarity": "common"
+      },
+      {
+        "name": "Corundum",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Hephaestanite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Torite",
+        "rarity": "uncommon"
+      }
+    ],
+    "MIC-L5": [
+      {
+        "name": "Aluminum",
+        "rarity": "common"
+      },
+      {
+        "name": "Corundum",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Hephaestanite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Torite",
+        "rarity": "uncommon"
+      }
+    ],
     "All Moons/Planets/Caves": [
       {
         "name": "Aphorite",
@@ -1710,7 +2131,28 @@
         "rarity": "common"
       }
     ],
-    "CRU-L4": [],
+    "CRU-L4": [
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Ice",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      },
+      {
+        "name": "Gold",
+        "rarity": "rare"
+      },
+      {
+        "name": "Aslarite",
+        "rarity": "rare"
+      }
+    ],
     "Fuego": [
       {
         "name": "Aslarite",
@@ -1893,7 +2335,28 @@
         "rarity": "common"
       }
     ],
-    "CRU-L2": [],
+    "CRU-L2": [
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Ice",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      },
+      {
+        "name": "Bexalite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Titanium",
+        "rarity": "uncommon"
+      }
+    ],
     "Fairo": [
       {
         "name": "Bexalite",
@@ -1962,7 +2425,28 @@
         "rarity": "uncommon"
       }
     ],
-    "HUR-L3": [],
+    "HUR-L3": [
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Ice",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      },
+      {
+        "name": "Bexalite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Titanium",
+        "rarity": "uncommon"
+      }
+    ],
     "Adir": [
       {
         "name": "Borase",
@@ -2199,7 +2683,28 @@
         "rarity": "handMineable"
       }
     ],
-    "MIC-L3": [],
+    "MIC-L3": [
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Ice",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      },
+      {
+        "name": "Gold",
+        "rarity": "rare"
+      },
+      {
+        "name": "Aslarite",
+        "rarity": "rare"
+      }
+    ],
     "Yela Ring": [
       {
         "name": "Copper",
@@ -2222,7 +2727,28 @@
         "rarity": "uncommon"
       }
     ],
-    "ARC-L4": [],
+    "ARC-L4": [
+      {
+        "name": "Aluminum",
+        "rarity": "common"
+      },
+      {
+        "name": "Corundum",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Hephaestanite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Taranite",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Tungsten",
+        "rarity": "uncommon"
+      }
+    ],
     "Hurston": [
       {
         "name": "Janalite",
@@ -2481,14 +3007,6 @@
       {
         "name": "Sadaryx",
         "rarity": "handMineable"
-      },
-      {
-        "name": "Savrilium",
-        "rarity": "legendary"
-      },
-      {
-        "name": "Torite",
-        "rarity": "uncommon"
       }
     ],
     "All Pyro Planets": [
@@ -2538,6 +3056,476 @@
       },
       {
         "name": "Beryl",
+        "rarity": "rare"
+      }
+    ],
+    "PYR1 L1": [
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      },
+      {
+        "name": "Bexalite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Agricium",
+        "rarity": "rare"
+      }
+    ],
+    "PYR1 L2 · PYAM-FARSTAT-1-2": [
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      },
+      {
+        "name": "Bexalite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Agricium",
+        "rarity": "rare"
+      }
+    ],
+    "PYR1 L3 · PYAM-FARSTAT-1-3": [
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      },
+      {
+        "name": "Bexalite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Agricium",
+        "rarity": "rare"
+      }
+    ],
+    "PYR1 L4": [
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      },
+      {
+        "name": "Bexalite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Agricium",
+        "rarity": "rare"
+      }
+    ],
+    "PYR1 L5 · PYAM-FARSTAT-1-5": [
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      },
+      {
+        "name": "Bexalite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Agricium",
+        "rarity": "rare"
+      }
+    ],
+    "PYR2 L1": [
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      },
+      {
+        "name": "Bexalite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Agricium",
+        "rarity": "rare"
+      }
+    ],
+    "PYR2 L2": [
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      },
+      {
+        "name": "Bexalite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Agricium",
+        "rarity": "rare"
+      }
+    ],
+    "PYR2 L3 · PYAM-FARSTAT-2-3": [
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      },
+      {
+        "name": "Bexalite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Agricium",
+        "rarity": "rare"
+      }
+    ],
+    "PYR2 L4 · Checkmate": [
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      },
+      {
+        "name": "Bexalite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Agricium",
+        "rarity": "rare"
+      }
+    ],
+    "PYR2 L5": [
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      },
+      {
+        "name": "Bexalite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Agricium",
+        "rarity": "rare"
+      }
+    ],
+    "PYR3 L1 · Starlight Service Station": [
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      },
+      {
+        "name": "Gold",
+        "rarity": "rare"
+      },
+      {
+        "name": "Tungsten",
+        "rarity": "uncommon"
+      }
+    ],
+    "PYR3 L2": [
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      },
+      {
+        "name": "Gold",
+        "rarity": "rare"
+      },
+      {
+        "name": "Tungsten",
+        "rarity": "uncommon"
+      }
+    ],
+    "PYR3 L3 · Patch City": [
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      },
+      {
+        "name": "Gold",
+        "rarity": "rare"
+      },
+      {
+        "name": "Tungsten",
+        "rarity": "uncommon"
+      }
+    ],
+    "PYR3 L4 · PYAM-SUPVISR-3-4": [
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      },
+      {
+        "name": "Gold",
+        "rarity": "rare"
+      },
+      {
+        "name": "Tungsten",
+        "rarity": "uncommon"
+      }
+    ],
+    "PYR3 L5 · PYAM-FARSTAT-3-5, PYAM-SUPVISR-3-5": [
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      },
+      {
+        "name": "Gold",
+        "rarity": "rare"
+      },
+      {
+        "name": "Tungsten",
+        "rarity": "uncommon"
+      }
+    ],
+    "PYR5 L1 · PYAM-FARSTAT-5-1": [
+      {
+        "name": "Ice",
+        "rarity": "common"
+      },
+      {
+        "name": "Silicon",
+        "rarity": "common"
+      },
+      {
+        "name": "Borase",
+        "rarity": "rare"
+      },
+      {
+        "name": "Titanium",
+        "rarity": "uncommon"
+      }
+    ],
+    "PYR5 L2 · Gaslight": [
+      {
+        "name": "Ice",
+        "rarity": "common"
+      },
+      {
+        "name": "Silicon",
+        "rarity": "common"
+      },
+      {
+        "name": "Borase",
+        "rarity": "rare"
+      },
+      {
+        "name": "Titanium",
+        "rarity": "uncommon"
+      }
+    ],
+    "PYR5 L3 · PYAM-FARSTAT-5-3": [
+      {
+        "name": "Ice",
+        "rarity": "common"
+      },
+      {
+        "name": "Silicon",
+        "rarity": "common"
+      },
+      {
+        "name": "Borase",
+        "rarity": "rare"
+      },
+      {
+        "name": "Titanium",
+        "rarity": "uncommon"
+      }
+    ],
+    "PYR5 L4 · Rod's Fuel 'N Supplies": [
+      {
+        "name": "Ice",
+        "rarity": "common"
+      },
+      {
+        "name": "Silicon",
+        "rarity": "common"
+      },
+      {
+        "name": "Borase",
+        "rarity": "rare"
+      },
+      {
+        "name": "Titanium",
+        "rarity": "uncommon"
+      }
+    ],
+    "PYR5 L5 · Rat's Nest": [
+      {
+        "name": "Ice",
+        "rarity": "common"
+      },
+      {
+        "name": "Silicon",
+        "rarity": "common"
+      },
+      {
+        "name": "Borase",
+        "rarity": "rare"
+      },
+      {
+        "name": "Titanium",
+        "rarity": "uncommon"
+      }
+    ],
+    "PYR6 L1": [
+      {
+        "name": "Ice",
+        "rarity": "common"
+      },
+      {
+        "name": "Silicon",
+        "rarity": "common"
+      },
+      {
+        "name": "Ouratite",
+        "rarity": "epic"
+      },
+      {
+        "name": "Taranite",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Aslarite",
+        "rarity": "rare"
+      }
+    ],
+    "PYR6 L2 · PYAM-FARSTAT-6-2": [
+      {
+        "name": "Ice",
+        "rarity": "common"
+      },
+      {
+        "name": "Silicon",
+        "rarity": "common"
+      },
+      {
+        "name": "Ouratite",
+        "rarity": "epic"
+      },
+      {
+        "name": "Taranite",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Aslarite",
+        "rarity": "rare"
+      }
+    ],
+    "PYR6 L3 · Endgame": [
+      {
+        "name": "Ice",
+        "rarity": "common"
+      },
+      {
+        "name": "Silicon",
+        "rarity": "common"
+      },
+      {
+        "name": "Ouratite",
+        "rarity": "epic"
+      },
+      {
+        "name": "Taranite",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Aslarite",
+        "rarity": "rare"
+      }
+    ],
+    "PYR6 L4 · Dudley & Daughters": [
+      {
+        "name": "Ice",
+        "rarity": "common"
+      },
+      {
+        "name": "Silicon",
+        "rarity": "common"
+      },
+      {
+        "name": "Ouratite",
+        "rarity": "epic"
+      },
+      {
+        "name": "Taranite",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Aslarite",
+        "rarity": "rare"
+      }
+    ],
+    "PYR6 L5 · Megumi Refueling": [
+      {
+        "name": "Ice",
+        "rarity": "common"
+      },
+      {
+        "name": "Silicon",
+        "rarity": "common"
+      },
+      {
+        "name": "Ouratite",
+        "rarity": "epic"
+      },
+      {
+        "name": "Taranite",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Aslarite",
         "rarity": "rare"
       }
     ]
@@ -3413,6 +4401,528 @@
       "harvestables": [],
       "creatures": [],
       "spawnKey": "Stanton2c Belt"
+    },
+    "HUR-L4": {
+      "shipMineables": [
+        "Aluminum",
+        "Corundum",
+        "Hephaestanite",
+        "Borase",
+        "Laranite"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Lagrange A"
+    },
+    "HUR-L5": {
+      "shipMineables": [
+        "Aluminum",
+        "Corundum",
+        "Hephaestanite",
+        "Torite"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Lagrange C"
+    },
+    "MIC-L1": {
+      "shipMineables": [
+        "Aluminum",
+        "Corundum",
+        "Hephaestanite",
+        "Torite"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Lagrange C"
+    },
+    "MIC-L2": {
+      "shipMineables": [
+        "Aluminum",
+        "Corundum",
+        "Hephaestanite",
+        "Torite"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Lagrange C"
+    },
+    "MIC-L5": {
+      "shipMineables": [
+        "Aluminum",
+        "Corundum",
+        "Hephaestanite",
+        "Torite"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Lagrange C"
+    },
+    "ARC-L2": {
+      "shipMineables": [
+        "Aluminum",
+        "Corundum",
+        "Hephaestanite",
+        "Taranite",
+        "Tungsten"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Lagrange F"
+    },
+    "ARC-L4": {
+      "shipMineables": [
+        "Aluminum",
+        "Corundum",
+        "Hephaestanite",
+        "Taranite",
+        "Tungsten"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Lagrange F"
+    },
+    "HUR-L2": {
+      "shipMineables": [
+        "Aluminum",
+        "Corundum",
+        "Hephaestanite",
+        "Taranite",
+        "Tungsten"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Lagrange F"
+    },
+    "PYR1 L1": {
+      "shipMineables": [
+        "Copper",
+        "Iron",
+        "Bexalite",
+        "Agricium"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Pyro Warm01"
+    },
+    "PYR1 L2 · PYAM-FARSTAT-1-2": {
+      "shipMineables": [
+        "Copper",
+        "Iron",
+        "Bexalite",
+        "Agricium"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Pyro Warm01"
+    },
+    "PYR1 L3 · PYAM-FARSTAT-1-3": {
+      "shipMineables": [
+        "Copper",
+        "Iron",
+        "Bexalite",
+        "Agricium"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Pyro Warm01"
+    },
+    "PYR1 L4": {
+      "shipMineables": [
+        "Copper",
+        "Iron",
+        "Bexalite",
+        "Agricium"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Pyro Warm01"
+    },
+    "PYR1 L5 · PYAM-FARSTAT-1-5": {
+      "shipMineables": [
+        "Copper",
+        "Iron",
+        "Bexalite",
+        "Agricium"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Pyro Warm01"
+    },
+    "PYR2 L1": {
+      "shipMineables": [
+        "Copper",
+        "Iron",
+        "Bexalite",
+        "Agricium"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Pyro Warm01"
+    },
+    "PYR2 L2": {
+      "shipMineables": [
+        "Copper",
+        "Iron",
+        "Bexalite",
+        "Agricium"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Pyro Warm01"
+    },
+    "PYR2 L3 · PYAM-FARSTAT-2-3": {
+      "shipMineables": [
+        "Copper",
+        "Iron",
+        "Bexalite",
+        "Agricium"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Pyro Warm01"
+    },
+    "PYR2 L4 · Checkmate": {
+      "shipMineables": [
+        "Copper",
+        "Iron",
+        "Bexalite",
+        "Agricium"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Pyro Warm01"
+    },
+    "PYR2 L5": {
+      "shipMineables": [
+        "Copper",
+        "Iron",
+        "Bexalite",
+        "Agricium"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Pyro Warm01"
+    },
+    "PYR3 L1 · Starlight Service Station": {
+      "shipMineables": [
+        "Copper",
+        "Iron",
+        "Gold",
+        "Tungsten"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Pyro Warm02"
+    },
+    "PYR3 L2": {
+      "shipMineables": [
+        "Copper",
+        "Iron",
+        "Gold",
+        "Tungsten"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Pyro Warm02"
+    },
+    "PYR3 L3 · Patch City": {
+      "shipMineables": [
+        "Copper",
+        "Iron",
+        "Gold",
+        "Tungsten"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Pyro Warm02"
+    },
+    "PYR3 L4 · PYAM-SUPVISR-3-4": {
+      "shipMineables": [
+        "Copper",
+        "Iron",
+        "Gold",
+        "Tungsten"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Pyro Warm02"
+    },
+    "PYR3 L5 · PYAM-FARSTAT-3-5, PYAM-SUPVISR-3-5": {
+      "shipMineables": [
+        "Copper",
+        "Iron",
+        "Gold",
+        "Tungsten"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Pyro Warm02"
+    },
+    "CRU-L4": {
+      "shipMineables": [
+        "Copper",
+        "Ice",
+        "Iron",
+        "Gold",
+        "Aslarite"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Lagrange B"
+    },
+    "MIC-L3": {
+      "shipMineables": [
+        "Copper",
+        "Ice",
+        "Iron",
+        "Gold",
+        "Aslarite"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Lagrange B"
+    },
+    "CRU-L5": {
+      "shipMineables": [
+        "Copper",
+        "Ice",
+        "Iron",
+        "Beryl",
+        "Agricium"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Lagrange D"
+    },
+    "MIC-L4": {
+      "shipMineables": [
+        "Copper",
+        "Ice",
+        "Iron",
+        "Beryl",
+        "Agricium"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Lagrange D"
+    },
+    "CRU-L2": {
+      "shipMineables": [
+        "Copper",
+        "Ice",
+        "Iron",
+        "Bexalite",
+        "Titanium"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Lagrange E"
+    },
+    "HUR-L3": {
+      "shipMineables": [
+        "Copper",
+        "Ice",
+        "Iron",
+        "Bexalite",
+        "Titanium"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Lagrange E"
+    },
+    "PYR5 L1 · PYAM-FARSTAT-5-1": {
+      "shipMineables": [
+        "Ice",
+        "Silicon",
+        "Borase",
+        "Titanium"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Pyro Cool01"
+    },
+    "PYR5 L2 · Gaslight": {
+      "shipMineables": [
+        "Ice",
+        "Silicon",
+        "Borase",
+        "Titanium"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Pyro Cool01"
+    },
+    "PYR5 L3 · PYAM-FARSTAT-5-3": {
+      "shipMineables": [
+        "Ice",
+        "Silicon",
+        "Borase",
+        "Titanium"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Pyro Cool01"
+    },
+    "PYR5 L4 · Rod's Fuel 'N Supplies": {
+      "shipMineables": [
+        "Ice",
+        "Silicon",
+        "Borase",
+        "Titanium"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Pyro Cool01"
+    },
+    "PYR5 L5 · Rat's Nest": {
+      "shipMineables": [
+        "Ice",
+        "Silicon",
+        "Borase",
+        "Titanium"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Pyro Cool01"
+    },
+    "PYR6 L1": {
+      "shipMineables": [
+        "Ice",
+        "Silicon",
+        "Ouratite",
+        "Taranite",
+        "Aslarite"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Pyro Cool02"
+    },
+    "PYR6 L2 · PYAM-FARSTAT-6-2": {
+      "shipMineables": [
+        "Ice",
+        "Silicon",
+        "Ouratite",
+        "Taranite",
+        "Aslarite"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Pyro Cool02"
+    },
+    "PYR6 L3 · Endgame": {
+      "shipMineables": [
+        "Ice",
+        "Silicon",
+        "Ouratite",
+        "Taranite",
+        "Aslarite"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Pyro Cool02"
+    },
+    "PYR6 L4 · Dudley & Daughters": {
+      "shipMineables": [
+        "Ice",
+        "Silicon",
+        "Ouratite",
+        "Taranite",
+        "Aslarite"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Pyro Cool02"
+    },
+    "PYR6 L5 · Megumi Refueling": {
+      "shipMineables": [
+        "Ice",
+        "Silicon",
+        "Ouratite",
+        "Taranite",
+        "Aslarite"
+      ],
+      "groundVehicleMineables": [],
+      "handMineables": [],
+      "harvestables": [],
+      "creatures": [],
+      "spawnKey": "Pyro Cool02"
     }
   },
   "handMineableHabitats": {
@@ -3623,23 +5133,11 @@
       "spawnKey": "Lagrange A",
       "guideNames": [
         "HUR-L1",
-        "HUR-L4",
-        "HUR-L5"
+        "HUR-L4"
       ],
       "displayName": "HUR-L1",
       "system": "Stanton",
-      "source": "verified_overlay+hpp_path_audit",
-      "navHint": "QT straight to HUR-L1 / HUR-L4 / HUR-L5 — the belt surrounds the station",
-      "navMarkers": [
-        {
-          "label": "Lagrange stations with this belt profile",
-          "markers": [
-            "HUR-L1",
-            "HUR-L4",
-            "HUR-L5"
-          ]
-        }
-      ]
+      "source": "verified_overlay+hpp_path_audit"
     },
     "Lagrange B": {
       "spawnKey": "Lagrange B",
@@ -3650,42 +5148,20 @@
       ],
       "displayName": "ARC-L5",
       "system": "Stanton",
-      "source": "verified_overlay+hpp_path_audit",
-      "navHint": "QT straight to ARC-L5 / CRU-L4 / MIC-L3 — the belt surrounds the station",
-      "navMarkers": [
-        {
-          "label": "Lagrange stations with this belt profile",
-          "markers": [
-            "ARC-L5",
-            "CRU-L4",
-            "MIC-L3"
-          ]
-        }
-      ]
+      "source": "verified_overlay+hpp_path_audit"
     },
     "Lagrange C": {
       "spawnKey": "Lagrange C",
       "guideNames": [
         "CRU-L3",
+        "HUR-L5",
         "MIC-L1",
         "MIC-L2",
         "MIC-L5"
       ],
       "displayName": "CRU-L3",
       "system": "Stanton",
-      "source": "verified_overlay+hpp_path_audit",
-      "navHint": "QT straight to CRU-L3 / MIC-L1 / MIC-L2 / MIC-L5 — the belt surrounds the station",
-      "navMarkers": [
-        {
-          "label": "Lagrange stations with this belt profile",
-          "markers": [
-            "CRU-L3",
-            "MIC-L1",
-            "MIC-L2",
-            "MIC-L5"
-          ]
-        }
-      ]
+      "source": "verified_overlay+hpp_path_audit"
     },
     "Lagrange D": {
       "spawnKey": "Lagrange D",
@@ -3696,18 +5172,7 @@
       ],
       "displayName": "ARC-L3",
       "system": "Stanton",
-      "source": "verified_overlay+hpp_path_audit",
-      "navHint": "QT straight to ARC-L3 / CRU-L5 / MIC-L4 — the belt surrounds the station",
-      "navMarkers": [
-        {
-          "label": "Lagrange stations with this belt profile",
-          "markers": [
-            "ARC-L3",
-            "CRU-L5",
-            "MIC-L4"
-          ]
-        }
-      ]
+      "source": "verified_overlay+hpp_path_audit"
     },
     "Lagrange E": {
       "spawnKey": "Lagrange E",
@@ -3718,18 +5183,7 @@
       ],
       "displayName": "CRU-L1",
       "system": "Stanton",
-      "source": "verified_overlay+hpp_path_audit",
-      "navHint": "QT straight to CRU-L1 / CRU-L2 / HUR-L3 — the belt surrounds the station",
-      "navMarkers": [
-        {
-          "label": "Lagrange stations with this belt profile",
-          "markers": [
-            "CRU-L1",
-            "CRU-L2",
-            "HUR-L3"
-          ]
-        }
-      ]
+      "source": "verified_overlay+hpp_path_audit"
     },
     "Lagrange F": {
       "spawnKey": "Lagrange F",
@@ -3741,19 +5195,7 @@
       ],
       "displayName": "ARC-L1",
       "system": "Stanton",
-      "source": "verified_overlay+hpp_path_audit",
-      "navHint": "QT straight to ARC-L1 / ARC-L2 / ARC-L4 / HUR-L2 — the belt surrounds the station",
-      "navMarkers": [
-        {
-          "label": "Lagrange stations with this belt profile",
-          "markers": [
-            "ARC-L1",
-            "ARC-L2",
-            "ARC-L4",
-            "HUR-L2"
-          ]
-        }
-      ]
+      "source": "verified_overlay+hpp_path_audit"
     },
     "Lagrange G": {
       "spawnKey": "Lagrange G",
@@ -3780,12 +5222,11 @@
     "Pyro Cool01": {
       "spawnKey": "Pyro Cool01",
       "guideNames": [
-        "Pyro Asteroid Clusters",
-        "PYR5 L1",
-        "PYR5 L2",
-        "PYR5 L3",
-        "PYR5 L4",
-        "PYR5 L5"
+        "PYR5 L1 · PYAM-FARSTAT-5-1",
+        "PYR5 L2 · Gaslight",
+        "PYR5 L3 · PYAM-FARSTAT-5-3",
+        "PYR5 L4 · Rod's Fuel 'N Supplies",
+        "PYR5 L5 · Rat's Nest"
       ],
       "displayName": "Pyro V Lagrange belts",
       "system": "Pyro",
@@ -3807,12 +5248,11 @@
     "Pyro Cool02": {
       "spawnKey": "Pyro Cool02",
       "guideNames": [
-        "Pyro Asteroid Clusters",
         "PYR6 L1",
-        "PYR6 L2",
-        "PYR6 L3",
-        "PYR6 L4",
-        "PYR6 L5"
+        "PYR6 L2 · PYAM-FARSTAT-6-2",
+        "PYR6 L3 · Endgame",
+        "PYR6 L4 · Dudley & Daughters",
+        "PYR6 L5 · Megumi Refueling"
       ],
       "displayName": "Pyro VI Lagrange belts",
       "system": "Pyro",
@@ -3990,16 +5430,15 @@
     "Pyro Warm01": {
       "spawnKey": "Pyro Warm01",
       "guideNames": [
-        "Pyro Asteroid Clusters",
         "PYR1 L1",
-        "PYR1 L2",
-        "PYR1 L3",
+        "PYR1 L2 · PYAM-FARSTAT-1-2",
+        "PYR1 L3 · PYAM-FARSTAT-1-3",
         "PYR1 L4",
-        "PYR1 L5",
+        "PYR1 L5 · PYAM-FARSTAT-1-5",
         "PYR2 L1",
         "PYR2 L2",
-        "PYR2 L3",
-        "PYR2 L4",
+        "PYR2 L3 · PYAM-FARSTAT-2-3",
+        "PYR2 L4 · Checkmate",
         "PYR2 L5"
       ],
       "displayName": "Pyro I–II Lagrange belts",
@@ -4032,12 +5471,11 @@
     "Pyro Warm02": {
       "spawnKey": "Pyro Warm02",
       "guideNames": [
-        "Pyro Asteroid Clusters",
-        "PYR3 L1",
+        "PYR3 L1 · Starlight Service Station",
         "PYR3 L2",
-        "PYR3 L3",
-        "PYR3 L4",
-        "PYR3 L5"
+        "PYR3 L3 · Patch City",
+        "PYR3 L4 · PYAM-SUPVISR-3-4",
+        "PYR3 L5 · PYAM-FARSTAT-3-5, PYAM-SUPVISR-3-5"
       ],
       "displayName": "Pyro III Lagrange belts",
       "system": "Pyro",
@@ -4269,7 +5707,7 @@
       ],
       "displayName": "Yela",
       "system": "Stanton",
-      "source": "localization_desc+hpp_path_audit"
+      "source": "spawn_code_table+hpp_path_audit"
     },
     "Stanton2c Belt": {
       "spawnKey": "Stanton2c Belt",
@@ -4290,7 +5728,7 @@
       ],
       "displayName": "Lyria",
       "system": "Stanton",
-      "source": "localization_desc+hpp_path_audit"
+      "source": "spawn_code_table+hpp_path_audit"
     },
     "Stanton3b": {
       "spawnKey": "Stanton3b",
@@ -4320,7 +5758,7 @@
       ],
       "displayName": "Calliope",
       "system": "Stanton",
-      "source": "localization_desc+hpp_path_audit"
+      "source": "spawn_code_table+hpp_path_audit"
     },
     "Stanton4b": {
       "spawnKey": "Stanton4b",
@@ -4330,7 +5768,7 @@
       ],
       "displayName": "Clio",
       "system": "Stanton",
-      "source": "localization_desc+hpp_path_audit"
+      "source": "spawn_code_table+hpp_path_audit"
     },
     "Stanton4c": {
       "spawnKey": "Stanton4c",
@@ -4429,7 +5867,7 @@
       "Lagrange A"
     ],
     "HUR-L5": [
-      "Lagrange A"
+      "Lagrange C"
     ],
     "Hurston": [
       "Stanton1",
@@ -4486,6 +5924,81 @@
     "Monox": [
       "Pyro2"
     ],
+    "PYR1 L1": [
+      "Pyro Warm01"
+    ],
+    "PYR1 L2 · PYAM-FARSTAT-1-2": [
+      "Pyro Warm01"
+    ],
+    "PYR1 L3 · PYAM-FARSTAT-1-3": [
+      "Pyro Warm01"
+    ],
+    "PYR1 L4": [
+      "Pyro Warm01"
+    ],
+    "PYR1 L5 · PYAM-FARSTAT-1-5": [
+      "Pyro Warm01"
+    ],
+    "PYR2 L1": [
+      "Pyro Warm01"
+    ],
+    "PYR2 L2": [
+      "Pyro Warm01"
+    ],
+    "PYR2 L3 · PYAM-FARSTAT-2-3": [
+      "Pyro Warm01"
+    ],
+    "PYR2 L4 · Checkmate": [
+      "Pyro Warm01"
+    ],
+    "PYR2 L5": [
+      "Pyro Warm01"
+    ],
+    "PYR3 L1 · Starlight Service Station": [
+      "Pyro Warm02"
+    ],
+    "PYR3 L2": [
+      "Pyro Warm02"
+    ],
+    "PYR3 L3 · Patch City": [
+      "Pyro Warm02"
+    ],
+    "PYR3 L4 · PYAM-SUPVISR-3-4": [
+      "Pyro Warm02"
+    ],
+    "PYR3 L5 · PYAM-FARSTAT-3-5, PYAM-SUPVISR-3-5": [
+      "Pyro Warm02"
+    ],
+    "PYR5 L1 · PYAM-FARSTAT-5-1": [
+      "Pyro Cool01"
+    ],
+    "PYR5 L2 · Gaslight": [
+      "Pyro Cool01"
+    ],
+    "PYR5 L3 · PYAM-FARSTAT-5-3": [
+      "Pyro Cool01"
+    ],
+    "PYR5 L4 · Rod's Fuel 'N Supplies": [
+      "Pyro Cool01"
+    ],
+    "PYR5 L5 · Rat's Nest": [
+      "Pyro Cool01"
+    ],
+    "PYR6 L1": [
+      "Pyro Cool02"
+    ],
+    "PYR6 L2 · PYAM-FARSTAT-6-2": [
+      "Pyro Cool02"
+    ],
+    "PYR6 L3 · Endgame": [
+      "Pyro Cool02"
+    ],
+    "PYR6 L4 · Dudley & Daughters": [
+      "Pyro Cool02"
+    ],
+    "PYR6 L5 · Megumi Refueling": [
+      "Pyro Cool02"
+    ],
     "Pyro I": [
       "Pyro1"
     ],
@@ -4525,10 +6038,10 @@
   ],
   "summary": {
     "totalOres": 35,
-    "totalLocations": 57,
-    "locationsWithDetails": 39,
+    "totalLocations": 82,
+    "locationsWithDetails": 78,
     "handMineableHabitatEntries": 90,
     "locationAliasCount": 47,
-    "guideToSpawnKeyCount": 54
+    "guideToSpawnKeyCount": 79
   }
 }

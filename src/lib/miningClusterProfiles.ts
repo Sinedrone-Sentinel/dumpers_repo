@@ -165,6 +165,8 @@ function profilesForScope(
     const atSite = getGuideLocationProfiles(oreName, scope.guideLocationName)
     if (atSite.length > 0) {
       pool = atSite
+    } else if (scope.guideLocationName === 'Pyro Asteroid Clusters') {
+      pool = []
     } else if (!(isBroadGuideLocation(scope.guideLocationName) && scope.system)) {
       pool = []
     }
@@ -280,7 +282,11 @@ export function getGuideLocationProfiles(
   // Compound guide keys (e.g. Hurston → Stanton1 + moons) must not fan out to
   // child-body spawn profiles when the card already lists those moons separately.
   const exact = matched.filter((loc) => loc.guideName === guideLocationName)
-  return exact.length > 0 ? exact : matched
+  const pool = exact.length > 0 ? exact : matched
+  if (guideLocationName !== 'Pyro Asteroid Clusters') return pool
+  return pool.filter(
+    (loc) => loc.spawnKey === 'Pyro Deepspaceasteroids' || loc.locationName === 'Pyro Deepspaceasteroids'
+  )
 }
 
 export function getTrackerProfile(entry: MiningTrackerEntry): FormattedClusterDisplay | null {
