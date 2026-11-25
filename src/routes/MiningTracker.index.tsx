@@ -1211,9 +1211,12 @@ function trackerStarMapLocations(entry: MiningTrackerEntry, ores: MiningData[]):
   if (isLocationTrackerEntry(entry) && entry.locationName) return [entry.locationName]
   const ore = ores.find((o) => o.ore_name === entry.oreName)
   if (!ore) return []
-  return getOreLocations(ore).filter((loc) =>
-    depositTypesForOreAtGuideLocation(ore.ore_name, ore.rarity, loc).includes(entry.depositType)
-  )
+  return getOreLocations(ore).filter((loc) => {
+    if (!depositTypesForOreAtGuideLocation(ore.ore_name, ore.rarity, loc).includes(entry.depositType)) return false
+    // A broad bucket with no spawn of this ore (Pyro Asteroid Clusters filed on a belt) is not a site.
+    if (isBroadGuideLocation(loc) && getGuideLocationProfiles(ore.ore_name, loc).length === 0) return false
+    return true
+  })
 }
 
 function GuideOreCard({

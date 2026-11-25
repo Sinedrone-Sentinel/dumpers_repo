@@ -79,18 +79,10 @@ export function isNonSiteBroadGuideLocation(guideLocationName: string): boolean 
  * e.g. "Magda Sand Caves" is part of Magda, not a separate guide site.
  */
 export function isRedundantSubsiteGuideLocation(guideLocationName: string): boolean {
+  // Only names the parser listed (a cave label that repeats its parent moon).
+  // Sibling Lagrange sites share one belt template and are still separate places.
   const listed = miningLocations.redundantSubsiteGuideLocations
-  if (listed?.includes(guideLocationName)) return true
-
-  const spawnKeys = getSpawnKeysForGuideName(guideLocationName)
-  if (spawnKeys.length !== 1) return false
-
-  const spawnKey = spawnKeys[0]
-  for (const [guideLoc, mineables] of Object.entries(miningLocations.locationMineables ?? {})) {
-    const entry = mineables as { spawnKey?: string }
-    if (entry.spawnKey === spawnKey && guideLoc !== guideLocationName) return true
-  }
-  return false
+  return listed?.includes(guideLocationName) === true
 }
 
 export function isExcludedGuideLocation(guideLocationName: string): boolean {
