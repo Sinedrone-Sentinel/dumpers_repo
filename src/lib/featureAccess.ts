@@ -78,7 +78,8 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
       featureId === 'ship_shop' ||
       featureId === 'executive_hangar' ||
       featureId === 'loot_finder' ||
-      featureId === 'dumper_apps'
+      featureId === 'dumper_apps' ||
+      featureId === 'star_map'
     )
   }
 
@@ -163,7 +164,7 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
       return !!ctx.role
 
     case 'star_map':
-      return ctx.isSuperAdmin
+      return true
 
     default:
       return false

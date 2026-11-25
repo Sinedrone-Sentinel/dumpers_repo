@@ -185,6 +185,13 @@ const PAGE_GUIDE_ICONS: Record<string, React.ReactNode> = {
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
     </svg>
   ),
+  'star-map': (
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="2.5" strokeWidth={1.5} />
+      <ellipse cx="12" cy="12" rx="9" ry="4" strokeWidth={1.5} transform="rotate(-25 12 12)" />
+      <circle cx="19" cy="8" r="1.2" fill="currentColor" stroke="none" />
+    </svg>
+  ),
   'smart-hauler': (
     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 7h11v9H3zM14 10h4l3 3v3h-7M7.5 19a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm10 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />

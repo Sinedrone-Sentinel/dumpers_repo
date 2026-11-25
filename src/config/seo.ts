@@ -25,6 +25,7 @@ export const SEO_PRERENDER_PATHS = [
   '/targets',
   '/resources',
   '/mining-tracker',
+  '/star-map',
   '/commodity-lookup',
   '/shop-cart',
   '/ship-shop',
@@ -41,6 +42,7 @@ export const SEO_SITEMAP_PATHS = [
   '/targets/',
   '/resources/',
   '/mining-tracker/',
+  '/star-map/',
   '/commodity-lookup/',
   '/shop-cart/',
   '/ship-shop/',
@@ -56,7 +58,7 @@ const pages: Record<string, SeoPageConfig> = {
   '/': {
     title: "Star Citizen Blueprint Tracker & Crafting Tools | Dumper's Repo",
     description:
-      "The all-in-one Star Citizen companion for ship fitting, cargo hauling, mining, crafting blueprints, and Wikelo trades. Also flight profiles, shop runs, cave routes, and a member marketplace. Most tools work signed out.",
+      "The all-in-one Star Citizen companion for ship fitting, cargo hauling, mining, crafting blueprints, and Wikelo trades. Also flight profiles, shop runs, the Star Map, cave routes, and a member marketplace. Most tools work signed out.",
     canonicalPath: '/',
   },
   '/blueprints': {
@@ -82,6 +84,12 @@ const pages: Record<string, SeoPageConfig> = {
     description:
       'Track Star Citizen crafting resources in this browser. My Resources logs cargo and materials with notes and Dumper\'s Fair-Value Price (DFP). Can Craft shows blueprints you can make from that stock.',
     canonicalPath: '/resources/',
+  },
+  '/star-map': {
+    title: "Star Map | Dumper's Repo",
+    description:
+      'Star Citizen star map for Stanton, Pyro, and Nyx. Open a system to see planets, moons, stations, belts, and jump points. Works signed out.',
+    canonicalPath: '/star-map/',
   },
   '/mining-tracker': {
     title: "Star Citizen Mining Tracker — Ore Guide, RS & Ledgers | Dumper's Repo",
@@ -250,6 +258,7 @@ export function buildJsonLdGraph(): Record<string, unknown> {
           'Resource Tracker',
           'Smart Hauler',
           'Mining Tracker — ore guide, rock calculator, and cave routes',
+          'Star Map',
           'Smart Cracker',
           'Flight Profile',
           "Fuzy's Ship Shop",

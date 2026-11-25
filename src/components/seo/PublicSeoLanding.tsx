@@ -58,6 +58,13 @@ const FEATURES: FeatureCard[] = [
     cta: 'Sign in to use Smart Hauler →',
   },
   {
+    title: 'Star Map',
+    body: 'Open Stanton, Pyro, and Nyx. Planets, moons, stations, and jump points are on each system map. Smart Hauler and the Shopping Cart can open the map on the stops in a run.',
+    href: '/star-map',
+    action: 'offline',
+    cta: 'Open Star Map offline →',
+  },
+  {
     title: 'Mining Tracker',
     body: 'Ore guide, cluster RS reference, spawn chances, the rock calculator, crew mining ledgers, and cave routes from where you are.',
     href: '/mining-tracker',
@@ -204,7 +211,7 @@ export default function PublicSeoLanding({ onBrowseOffline }: PublicSeoLandingPr
           </h1>
           <p className="mx-auto mt-5 max-w-2xl text-center text-base text-slate-300 sm:text-lg">
             The all-in-one Star Citizen companion for ship fitting, cargo hauling, mining, crafting
-            blueprints, and Wikelo trades. Also flight profiles, shop runs, cave routes, and a member
+            blueprints, and Wikelo trades. Also flight profiles, shop runs, the Star Map, cave routes, and a member
             marketplace. Most tools work signed out. Sign in for Smart Hauler, Smart Cracker, Flight
             Profile, My Hangar, and My Listings.
           </p>
