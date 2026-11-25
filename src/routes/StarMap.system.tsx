@@ -57,6 +57,7 @@ export default function StarMapSystemRoute() {
             shops={payload.category === 'shopping' ? payload.shops : undefined}
             active={payload.active}
             wholeSystem={wholeSystem}
+            focusId={session?.focusId ?? 0}
             onBack={back}
             onJump={jump}
           />

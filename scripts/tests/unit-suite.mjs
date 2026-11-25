@@ -3681,9 +3681,15 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
   const arial = byName(stanton, 'Arial')
   const hurstonMoons = at(80000 / 52.7e6 / fitPx)
   check(
-    starMap.orbDisplayRadiusPx(hurston, at(2)) > hurstonFit * 1.2 &&
-      starMap.orbDisplayRadiusPx(hurston, at(4)) > starMap.orbDisplayRadiusPx(hurston, at(2)),
-    'star map: each zoom step from the system view grows Hurston',
+    starMap.orbDisplayRadiusPx(crusader, at(1)) * 2 === starMap.ICON_PX * 2 &&
+      starMap.orbDisplayRadiusPx(crusader, at(24)) === starMap.orbDisplayRadiusPx(crusader, at(1)) &&
+      starMap.orbDisplayRadiusPx(hurston, at(24)) === hurstonFit,
+    'star map: zoomed out, a planet is twice an icon and stays that size',
+  )
+  check(
+    starMap.orbDisplayRadiusPx(hurston, at(64)) > hurstonFit &&
+      starMap.orbDisplayRadiusPx(hurston, at(128)) > starMap.orbDisplayRadiusPx(hurston, at(64)),
+    'star map: zooming past the wide view grows Hurston',
   )
   const planets = stanton.markers.filter((m) => m.kind === 'planet')
   let planetGrew = true
@@ -3697,9 +3703,9 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
   }
   check(planetGrew, 'star map: zooming in never shrinks a planet')
   check(
-    starMap.orbDisplayRadiusPx(hurston, at(50)) >= hurstonFit &&
+    starMap.orbDisplayRadiusPx(hurston, at(64)) > hurstonFit &&
       starMap.orbDisplayRadiusPx(hurston, hurstonMoons) > hurstonFit &&
-      starMap.orbDisplayRadiusPx(hurston, at(80)) === starMap.orbDisplayRadiusPx(hurston, at(200)),
+      starMap.orbDisplayRadiusPx(hurston, at(400)) === starMap.orbDisplayRadiusPx(hurston, at(800)),
     'star map: Hurston grows, then stops at its on-screen maximum',
   )
   const moonSystems = [stanton, smSystems.pyro, smSystems.nyx]
@@ -3759,6 +3765,30 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
   check(
     starMap.moonSpread(crusader, at(1)) === 1,
     'star map: at the whole-system view the moons stay tucked in',
+  )
+  let stantonExtent = 0
+  for (const marker of stanton.markers) {
+    stantonExtent = Math.max(
+      stantonExtent,
+      Math.hypot(marker.x, marker.y) + (marker.kind === 'belt' ? marker.outerRadiusM || 0 : 0),
+    )
+  }
+  const seraphimStop = byName(stanton, 'Seraphim Station')
+  const seraphimHalf = starMap.starMapFocusHalfM(stanton, [seraphimStop], stantonExtent)
+  const yelaOrbit = Math.hypot(yela.x - crusader.x, yela.y - crusader.y)
+  const cruStop = byName(stanton, 'CRU L1')
+  const cruHalf = starMap.starMapFocusHalfM(stanton, [cruStop], stantonExtent)
+  const hurstonArc = starMap.starMapFocusHalfM(stanton, [hurston, arcCorp], stantonExtent)
+  const routeSpan = Math.max(Math.abs(hurston.x - arcCorp.x), Math.abs(hurston.y - arcCorp.y)) / 2
+  check(
+    seraphimHalf <= yelaOrbit * 1.45 + 1 && seraphimHalf < stantonExtent / 40 &&
+      cruHalf > seraphimHalf && cruHalf < stantonExtent / 40 &&
+      Math.abs(hurstonArc - routeSpan) < 1,
+    'star map: one stop zooms in, and a route frames the line between its stops',
+  )
+  check(
+    starMap.TELEMETRY_ICON_PX === starMap.ICON_PX * 2,
+    'star map: every telemetry icon is twice a normal icon',
   )
   const grimHex = byName(stanton, 'Grim HEX')
   const yelaZoom = at(150 / 782e3 / fitPx)

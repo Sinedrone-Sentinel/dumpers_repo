@@ -1,7 +1,7 @@
 import { useNavigate } from '@tanstack/react-router'
 import SiteTooltip from '../SiteTooltip'
 import { useAuth } from '../../contexts/AuthContext'
-import type { StarMapPayload } from '../../lib/starMapHighlight'
+import { STAR_MAP_WINDOW, publishStarMapHandoff, type StarMapPayload } from '../../lib/starMapHighlight'
 import { startStarMapSession } from '../../lib/starMapSession'
 
 /** Opens the Star Map with a shopping run. Hidden until the Star Map is available. */
@@ -15,6 +15,12 @@ export default function StarMapViewButton({ payload }: { payload: StarMapPayload
         type="button"
         className="site-btn-secondary rounded-md !px-2 !py-0.5 text-[11px]"
         onClick={() => {
+          const id = publishStarMapHandoff(payload)
+          const opened = window.open(`/star-map?handoff=${encodeURIComponent(id)}`, STAR_MAP_WINDOW)
+          if (opened) {
+            opened.focus()
+            return
+          }
           startStarMapSession(payload)
           void navigate({ to: '/star-map', search: {} })
         }}

@@ -2,7 +2,7 @@ import { useEffect, useMemo } from 'react'
 import { useNavigate, useSearch } from '@tanstack/react-router'
 import StarMapOverview from '../components/starMap/StarMapOverview'
 import { setAnalyticsSubTool } from '../lib/analytics'
-import { payloadFromSearch, resolveStarMapSystem, type StarMapSearch } from '../lib/starMapHighlight'
+import { payloadFromSearch, readStarMapHandoff, resolveStarMapSystem, type StarMapSearch } from '../lib/starMapHighlight'
 import { getStarMapData } from '../lib/starMapData'
 import {
   clearStarMapSessionIfLeft,
@@ -38,6 +38,22 @@ export default function StarMapIndexRoute() {
       navigate({ to: '/star-map', search: {}, replace: true })
     }
   }, [hasIncoming, search, systems, index, navigate])
+
+  // A shopping run arrives by id. The list of stops stays out of the URL.
+  useEffect(() => {
+    if (!search.handoff) return
+    const payload = readStarMapHandoff(search.handoff)
+    if (payload) startStarMapSession(payload)
+    const current = getStarMapSession()
+    const res = current ? resolveStarMapSystem(current.payload, systems, index) : null
+    if (res?.kind === 'single') {
+      updateStarMapSession({ choicePending: false })
+      void navigate({ to: '/star-map/$systemId', params: { systemId: res.systemId }, search: {}, replace: true })
+      return
+    }
+    if (res?.kind === 'empty') updateStarMapSession({ choicePending: false })
+    void navigate({ to: '/star-map', search: {}, replace: true })
+  }, [search.handoff, systems, index, navigate])
 
   // A shopping run is kept on the session, not in the URL.
   useEffect(() => {

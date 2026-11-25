@@ -106,8 +106,8 @@ export function paintStarfield(ctx: CanvasRenderingContext2D, w: number, h: numb
 }
 
 /**
- * An asteroid belt or ring. The fill fades to nothing at the inner and outer
- * edge, and a few specks drift along it. `marked` is 0–1.
+ * An asteroid belt or ring. A soft dust band, a brighter glow along the
+ * middle, and drifting specks. The fill fades out at both edges. `marked` is 0–1.
  */
 export function paintBelt(
   ctx: CanvasRenderingContext2D,
@@ -123,19 +123,43 @@ export function paintBelt(
   const inner = Math.max(0, innerPx - feather * 0.2)
   const outer = outerPx + feather * 0.45
   if (outer < 1.5) return
-  const dust = '168, 184, 156'
+  const dust = '196, 206, 168'
   const g = ctx.createRadialGradient(sx, sy, inner, sx, sy, outer)
   g.addColorStop(0, `rgba(${dust}, 0)`)
-  g.addColorStop(0.2, `rgba(${dust}, 0.025)`)
-  g.addColorStop(0.5, `rgba(${dust}, ${0.055 + marked * 0.06})`)
-  g.addColorStop(0.8, `rgba(${dust}, 0.02)`)
+  g.addColorStop(0.18, `rgba(${dust}, 0.08)`)
+  g.addColorStop(0.5, `rgba(${dust}, ${0.2 + marked * 0.1})`)
+  g.addColorStop(0.82, `rgba(${dust}, 0.07)`)
   g.addColorStop(1, `rgba(${dust}, 0)`)
   ctx.beginPath()
   ctx.arc(sx, sy, outer, 0, Math.PI * 2)
   ctx.fillStyle = g
   ctx.fill()
 
-  const count = Math.min(140, Math.max(18, Math.floor(span / 2)))
+  const mid = (innerPx + outerPx) / 2
+  const glowHalf = Math.max(5, Math.min(span * 0.28, 36))
+  const glow = ctx.createRadialGradient(sx, sy, Math.max(0, mid - glowHalf), sx, sy, mid + glowHalf)
+  glow.addColorStop(0, 'rgba(236, 220, 160, 0)')
+  glow.addColorStop(0.42, 'rgba(236, 220, 160, 0.08)')
+  glow.addColorStop(0.5, `rgba(255, 236, 180, ${0.42 + marked * 0.2})`)
+  glow.addColorStop(0.58, 'rgba(236, 220, 160, 0.08)')
+  glow.addColorStop(1, 'rgba(236, 220, 160, 0)')
+  ctx.beginPath()
+  ctx.arc(sx, sy, mid + glowHalf, 0, Math.PI * 2)
+  ctx.fillStyle = glow
+  ctx.fill()
+
+  ctx.save()
+  ctx.strokeStyle = `rgba(236, 220, 170, ${0.55 + marked * 0.25})`
+  ctx.lineWidth = Math.max(1.25, Math.min(span * 0.04, 2.5))
+  for (const radius of [innerPx, outerPx]) {
+    if (radius < 1) continue
+    ctx.beginPath()
+    ctx.arc(sx, sy, radius, 0, Math.PI * 2)
+    ctx.stroke()
+  }
+  ctx.restore()
+
+  const count = Math.min(180, Math.max(24, Math.floor(span / 1.6)))
   const seed = (Math.round(sx) * 13 + Math.round(sy)) % 997
   for (let i = 0; i < count; i++) {
     const u = fract(Math.sin(i * 127.1 + seed) * 43758.5453)
@@ -145,9 +169,11 @@ export function paintBelt(
     const x = sx + Math.cos(ang) * rad
     const y = sy + Math.sin(ang) * rad
     const edge = Math.sin(v * Math.PI)
-    ctx.globalAlpha = 0.22 * edge
-    ctx.fillStyle = v > 0.55 ? 'rgba(214, 206, 186, 0.9)' : 'rgba(140, 150, 132, 0.8)'
-    ctx.fillRect(x, y, v > 0.8 ? 1.7 : 1, v > 0.8 ? 1.7 : 1)
+    const rock = v > 0.82
+    ctx.globalAlpha = (rock ? 0.9 : 0.55) * edge
+    ctx.fillStyle = rock ? 'rgba(255, 244, 214, 0.95)' : 'rgba(214, 206, 170, 0.9)'
+    const s = rock ? 2.4 : 1.5
+    ctx.fillRect(x, y, s, s)
   }
   ctx.globalAlpha = 1
 }

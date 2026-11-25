@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   ICON_PX,
+  TELEMETRY_ICON_PX,
   ORB_KINDS,
   STAR_MAP_COLORS,
   STAR_MAP_POI_ORDER,
@@ -10,6 +11,8 @@ import {
   declutterMarkers,
   displayPositionM,
   orbDisplayRadiusPx,
+  starMapFocusCenter,
+  starMapFocusHalfM,
   starMapJumpDestination,
   starMapMarkerLabel,
   starMapMarkerReadout,
@@ -24,7 +27,7 @@ import {
   type StarMapSystem,
 } from '../../lib/starMap'
 import { resolveShopMarker, routeLegTone, routeSegmentsInSystem, type StarMapShopStop } from '../../lib/starMapHighlight'
-import { STAR_MAP_ICON_PATHS, drawShoppingIcon, drawStarMapIcon } from './starMapIcons'
+import { STAR_MAP_ICON_PATHS, drawShoppingIcon, drawStarMapIcon, strokeTelemetryLink } from './starMapIcons'
 import { paintBelt, paintBody, paintStar, paintStarfield } from './starMapPaint'
 import SiteTooltip from '../SiteTooltip'
 
@@ -39,6 +42,8 @@ interface Props {
   active?: string
   /** Open zoomed out to the whole system, ignoring marks and route. */
   wholeSystem?: boolean
+  /** A new value refits the view to the current stops. */
+  focusId?: number
   onBack: () => void
   onJump: (marker: StarMapMarker) => void
 }
@@ -73,6 +78,7 @@ export default function StarMapSystemView({
   shops,
   active,
   wholeSystem,
+  focusId = 0,
   onBack,
   onJump,
 }: Props) {
@@ -170,28 +176,25 @@ export default function StarMapSystemView({
     return () => ro.disconnect()
   }, [])
 
-  // Initial camera: marks, then route, else the whole system. A jump always opens the whole system.
+  const focusTargets = useMemo(
+    () => (wholeSystem ? [] : system.markers.filter((m) => markedIds.has(m.id) || routeIds.has(m.id))),
+    [wholeSystem, system, markedIds, routeIds],
+  )
+  const focusKey = `${focusId}|${wholeSystem ? 'all' : focusTargets.map((m) => m.id).join(',')}`
+  const fittedKey = useRef('')
+
+  // Opening view: the route fills the screen, one stop zooms in, otherwise the whole system.
+  // A new focus refits. Scrolling after that is left alone. A jump opens the whole system.
   useEffect(() => {
-    if (!fitPxPerM || camRef.current) return
-    const targets = wholeSystem ? [] : system.markers.filter((m) => markedIds.has(m.id) || routeIds.has(m.id))
-    if (targets.length) {
-      const reach = (m: StarMapMarker) => (m.kind === 'belt' ? (m.outerRadiusM ?? 0) : 0)
-      const xs = targets.flatMap((m) => [m.x - reach(m), m.x + reach(m)])
-      const ys = targets.flatMap((m) => [m.y - reach(m), m.y + reach(m)])
-      const minX = Math.min(...xs)
-      const maxX = Math.max(...xs)
-      const minY = Math.min(...ys)
-      const maxY = Math.max(...ys)
-      const half = Math.max((maxX - minX) / 2, (maxY - minY) / 2, extentM / 40)
-      setCam({
-        cx: (minX + maxX) / 2,
-        cy: (minY + maxY) / 2,
-        pxPerM: (Math.min(size.w, size.h) / 2 - FIT_PADDING_PX * 2) / half,
-      })
-      return
-    }
-    setCam({ cx: starX, cy: starY, pxPerM: fitPxPerM })
-  }, [fitPxPerM, wholeSystem, system, markedIds, routeIds, extentM, size, starX, starY, setCam])
+    if (!fitPxPerM || fittedKey.current === focusKey) return
+    fittedKey.current = focusKey
+    const center = starMapFocusCenter(focusTargets, { x: starX, y: starY })
+    const half = starMapFocusHalfM(system, focusTargets, extentM)
+    const pxPerM = focusTargets.length
+      ? (Math.min(size.w, size.h) / 2 - FIT_PADDING_PX * 2) / half
+      : fitPxPerM
+    setCam({ cx: center.x, cy: center.y, pxPerM })
+  }, [focusKey, fitPxPerM, focusTargets, system, extentM, size, starX, starY, setCam])
 
   // Re-clamp when the box resizes.
   useEffect(() => {
@@ -301,27 +304,6 @@ export default function StarMapSystemView({
         ctx.restore()
       }
 
-      // Shopping icons sit just off the stop so the place itself stays visible.
-      const shopHits: { place: string; sx: number; sy: number }[] = []
-      if (shops?.length) {
-        const seen = new Map<string, number>()
-        for (const shop of shops) {
-          const marker = resolveShopMarker(shop.place, { [system.id]: system })
-          if (!marker) continue
-          const at = displayPositionM(marker, scale)
-          const p = toScreen(at.x, at.y, cam)
-          const body = byId.get(marker.id)
-          const gap = (body?.r ?? ICON_PX / 2) + ICON_PX
-          const n = seen.get(marker.id) ?? 0
-          seen.set(marker.id, n + 1)
-          const sx = p.sx + gap
-          const sy = p.sy - gap - n * (ICON_PX + 4)
-          drawShoppingIcon(ctx, sx, sy, ICON_PX)
-          shopHits.push({ place: shop.place, sx, sy })
-        }
-      }
-      shopHitsRef.current = shopHits
-
       // Orbs. Stars carry a moving surface; planets and moons are lit from the star.
       for (const it of items) {
         if (!ORB_KINDS.has(it.marker.kind) || !visible.has(it.marker.id)) continue
@@ -334,6 +316,29 @@ export default function StarMapSystemView({
         if (ORB_KINDS.has(it.marker.kind) || !visible.has(it.marker.id)) continue
         drawStarMapIcon(ctx, it.marker.kind, it.sx, it.sy, ICON_PX, starMapPoiGroup(it.marker)?.color)
       }
+
+      // Telemetry pins. Each one is twice an icon, shimmering, with a gold line to its place.
+      const shopHits: { place: string; sx: number; sy: number }[] = []
+      if (shops?.length) {
+        const seen = new Map<string, number>()
+        for (const shop of shops) {
+          const marker = resolveShopMarker(shop.place, { [system.id]: system })
+          if (!marker) continue
+          const at = displayPositionM(marker, scale)
+          const p = toScreen(at.x, at.y, cam)
+          const body = byId.get(marker.id)
+          const fromR = body?.r ?? ICON_PX / 2
+          const gap = fromR + TELEMETRY_ICON_PX * 0.75 + 16
+          const n = seen.get(marker.id) ?? 0
+          seen.set(marker.id, n + 1)
+          const sx = p.sx + gap
+          const sy = p.sy - gap - n * (TELEMETRY_ICON_PX + 8)
+          strokeTelemetryLink(ctx, p.sx, p.sy, fromR, sx, sy)
+          drawShoppingIcon(ctx, sx, sy, t)
+          shopHits.push({ place: shop.place, sx, sy })
+        }
+      }
+      shopHitsRef.current = shopHits
 
       // Blink.
       if (markedIds.size) {
@@ -498,7 +503,7 @@ export default function StarMapSystemView({
   const shopAt = (mx: number, my: number): string | null => {
     for (let i = shopHitsRef.current.length - 1; i >= 0; i--) {
       const hit = shopHitsRef.current[i]
-      if (Math.hypot(mx - hit.sx, my - hit.sy) <= ICON_PX / 2 + 3) return hit.place
+      if (Math.hypot(mx - hit.sx, my - hit.sy) <= TELEMETRY_ICON_PX * 0.72) return hit.place
     }
     return null
   }

@@ -192,6 +192,8 @@ export interface StarMapSearch {
   marks?: string
   route?: string
   start?: string
+  /** Id of a shopping run stored for the Star Map tab. Not the run itself. */
+  handoff?: string
 }
 
 const LIST_SEP = '|'
@@ -221,6 +223,39 @@ export function validateStarMapSearch(search: Record<string, unknown>): StarMapS
     marks: str(search.marks),
     route: str(search.route),
     start: str(search.start),
+    handoff: str(search.handoff),
+  }
+}
+
+const HANDOFF_KEY = 'dumper-star-map-handoff'
+export const STAR_MAP_CHANNEL = 'dumper-star-map'
+export const STAR_MAP_WINDOW = 'dumper-star-map'
+
+/** Park a shopping run where the Star Map tab can read it. Returns its id. */
+export function publishStarMapHandoff(payload: StarMapPayload): string {
+  const id = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`
+  const body = JSON.stringify({ id, payload })
+  localStorage.setItem(HANDOFF_KEY, body)
+  try {
+    const channel = new BroadcastChannel(STAR_MAP_CHANNEL)
+    channel.postMessage({ id, payload })
+    channel.close()
+  } catch {
+    // The tab reads localStorage on open when BroadcastChannel is missing.
+  }
+  return id
+}
+
+/** The run for this id, or null. Safe to call twice for the same id. */
+export function readStarMapHandoff(id: string): StarMapPayload | null {
+  try {
+    const raw = localStorage.getItem(HANDOFF_KEY)
+    if (!raw) return null
+    const parsed = JSON.parse(raw) as { id?: string; payload?: StarMapPayload }
+    if (parsed.id !== id || !parsed.payload) return null
+    return parsed.payload
+  } catch {
+    return null
   }
 }
 
