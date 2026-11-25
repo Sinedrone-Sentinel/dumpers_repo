@@ -3679,7 +3679,7 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
   let wanderBack = false
   let prev = xy(paint.starMotePlace(wander, 0))
   let prevStep = null
-  for (let t = 400; t <= 14000; t += 400) {
+  for (let t = 800; t <= 28000; t += 800) {
     const p = xy(paint.starMotePlace(wander, t))
     const step = [p[0] - prev[0], p[1] - prev[1]]
     if (prevStep && step[0] * prevStep[0] + step[1] * prevStep[1] < 0) wanderBack = true
@@ -3692,7 +3692,7 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
   let wentOut = false
   let cameBack = false
   let lastX = xy(paint.starMotePlace(bounce, 0))[0]
-  for (let t = 250; t <= 22000; t += 250) {
+  for (let t = 500; t <= 44000; t += 500) {
     const p = paint.starMotePlace(bounce, t)
     const [x, y] = xy(p)
     if (Math.hypot(x, y) > 0.91) inside = false
@@ -3700,8 +3700,8 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
     if (wentOut && x < lastX - 0.004) cameBack = true
     lastX = x
   }
-  const forth = xy(paint.starMotePlace(bounce, 1800))
-  const opposite = xy(paint.starMotePlace(otherWay, 1800))
+  const forth = xy(paint.starMotePlace(bounce, 3600))
+  const opposite = xy(paint.starMotePlace(otherWay, 3600))
   check(
     wanderBack &&
       inside &&
