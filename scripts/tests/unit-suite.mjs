@@ -3568,6 +3568,18 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
   const stantonLegs = hl.routeSegmentsInSystem(points, 'stanton')
   const lastStanton = stantonLegs[stantonLegs.length - 1]?.[1]
   check(lastStanton?.kind === 'jump_point' && lastStanton.toSystem === 'pyro', 'route: Stanton leg stops at the departure jump')
+  const leave = hl.jumpContinuations(points, 'stanton', smIndex)
+  check(
+    leave.length === 1 && leave[0].systemName === 'Pyro' && leave[0].markerId === lastStanton.id,
+    'star map: leaving a system is a jump label, not a cart',
+  )
+  check(hl.jumpContinuations(points, 'pyro', smIndex).length === 0, 'star map: arriving in a system does not ask you to jump again')
+  const open = hl.placeCallout(200, 200, 12, 40, 40, [], 900, 700)
+  const blocked = hl.placeCallout(200, 200, 12, 40, 40, [{ x: open.x - 20, y: open.y - 20, w: 40, h: 40 }], 900, 700)
+  check(
+    (blocked.x !== open.x || blocked.y !== open.y) && Math.hypot(blocked.x - 200, blocked.y - 200) >= Math.hypot(open.x - 200, open.y - 200) - 0.01,
+    'star map: a telemetry pin shifts, and the gold line can grow, to miss what is already drawn',
+  )
   const pyroLegs = hl.routeSegmentsInSystem(points, 'pyro')
   check(
     pyroLegs[0]?.[0].kind === 'jump_point' && pyroLegs[pyroLegs.length - 1]?.[1].name === 'Monox',

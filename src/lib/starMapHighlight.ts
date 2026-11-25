@@ -386,6 +386,83 @@ export function expandRoute(
   return points
 }
 
+export interface StarMapJumpCallout {
+  markerId: string
+  /** Display name of the system the route enters next. */
+  systemName: string
+}
+
+/**
+ * Departure jumps where the route leaves this system. The callout is a label,
+ * not a shop pin. A shop that sits on that same jump is a separate pin.
+ */
+export function jumpContinuations(points: StarMapMarker[], systemId: string, index: StarMapIndex): StarMapJumpCallout[] {
+  const nameOf = (id: string) => index.systems.find((system) => system.id === id)?.name ?? id
+  const out: StarMapJumpCallout[] = []
+  const seen = new Set<string>()
+  for (let i = 0; i < points.length - 1; i++) {
+    const here = points[i]
+    const next = points[i + 1]
+    if (here.systemId !== systemId || here.kind !== 'jump_point' || next.systemId === systemId) continue
+    if (seen.has(here.id)) continue
+    seen.add(here.id)
+    out.push({ markerId: here.id, systemName: nameOf(next.systemId) })
+  }
+  return out
+}
+
+export interface CalloutBox {
+  x: number
+  y: number
+  w: number
+  h: number
+}
+
+const CALLOUT_ANGLES = [-Math.PI / 4, -Math.PI / 2, 0, Math.PI / 4, Math.PI / 2, Math.PI, (Math.PI * 3) / 4, (-Math.PI * 3) / 4]
+
+function calloutHits(a: CalloutBox, b: CalloutBox, pad: number): boolean {
+  return a.x < b.x + b.w + pad && a.x + a.w + pad > b.x && a.y < b.y + b.h + pad && a.y + a.h + pad > b.y
+}
+
+/**
+ * Centre for a telemetry pin or jump label. Tries a short gold line first, then
+ * longer ones and other directions, so the pin stays off markers and labels.
+ */
+export function placeCallout(
+  anchorX: number,
+  anchorY: number,
+  fromR: number,
+  boxW: number,
+  boxH: number,
+  occupied: CalloutBox[],
+  viewW: number,
+  viewH: number,
+): { x: number; y: number } {
+  const reach = fromR + Math.max(boxW, boxH) / 2 + 10
+  const lengths = [reach, reach + 24, reach + 48, reach + 76]
+  let best: { x: number; y: number; overlap: number } | null = null
+  for (const len of lengths) {
+    for (const ang of CALLOUT_ANGLES) {
+      const x = anchorX + Math.cos(ang) * len
+      const y = anchorY + Math.sin(ang) * len
+      const box = { x: x - boxW / 2, y: y - boxH / 2, w: boxW, h: boxH }
+      if (box.x < 2 || box.y < 2 || box.x + box.w > viewW - 2 || box.y + box.h > viewH - 2) continue
+      let overlap = 0
+      for (const other of occupied) {
+        if (!calloutHits(box, other, 6)) continue
+        const ix = Math.min(box.x + box.w, other.x + other.w) - Math.max(box.x, other.x)
+        const iy = Math.min(box.y + box.h, other.y + other.h) - Math.max(box.y, other.y)
+        overlap += Math.max(0, ix) * Math.max(0, iy)
+      }
+      if (overlap === 0) return { x, y }
+      if (!best || overlap < best.overlap) best = { x, y, overlap }
+    }
+  }
+  if (best) return { x: best.x, y: best.y }
+  const ang = CALLOUT_ANGLES[0]
+  return { x: anchorX + Math.cos(ang) * reach, y: anchorY + Math.sin(ang) * reach }
+}
+
 /** Consecutive route pairs that are drawn inside one system. */
 export function routeSegmentsInSystem(points: StarMapMarker[], systemId: string): [StarMapMarker, StarMapMarker][] {
   const out: [StarMapMarker, StarMapMarker][] = []
