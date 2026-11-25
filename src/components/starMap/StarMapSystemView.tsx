@@ -26,8 +26,8 @@ import {
   type StarMapPoiGroup,
   type StarMapSystem,
 } from '../../lib/starMap'
-import { groupShopPins, routeLegTone, routeSegmentsInSystem, type StarMapShopStop, type StarMapTelemetry } from '../../lib/starMapHighlight'
-import { STAR_MAP_ICON_PATHS, drawStarMapIcon, drawTelemetryIcon, strokeTelemetryLink } from './starMapIcons'
+import { groupShopPins, jumpContinuations, placeCallout, routeLegTone, routeSegmentsInSystem, type StarMapShopStop, type StarMapTelemetry } from '../../lib/starMapHighlight'
+import { STAR_MAP_ICON_PATHS, drawStarMapIcon, drawTelemetryIcon, paintJumpCallout, strokeTelemetryLink } from './starMapIcons'
 import { paintBelt, paintBody, paintStar, paintStarfield } from './starMapPaint'
 import SiteTooltip from '../SiteTooltip'
 
@@ -319,7 +319,7 @@ export default function StarMapSystemView({
       for (const it of items) {
         if (!ORB_KINDS.has(it.marker.kind) || !visible.has(it.marker.id)) continue
         if (it.marker.kind === 'star') paintStar(ctx, it.sx, it.sy, it.r, t, it.marker.name)
-        else paintBody(ctx, it.sx, it.sy, it.r, it.marker.name, sc.sx, sc.sy)
+        else paintBody(ctx, it.sx, it.sy, it.r, it.marker.name, sc.sx, sc.sy, t)
       }
 
       // Icons.
@@ -327,24 +327,6 @@ export default function StarMapSystemView({
         if (ORB_KINDS.has(it.marker.kind) || !visible.has(it.marker.id)) continue
         drawStarMapIcon(ctx, it.marker.kind, it.sx, it.sy, ICON_PX, starMapPoiGroup(it.marker)?.color)
       }
-
-      // One pin per body. Every buy and sell there is on that pin, in haul order.
-      const shopHits: { index: number; sx: number; sy: number }[] = []
-      shopPins.forEach((pin, index) => {
-        const marker = system.markers.find((row) => row.id === pin.markerId)
-        if (!marker) return
-        const at = displayPositionM(marker, scale)
-        const p = toScreen(at.x, at.y, cam)
-        const body = byId.get(marker.id)
-        const fromR = body?.r ?? ICON_PX / 2
-        const gap = fromR + TELEMETRY_ICON_PX * 0.75 + 16
-        const sx = p.sx + gap
-        const sy = p.sy - gap
-        strokeTelemetryLink(ctx, p.sx, p.sy, fromR, sx, sy)
-        drawTelemetryIcon(ctx, sx, sy, t, telemetry)
-        shopHits.push({ index, sx, sy })
-      })
-      shopHitsRef.current = shopHits
 
       // Blink.
       if (markedIds.size) {
@@ -465,8 +447,44 @@ export default function StarMapSystemView({
         ctx.fillStyle = STAR_MAP_COLORS.beltLabel
         ctx.fillText(text, placed.x, placed.y + 7)
       }
+
+      // Telemetry pins and jump labels take a clear spot. The gold line grows
+      // when a short one would cover a marker or a name.
+      ctx.shadowBlur = 0
+      const shopHits: { index: number; sx: number; sy: number }[] = []
+      const iconBox = TELEMETRY_ICON_PX + 14
+      const anchorOf = (markerId: string) => {
+        const marker = system.markers.find((row) => row.id === markerId)
+        if (!marker) return null
+        const at = displayPositionM(marker, scale)
+        const p = toScreen(at.x, at.y, cam)
+        const body = byId.get(marker.id)
+        return { sx: p.sx, sy: p.sy, fromR: body?.r ?? ICON_PX / 2 }
+      }
+      shopPins.forEach((pin, index) => {
+        const anchor = anchorOf(pin.markerId)
+        if (!anchor) return
+        const at = placeCallout(anchor.sx, anchor.sy, anchor.fromR, iconBox, iconBox, boxes, size.w, size.h)
+        strokeTelemetryLink(ctx, anchor.sx, anchor.sy, anchor.fromR, at.x, at.y)
+        drawTelemetryIcon(ctx, at.x, at.y, t, telemetry)
+        shopHits.push({ index, sx: at.x, sy: at.y })
+        boxes.push({ x: at.x - iconBox / 2, y: at.y - iconBox / 2, w: iconBox, h: iconBox, owner: pin.markerId })
+      })
+      shopHitsRef.current = shopHits
+
+      ctx.font = '12px ui-sans-serif, system-ui, sans-serif'
+      for (const callout of jumpContinuations(routePoints, system.id, index)) {
+        const anchor = anchorOf(callout.markerId)
+        if (!anchor) continue
+        const text = `Jump to ${callout.systemName} to continue shopping`
+        const w = ctx.measureText(text).width + 16
+        const h = 20
+        const at = placeCallout(anchor.sx, anchor.sy, anchor.fromR, w, h, boxes, size.w, size.h)
+        paintJumpCallout(ctx, anchor.sx, anchor.sy, anchor.fromR, at.x, at.y, text)
+        boxes.push({ x: at.x - w / 2, y: at.y - h / 2, w, h, owner: callout.markerId })
+      }
     },
-    [system, size, toScreen, starX, starY, markedIds, routeIds, selectedId, segments, routePoints, shopPins, telemetry, active, planetsByName, fitPxPerM, poiOn],
+    [system, size, toScreen, starX, starY, markedIds, routeIds, selectedId, segments, routePoints, shopPins, telemetry, active, planetsByName, fitPxPerM, poiOn, index],
   )
 
   // The star surface and belt dust move, so the view redraws continuously.
@@ -515,7 +533,7 @@ export default function StarMapSystemView({
   }
 
   const hitTest = (mx: number, my: number): StarMapMarker | null => {
-    if (shopAt(mx, my)) return null
+    if (shopAt(mx, my) != null) return null
     const { items, visible } = projectedRef.current
     for (let i = items.length - 1; i >= 0; i--) {
       const it = items[i]
@@ -547,7 +565,8 @@ export default function StarMapSystemView({
     const drag = dragRef.current
     const rect = e.currentTarget.getBoundingClientRect()
     if (!drag) {
-      e.currentTarget.style.cursor = shopAt(e.clientX - rect.left, e.clientY - rect.top) || hitTest(e.clientX - rect.left, e.clientY - rect.top) ? 'pointer' : 'grab'
+      const overShop = shopAt(e.clientX - rect.left, e.clientY - rect.top) != null
+      e.currentTarget.style.cursor = overShop || hitTest(e.clientX - rect.left, e.clientY - rect.top) ? 'pointer' : 'grab'
       return
     }
     const dx = e.clientX - drag.x
@@ -593,7 +612,7 @@ export default function StarMapSystemView({
     }
     if (!drag || drag.moved) return
     const shop = shopAt(e.clientX - rect.left, e.clientY - rect.top)
-    if (shop) {
+    if (shop != null) {
       setSelectedShop(shop)
       setSelectedId(null)
       return

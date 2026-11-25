@@ -58,6 +58,7 @@ const modules = [
   'src/lib/lootBlueprintLookup.ts',
   'src/lib/starMap.ts',
   'src/lib/starMapHighlight.ts',
+  'src/components/starMap/starMapPaint.ts',
 ]
 
 console.log('Unit tests: bundling modules...')
@@ -3419,6 +3420,7 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
 {
   const starMap = await import(pathToFileURL(path.join(outDir, 'starMap.mjs')).href)
   const hl = await import(pathToFileURL(path.join(outDir, 'starMapHighlight.mjs')).href)
+  const paint = await import(pathToFileURL(path.join(outDir, 'starMapPaint.mjs')).href)
   const mapDir = path.join(root, 'src/data/star-maps')
   const smIndex = JSON.parse(readFileSync(path.join(mapDir, 'index.json'), 'utf8'))
   const smSystems = {}
@@ -3566,6 +3568,18 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
   const stantonLegs = hl.routeSegmentsInSystem(points, 'stanton')
   const lastStanton = stantonLegs[stantonLegs.length - 1]?.[1]
   check(lastStanton?.kind === 'jump_point' && lastStanton.toSystem === 'pyro', 'route: Stanton leg stops at the departure jump')
+  const leave = hl.jumpContinuations(points, 'stanton', smIndex)
+  check(
+    leave.length === 1 && leave[0].systemName === 'Pyro' && leave[0].markerId === lastStanton.id,
+    'star map: leaving a system is a jump label, not a cart',
+  )
+  check(hl.jumpContinuations(points, 'pyro', smIndex).length === 0, 'star map: arriving in a system does not ask you to jump again')
+  const open = hl.placeCallout(200, 200, 12, 40, 40, [], 900, 700)
+  const blocked = hl.placeCallout(200, 200, 12, 40, 40, [{ x: open.x - 20, y: open.y - 20, w: 40, h: 40 }], 900, 700)
+  check(
+    (blocked.x !== open.x || blocked.y !== open.y) && Math.hypot(blocked.x - 200, blocked.y - 200) >= Math.hypot(open.x - 200, open.y - 200) - 0.01,
+    'star map: a telemetry pin shifts, and the gold line can grow, to miss what is already drawn',
+  )
   const pyroLegs = hl.routeSegmentsInSystem(points, 'pyro')
   check(
     pyroLegs[0]?.[0].kind === 'jump_point' && pyroLegs[pyroLegs.length - 1]?.[1].name === 'Monox',
@@ -3599,6 +3613,20 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
     stops: [{ place: 'Area18', lines: [{ action: 'buy', label: 'Carbon' }] }],
   }, smSystems)
   check(haulMark.category === 'hauler' && shopHere.category === 'shopping', 'star map: a haul uses the hauler icon and a cart stays a cart')
+  check(
+    paint.beltSpeckCount(80) === 100 && paint.beltSpeckCount(10) === 48 && paint.beltSpeckCount(400) === 360,
+    'star map: belt specks are twice as dense',
+  )
+  check(
+    Math.abs(paint.beltSpeckSize(1) - 4.8) < 1e-9 && paint.beltSpeckSize(0.9) > 2.4 && paint.beltSpeckSize(0.2) < 2.4,
+    'star map: the largest belt specks are twice the old rock size',
+  )
+  check(
+    paint.flareReach('Pyro', 1) > paint.flareReach('Stanton', 1) &&
+      paint.flareReach('Nyx', 1) === paint.flareReach('Stanton', 1) &&
+      paint.flareReach('Pyro', 0.05) < paint.flareReach('Stanton', 1),
+    'star map: Pyro flares run larger than Stanton and Nyx, and small flares still happen',
+  )
   check(
     hl.isStarMapPath('/star-map') &&
       hl.isStarMapPath('/star-map/') &&

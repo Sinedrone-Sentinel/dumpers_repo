@@ -98,6 +98,47 @@ const TELEMETRY_GLYPHS = {
   hauler: HAULER_ICON,
 } as const
 
+/** Gold line from a jump to the "continue shopping" label. Not a hit target. */
+export function paintJumpCallout(
+  ctx: CanvasRenderingContext2D,
+  fromX: number,
+  fromY: number,
+  fromR: number,
+  x: number,
+  y: number,
+  text: string,
+): void {
+  ctx.save()
+  ctx.font = '12px ui-sans-serif, system-ui, sans-serif'
+  ctx.textAlign = 'center'
+  ctx.textBaseline = 'middle'
+  const padX = 8
+  const w = ctx.measureText(text).width + padX * 2
+  const h = 20
+  const dx = x - fromX
+  const dy = y - fromY
+  const dist = Math.hypot(dx, dy) || 1
+  const ux = dx / dist
+  const uy = dy / dist
+  const edge = Math.min(Math.abs(ux) > 0.001 ? w / 2 / Math.abs(ux) : Infinity, Math.abs(uy) > 0.001 ? h / 2 / Math.abs(uy) : Infinity)
+  ctx.strokeStyle = STAR_MAP_COLORS.route
+  ctx.lineWidth = 2
+  ctx.lineCap = 'round'
+  ctx.beginPath()
+  ctx.moveTo(fromX + ux * fromR, fromY + uy * fromR)
+  ctx.lineTo(x - ux * edge, y - uy * edge)
+  ctx.stroke()
+  ctx.beginPath()
+  ctx.roundRect(x - w / 2, y - h / 2, w, h, 6)
+  ctx.fillStyle = 'rgba(7, 11, 18, 0.92)'
+  ctx.fill()
+  ctx.lineWidth = 1.25
+  ctx.stroke()
+  ctx.fillStyle = STAR_MAP_COLORS.route
+  ctx.fillText(text, x, y)
+  ctx.restore()
+}
+
 /** Gold link from a place to its telemetry icon. Every telemetry pin uses this. */
 export function strokeTelemetryLink(
   ctx: CanvasRenderingContext2D,
