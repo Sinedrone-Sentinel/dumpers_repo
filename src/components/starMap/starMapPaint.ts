@@ -90,9 +90,19 @@ function withAlpha(color: string, alpha: number): string {
   return color
 }
 
-/** Speck count for a belt of the given width in pixels. Twice the previous field. */
-export function beltSpeckCount(span: number): number {
-  return Math.min(360, Math.max(48, Math.floor(Math.max(span, 0) / 0.8)))
+/**
+ * Yela Ring is the density baseline. Its width over its midline is what the
+ * old span/0.8 count looked like when that ring read as clustered. Every belt
+ * keeps that many specks per pixel of circumference, so a longer ring gets
+ * more specks instead of spreading a fixed handful around a bigger circle.
+ */
+const YELA_RING_MID_M = (482_000 + 782_000) / 2
+const YELA_RING_WIDTH_M = 782_000 - 482_000
+
+export function beltSpeckCount(midPx: number): number {
+  const yelaRatio = YELA_RING_WIDTH_M / YELA_RING_MID_M
+  const count = (Math.max(0, midPx) * yelaRatio) / 0.8
+  return Math.max(12, Math.min(2400, Math.round(count)))
 }
 
 /**
@@ -355,7 +365,7 @@ export function paintBelt(
   ctx.fillStyle = glow
   ctx.fill()
 
-  const count = beltSpeckCount(span)
+  const count = beltSpeckCount(mid)
   const seed = (Math.round(sx) * 13 + Math.round(sy)) % 997
   for (let i = 0; i < count; i++) {
     const u = fract(Math.sin(i * 127.1 + seed) * 43758.5453)
