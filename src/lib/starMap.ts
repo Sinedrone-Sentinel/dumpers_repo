@@ -212,13 +212,37 @@ export function starMapMarkerShown(marker: StarMapMarker, enabled: Readonly<Reco
   return !group.startsHidden
 }
 
+/**
+ * System a jump point opens for the member. Stanton's Magnus jump is the live
+ * route to Nyx, so it reads as Nyx while the record name stays Magnus.
+ */
+export function starMapJumpDestination(marker: StarMapMarker): string | null {
+  if (marker.kind !== 'jump_point') return null
+  if (marker.toSystem === 'magnus' || /magnus/i.test(marker.name)) return 'nyx'
+  return marker.toSystem
+}
+
+/** Name drawn on the map. Jump points use the destination only. */
+export function starMapMarkerLabel(marker: StarMapMarker): string {
+  const dest = starMapJumpDestination(marker)
+  if (!dest) return marker.name
+  return `${dest.charAt(0).toUpperCase()}${dest.slice(1)} Jump Point`
+}
+
 export function starMapMarkerReadout(marker: StarMapMarker): { subtitle: string; mission: string | null; description: string | null } {
   const group = starMapPoiGroup(marker)
-  const description = marker.description?.trim() || null
+  let description = marker.description?.trim() || null
+  if (description && uninitializedText(description)) description = null
+  const dest = starMapJumpDestination(marker)
+  if (dest && marker.toSystem && dest !== marker.toSystem) {
+    const from = marker.systemId.charAt(0).toUpperCase() + marker.systemId.slice(1)
+    const to = dest.charAt(0).toUpperCase() + dest.slice(1)
+    description = `This jump point connects ${from} to ${to}.`
+  }
   return {
     subtitle: group?.label ?? STAR_MAP_KIND_LABELS[marker.kind],
     mission: group?.missionLocation ? QV_MISSION : null,
-    description: description && !uninitializedText(description) ? description : null,
+    description,
   }
 }
 
@@ -383,7 +407,7 @@ export function systemBodyScale(
   system: StarMapSystem,
   pxPerM: number,
   fitPxPerM: number = pxPerM,
-  maxPlanetPx = 28,
+  maxPlanetPx = 14,
 ): BodyScale {
   const star = system.markers.find((m) => m.kind === 'star')
   const cx = star?.x ?? 0
@@ -544,18 +568,24 @@ export interface StarMapCamera {
 }
 
 /**
- * Camera after a box zoom: the box's top-left becomes the view's top-left and
- * the box width spans the view width. Box height does not matter.
+ * Camera after a box zoom. The middle of the rectangle becomes the middle of
+ * the view, and the zoom fits the whole rectangle on screen.
  */
 export function boxZoomCamera(
   cam: StarMapCamera,
   view: { w: number; h: number },
-  box: { left: number; top: number; width: number },
+  box: { left: number; top: number; width: number; height: number },
 ): StarMapCamera {
-  const wx = cam.cx + (box.left - view.w / 2) / cam.pxPerM
-  const wy = cam.cy - (box.top - view.h / 2) / cam.pxPerM
-  const pxPerM = cam.pxPerM * (view.w / box.width)
-  return { pxPerM, cx: wx + view.w / 2 / pxPerM, cy: wy - view.h / 2 / pxPerM }
+  const width = Math.max(box.width, 1)
+  const height = Math.max(box.height, 1)
+  const pxPerM = cam.pxPerM * Math.min(view.w / width, view.h / height)
+  const midX = box.left + width / 2
+  const midY = box.top + height / 2
+  return {
+    pxPerM,
+    cx: cam.cx + (midX - view.w / 2) / cam.pxPerM,
+    cy: cam.cy - (midY - view.h / 2) / cam.pxPerM,
+  }
 }
 
 // ── Declutter ──────────────────────────────────────────────────────────────

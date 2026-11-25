@@ -122,10 +122,13 @@ function walkChildren(xml, visit) {
     const attr = attrs(match[1])
     const local = parsePos(attr.pos)
     const localRot = parseRot(attr.rot)
-    const rotated = quatRot(parent.rot, local)
+    // The star container's spin is the star mesh, not the starmap frame. Pyro's
+    // star is rotated, and folding that in parks jump points on the wrong side.
+    const basis = /star\.socpak$/i.test(String(parent.attr?.name || '')) ? [1, 0, 0, 0] : parent.rot
+    const rotated = quatRot(basis, local)
     const world = {
       pos: [parent.pos[0] + rotated[0], parent.pos[1] + rotated[1], parent.pos[2] + rotated[2]],
-      rot: quatMul(parent.rot, localRot),
+      rot: quatMul(basis, localRot),
       attr,
     }
     visit(world)
