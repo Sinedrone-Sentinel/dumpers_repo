@@ -3668,6 +3668,10 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
     'star map: Pyro flares run larger than Stanton and Nyx, and small flares still happen',
   )
   check(
+    paint.flareStyle(0.1) === 'arch' && paint.flareStyle(0.5) === 'fan' && paint.flareStyle(0.9) === 'spray',
+    'star map: flares pick an arch, a loop fan, or a spray',
+  )
+  check(
     hl.isStarMapPath('/star-map') &&
       hl.isStarMapPath('/star-map/') &&
       hl.isStarMapPath('/star-map/stanton') &&
