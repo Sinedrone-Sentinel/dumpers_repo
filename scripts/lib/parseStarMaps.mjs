@@ -329,6 +329,35 @@ function addMarker(markers, marker) {
   return id
 }
 
+function navFrameShift(markers, navPoints) {
+  const pairs = []
+  for (const point of navPoints) {
+    if (point.kind !== 'planet' && point.kind !== 'moon') continue
+    const marker = markers.find((row) => (
+      (row.kind === 'planet' || row.kind === 'moon')
+      && row.name.toLowerCase() === String(point.name).toLowerCase()
+    ))
+    if (!marker) continue
+    if (Math.hypot(point.x, point.y) < 1e6 || Math.hypot(marker.x, marker.y) < 1e6) continue
+    pairs.push({ point, marker })
+  }
+  if (pairs.length === 0) return (point) => point
+  const delta = Math.atan2(pairs[0].marker.y, pairs[0].marker.x) - Math.atan2(pairs[0].point.y, pairs[0].point.x)
+  const turn = (x, y) => ({
+    x: x * Math.cos(delta) - y * Math.sin(delta),
+    y: x * Math.sin(delta) + y * Math.cos(delta),
+  })
+  const aligned = pairs.every(({ point, marker }) => {
+    const moved = turn(point.x, point.y)
+    return Math.hypot(moved.x - marker.x, moved.y - marker.y) < 1e7
+  })
+  if (!aligned) return (point) => point
+  return (point) => {
+    const moved = turn(point.x, point.y)
+    return { ...point, x: moved.x, y: moved.y }
+  }
+}
+
 function layoutOverview(systems, links) {
   // Place systems on a circle using jump-graph adjacency. Fully connected = even triangle.
   const ids = systems.map((s) => s.id)
@@ -608,31 +637,83 @@ export function parseStarMaps({ extractedRoot, localization }) {
     }
 
     // Parent moons to nearest planet for orbit rings.
-    // Fill manned stations that live under planet interiors (Checkmate, Seraphim, …).
-    // A city on a planet stays off the map. Levski is a city in the Glaciem Ring, so it stays.
+    // Named stations (Checkmate, Seraphim, …) come from the nav bake. Pyro's nav
+    // coordinates include the star mesh spin; the map does not, so those points
+    // are turned back onto the containers before they are placed. A city on a
+    // planet stays off the map. Levski is the station inside Delamar.
     try {
       const navPath = join(ROOT, 'src', 'data', 'nav-systems.json')
       if (existsSync(navPath)) {
         const nav = JSON.parse(readFileSync(navPath, 'utf8'))
+        const navPoints = (nav.points || []).filter((point) => point.system === systemId)
+        const shift = navFrameShift(markers, navPoints)
         const onBody = (point) => markers.some((m) => {
           if ((m.kind !== 'planet' && m.kind !== 'moon') || !m.radiusM) return false
           return Math.hypot(point.x - m.x, point.y - m.y, (point.z || 0) - (m.z || 0)) < m.radiusM * 4
         })
-        for (const point of nav.points || []) {
-          if (point.system !== systemId) continue
+        const labelOf = (marker) => [marker.name, ...(marker.aliases || [])]
+        const same = (a, b) => String(a).toLowerCase() === String(b).toLowerCase()
+        const shortCode = (name) => /^(?:PYR\d[\s-]L[1-5]|[A-Z]{2,4}[\s-]L[1-5])$/.test(name || '')
+        const adoptName = (marker, point, aliases) => {
+          const nextId = `${systemId}:${slug(point.name)}`
+          if (!markers.some((row) => row !== marker && row.id === nextId)) marker.id = nextId
+          marker.aliases = [...new Set([...marker.aliases, marker.name, ...aliases].filter((alias) => alias && !same(alias, point.name)))]
+          marker.name = point.name
+        }
+        for (const point of navPoints) {
           if (point.kind !== 'station' && point.kind !== 'city') continue
-          if (point.kind === 'city' && onBody(point)) continue
-          if (markers.some((m) => m.name.toLowerCase() === String(point.name).toLowerCase())) continue
-          const landing = point.kind === 'city'
+          const placed = shift(point)
+          if (point.kind === 'city' && onBody(placed)) continue
+          const aliases = point.aliases || []
+          const frameMoved = Math.hypot(placed.x - point.x, placed.y - point.y) > 1000
+          if (!frameMoved) {
+            if (markers.some((marker) => same(marker.name, point.name))) continue
+            addMarker(markers, {
+              systemId,
+              name: point.name,
+              aliases,
+              kind: 'station',
+              description: point.name === 'Levski' ? locText(localization, 'Delamar_Desc', 400) : null,
+              x: placed.x,
+              y: placed.y,
+              z: placed.z,
+              radiusM: null,
+              innerRadiusM: null,
+              outerRadiusM: null,
+              toSystem: null,
+              toMarkerName: null,
+              notes: [],
+              parentName: null,
+            })
+            continue
+          }
+          const existing = markers.find((marker) => labelOf(marker).some((label) => same(label, point.name) || aliases.some((alias) => same(alias, label))))
+          if (existing) {
+            const close = Math.hypot(existing.x - placed.x, existing.y - placed.y, (existing.z || 0) - (placed.z || 0)) < 50000
+            if (frameMoved && close && existing.kind !== 'supervisor' && shortCode(existing.name) && !shortCode(point.name)) {
+              adoptName(existing, point, aliases)
+            }
+            continue
+          }
+          const near = markers.find((marker) => (
+            marker.kind !== 'planet' && marker.kind !== 'moon' && marker.kind !== 'star'
+            && Math.hypot(marker.x - placed.x, marker.y - placed.y, (marker.z || 0) - (placed.z || 0)) < 50000
+          ))
+          if (near) {
+            if (frameMoved && near.kind !== 'supervisor' && shortCode(near.name) && !shortCode(point.name)) {
+              adoptName(near, point, aliases)
+            }
+            continue
+          }
           addMarker(markers, {
             systemId,
             name: point.name,
-            aliases: point.aliases || [],
-            kind: landing ? 'landing' : 'station',
-            description: landing && point.name === 'Levski' ? locText(localization, 'Delamar_Desc', 400) : null,
-            x: point.x,
-            y: point.y,
-            z: point.z,
+            aliases: aliases,
+            kind: 'station',
+            description: point.name === 'Levski' ? locText(localization, 'Delamar_Desc', 400) : null,
+            x: placed.x,
+            y: placed.y,
+            z: placed.z,
             radiusM: null,
             innerRadiusM: null,
             outerRadiusM: null,
