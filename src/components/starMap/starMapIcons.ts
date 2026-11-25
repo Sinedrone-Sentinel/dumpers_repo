@@ -88,6 +88,16 @@ export function drawStarMapIcon(
 const SHOPPING_ICON =
   'M3.2 4.2h2.2l2.2 11.2h11.4l2.4-7.6H8.2 M7.2 4.2 5 2 M8.2 19.6a1.7 1.7 0 1 1 3.4 0a1.7 1.7 0 1 1-3.4 0 M16.2 19.6a1.7 1.7 0 1 1 3.4 0a1.7 1.7 0 1 1-3.4 0'
 
+/** Same truck as the Smart Hauler entry in the menu. */
+const HAULER_ICON =
+  'M3 7h11v9H3zM14 10h4l3 3v3h-7M7.5 19a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm10 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3z'
+
+/** Glyph only. Size, green, shimmer, and the gold link do not change per tool. */
+const TELEMETRY_GLYPHS = {
+  shopping: SHOPPING_ICON,
+  hauler: HAULER_ICON,
+} as const
+
 /** Gold link from a place to its telemetry icon. Every telemetry pin uses this. */
 export function strokeTelemetryLink(
   ctx: CanvasRenderingContext2D,
@@ -174,7 +184,13 @@ function cachedPath(key: string, d: string): Path2D {
   return path
 }
 
-/** Shopping stop. Green cart on the shared telemetry frame. */
-export function drawShoppingIcon(ctx: CanvasRenderingContext2D, x: number, y: number, timeMs: number): void {
-  drawTelemetryFrame(ctx, x, y, timeMs, cachedPath('shopping', SHOPPING_ICON), STAR_MAP_COLORS.shopping)
+/** Telemetry pin. The glyph is the tool's menu icon. Color and frame stay the same. */
+export function drawTelemetryIcon(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  timeMs: number,
+  kind: keyof typeof TELEMETRY_GLYPHS = 'shopping',
+): void {
+  drawTelemetryFrame(ctx, x, y, timeMs, cachedPath(kind, TELEMETRY_GLYPHS[kind]), STAR_MAP_COLORS.shopping)
 }

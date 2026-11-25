@@ -102,6 +102,9 @@ function shopRouteName(place: string, systems?: StarMapSystems): string {
 
 // ── Payload (search params) ────────────────────────────────────────────────
 
+/** Which tool sent the pins. The glyph is that tool's menu icon. The frame is shared. */
+export type StarMapTelemetry = 'shopping' | 'hauler'
+
 export interface StarMapShopLine {
   action: 'buy' | 'sell'
   label: string
@@ -120,8 +123,8 @@ export interface StarMapPayload {
   route?: string[]
   /** Where the route starts; defaults to the first matched stop. */
   start?: string
-  /** Shopping stops keep a temporary icon and a buy/sell list. Not put in the URL. */
-  category?: 'shopping'
+  /** Which tool's menu icon to draw. Not put in the URL. */
+  category?: StarMapTelemetry
   shops?: StarMapShopStop[]
   /** Place the bright leg ends at. Earlier legs are dim. Carts omit this. */
   active?: string
@@ -137,6 +140,7 @@ export function shoppingMapPayload(
     from?: string | null
     stops: StarMapShopStop[]
     progressive?: boolean
+    category?: StarMapTelemetry
   },
   systems?: StarMapSystems,
 ): StarMapPayload {
@@ -155,7 +159,7 @@ export function shoppingMapPayload(
   for (const stop of stops) push(stop.place)
   const blink = places.length <= 1
   return {
-    category: 'shopping',
+    category: input.category ?? 'shopping',
     shops: stops,
     marks: blink && places[0] ? [places[0]] : undefined,
     start: blink ? undefined : places[0],

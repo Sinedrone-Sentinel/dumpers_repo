@@ -3592,6 +3592,13 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
     shopOn.start === 'ArcCorp' && shopOn.route?.join() === 'Seraphim Station' && shopOn.active === 'Seraphim Station' && shopOn.shops?.[0]?.place === 'Area18',
     'star map: a haul in progress routes from the start to the current stop',
   )
+  const haulMark = hl.shoppingMapPayload({
+    category: 'hauler',
+    from: 'Seraphim Station',
+    progressive: true,
+    stops: [{ place: 'Area18', lines: [{ action: 'buy', label: 'Carbon' }] }],
+  }, smSystems)
+  check(haulMark.category === 'hauler' && shopHere.category === 'shopping', 'star map: a haul uses the hauler icon and a cart stays a cart')
   const haulPins = hl.groupShopPins([
     { place: 'Area18', lines: [{ action: 'buy', label: '100 SCU of Steel' }] },
     { place: 'Seraphim Station', lines: [{ action: 'sell', label: '100 SCU of Steel' }] },

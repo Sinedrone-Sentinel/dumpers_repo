@@ -633,6 +633,7 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
               <p className="text-blue-400">Go to {current.place}.</p>
               <StarMapViewButton
                 payload={shoppingMapPayload({
+                  category: 'hauler',
                   from: pointById(navMap, startId)?.name,
                   progressive: true,
                   stops: route.stops.slice(0, step + 1).map((stop) => ({

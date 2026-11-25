@@ -26,8 +26,8 @@ import {
   type StarMapPoiGroup,
   type StarMapSystem,
 } from '../../lib/starMap'
-import { groupShopPins, routeLegTone, routeSegmentsInSystem, type StarMapShopStop } from '../../lib/starMapHighlight'
-import { STAR_MAP_ICON_PATHS, drawShoppingIcon, drawStarMapIcon, strokeTelemetryLink } from './starMapIcons'
+import { groupShopPins, routeLegTone, routeSegmentsInSystem, type StarMapShopStop, type StarMapTelemetry } from '../../lib/starMapHighlight'
+import { STAR_MAP_ICON_PATHS, drawStarMapIcon, drawTelemetryIcon, strokeTelemetryLink } from './starMapIcons'
 import { paintBelt, paintBody, paintStar, paintStarfield } from './starMapPaint'
 import SiteTooltip from '../SiteTooltip'
 
@@ -36,8 +36,10 @@ interface Props {
   index: StarMapIndex
   markedIds: ReadonlySet<string>
   routePoints: StarMapMarker[]
-  /** Shopping stops drawn as a temporary icon. Click one for the buy or sell list. */
+  /** Stops drawn as a temporary icon. Click one for the buy or sell list. */
   shops?: StarMapShopStop[]
+  /** Menu icon drawn inside the shared telemetry frame. */
+  telemetry?: StarMapTelemetry
   /** Place the bright route leg ends at. Earlier legs are dim. */
   active?: string
   /** Open zoomed out to the whole system, ignoring marks and route. */
@@ -76,6 +78,7 @@ export default function StarMapSystemView({
   markedIds,
   routePoints,
   shops,
+  telemetry = 'shopping',
   active,
   wholeSystem,
   focusId = 0,
@@ -338,7 +341,7 @@ export default function StarMapSystemView({
         const sx = p.sx + gap
         const sy = p.sy - gap
         strokeTelemetryLink(ctx, p.sx, p.sy, fromR, sx, sy)
-        drawShoppingIcon(ctx, sx, sy, t)
+        drawTelemetryIcon(ctx, sx, sy, t, telemetry)
         shopHits.push({ index, sx, sy })
       })
       shopHitsRef.current = shopHits
@@ -463,7 +466,7 @@ export default function StarMapSystemView({
         ctx.fillText(text, placed.x, placed.y + 7)
       }
     },
-    [system, size, toScreen, starX, starY, markedIds, routeIds, selectedId, segments, routePoints, shopPins, active, planetsByName, fitPxPerM, poiOn],
+    [system, size, toScreen, starX, starY, markedIds, routeIds, selectedId, segments, routePoints, shopPins, telemetry, active, planetsByName, fitPxPerM, poiOn],
   )
 
   // The star surface and belt dust move, so the view redraws continuously.
@@ -720,7 +723,9 @@ export default function StarMapSystemView({
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">
               <div className="text-sm font-semibold text-slate-100">{shopStop.title}</div>
-              <div className="text-[11px] uppercase tracking-wide text-amber-300">Shopping</div>
+              <div className="text-[11px] uppercase tracking-wide text-amber-300">
+                {telemetry === 'hauler' ? 'Smart Hauler' : 'Shopping'}
+              </div>
             </div>
             <button type="button" className="site-btn-icon !p-1" aria-label="Close" onClick={() => setSelectedShop(null)}>
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

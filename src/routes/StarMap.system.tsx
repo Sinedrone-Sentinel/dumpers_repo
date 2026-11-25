@@ -56,7 +56,8 @@ export default function StarMapSystemRoute() {
             index={index}
             markedIds={markedIds}
             routePoints={routePoints}
-            shops={payload.category === 'shopping' ? payload.shops : undefined}
+            shops={payload.shops}
+            telemetry={payload.category === 'hauler' ? 'hauler' : 'shopping'}
             active={payload.active}
             wholeSystem={wholeSystem}
             focusId={session?.focusId ?? 0}

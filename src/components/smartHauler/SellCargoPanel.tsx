@@ -225,6 +225,7 @@ export default function SellCargoPanel({
                   <p className="text-blue-400">Go to {row.buyer.offer.place}{from ? ` from ${from.name}` : ''}.</p>
                   <StarMapViewButton
                     payload={shoppingMapPayload({
+                      category: 'hauler',
                       from: from?.name,
                       progressive: true,
                       stops: [{
