@@ -437,18 +437,35 @@ export function systemBodyScale(
 /** Gas giants read a little larger. Every other planet is the same disc. */
 const GAS_GIANT_NAMES = new Set(['Crusader', 'Pyro V', 'Nyx III'])
 
+/** Pixels between a planet's disc and its first moon once the moons spread out. */
+const MOON_GAP_PX = 12
+/** The spread moons stay inside this share of the gap to the planet's nearest neighbour. */
+const MOON_SPREAD_SHARE = 0.6
+
 /**
  * Planet radius in pixels. Positions stay true to distance. A planet is not
  * scaled against the other planets in the system — a rocky world stays a disc
- * beside a gas giant. It grows as the view zooms, and once its first moon
- * orbit is on screen it stays inside that orbit. Moons are sized from their
- * own planet, not from this.
+ * beside a gas giant. It grows as the view zooms. It stops growing only when
+ * the next step would cover the moons and there is no room to push them out,
+ * or once the first moon orbit is on screen and the disc would cross it.
  */
 function planetPx(marker: StarMapMarker, scale: BodyScale): number {
   const floor = scale.maxPlanetPx * (GAS_GIANT_NAMES.has(marker.name) ? 1 : 0.9)
-  const zoom = Math.sqrt(Math.max(1, scale.pxPerM / scale.fitPxPerM))
+  const zoom = Math.max(1, scale.pxPerM / scale.fitPxPerM)
+  // Grow from the first zoom step. Holding the disc at `floor` until the moon
+  // orbit caught up made a long stretch of the scroll wheel change nothing.
+  let size = floor * Math.pow(zoom, 0.65)
+  const span = scale.layout.moonSpanM.get(marker.id)
+  const neighbour = scale.layout.neighbourM.get(marker.id)
+  if (span && neighbour !== undefined && Number.isFinite(neighbour)) {
+    const room = neighbour * scale.pxPerM * MOON_SPREAD_SHARE
+    // A hair under the limit so moonSpread's <= room check still passes.
+    const spreadMax = room * (span.inner / span.outer) - MOON_GAP_PX - 0.25
+    if (spreadMax > floor) size = Math.min(size, spreadMax)
+  }
   const cap = (scale.layout.clearM.get(marker.id) ?? Infinity) * scale.pxPerM * BODY_CLEAR_SHARE
-  return Math.max(floor, Math.min(floor * zoom, cap))
+  if (cap > floor) size = Math.min(size, cap)
+  return size
 }
 
 /**
@@ -487,11 +504,6 @@ export function beltPxPerM(belt: StarMapMarker, parent: StarMapMarker | null, sc
   if (!parent?.radiusM) return scale.pxPerM
   return scale.pxPerM * bodyEnlargement(parent, scale)
 }
-
-/** Pixels between a planet's disc and its first moon once the moons spread out. */
-const MOON_GAP_PX = 12
-/** The spread moons stay inside this share of the gap to the planet's nearest neighbour. */
-const MOON_SPREAD_SHARE = 0.6
 
 /**
  * How far a planet's moons are pushed out from it (1 = true distance). When the
