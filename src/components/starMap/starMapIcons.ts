@@ -1,4 +1,4 @@
-import { STAR_MAP_ICON_COLORS, type StarMapKind } from '../../lib/starMap'
+import { STAR_MAP_COLORS, STAR_MAP_ICON_COLORS, TELEMETRY_ICON_PX, type StarMapKind } from '../../lib/starMap'
 
 /** Stroke paths in a 24×24 box. Shared by the canvas and the legend SVGs. */
 export const STAR_MAP_ICON_PATHS: Partial<Record<StarMapKind, string>> = {
@@ -85,37 +85,96 @@ export function drawStarMapIcon(
   ctx.restore()
 }
 
-const SHOPPING_ICON = 'M6 8h12l-1.2 12H7.2L6 8Z M9 8V6.2a3 3 0 0 1 6 0V8'
+const SHOPPING_ICON =
+  'M3.2 4.2h2.2l2.2 11.2h11.4l2.4-7.6H8.2 M7.2 4.2 5 2 M8.2 19.6a1.7 1.7 0 1 1 3.4 0a1.7 1.7 0 1 1-3.4 0 M16.2 19.6a1.7 1.7 0 1 1 3.4 0a1.7 1.7 0 1 1-3.4 0'
 
-/** Temporary shopping marker. Amber bag, same size as the other icons. */
-export function drawShoppingIcon(ctx: CanvasRenderingContext2D, x: number, y: number, size: number): void {
-  const color = '#f59e0b'
-  let path = pathCache.get('shopping')
-  if (!path) {
-    path = new Path2D(SHOPPING_ICON)
-    pathCache.set('shopping', path)
-  }
+/** Gold link from a place to its telemetry icon. Every telemetry pin uses this. */
+export function strokeTelemetryLink(
+  ctx: CanvasRenderingContext2D,
+  fromX: number,
+  fromY: number,
+  fromR: number,
+  toX: number,
+  toY: number,
+): void {
+  const dx = toX - fromX
+  const dy = toY - fromY
+  const dist = Math.hypot(dx, dy) || 1
+  const ux = dx / dist
+  const uy = dy / dist
   ctx.save()
-  const glow = ctx.createRadialGradient(x, y, size * 0.15, x, y, size * 0.95)
-  glow.addColorStop(0, withAlpha(color, 0.32))
+  ctx.lineCap = 'round'
+  ctx.strokeStyle = STAR_MAP_COLORS.route
+  ctx.lineWidth = 2
+  ctx.beginPath()
+  ctx.moveTo(fromX + ux * fromR, fromY + uy * fromR)
+  ctx.lineTo(toX - ux * TELEMETRY_ICON_PX * 0.72, toY - uy * TELEMETRY_ICON_PX * 0.72)
+  ctx.stroke()
+  ctx.restore()
+}
+
+/**
+ * Shared frame for every telemetry icon: twice a normal icon, dark disc,
+ * and a shimmering ring. The glyph is the only part that changes.
+ */
+function drawTelemetryFrame(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  timeMs: number,
+  glyph: Path2D,
+  color: string,
+): void {
+  const size = TELEMETRY_ICON_PX
+  const pulse = 0.55 + 0.45 * Math.sin(timeMs / 260)
+  const ringR = size * 0.68
+  ctx.save()
+  const glow = ctx.createRadialGradient(x, y, size * 0.2, x, y, ringR * 1.55)
+  glow.addColorStop(0, withAlpha(color, 0.42 * pulse))
+  glow.addColorStop(0.55, withAlpha(color, 0.16 * pulse))
   glow.addColorStop(1, withAlpha(color, 0))
   ctx.fillStyle = glow
   ctx.beginPath()
-  ctx.arc(x, y, size * 0.95, 0, Math.PI * 2)
+  ctx.arc(x, y, ringR * 1.55, 0, Math.PI * 2)
   ctx.fill()
   ctx.beginPath()
   ctx.arc(x, y, size / 2 + 1, 0, Math.PI * 2)
-  ctx.fillStyle = 'rgba(7, 11, 18, 0.8)'
+  ctx.fillStyle = 'rgba(7, 11, 18, 0.9)'
   ctx.fill()
-  ctx.lineWidth = 1
-  ctx.strokeStyle = withAlpha(color, 0.5)
+  ctx.beginPath()
+  ctx.arc(x, y, ringR, 0, Math.PI * 2)
+  ctx.lineWidth = 1.6
+  ctx.strokeStyle = withAlpha(color, 0.45)
   ctx.stroke()
+  const spin = (timeMs / 520) % (Math.PI * 2)
+  ctx.beginPath()
+  ctx.arc(x, y, ringR, spin, spin + 1.35)
+  ctx.lineWidth = 2.6
+  ctx.strokeStyle = '#e8fff1'
+  ctx.shadowColor = color
+  ctx.shadowBlur = 10
+  ctx.stroke()
+  ctx.shadowBlur = 0
   ctx.translate(x - size / 2, y - size / 2)
   ctx.scale(size / 24, size / 24)
-  ctx.lineWidth = 1.65
+  ctx.lineWidth = 1.8
   ctx.lineCap = 'round'
   ctx.lineJoin = 'round'
   ctx.strokeStyle = color
-  ctx.stroke(path)
+  ctx.stroke(glyph)
   ctx.restore()
+}
+
+function cachedPath(key: string, d: string): Path2D {
+  let path = pathCache.get(key)
+  if (!path) {
+    path = new Path2D(d)
+    pathCache.set(key, path)
+  }
+  return path
+}
+
+/** Shopping stop. Green cart on the shared telemetry frame. */
+export function drawShoppingIcon(ctx: CanvasRenderingContext2D, x: number, y: number, timeMs: number): void {
+  drawTelemetryFrame(ctx, x, y, timeMs, cachedPath('shopping', SHOPPING_ICON), STAR_MAP_COLORS.shopping)
 }

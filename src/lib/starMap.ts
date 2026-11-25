@@ -105,7 +105,7 @@ export const STAR_MAP_COLORS = {
   beltLabel: 'rgba(198, 206, 188, 0.8)',
   route: '#facc15',
   routeDim: 'rgba(250, 204, 21, 0.35)',
-  shopping: '#f59e0b',
+  shopping: '#4ade80',
   blink: '#facc15',
 } as const
 
@@ -315,6 +315,12 @@ export function blinkAlpha(timeMs: number): number {
 /** Screen size for stations, jumps, clusters and every other icon. */
 export const ICON_PX = 14
 
+/**
+ * Every temporary icon sent to the map (shopping, and any later telemetry).
+ * Twice a normal icon. The ring and the gold link use this same size.
+ */
+export const TELEMETRY_ICON_PX = ICON_PX * 2
+
 /** Who sits around which planet or moon, worked out once per system. */
 interface BodyLayout {
   byName: Map<string, StarMapMarker>
@@ -445,14 +451,31 @@ export function systemBodyScale(
 /** Gas giants read a little larger. Every other planet is the same disc. */
 const GAS_GIANT_NAMES = new Set(['Crusader', 'Pyro V', 'Nyx III'])
 
-/** Largest on-screen radius for a planet, as a multiple of the system-view disc. */
+/** Largest on-screen radius for a planet, as a multiple of the zoomed-out disc. */
 const PLANET_CEILING = 3
 /** A fully zoomed moon is this many times an icon across. It is never smaller than one icon. */
 const MOON_MAX_ICONS = 4
+/** Zoomed-out planet diameter, in icon widths. Gas giants use the full width. */
+const PLANET_ICON_WIDTHS = 2
+/**
+ * Bodies stay at their zoomed-out size until the view is this many times the
+ * system fit. A neighborhood that still shows a planet's Lagrange points is
+ * inside that range, so the discs do not sit at their maximum there.
+ */
+const BODY_ZOOM_HOLD = 32
 
-function planetCeilingPx(marker: StarMapMarker, scale: BodyScale): number {
-  const gas = GAS_GIANT_NAMES.has(marker.name) ? 1 : 0.9
-  return scale.maxPlanetPx * gas * PLANET_CEILING
+function heldZoom(scale: BodyScale): number {
+  const zoom = Math.max(1, scale.pxPerM / scale.fitPxPerM)
+  return Math.max(1, zoom / BODY_ZOOM_HOLD)
+}
+
+function planetFloorPx(marker: StarMapMarker): number {
+  const full = (ICON_PX * PLANET_ICON_WIDTHS) / 2
+  return full * (GAS_GIANT_NAMES.has(marker.name) ? 1 : 0.9)
+}
+
+function planetCeilingPx(marker: StarMapMarker): number {
+  return planetFloorPx(marker) * PLANET_CEILING
 }
 
 /** Pixels between a planet's disc and its first moon once the moons spread out. */
@@ -468,11 +491,9 @@ const MOON_SPREAD_SHARE = 0.6
  * never shrunk to make that gap.
  */
 function planetPx(marker: StarMapMarker, scale: BodyScale): number {
-  const floor = scale.maxPlanetPx * (GAS_GIANT_NAMES.has(marker.name) ? 1 : 0.9)
-  const zoom = Math.max(1, scale.pxPerM / scale.fitPxPerM)
-  // Grow from the first zoom step, then stop at the on-screen ceiling.
-  // Further zoom opens space around the disc instead of filling the view.
-  return Math.min(floor * Math.pow(zoom, 0.65), planetCeilingPx(marker, scale))
+  // Stay at twice an icon through the wide view, then grow. Further zoom
+  // opens space around the disc instead of filling the view.
+  return Math.min(planetFloorPx(marker) * Math.pow(heldZoom(scale), 0.65), planetCeilingPx(marker))
 }
 
 /**
@@ -482,8 +503,7 @@ function planetPx(marker: StarMapMarker, scale: BodyScale): number {
  */
 function moonWantPx(scale: BodyScale): number {
   const iconR = ICON_PX / 2
-  const zoom = Math.max(1, scale.pxPerM / scale.fitPxPerM)
-  const grow = Math.min(Math.pow(zoom, 0.65), MOON_MAX_ICONS)
+  const grow = Math.min(Math.pow(heldZoom(scale), 0.65), MOON_MAX_ICONS)
   return iconR * grow
 }
 
@@ -502,7 +522,7 @@ export function orbDisplayRadiusPx(marker: StarMapMarker, scale: BodyScale): num
     return Math.max(Math.min(want, cap), realPx, 3)
   }
   if (marker.kind === 'moon') return moonWantPx(scale)
-  return Math.min(Math.max(planetPx(marker, scale), 10), planetCeilingPx(marker, scale))
+  return Math.min(Math.max(planetPx(marker, scale), 10), planetCeilingPx(marker))
 }
 
 /** How much a body is drawn larger than true size (1 = true size). */
@@ -642,6 +662,85 @@ export interface StarMapCamera {
  * Camera after a box zoom. The middle of the rectangle becomes the middle of
  * the view, and the zoom fits the whole rectangle on screen.
  */
+/** A single stop frames its planet's moons. A route frames the line between its stops. */
+const FOCUS_MOON_PAD = 1.45
+const FOCUS_ISOLATED_SHARE = 160
+
+function nearestPlanet(system: StarMapSystem, marker: StarMapMarker): StarMapMarker | null {
+  const planets = system.markers.filter((m) => m.kind === 'planet')
+  if (marker.kind === 'planet') return marker
+  if (marker.kind === 'moon' && marker.parentName) {
+    return planets.find((p) => p.name === marker.parentName) ?? null
+  }
+  let best: StarMapMarker | null = null
+  let bestD = Infinity
+  for (const planet of planets) {
+    const d = Math.hypot(marker.x - planet.x, marker.y - planet.y)
+    if (d < bestD) {
+      bestD = d
+      best = planet
+    }
+  }
+  return best
+}
+
+function singleFocusHalfM(system: StarMapSystem, marker: StarMapMarker, extentM: number): number {
+  const home = nearestPlanet(system, marker)
+  if (home) {
+    let outer = 0
+    for (const moon of system.markers) {
+      if (moon.kind !== 'moon' || moon.parentName !== home.name) continue
+      outer = Math.max(outer, Math.hypot(moon.x - home.x, moon.y - home.y))
+    }
+    if (outer > 0 && Math.hypot(marker.x - home.x, marker.y - home.y) <= outer * 4) {
+      return outer * FOCUS_MOON_PAD
+    }
+  }
+  return Math.max(extentM / FOCUS_ISOLATED_SHARE, 1)
+}
+
+/**
+ * Half-width, in meters, for the opening view. Several stops use the box
+ * around the route so the line fills the screen. One stop zooms in on that
+ * place: the planet and its moons when the stop is there, otherwise a
+ * neighborhood well inside the system.
+ */
+export function starMapFocusHalfM(system: StarMapSystem, markers: StarMapMarker[], extentM: number): number {
+  if (!markers.length) return extentM || 1
+  if (markers.length === 1) return singleFocusHalfM(system, markers[0], extentM)
+  let minX = Infinity
+  let maxX = -Infinity
+  let minY = Infinity
+  let maxY = -Infinity
+  for (const m of markers) {
+    const reach = m.kind === 'belt' ? (m.outerRadiusM ?? 0) : 0
+    minX = Math.min(minX, m.x - reach)
+    maxX = Math.max(maxX, m.x + reach)
+    minY = Math.min(minY, m.y - reach)
+    maxY = Math.max(maxY, m.y + reach)
+  }
+  const span = Math.max((maxX - minX) / 2, (maxY - minY) / 2)
+  if (span > 1) return span
+  return singleFocusHalfM(system, markers[0], extentM)
+}
+
+/** Centre of the opening view. One stop uses that stop. A route uses the middle of its box. */
+export function starMapFocusCenter(markers: StarMapMarker[], fallback: { x: number; y: number }): { x: number; y: number } {
+  if (!markers.length) return fallback
+  if (markers.length === 1) return { x: markers[0].x, y: markers[0].y }
+  let minX = Infinity
+  let maxX = -Infinity
+  let minY = Infinity
+  let maxY = -Infinity
+  for (const m of markers) {
+    minX = Math.min(minX, m.x)
+    maxX = Math.max(maxX, m.x)
+    minY = Math.min(minY, m.y)
+    maxY = Math.max(maxY, m.y)
+  }
+  return { x: (minX + maxX) / 2, y: (minY + maxY) / 2 }
+}
+
 export function boxZoomCamera(
   cam: StarMapCamera,
   view: { w: number; h: number },

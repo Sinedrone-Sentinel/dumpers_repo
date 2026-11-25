@@ -11,6 +11,8 @@ export interface StarMapSession {
   wholeSystem?: boolean
   /** The overview still owes the member a which-system choice. */
   choicePending: boolean
+  /** Changes when a new run is sent, so an open map refits. */
+  focusId: number
 }
 
 let session: StarMapSession | null = null
@@ -21,7 +23,7 @@ function emit() {
 }
 
 export function startStarMapSession(payload: StarMapPayload): void {
-  session = { payload, choicePending: true }
+  session = { payload, choicePending: true, focusId: Date.now() }
   emit()
 }
 
