@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { StarMapIndex, StarMapSystemSummary } from '../../lib/starMap'
+import { paintStar } from './starMapPaint'
 
 interface Props {
   index: StarMapIndex
@@ -59,7 +60,6 @@ export default function StarMapOverview({ index, onEnter }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [size, setSize] = useState({ w: 0, h: 0 })
   const camRef = useRef<Cam | null>(null)
-  const [camTick, setCamTick] = useState(0)
   const [focusId, setFocusId] = useState<string | null>(null)
   const savedCamRef = useRef<Cam | null>(null)
   const animRef = useRef(0)
@@ -94,7 +94,6 @@ export default function StarMapOverview({ index, onEnter }: Props) {
   const setCam = useCallback(
     (cam: Cam) => {
       camRef.current = clampCam(cam)
-      setCamTick((n) => n + 1)
     },
     [clampCam],
   )
@@ -158,7 +157,8 @@ export default function StarMapOverview({ index, onEnter }: Props) {
     [focal, size],
   )
 
-  useEffect(() => {
+  const drawRef = useRef<(t: number) => void>(() => {})
+  drawRef.current = (t: number) => {
     const canvas = canvasRef.current
     const cam = camRef.current
     if (!canvas || !cam || !size.w) return
@@ -208,18 +208,7 @@ export default function StarMapOverview({ index, onEnter }: Props) {
 
     for (const it of projected) {
       const { sx, sy, r } = it
-      ctx.save()
-      ctx.shadowColor = 'rgba(147, 197, 253, 0.9)'
-      ctx.shadowBlur = r * 0.9
-      const g = ctx.createRadialGradient(sx - r * 0.25, sy - r * 0.25, r * 0.05, sx, sy, r)
-      g.addColorStop(0, '#ffffff')
-      g.addColorStop(0.45, '#dbeafe')
-      g.addColorStop(1, '#60a5fa')
-      ctx.beginPath()
-      ctx.arc(sx, sy, r, 0, Math.PI * 2)
-      ctx.fillStyle = g
-      ctx.fill()
-      ctx.restore()
+      paintStar(ctx, sx, sy, r, t, it.sys.name)
       if (it.sys.id === focusId) {
         ctx.strokeStyle = '#f8fafc'
         ctx.setLineDash([4, 4])
@@ -234,7 +223,17 @@ export default function StarMapOverview({ index, onEnter }: Props) {
       ctx.fillStyle = '#e2e8f0'
       ctx.fillText(it.sys.name, sx, sy + r + 8)
     }
-  }, [camTick, size, index, project, focusId])
+  }
+
+  useEffect(() => {
+    let raf = 0
+    const loop = (now: number) => {
+      drawRef.current(now)
+      raf = requestAnimationFrame(loop)
+    }
+    raf = requestAnimationFrame(loop)
+    return () => cancelAnimationFrame(raf)
+  }, [])
 
   useEffect(() => {
     const canvas = canvasRef.current

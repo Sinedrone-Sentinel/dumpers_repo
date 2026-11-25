@@ -96,9 +96,9 @@ export const STAR_MAP_COLORS = {
   planetCore: '#93c5fd',
   moon: '#7dd3fc',
   moonCore: '#e0f2fe',
-  orbit: 'rgba(148, 148, 148, 0.55)',
-  belt: 'rgba(74, 222, 128, 0.16)',
-  beltLabel: 'rgba(134, 239, 172, 0.9)',
+  orbit: 'rgba(148, 163, 184, 0.2)',
+  belt: 'rgba(168, 184, 156, 0.06)',
+  beltLabel: 'rgba(198, 206, 188, 0.8)',
   route: '#facc15',
   blink: '#facc15',
 } as const
