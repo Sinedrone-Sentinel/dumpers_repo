@@ -3439,13 +3439,17 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
     'star map: Aaron Halo is one band between Crusader and ArcCorp',
   )
 
-  // Scale: game radii stay relative; icons are a fixed small size.
+  // Wide view: every planet is a disc. Close view: a moon matches its own planet.
   const crusader = byName(stanton, 'Crusader')
   const hurston = byName(stanton, 'Hurston')
   const yela = byName(stanton, 'Yela')
   const fit = starMap.systemBodyScale(stanton, 400 / 7e10)
-  const ratio = starMap.orbDisplayRadiusPx(hurston, fit) / starMap.orbDisplayRadiusPx(crusader, fit)
-  check(Math.abs(ratio - hurston.radiusM / crusader.radiusM) < 0.01, 'star map: planet sizes follow game radii')
+  const hurstonFit = starMap.orbDisplayRadiusPx(hurston, fit)
+  const crusaderFit = starMap.orbDisplayRadiusPx(crusader, fit)
+  check(
+    hurstonFit >= 10 && crusaderFit > hurstonFit && hurstonFit / crusaderFit > hurston.radiusM / crusader.radiusM,
+    'star map: zoomed out, rocky planets stay discs and Crusader stays the largest',
+  )
   const close = starMap.systemBodyScale(stanton, 200 / crusader.radiusM)
   const moonRatio = starMap.orbDisplayRadiusPx(yela, close) / starMap.orbDisplayRadiusPx(crusader, close)
   check(Math.abs(moonRatio - yela.radiusM / crusader.radiusM) < 0.01, 'star map: moon size relative to its planet')
@@ -3560,15 +3564,25 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
   )
   check(starMap.beltPxPerM(byName(stanton, 'Aaron Halo'), null, ringScale) === ringScale.pxPerM, 'star map: star belts use map scale')
 
-  // Zooming in grows every body on one shared scale.
+  // Planet discs stay readable. They are not a true-radius share of the gas giant.
   const fitPx = 400 / 7e10
   const at = (zoom) => starMap.systemBodyScale(stanton, fitPx * zoom, fitPx)
+  const arcCorp = byName(stanton, 'ArcCorp')
+  const microTech = byName(stanton, 'microTech')
   check(
-    starMap.orbDisplayRadiusPx(hurston, at(50)) > starMap.orbDisplayRadiusPx(hurston, at(1)) * 3,
-    'star map: zooming in makes Hurston bigger',
+    [hurston, arcCorp, microTech].every((p) => {
+      const px = starMap.orbDisplayRadiusPx(p, fit)
+      return px >= 14 && Math.abs(px - hurstonFit) < 1
+    }),
+    'star map: zoomed out, the rocky planets are the same size disc',
   )
   const arial = byName(stanton, 'Arial')
   const hurstonMoons = at(80000 / 52.7e6 / fitPx)
+  check(
+    starMap.orbDisplayRadiusPx(hurston, at(50)) >= hurstonFit &&
+      starMap.orbDisplayRadiusPx(hurston, hurstonMoons) > hurstonFit,
+    'star map: zooming in does not shrink Hurston, and it grows beside its moons',
+  )
   check(
     Math.abs(
       starMap.orbDisplayRadiusPx(arial, hurstonMoons) / starMap.orbDisplayRadiusPx(hurston, hurstonMoons) -
