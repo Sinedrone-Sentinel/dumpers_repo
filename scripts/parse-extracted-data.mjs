@@ -24,6 +24,7 @@ import { buildMiningVesselCatalog } from './lib/buildMiningVessels.mjs'
 import { parseSiteLoot } from './lib/parseSiteLoot.mjs'
 import { extractShipItemStats } from './lib/shipItemStats.mjs'
 import { parseNavSystems } from './lib/parseNavSystems.mjs'
+import { writeStarMaps } from './lib/parseStarMaps.mjs'
 import {
   buildGuideToSpawnKeys,
   buildLocationAliases,
@@ -5482,6 +5483,18 @@ async function main() {
       } else {
         saveJson('nav-systems.json', nav)
         console.log(`  Nav map: ${nav.systems.map((row) => row.name).join(', ')} (${nav.points.length} points)`)
+      }
+      try {
+        const starMaps = writeStarMaps({
+          extractedRoot: EXTRACTED_DATA,
+          localization,
+          outDir: join(OUTPUT_DIR, 'star-maps'),
+        })
+        console.log(
+          `  Star maps: ${starMaps.index.systems.map((row) => row.name).join(', ')} (${starMaps.maps.reduce((n, m) => n + m.markers.length, 0)} markers)`
+        )
+      } catch (starErr) {
+        console.log(`  ⚠ Star maps skipped: ${starErr instanceof Error ? starErr.message : starErr}`)
       }
     } catch (err) {
       console.log(`  ⚠ Nav map skipped: ${err instanceof Error ? err.message : err}`)

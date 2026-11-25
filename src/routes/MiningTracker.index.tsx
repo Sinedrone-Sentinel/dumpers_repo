@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { getRouteApi } from '@tanstack/react-router'
+import { getRouteApi, useNavigate } from '@tanstack/react-router'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import UexLookupButton from '../components/shop/UexLookupButton'
 import { setAnalyticsSubTool } from '../lib/analytics'
@@ -47,6 +47,7 @@ import {
   spawnScopeForGuideLocation,
 } from '../lib/miningClusterProfiles'
 import { isBroadGuideLocation } from '../lib/miningLocationAliases'
+import { starMapSearch } from '../lib/starMapHighlight'
 import {
   getNavHintForGuideLocation,
   getNavMarkersForGuideLocation,
@@ -101,7 +102,9 @@ type ViewMode = 'tracker' | 'guide' | 'ledger' | 'caves'
 const miningTrackerRoute = getRouteApi('/mining-tracker')
 
 export default function MiningTrackerRoute() {
-  const { isGuestPreview } = useAuth()
+  const { isGuestPreview, canUseFeature } = useAuth()
+  const navigate = useNavigate()
+  const canShowStarMap = canUseFeature('star_map')
   const { canUse: canUseLoadouts, store: loadoutStore } = useMiningLoadouts()
   const { data, loading, error, refetch } = useMiningData()
   const { entries, addEntry, removeEntry, clearAll, isTracked } = useMiningTracker()
@@ -797,8 +800,35 @@ export default function MiningTrackerRoute() {
                             </div>
                           ) : null}
                           <div className="text-[11px] text-slate-500 mt-1">{subtitle}</div>
-                          <div className="mt-1.5">
+                          <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
                             <UexLookupButton commodityName={entry.oreName} emphasis="sell" />
+                            {canShowStarMap ? (
+                              <SiteTooltip
+                                side="top"
+                                content={
+                                  entry.depositType === 'asteroid'
+                                    ? 'Open the Star Map with the places this ore is found in space blinking.'
+                                    : 'Open the Star Map with the planets and moons this ore is found on blinking.'
+                                }
+                              >
+                                <button
+                                  type="button"
+                                  className="site-btn-secondary rounded-md !px-2 !py-0.5 text-[11px]"
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    navigate({
+                                      to: '/star-map',
+                                      search: starMapSearch({
+                                        marks: trackerStarMapLocations(entry, data ?? []),
+                                      }),
+                                    })
+                                  }}
+                                  onKeyDown={(e) => e.stopPropagation()}
+                                >
+                                  Show Map
+                                </button>
+                              </SiteTooltip>
+                            ) : null}
                           </div>
                         </div>
 
@@ -1175,6 +1205,15 @@ function locationPassesGuidePipeline(
 
 function getOreLocations(ore: MiningData): string[] {
   return ore.locations ?? []
+}
+
+function trackerStarMapLocations(entry: MiningTrackerEntry, ores: MiningData[]): string[] {
+  if (isLocationTrackerEntry(entry) && entry.locationName) return [entry.locationName]
+  const ore = ores.find((o) => o.ore_name === entry.oreName)
+  if (!ore) return []
+  return getOreLocations(ore).filter((loc) =>
+    depositTypesForOreAtGuideLocation(ore.ore_name, ore.rarity, loc).includes(entry.depositType)
+  )
 }
 
 function GuideOreCard({

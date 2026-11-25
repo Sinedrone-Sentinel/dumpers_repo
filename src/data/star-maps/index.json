@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "systems": [
+    {
+      "id": "nyx",
+      "name": "Nyx",
+      "description": "The Nyx system.",
+      "overview": {
+        "x": 7.34788079488412e-15,
+        "y": 0,
+        "z": -120
+      }
+    },
+    {
+      "id": "pyro",
+      "name": "Pyro",
+      "description": "A K-type main sequence flare star.",
+      "overview": {
+        "x": 103.92304845413264,
+        "y": 0,
+        "z": 59.99999999999998
+      }
+    },
+    {
+      "id": "stanton",
+      "name": "Stanton",
+      "description": "A class-G main sequence star.",
+      "overview": {
+        "x": -103.92304845413261,
+        "y": 0,
+        "z": 60.00000000000004
+      }
+    }
+  ],
+  "links": [
+    {
+      "from": "nyx",
+      "to": "pyro",
+      "depart": "nyx:nyx-pyro-jump-point",
+      "arrive": "pyro:pyro-nyx-jump-point",
+      "arriveName": "Pyro - Nyx Jump Point"
+    },
+    {
+      "from": "pyro",
+      "to": "nyx",
+      "depart": "pyro:pyro-nyx-jump-point",
+      "arrive": "nyx:nyx-pyro-jump-point",
+      "arriveName": "Nyx - Pyro Jump Point"
+    },
+    {
+      "from": "pyro",
+      "to": "stanton",
+      "depart": "pyro:pyro-stanton-jump-point",
+      "arrive": "stanton:stanton-pyro-jump-point",
+      "arriveName": "Stanton-Pyro Jump Point"
+    },
+    {
+      "from": "stanton",
+      "to": "pyro",
+      "depart": "stanton:stanton-pyro-jump-point",
+      "arrive": "pyro:pyro-stanton-jump-point",
+      "arriveName": "Pyro-Stanton Jump Point"
+    }
+  ]
+}

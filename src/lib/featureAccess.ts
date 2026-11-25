@@ -28,6 +28,7 @@ export type FeatureId =
   | 'contributor_team_admin'
   | 'flight_profile'
   | 'dumper_apps'
+  | 'star_map'
 
 export interface VisibilityContext {
   role: UserRole | null
@@ -160,6 +161,9 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
     case 'dumper_apps':
       // Page open to any signed-in role; BP Dumper tab still requires approval in UI.
       return !!ctx.role
+
+    case 'star_map':
+      return ctx.isSuperAdmin
 
     default:
       return false
