@@ -125,6 +125,16 @@ function loadRecordsById(dir) {
   return out
 }
 
+/**
+ * `CO<font size="%d">2</font>` → `CO2`. Only formula characters are kept, so no
+ * markup can reach the output. Text inside a tag never matches the formula shape.
+ */
+export function chemicalSymbol(raw) {
+  const parts = String(raw || '').match(/(?:^|>)[A-Za-z0-9.]+/g) || []
+  const symbol = parts.map((part) => part.replace(/[^A-Za-z0-9.]/g, '')).join('')
+  return /^[A-Za-z0-9.]{1,16}$/.test(symbol) ? symbol : null
+}
+
 /** Atmosphere state + gas mix records the planet containers point at. */
 function loadEnvironmentRecords(extractedRoot, localization) {
   const room = join(extractedRoot, 'libs', 'foundry', 'records', 'roomsystem')
@@ -137,7 +147,7 @@ function loadEnvironmentRecords(extractedRoot, localization) {
       const symKey = String(value.chemicalSymbol || '').replace(/^@/, '')
       const stem = symKey.replace(/^ui_chemsymbol_/i, '')
       if (!stem) continue
-      const symbol = String(localization[symKey] || '').replace(/<[^>]+>/g, '').trim() || null
+      const symbol = chemicalSymbol(localization[symKey])
       const name = GAS_NAMES[stem] || stem.replace(/([a-z])([A-Z])/g, '$1 $2')
       gases.set(recordKey(path), { name, symbol })
     } catch {

@@ -4135,6 +4135,16 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
     'location card: Grim HEX and gateway stores land on their own marker, not the nearby body',
   )
 
+  const { chemicalSymbol } = await import(pathToFileURL(path.join(root, 'scripts/lib/parseStarMaps.mjs')).href)
+  check(
+    chemicalSymbol('CH<font size="%d">3</font>OH') === 'CH3OH' &&
+      chemicalSymbol('PM<font size="%d">2.5</font>') === 'PM2.5' &&
+      ['<scr<script>ipt>alert(1)</script>', '<<script>script>', '<img src=x onerror=alert(1)>'].every(
+        (raw) => !/[<>]/.test(chemicalSymbol(raw) ?? ''),
+      ),
+    'star map bake: gas symbols keep formula characters only, never markup',
+  )
+
   check(
     info.groupServices(['Hangar (L)', 'Clinic', 'Refinery', 'Buy Armor']).map((g) => g.group).join() === 'Medical,Ships,Trade,Shopping',
     'location card: services group as Medical, Ships, Trade, Shopping',
