@@ -442,8 +442,10 @@ export function parseStarMaps({ extractedRoot, localization }) {
       }
       if (!name || /[_@]/.test(name) || name.startsWith('LOC_')) return
       // Only the numbered abandoned breakers are on the Nyx map. Extraction
-      // sites, generic breakers and rockcrackers are not stored.
+      // sites, generic breakers and rockcrackers are not stored. Outlaw
+      // stations are mission spawns and are not on the Nyx map either.
       if (kind === 'qv' && !/BRK-\d+/.test(name)) return
+      if (kind === 'outlaw' && systemId === 'nyx') return
       let toSystem = null
       let toMarkerName = null
       if (kind === 'jump_point') {
@@ -546,7 +548,7 @@ export function parseStarMaps({ extractedRoot, localization }) {
     }
 
     // Nyx belts are segment fields, not one ring socpak. The orbit is where the
-    // segments sit (Levski rides Glaciem; QV / outlaw / social stations ride Keeger).
+    // segments sit (Levski rides Glaciem; QV and social stations ride Keeger).
     // The outer edge comes from the ring's _bg container bounds when it ships.
     if (systemId === 'nyx') {
       for (const [label, filePart, ringKey] of [
