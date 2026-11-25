@@ -444,7 +444,9 @@ export default function StarMapSystemView({
       const my = e.clientY - rect.top
       const wx = cam.cx + (mx - size.w / 2) / cam.pxPerM
       const wy = cam.cy - (my - size.h / 2) / cam.pxPerM
-      const next = clampCam({ ...cam, pxPerM: cam.pxPerM * Math.exp(-e.deltaY * 0.0015) })
+      // A mouse notch is about 100 units. Trackpads send a stream of small values.
+      const notches = Math.abs(e.deltaY) >= 50 ? Math.sign(e.deltaY) * Math.min(Math.abs(e.deltaY) / 100, 4) : e.deltaY / 100
+      const next = clampCam({ ...cam, pxPerM: cam.pxPerM * Math.exp(-notches * 0.32) })
       setCam({
         pxPerM: next.pxPerM,
         cx: wx - (mx - size.w / 2) / next.pxPerM,

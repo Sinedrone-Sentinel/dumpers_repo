@@ -3595,6 +3595,11 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
   const arial = byName(stanton, 'Arial')
   const hurstonMoons = at(80000 / 52.7e6 / fitPx)
   check(
+    starMap.orbDisplayRadiusPx(hurston, at(2)) > hurstonFit * 1.2 &&
+      starMap.orbDisplayRadiusPx(hurston, at(4)) > starMap.orbDisplayRadiusPx(hurston, at(2)),
+    'star map: each zoom step from the system view grows Hurston',
+  )
+  check(
     starMap.orbDisplayRadiusPx(hurston, at(50)) >= hurstonFit &&
       starMap.orbDisplayRadiusPx(hurston, hurstonMoons) > hurstonFit,
     'star map: zooming in does not shrink Hurston, and it grows beside its moons',
