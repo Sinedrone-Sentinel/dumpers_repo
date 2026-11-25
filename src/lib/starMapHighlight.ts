@@ -278,6 +278,18 @@ const HANDOFF_KEY = 'dumper-star-map-handoff'
 export const STAR_MAP_CHANNEL = 'dumper-star-map'
 export const STAR_MAP_WINDOW = 'dumper-star-map'
 
+/** The named tab View Map opens. That tab is the map alone. */
+export function isDedicatedStarMapWindow(): boolean {
+  return typeof window !== 'undefined' && window.name === STAR_MAP_WINDOW
+}
+
+/** `/star-map` and `/star-map/stanton`. A trailing slash still counts. */
+export function isStarMapPath(pathname: string): boolean {
+  const bare = (pathname || '/').split('?')[0].split('#')[0] || '/'
+  const normalized = bare.length > 1 && bare.endsWith('/') ? bare.slice(0, -1) : bare
+  return normalized === '/star-map' || normalized.startsWith('/star-map/')
+}
+
 /** Park a shopping run where the Star Map tab can read it. Returns its id. */
 export function publishStarMapHandoff(payload: StarMapPayload): string {
   const id = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`

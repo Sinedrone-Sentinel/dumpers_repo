@@ -3599,6 +3599,14 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
     stops: [{ place: 'Area18', lines: [{ action: 'buy', label: 'Carbon' }] }],
   }, smSystems)
   check(haulMark.category === 'hauler' && shopHere.category === 'shopping', 'star map: a haul uses the hauler icon and a cart stays a cart')
+  check(
+    hl.isStarMapPath('/star-map') &&
+      hl.isStarMapPath('/star-map/') &&
+      hl.isStarMapPath('/star-map/stanton') &&
+      !hl.isStarMapPath('/star-maps') &&
+      !hl.isStarMapPath('/'),
+    'star map: the dedicated tab only stays on the map',
+  )
   const haulPins = hl.groupShopPins([
     { place: 'Area18', lines: [{ action: 'buy', label: '100 SCU of Steel' }] },
     { place: 'Seraphim Station', lines: [{ action: 'sell', label: '100 SCU of Steel' }] },

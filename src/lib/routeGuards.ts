@@ -2,6 +2,7 @@ import { redirect } from '@tanstack/react-router'
 import type { UserRole } from './supabase'
 import { roleAtLeast } from './roles'
 import { type FeatureId, type VisibilityContext } from './featureAccess'
+import { isDedicatedStarMapWindow } from './starMapHighlight'
 
 export interface RouterAuthContext {
   loading: boolean
@@ -45,5 +46,25 @@ export function requireFeature(featureId: FeatureId) {
       }
       throw redirect({ to: '/' })
     }
+  }
+}
+
+/**
+ * Star Map in the named View Map tab stays on the map. Sending that tab to
+ * `/` or the guest lock would show the rest of the site. The page itself
+ * stays blank when the feature is off.
+ */
+export function requireStarMapFeature() {
+  return ({ context }: { context: { auth: RouterAuthContext } }) => {
+    if (context.auth.loading) return
+    if (context.auth.canUseFeature('star_map')) return
+    if (isDedicatedStarMapWindow()) return
+    if (context.auth.visibilityContext.isGuestPreview) {
+      throw redirect({
+        to: '/guest-locked',
+        search: { feature: 'star_map' },
+      })
+    }
+    throw redirect({ to: '/' })
   }
 }
