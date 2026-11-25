@@ -305,6 +305,98 @@ function bouncePoint(
   return moved
 }
 
+/** 0 dark, 1 mid, 2 white. Same band can cluster. White and dark repel. */
+export function starSpotBand(roll: number): number {
+  if (roll > 0.86) return 2
+  if (roll > 0.4) return 1
+  return 0
+}
+
+/** Fraction of the smaller orb that is covered. 0 at a touch, 1 when the centers meet. */
+export function starMoteOverlap(dist: number, r1: number, r2: number): number {
+  const minR = Math.min(r1, r2)
+  if (!(minR > 0)) return 0
+  const covered = r1 + r2 - dist
+  if (covered <= 0) return 0
+  return covered / (2 * minR)
+}
+
+/** Degrees between two travel directions. */
+export function starHeadingGap(ax: number, ay: number, bx: number, by: number): number {
+  const am = Math.hypot(ax, ay)
+  const bm = Math.hypot(bx, by)
+  if (am < 1e-12 || bm < 1e-12) return 180
+  const cos = Math.min(1, Math.max(-1, (ax * bx + ay * by) / (am * bm)))
+  return Math.acos(cos) * (180 / Math.PI)
+}
+
+/**
+ * Same-color draw while overlap is at least 20% and headings are within 20°.
+ * Strength eases in through 30% overlap. It is a position nudge, not a new heading.
+ */
+export function starClusterPull(overlap: number, headingDeg: number): number {
+  if (headingDeg > 20 || overlap < 0.2) return 0
+  if (overlap < 0.3) return 0.35 + 0.65 * ((overlap - 0.2) / 0.1)
+  return Math.max(0.25, 1 - (overlap - 0.3) * 0.7)
+}
+
+/** 0–1 repulsion for colors that are not close. Only white against dark. */
+export function starRepelScale(overlap: number, bandA: number, bandB: number): number {
+  if (Math.abs(bandA - bandB) < 2 || overlap <= 0) return 0
+  return Math.min(1, overlap)
+}
+
+/** Turn a velocity toward `away` without changing its speed. */
+export function starVelocityNudge(
+  vx: number,
+  vy: number,
+  awayX: number,
+  awayY: number,
+  radians: number,
+): { vx: number; vy: number } {
+  const speed = Math.hypot(vx, vy)
+  const away = Math.hypot(awayX, awayY)
+  if (speed < 1e-12 || away < 1e-12 || radians <= 0) return { vx, vy }
+  let nx = vx / speed + (awayX / away) * radians
+  let ny = vy / speed + (awayY / away) * radians
+  const nm = Math.hypot(nx, ny) || 1
+  return { vx: (nx / nm) * speed, vy: (ny / nm) * speed }
+}
+
+interface SpotDrift {
+  x: number
+  y: number
+  vx: number
+  vy: number
+}
+
+const spotDrift = new WeakMap<object, SpotDrift>()
+const paintClock = new Map<StarKind, number>()
+const DRIFT_CAP = 0.000018
+
+function driftOf(mote: object): SpotDrift {
+  let drift = spotDrift.get(mote)
+  if (!drift) {
+    drift = { x: 0, y: 0, vx: 0, vy: 0 }
+    spotDrift.set(mote, drift)
+  }
+  return drift
+}
+
+function starMoteMotion(
+  mote: { ang: number; dist: number; phase: number; spin: number; roll?: number },
+  t: number,
+): { x: number; y: number; vx: number; vy: number } {
+  if (wanderMote(mote)) {
+    const here = wanderPoint(mote, t)
+    const next = wanderPoint(mote, t + 40)
+    return { x: here.x, y: here.y, vx: (next.x - here.x) / 40, vy: (next.y - here.y) / 40 }
+  }
+  const here = bouncePoint(mote, t)
+  const sim = moteSim.get(mote)
+  return { x: here.x, y: here.y, vx: sim?.vx ?? 0, vy: sim?.vy ?? 0 }
+}
+
 function starRgba(hex: string, alpha: number): string {
   const n = Number.parseInt(hex.slice(1), 16)
   return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${alpha})`
@@ -324,14 +416,123 @@ function paintStarSurface(
   const turn = starDiscTurn(t)
   const motes = motesFor(kind)
   const cells = motes.filter((mote) => mote.group === 0).slice().sort((a, b) => b.size - a.size)
-  for (const mote of cells) {
-    const at = starMotePlace(mote, t)
-    const ang = at.ang + turn
-    const x = sx + Math.cos(ang) * at.dist * r
-    const y = sy + Math.sin(ang) * at.dist * r
-    const rad = mote.size * r
-    const core = mote.roll > 0.86 ? hot : mote.roll > 0.4 ? mid : cool
-    const peak = 0.16 + mote.roll * 0.2
+  const spots = cells.map((mote) => {
+    const motion = starMoteMotion(mote, t)
+    const wander = wanderMote(mote)
+    const drift = wander ? driftOf(mote) : null
+    return {
+      mote,
+      wander,
+      x: motion.x + (drift?.x ?? 0),
+      y: motion.y + (drift?.y ?? 0),
+      vx: motion.vx + (drift?.vx ?? 0),
+      vy: motion.vy + (drift?.vy ?? 0),
+    }
+  })
+  const previous = paintClock.get(kind)
+  const dt = previous != null && t > previous && t - previous < 80 ? t - previous : 0
+  paintClock.set(kind, t)
+  for (let i = 0; i < spots.length; i++) {
+    for (let j = i + 1; j < spots.length; j++) {
+      const a = spots[i]
+      const b = spots[j]
+      const apart = Math.hypot(b.x - a.x, b.y - a.y)
+      const scale = starRepelScale(starMoteOverlap(apart, a.mote.size, b.mote.size), starSpotBand(a.mote.roll), starSpotBand(b.mote.roll))
+      if (scale <= 0 || dt <= 0 || apart < 1e-8) continue
+      const turnBy = 0.00003 * scale * dt
+      const ax = a.x - b.x
+      const ay = a.y - b.y
+      if (a.wander) {
+        const drift = driftOf(a.mote)
+        drift.vx += (ax / apart) * 5e-9 * dt * scale
+        drift.vy += (ay / apart) * 5e-9 * dt * scale
+      } else {
+        const sim = moteSim.get(a.mote)
+        if (sim) {
+          const nudged = starVelocityNudge(sim.vx, sim.vy, ax, ay, turnBy)
+          sim.vx = nudged.vx
+          sim.vy = nudged.vy
+          a.vx = nudged.vx
+          a.vy = nudged.vy
+        }
+      }
+      if (b.wander) {
+        const drift = driftOf(b.mote)
+        drift.vx -= (ax / apart) * 5e-9 * dt * scale
+        drift.vy -= (ay / apart) * 5e-9 * dt * scale
+      } else {
+        const sim = moteSim.get(b.mote)
+        if (sim) {
+          const nudged = starVelocityNudge(sim.vx, sim.vy, -ax, -ay, turnBy)
+          sim.vx = nudged.vx
+          sim.vy = nudged.vy
+          b.vx = nudged.vx
+          b.vy = nudged.vy
+        }
+      }
+    }
+  }
+  for (const spot of spots) {
+    if (!spot.wander || dt <= 0) continue
+    const drift = driftOf(spot.mote)
+    const speed = Math.hypot(drift.vx, drift.vy)
+    if (speed > DRIFT_CAP) {
+      drift.vx *= DRIFT_CAP / speed
+      drift.vy *= DRIFT_CAP / speed
+    }
+    const naturalX = spot.x - drift.x
+    const naturalY = spot.y - drift.y
+    drift.x += drift.vx * dt
+    drift.y += drift.vy * dt
+    const held = clampLimb(naturalX + drift.x, naturalY + drift.y)
+    drift.x = held.x - naturalX
+    drift.y = held.y - naturalY
+    spot.x = held.x
+    spot.y = held.y
+    spot.vx = starMoteMotion(spot.mote, t).vx + drift.vx
+    spot.vy = starMoteMotion(spot.mote, t).vy + drift.vy
+  }
+  const shift = spots.map(() => ({ x: 0, y: 0 }))
+  for (let i = 0; i < spots.length; i++) {
+    for (let j = i + 1; j < spots.length; j++) {
+      const a = spots[i]
+      const b = spots[j]
+      if (starSpotBand(a.mote.roll) !== starSpotBand(b.mote.roll)) continue
+      const dx = b.x - a.x
+      const dy = b.y - a.y
+      const apart = Math.hypot(dx, dy)
+      if (apart < 1e-8) continue
+      const pull = starClusterPull(starMoteOverlap(apart, a.mote.size, b.mote.size), starHeadingGap(a.vx, a.vy, b.vx, b.vy))
+      if (pull <= 0) continue
+      const mag = pull * 0.05 * Math.min(a.mote.size, b.mote.size)
+      const ux = dx / apart
+      const uy = dy / apart
+      shift[i].x += ux * mag
+      shift[i].y += uy * mag
+      shift[j].x -= ux * mag
+      shift[j].y -= uy * mag
+    }
+  }
+  for (let i = 0; i < spots.length; i++) {
+    const cap = spots[i].mote.size * 0.12
+    const len = Math.hypot(shift[i].x, shift[i].y)
+    if (len > cap) {
+      shift[i].x *= cap / len
+      shift[i].y *= cap / len
+    }
+    const held = clampLimb(spots[i].x + shift[i].x, spots[i].y + shift[i].y)
+    spots[i].x = held.x
+    spots[i].y = held.y
+  }
+  for (const spot of spots) {
+    const dist = Math.hypot(spot.x, spot.y)
+    const ang = Math.atan2(spot.y, spot.x) + turn
+    const x = sx + Math.cos(ang) * dist * r
+    const y = sy + Math.sin(ang) * dist * r
+    const rad = spot.mote.size * r
+    const band = starSpotBand(spot.mote.roll)
+    const core = band === 2 ? hot : band === 1 ? mid : cool
+    const peak = 0.16 + spot.mote.roll * 0.2
     const grd = ctx.createRadialGradient(x, y, 0, x, y, rad)
     grd.addColorStop(0, starRgba(core, peak))
     grd.addColorStop(0.16, starRgba(core, peak * 0.45))
