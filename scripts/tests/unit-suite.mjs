@@ -3451,11 +3451,15 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
     'star map: zoomed out, rocky planets stay discs and Crusader stays the largest',
   )
   const close = starMap.systemBodyScale(stanton, 200 / crusader.radiusM, 400 / 7e10)
-  const moonRatio = starMap.orbDisplayRadiusPx(yela, close) / starMap.orbDisplayRadiusPx(crusader, close)
+  const iconR = starMap.ICON_PX / 2
+  const moonCap = iconR * 4
+  const cellin = byName(stanton, 'Cellin')
   check(
     starMap.orbDisplayRadiusPx(crusader, close) <= 48 &&
-      Math.abs(moonRatio - yela.radiusM / crusader.radiusM) < 0.01,
-    'star map: moon size relative to its planet',
+      starMap.orbDisplayRadiusPx(yela, close) === moonCap &&
+      starMap.orbDisplayRadiusPx(cellin, close) >= iconR &&
+      starMap.orbDisplayRadiusPx(cellin, close) < starMap.orbDisplayRadiusPx(yela, close),
+    'star map: a zoomed moon is between one icon and four, with the largest at four',
   )
   check(
     starMap.ICON_PX <= starMap.orbDisplayRadiusPx(crusader, fit),
@@ -3588,12 +3592,15 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
       !stanton.markers.some((m) => m.name === 'Lorville' || m.name === 'Orison' || m.name === 'Area18' || m.name === 'New Babbage'),
     'star map: Levski is a landing zone in the Glaciem Ring, and planet cities stay off the map',
   )
-  const nyxStations = nyx.markers.filter((m) => m.kind === 'qv' || m.kind === 'outlaw')
-  const onKeeger = nyxStations.filter((m) => {
+  const nyxQv = nyx.markers.filter((m) => m.kind === 'qv')
+  const onKeeger = nyxQv.filter((m) => {
     const d = Math.hypot(m.x, m.y)
     return d >= keeger.innerRadiusM && d <= keeger.outerRadiusM
   })
-  check(onKeeger.length / nyxStations.length > 0.5, 'star map: Nyx QV and outlaw stations ride the Keeger Belt')
+  check(
+    !nyx.markers.some((m) => m.kind === 'outlaw') && nyxQv.length === 10 && onKeeger.length === nyxQv.length,
+    'star map: Nyx keeps the breaker stations on the Keeger Belt and stores no outlaw stations',
+  )
 
   // Planet and moon asteroid rings are centred on their body.
   const yelaRing = byName(stanton, 'Yela Ring')
@@ -3652,12 +3659,20 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
       starMap.orbDisplayRadiusPx(hurston, at(80)) === starMap.orbDisplayRadiusPx(hurston, at(200)),
     'star map: Hurston grows, then stops at its on-screen maximum',
   )
+  const moonSystems = [stanton, smSystems.pyro, smSystems.nyx]
+  let moonsInRange = true
+  for (const sys of moonSystems) {
+    const wide = starMap.systemBodyScale(sys, fitPx, fitPx)
+    const tight = starMap.systemBodyScale(sys, fitPx * 400, fitPx)
+    for (const moon of sys.markers.filter((m) => m.kind === 'moon')) {
+      const near = starMap.orbDisplayRadiusPx(moon, wide)
+      const far = starMap.orbDisplayRadiusPx(moon, tight)
+      if (far + 1e-6 < iconR || far > iconR * 4 + 1e-6 || far + 1e-6 < near) moonsInRange = false
+    }
+  }
   check(
-    Math.abs(
-      starMap.orbDisplayRadiusPx(arial, hurstonMoons) / starMap.orbDisplayRadiusPx(hurston, hurstonMoons) -
-        arial.radiusM / hurston.radiusM,
-    ) < 0.01 && starMap.orbDisplayRadiusPx(arial, hurstonMoons) > 3,
-    "star map: around Hurston, Arial is drawn at its true share of Hurston's size",
+    moonsInRange && starMap.orbDisplayRadiusPx(arial, hurstonMoons) >= iconR && starMap.orbDisplayRadiusPx(arial, hurstonMoons) <= iconR * 4,
+    'star map: every moon stays between one icon and four icons as you zoom',
   )
   const crusaderMoons = at(60 / 50.9e6 / fitPx)
   check(
@@ -3720,11 +3735,10 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
     'star map: Pyro jump points sit on the starmap side of the star',
   )
 
-  const nyxQv = nyx.markers.filter((m) => m.kind === 'qv')
   const transits = nyx.markers.filter((m) => m.kind === 'transit').map((m) => m.name).sort()
   check(
     nyxQv.length === 10 && nyxQv.every((m) => /BRK-\d+/.test(m.name)) &&
-      !nyx.markers.some((m) => m.name === 'QV Extraction Station' || m.name === 'Rockcracker Site' || m.name === 'QV Breaker Station') &&
+      !nyx.markers.some((m) => m.kind === 'outlaw' || m.name === 'QV Extraction Station' || m.name === 'Rockcracker Site' || m.name === 'QV Breaker Station') &&
       transits.join() === 'Transit Point Glaciem Alpha,Transit Point Glaciem Bravo,Transit Point Glaciem Charlie',
     'star map: Nyx keeps numbered breakers and the Glaciem transit points only',
   )

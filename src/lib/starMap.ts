@@ -324,6 +324,8 @@ interface BodyLayout {
   moonSpanM: Map<string, { inner: number; outer: number }>
   /** Planet id → closest marker that is not the planet, its moons, or anything riding on them, meters. */
   neighbourM: Map<string, number>
+  /** Planet id → radius of its largest moon, meters. */
+  moonMaxRadiusM: Map<string, number>
 }
 
 export interface BodyScale {
@@ -356,6 +358,7 @@ function bodyLayout(system: StarMapSystem): BodyLayout {
 
   const firstMoonM = new Map<string, number>()
   const moonSpanM = new Map<string, { inner: number; outer: number }>()
+  const moonMaxRadiusM = new Map<string, number>()
   for (const moon of bodies) {
     if (moon.kind !== 'moon' || !moon.parentName) continue
     const parent = byName.get(moon.parentName)
@@ -364,6 +367,7 @@ function bodyLayout(system: StarMapSystem): BodyLayout {
     firstMoonM.set(parent.id, Math.min(firstMoonM.get(parent.id) ?? Infinity, d))
     const span = moonSpanM.get(parent.id) ?? { inner: Infinity, outer: 0 }
     moonSpanM.set(parent.id, { inner: Math.min(span.inner, d), outer: Math.max(span.outer, d) })
+    moonMaxRadiusM.set(parent.id, Math.max(moonMaxRadiusM.get(parent.id) ?? 0, moon.radiusM || 0))
   }
 
   const attachedTo = new Map<string, StarMapMarker>()
@@ -409,7 +413,7 @@ function bodyLayout(system: StarMapSystem): BodyLayout {
     neighbourM.set(planet.id, near)
   }
 
-  const layout = { byName, clearM, attachedTo, moonSpanM, neighbourM }
+  const layout = { byName, clearM, attachedTo, moonSpanM, neighbourM, moonMaxRadiusM }
   layoutCache.set(system, layout)
   return layout
 }
@@ -445,8 +449,8 @@ const GAS_GIANT_NAMES = new Set(['Crusader', 'Pyro V', 'Nyx III'])
 
 /** Largest on-screen radius for a planet, as a multiple of the system-view disc. */
 const PLANET_CEILING = 3
-/** Largest on-screen radius for a moon. */
-const MOON_MAX_PX = 16
+/** A fully zoomed moon is this many times an icon across. It is never smaller than one icon. */
+const MOON_MAX_ICONS = 4
 
 function planetCeilingPx(marker: StarMapMarker, scale: BodyScale): number {
   const gas = GAS_GIANT_NAMES.has(marker.name) ? 1 : 0.9
@@ -474,10 +478,40 @@ function planetPx(marker: StarMapMarker, scale: BodyScale): number {
 }
 
 /**
+ * Moon radius before it has to fit around its planet. At least one icon, and
+ * the largest moon of a planet stops at four icons across.
+ */
+function moonWantPx(marker: StarMapMarker, scale: BodyScale): number {
+  const iconR = ICON_PX / 2
+  const zoom = Math.max(1, scale.pxPerM / scale.fitPxPerM)
+  const grow = Math.min(Math.pow(zoom, 0.65), MOON_MAX_ICONS)
+  const parent = marker.parentName ? scale.layout.byName.get(marker.parentName) : undefined
+  const familyMax = (parent && scale.layout.moonMaxRadiusM.get(parent.id)) || marker.radiusM || 0
+  const share = familyMax > 0 ? (marker.radiusM || 0) / familyMax : 1
+  return Math.min(Math.max(iconR, iconR * grow * share), iconR * MOON_MAX_ICONS)
+}
+
+/**
+ * Moon radius in pixels. The icon-size floor applies once the moon's center
+ * is outside its planet. While the center is still inside the planet, the
+ * disc stays inside too, so it does not cover stations parked on the rim.
+ */
+function moonRadiusPx(marker: StarMapMarker, scale: BodyScale): number {
+  const want = moonWantPx(marker, scale)
+  const parent = marker.parentName ? scale.layout.byName.get(marker.parentName) : undefined
+  if (!parent) return want
+  const centerPx = Math.hypot(marker.x - parent.x, marker.y - parent.y) * moonSpread(parent, scale) * scale.pxPerM
+  const parentR = orbDisplayRadiusPx(parent, scale)
+  if (centerPx >= parentR + 1) return want
+  return Math.max(Math.min(want, parentR - centerPx - 1), 1.5)
+}
+
+/**
  * Orb radius in pixels. Planets share one readable size (gas giants a step
- * larger). A moon is its true share of its own planet. The star is larger
- * than any planet but never past half the innermost planet orbit. True pixel
- * size takes over only when the view is zoomed in that far.
+ * larger). Moons grow with the zoom from one icon up to four. The star is
+ * larger than any planet but never past half the innermost planet orbit.
+ * True pixel size takes over for the star only when the view is zoomed in
+ * that far.
  */
 export function orbDisplayRadiusPx(marker: StarMapMarker, scale: BodyScale): number {
   const realPx = (marker.radiusM || 0) * scale.pxPerM
@@ -486,12 +520,7 @@ export function orbDisplayRadiusPx(marker: StarMapMarker, scale: BodyScale): num
     const want = scale.maxPlanetPx * 1.6
     return Math.max(Math.min(want, cap), realPx, 3)
   }
-  if (marker.kind === 'moon') {
-    const parent = marker.parentName ? scale.layout.byName.get(marker.parentName) : undefined
-    if (!parent?.radiusM) return Math.max(realPx, 1.5)
-    const share = (marker.radiusM || 0) / parent.radiusM
-    return Math.min(Math.max(orbDisplayRadiusPx(parent, scale) * share, 1.5), MOON_MAX_PX)
-  }
+  if (marker.kind === 'moon') return moonRadiusPx(marker, scale)
   return Math.min(Math.max(planetPx(marker, scale), 10), planetCeilingPx(marker, scale))
 }
 
@@ -520,19 +549,63 @@ export function moonSpread(planet: StarMapMarker, scale: BodyScale): number {
   const span = scale.layout.moonSpanM.get(planet.id)
   if (!span) return 1
   const p = scale.pxPerM
-  const want = (orbDisplayRadiusPx(planet, scale) + MOON_GAP_PX) / (span.inner * p)
-  if (want <= 1) return 1
+  let moonR = ICON_PX / 2
+  for (const other of scale.layout.byName.values()) {
+    if (other.kind === 'moon' && other.parentName === planet.name) moonR = Math.max(moonR, moonWantPx(other, scale))
+  }
+  const planetR = orbDisplayRadiusPx(planet, scale)
+  const full = (planetR + moonR + MOON_GAP_PX) / (span.inner * p)
+  if (full <= 1) return 1
   const room = (scale.layout.neighbourM.get(planet.id) ?? Infinity) * p * MOON_SPREAD_SHARE
-  return span.outer * p * want <= room ? want : 1
+  const fit = room / (span.outer * p)
+  const spread = Math.min(full, fit)
+  // Stay tucked until the closest moon's center can clear the planet disc.
+  if (spread <= 1 || span.inner * p * spread <= planetR + 2) return 1
+  return spread
 }
 
 /** Pixels of clear space between a body disc and an icon parked on its rim. */
 const ICON_RIM_GAP_PX = 4
 
+/** Closest point on a ray that sits outside every drawn planet, moon, and star. */
+function clearAlongRay(
+  origin: { x: number; y: number },
+  ux: number,
+  uy: number,
+  reachM: number,
+  scale: BodyScale,
+  skipId: string,
+): number {
+  let t = reachM
+  for (let n = 0; n < 8; n++) {
+    const x = origin.x + ux * t
+    const y = origin.y + uy * t
+    let next = t
+    for (const other of scale.layout.byName.values()) {
+      if (other.kind !== 'planet' && other.kind !== 'moon' && other.kind !== 'star') continue
+      if (other.id === skipId) continue
+      const at = other.kind === 'moon' ? displayPositionM(other, scale) : { x: other.x, y: other.y }
+      const need = (orbDisplayRadiusPx(other, scale) + ICON_PX / 2 + ICON_RIM_GAP_PX) / scale.pxPerM
+      if (Math.hypot(x - at.x, y - at.y) >= need) continue
+      const wx = origin.x - at.x
+      const wy = origin.y - at.y
+      const b = wx * ux + wy * uy
+      const c = wx * wx + wy * wy - need * need
+      const disc = b * b - c
+      if (disc < 0) continue
+      const exit = -b + Math.sqrt(disc)
+      if (exit > next) next = exit
+    }
+    if (next === t) break
+    t = next
+  }
+  return t
+}
+
 /**
- * Keep an icon on its bearing from a body. When the drawn disc covers that
- * bearing, the icon sits just outside the disc so it can show as soon as the
- * rim has room.
+ * Keep an icon on its bearing from a body. When a drawn disc covers that
+ * bearing, the icon sits just outside the furthest disc on the ray, so a
+ * moon growing over a station does not hide it.
  */
 function besideBody(
   body: StarMapMarker,
@@ -545,7 +618,8 @@ function besideBody(
   const need = orbDisplayRadiusPx(body, scale) + ICON_PX / 2 + ICON_RIM_GAP_PX
   const distPx = dist * scale.pxPerM
   const reach = (distPx < need ? need : distPx) / scale.pxPerM
-  return { x: at.x + (dx / dist) * reach, y: at.y + (dy / dist) * reach }
+  const t = clearAlongRay(at, dx / dist, dy / dist, reach, scale, body.id)
+  return { x: at.x + (dx / dist) * t, y: at.y + (dy / dist) * t }
 }
 
 /**
@@ -554,12 +628,14 @@ function besideBody(
  * the rim on its real bearing. Once the true spot is clear, it uses that spot.
  */
 export function displayPositionM(marker: StarMapMarker, scale: BodyScale): { x: number; y: number } {
+  if (marker.kind === 'planet' || marker.kind === 'star') return { x: marker.x, y: marker.y }
   if (marker.kind === 'moon' && marker.parentName) {
     const parent = scale.layout.byName.get(marker.parentName)
     if (!parent) return { x: marker.x, y: marker.y }
     const s = moonSpread(parent, scale)
     return { x: parent.x + (marker.x - parent.x) * s, y: parent.y + (marker.y - parent.y) * s }
   }
+  if (marker.kind === 'moon') return { x: marker.x, y: marker.y }
   const body = scale.layout.attachedTo.get(marker.id)
   if (body) {
     const at = displayPositionM(body, scale)
