@@ -127,33 +127,76 @@ function seedOf(name: string): number {
   return (h >>> 0) || 1
 }
 
-let grain: HTMLCanvasElement | null = null
+const photospheres = new Map<StarKind, HTMLCanvasElement>()
 
-/** Soft light and dark mottling, transparent between the spots. */
-function starGrain(): HTMLCanvasElement | null {
-  if (grain) return grain
+/**
+ * Granular photosphere. Bright cell centers, darker lanes, and a few cool
+ * filaments. Baked once per star. The live frame only turns it.
+ */
+function photosphere(kind: StarKind): HTMLCanvasElement | null {
+  const cached = photospheres.get(kind)
+  if (cached) return cached
   if (typeof document === 'undefined') return null
+  const n = 256
   const c = document.createElement('canvas')
-  c.width = 160
-  c.height = 160
+  c.width = n
+  c.height = n
   const g = c.getContext('2d')
   if (!g) return null
-  const rnd = makeRng(42)
-  for (let i = 0; i < 220; i++) {
-    const x = rnd() * 160
-    const y = rnd() * 160
-    const rad = 4 + rnd() * 18
-    const hot = rnd()
-    const col = hot > 0.72 ? '255, 248, 220' : hot > 0.4 ? '255, 150, 48' : hot > 0.18 ? '180, 48, 12' : '70, 16, 8'
+  const rnd = makeRng(kind === 'nyx' ? 11 : kind === 'pyro' ? 29 : 5)
+  const base = kind === 'nyx' ? '#9a4034' : kind === 'pyro' ? '#e85d04' : '#e08820'
+  const hot = kind === 'nyx' ? '#ffd0c4' : kind === 'pyro' ? '#fff6d0' : '#ffe7a8'
+  const mid = kind === 'nyx' ? '#d46858' : kind === 'pyro' ? '#ff9a2e' : '#f0a040'
+  const cool = kind === 'nyx' ? '#6e2820' : kind === 'pyro' ? '#9a2808' : '#b45309'
+  g.fillStyle = base
+  g.fillRect(0, 0, n, n)
+  for (let i = 0; i < 640; i++) {
+    const x = rnd() * n
+    const y = rnd() * n
+    const rad = n * (0.01 + rnd() * 0.026)
+    const roll = rnd()
+    const core = roll > 0.86 ? hot : roll > 0.4 ? mid : cool
     const grd = g.createRadialGradient(x, y, 0, x, y, rad)
-    grd.addColorStop(0, `rgba(${col}, ${0.5 + rnd() * 0.45})`)
-    grd.addColorStop(1, `rgba(${col}, 0)`)
+    grd.addColorStop(0, core)
+    grd.addColorStop(0.62, roll > 0.5 ? mid : base)
+    grd.addColorStop(1, 'rgba(80, 16, 4, 0)')
     g.fillStyle = grd
     g.beginPath()
     g.arc(x, y, rad, 0, Math.PI * 2)
     g.fill()
   }
-  grain = c
+  g.globalCompositeOperation = 'multiply'
+  for (let i = 0; i < 7; i++) {
+    const x = rnd() * n
+    const y = rnd() * n
+    const rad = n * (0.12 + rnd() * 0.16)
+    const shade = g.createRadialGradient(x, y, rad * 0.2, x, y, rad)
+    shade.addColorStop(0, 'rgba(90, 24, 8, 0.85)')
+    shade.addColorStop(1, 'rgba(255, 255, 255, 1)')
+    g.fillStyle = shade
+    g.beginPath()
+    g.arc(x, y, rad, 0, Math.PI * 2)
+    g.fill()
+  }
+  g.globalCompositeOperation = 'source-over'
+  g.lineCap = 'round'
+  g.lineJoin = 'round'
+  for (let i = 0; i < 6; i++) {
+    const x = rnd() * n
+    const y = rnd() * n
+    const dx = (rnd() - 0.5) * n * 0.55
+    const dy = (rnd() - 0.5) * n * 0.22
+    g.beginPath()
+    g.moveTo(x, y)
+    g.bezierCurveTo(x + dx * 0.4, y + dy - n * 0.08, x + dx * 0.7, y - dy, x + dx, y + dy * 0.35)
+    g.strokeStyle = 'rgba(255, 214, 160, 0.28)'
+    g.lineWidth = 2.4 + rnd() * 2
+    g.stroke()
+    g.strokeStyle = 'rgba(42, 8, 4, 0.72)'
+    g.lineWidth = 1.1 + rnd() * 1.4
+    g.stroke()
+  }
+  photospheres.set(kind, c)
   return c
 }
 
@@ -380,6 +423,45 @@ export function paintBelt(
   ctx.globalAlpha = 1
 }
 
+/** One prominence: a ribbon that leaves the limb and comes back down. */
+function strokeProminence(
+  ctx: CanvasRenderingContext2D,
+  r: number,
+  ang: number,
+  span: number,
+  height: number,
+  fade: number,
+  rgb: string,
+  width: number,
+): void {
+  const a0 = ang - span / 2
+  const a1 = ang + span / 2
+  const x0 = Math.cos(a0) * r * 0.97
+  const y0 = Math.sin(a0) * r * 0.97
+  const x1 = Math.cos(a1) * r * 0.97
+  const y1 = Math.sin(a1) * r * 0.97
+  // A quadratic control sits beyond the visible crest, so the arch peaks near `height`.
+  const peak = r + height * 2
+  const cx = Math.cos(ang) * peak
+  const cy = Math.sin(ang) * peak
+  ctx.beginPath()
+  ctx.moveTo(x0, y0)
+  ctx.quadraticCurveTo(cx, cy, x1, y1)
+  ctx.lineCap = 'round'
+  ctx.lineJoin = 'round'
+  ctx.strokeStyle = `rgba(${rgb}, ${0.34 * fade})`
+  ctx.lineWidth = width * 4.2
+  ctx.stroke()
+  ctx.strokeStyle = `rgba(255, 236, 206, ${0.92 * fade})`
+  ctx.lineWidth = width
+  ctx.stroke()
+  if (height > r * 0.35) {
+    ctx.strokeStyle = `rgba(72, 14, 6, ${0.62 * fade})`
+    ctx.lineWidth = Math.max(0.8, width * 0.42)
+    ctx.stroke()
+  }
+}
+
 function paintFlares(
   ctx: CanvasRenderingContext2D,
   sx: number,
@@ -390,49 +472,57 @@ function paintFlares(
 ): void {
   const kind = starKind(name)
   const pyro = kind === 'pyro'
-  const slots = pyro ? 7 : 4
+  const slots = pyro ? 6 : 3
   const seed = kind === 'nyx' ? 19 : pyro ? 53 : 7
-  const hot = kind === 'nyx' ? '255, 186, 150' : pyro ? '255, 120, 36' : '255, 186, 72'
+  const hot = kind === 'nyx' ? '255, 176, 140' : pyro ? '255, 120, 40' : '255, 186, 80'
+  ctx.save()
+  ctx.translate(sx, sy)
   for (let i = 0; i < slots; i++) {
-    const period = 3600 + hash(seed * 13 + i * 3.1) * 7800
-    const life = 900 + hash(seed + i * 9.7) * 1600
+    const period = 4200 + hash(seed * 13 + i * 3.1) * 9000
+    const life = 1400 + hash(seed + i * 9.7) * 2200
     const local = (t + hash(i * 4.4 + seed) * period) % period
     if (local > life) continue
     const u = local / life
     const fade = Math.sin(u * Math.PI)
     const scale = hash(seed * 17 + i * 2.2) ** 2
-    const ang = hash(seed * 3 + i * 11.7) * Math.PI * 2 + u * 0.2
-    const len = r * flareReach(name, scale)
-    const halfW = Math.max(1.15, r * (0.04 + scale * (pyro ? 0.16 : 0.09))) * (0.55 + 0.45 * fade)
-    ctx.save()
-    ctx.translate(sx, sy)
-    ctx.rotate(ang)
-    const glow = ctx.createRadialGradient(r + len * 0.45, 0, 0, r + len * 0.45, 0, len * 0.65)
-    glow.addColorStop(0, `rgba(${hot}, ${0.28 * fade})`)
-    glow.addColorStop(1, `rgba(${hot}, 0)`)
-    ctx.fillStyle = glow
-    ctx.beginPath()
-    ctx.arc(r + len * 0.45, 0, len * 0.65, 0, Math.PI * 2)
-    ctx.fill()
-    ctx.beginPath()
-    ctx.moveTo(r * 0.9, -halfW * 0.35)
-    ctx.quadraticCurveTo(r + len * 0.35, -halfW, r + len, 0)
-    ctx.quadraticCurveTo(r + len * 0.35, halfW, r * 0.9, halfW * 0.35)
-    ctx.closePath()
-    const tongue = ctx.createLinearGradient(r * 0.9, 0, r + len, 0)
-    tongue.addColorStop(0, `rgba(255, 252, 236, ${0.95 * fade})`)
-    tongue.addColorStop(0.28, `rgba(${hot}, ${0.8 * fade})`)
-    tongue.addColorStop(1, `rgba(${hot}, 0)`)
-    ctx.fillStyle = tongue
-    ctx.fill()
-    if (pyro && scale > 0.55) {
-      ctx.beginPath()
-      ctx.moveTo(r + len * 0.25, -halfW * 0.1)
-      ctx.quadraticCurveTo(r + len * 0.7, -halfW * 0.85, r + len * 1.15, -halfW * 0.15)
-      ctx.quadraticCurveTo(r + len * 0.62, -halfW * 0.05, r + len * 0.25, halfW * 0.08)
-      ctx.fill()
+    const ang = hash(seed * 3 + i * 11.7) * Math.PI * 2 + u * 0.08
+    const span = (0.22 + hash(seed + i * 6.4) * (pyro ? 0.95 : 0.5)) * (0.75 + 0.25 * fade)
+    const height = r * flareReach(name, scale) * (0.35 + 0.65 * fade)
+    const width = Math.max(1.05, r * (0.018 + scale * (pyro ? 0.028 : 0.016)))
+    strokeProminence(ctx, r, ang, span, height, fade, hot, width)
+    if (scale > 0.45) {
+      strokeProminence(ctx, r, ang + span * 0.08, span * 0.72, height * 0.62, fade * 0.75, hot, width * 0.65)
     }
-    ctx.restore()
+  }
+  ctx.restore()
+}
+
+/** Cool dark threads on the disc, the same plasma as a prominence seen against the surface. */
+function paintFilaments(
+  ctx: CanvasRenderingContext2D,
+  r: number,
+  t: number,
+  kind: StarKind,
+): void {
+  const n = kind === 'pyro' ? 4 : 2
+  ctx.lineCap = 'round'
+  for (let i = 0; i < n; i++) {
+    const spin = t * 0.00005 * (i % 2 === 0 ? 1 : -1)
+    const ang = hash(i * 3.7 + 1) * Math.PI * 2 + spin
+    const dist = r * (0.08 + hash(i * 1.7) * 0.5)
+    const len = r * (0.28 + hash(i * 2.4) * 0.38)
+    const x = Math.cos(ang) * dist
+    const y = Math.sin(ang) * dist
+    const bend = (hash(i * 8.1) - 0.5) * r * 0.5
+    ctx.beginPath()
+    ctx.moveTo(x - Math.cos(ang) * len * 0.5, y - Math.sin(ang) * len * 0.5)
+    ctx.quadraticCurveTo(x + bend, y - bend * 0.45, x + Math.cos(ang) * len * 0.45, y + Math.sin(ang) * len * 0.2)
+    ctx.strokeStyle = 'rgba(255, 220, 170, 0.2)'
+    ctx.lineWidth = Math.max(1.4, r * 0.03)
+    ctx.stroke()
+    ctx.strokeStyle = 'rgba(48, 10, 4, 0.78)'
+    ctx.lineWidth = Math.max(0.8, r * 0.014)
+    ctx.stroke()
   }
 }
 
@@ -444,20 +534,20 @@ function paintStarCells(
   t: number,
   kind: StarKind,
 ): void {
-  const n = kind === 'pyro' ? 14 : 8
+  const n = kind === 'pyro' ? 10 : 6
   for (let i = 0; i < n; i++) {
-    const period = 1400 + hash(i * 5.2 + 2) * 2200
-    const life = 520 + hash(i * 2.1 + 4) * 900
+    const period = 900 + hash(i * 5.2 + 2) * 1600
+    const life = 380 + hash(i * 2.1 + 4) * 700
     const local = (t + hash(i * 8 + 1) * period) % period
     if (local > life) continue
     const fade = Math.sin((local / life) * Math.PI)
-    const ang = hash(i * 12.9) * Math.PI * 2 + t * 0.00015
-    const dist = hash(i * 4.7) * r * 0.7
-    const rad = r * (0.045 + hash(i * 6.3) * 0.09) * (0.65 + fade)
+    const ang = hash(i * 12.9) * Math.PI * 2 + t * 0.00012
+    const dist = hash(i * 4.7) * r * 0.72
+    const rad = r * (0.02 + hash(i * 6.3) * 0.035) * (0.7 + fade)
     const x = sx + Math.cos(ang) * dist
     const y = sy + Math.sin(ang) * dist
     const cell = ctx.createRadialGradient(x, y, 0, x, y, rad)
-    cell.addColorStop(0, `rgba(255, 252, 236, ${0.7 * fade})`)
+    cell.addColorStop(0, `rgba(255, 250, 230, ${0.55 * fade})`)
     cell.addColorStop(1, 'rgba(255, 140, 32, 0)')
     ctx.fillStyle = cell
     ctx.beginPath()
@@ -466,7 +556,7 @@ function paintStarCells(
   }
 }
 
-/** A star: wide corona, a limb-darkened disc, a turning surface, and flares. */
+/** A star: corona, a granular photosphere, and prominences that loop off the limb. */
 export function paintStar(
   ctx: CanvasRenderingContext2D,
   sx: number,
@@ -511,17 +601,24 @@ export function paintStar(
   ctx.fillStyle = disc
   ctx.fillRect(sx - r, sy - r, r * 2, r * 2)
 
-  const img = r > 5 ? starGrain() : null
+  const img = r > 5 ? photosphere(kind) : null
   if (img) {
     ctx.save()
-    ctx.globalCompositeOperation = 'soft-light'
     ctx.translate(sx, sy)
-    ctx.rotate(t * 0.0001)
-    ctx.globalAlpha = 0.85
+    ctx.rotate(t * 0.00007)
     ctx.drawImage(img, -r, -r, r * 2, r * 2)
-    ctx.rotate(t * -0.00016)
-    ctx.globalAlpha = 0.45
-    ctx.drawImage(img, -r * 1.2, -r * 1.2, r * 2.4, r * 2.4)
+    ctx.restore()
+    const limb = ctx.createRadialGradient(sx, sy, r * 0.42, sx, sy, r)
+    limb.addColorStop(0, 'rgba(0, 0, 0, 0)')
+    limb.addColorStop(0.68, 'rgba(70, 16, 0, 0.05)')
+    limb.addColorStop(1, 'rgba(28, 4, 0, 0.62)')
+    ctx.fillStyle = limb
+    ctx.fillRect(sx - r, sy - r, r * 2, r * 2)
+  }
+  if (r > 8) {
+    ctx.save()
+    ctx.translate(sx, sy)
+    paintFilaments(ctx, r, t, kind)
     ctx.restore()
   }
   if (r > 5) paintStarCells(ctx, sx, sy, r, t, kind)
