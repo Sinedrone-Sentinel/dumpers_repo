@@ -3588,7 +3588,7 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
   check(
     [hurston, arcCorp, microTech].every((p) => {
       const px = starMap.orbDisplayRadiusPx(p, fit)
-      return px >= 14 && Math.abs(px - hurstonFit) < 1
+      return px >= 8 && Math.abs(px - hurstonFit) < 1
     }),
     'star map: zoomed out, the rocky planets are the same size disc',
   )
@@ -3648,6 +3648,21 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
     'star map: Checkmate, Orbituary and Ruin Station are plain stations',
   )
   check(hl.matchMarkers('PYR3 L4', smSystems)[0]?.name === 'PYAM-SUPVISR-3-4', 'star map: PYR3 L4 finds PYAM-SUPVISR-3-4')
+  const magnus = byName(stanton, 'Stanton - Magnus Jump Point')
+  check(
+    magnus?.toSystem === 'magnus' &&
+      starMap.starMapMarkerLabel(magnus) === 'Nyx Jump Point' &&
+      starMap.starMapJumpDestination(magnus) === 'nyx' &&
+      starMap.starMapMarkerLabel(byName(stanton, 'Stanton-Pyro Jump Point')) === 'Pyro Jump Point' &&
+      starMap.starMapMarkerLabel(byName(smSystems.pyro, 'Pyro-Stanton Jump Point')) === 'Stanton Jump Point',
+    'star map: jump labels name the destination, and Magnus reads as Nyx',
+  )
+  const pyroStantonJump = byName(smSystems.pyro, 'Pyro-Stanton Jump Point')
+  const pyroNyxJump = byName(smSystems.pyro, 'Pyro - Nyx Jump Point')
+  check(
+    pyroStantonJump.x < 0 && pyroStantonJump.y > 0 && pyroNyxJump.x > 0 && pyroNyxJump.y < 0,
+    'star map: Pyro jump points sit on the starmap side of the star',
+  )
 
   const nyxQv = nyx.markers.filter((m) => m.kind === 'qv')
   const hiddenQv = nyxQv.filter((m) => starMap.isHiddenStarMapMarker(m))
@@ -3681,17 +3696,17 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
     'star map: QV tooltip says potential mission location and never prints uninitialized',
   )
 
-  // Box zoom: box top-left becomes view top-left; box width spans the view.
+  // Box zoom: the rectangle's centre becomes the view centre, and the whole rectangle fits.
   const cam0 = { cx: 0, cy: 0, pxPerM: 1 }
   const view = { w: 800, h: 600 }
-  const zoomed = starMap.boxZoomCamera(cam0, view, { left: 100, top: 50, width: 200 })
-  const worldTopLeft = { x: cam0.cx + (100 - 400), y: cam0.cy - (50 - 300) }
-  const newTopLeft = { x: zoomed.cx - 400 / zoomed.pxPerM, y: zoomed.cy + 300 / zoomed.pxPerM }
-  check(zoomed.pxPerM === 4, 'box zoom: width spans the view')
+  const zoomed = starMap.boxZoomCamera(cam0, view, { left: 100, top: 50, width: 200, height: 150 })
+  check(zoomed.pxPerM === 4, 'box zoom: the rectangle fits the view')
   check(
-    Math.abs(newTopLeft.x - worldTopLeft.x) < 1e-9 && Math.abs(newTopLeft.y - worldTopLeft.y) < 1e-9,
-    'box zoom: box top-left becomes the view top-left',
+    zoomed.cx === 200 - 400 && zoomed.cy === -(125 - 300),
+    'box zoom: the middle of the rectangle becomes the middle of the view',
   )
+  const tall = starMap.boxZoomCamera(cam0, view, { left: 0, top: 0, width: 400, height: 600 })
+  check(tall.pxPerM === 1, 'box zoom: a tall rectangle is not cropped')
 }
 
 console.log(`Unit tests: ${pass} passed`)

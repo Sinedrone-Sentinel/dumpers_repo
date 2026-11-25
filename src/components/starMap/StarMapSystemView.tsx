@@ -10,6 +10,8 @@ import {
   declutterMarkers,
   displayPositionM,
   orbDisplayRadiusPx,
+  starMapJumpDestination,
+  starMapMarkerLabel,
   starMapMarkerReadout,
   starMapMarkerShown,
   starMapPoiGroup,
@@ -77,7 +79,8 @@ export default function StarMapSystemView({
   const projectedRef = useRef<{ items: ProjectedMarker[]; visible: Set<string> }>({ items: [], visible: new Set() })
   const dragRef = useRef<{ x: number; y: number; cam: Cam; moved: boolean; box: boolean } | null>(null)
   const leftShiftRef = useRef(false)
-  const [box, setBox] = useState<{ x0: number; y0: number; x1: number; y1: number } | null>(null)
+  const boxElRef = useRef<HTMLDivElement>(null)
+  const boxingRef = useRef(false)
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -357,7 +360,7 @@ export default function StarMapSystemView({
       }
       const labelOrder = items.filter((it) => visible.has(it.marker.id)).sort((a, b) => rank(a) - rank(b))
       for (const it of labelOrder) {
-        const text = it.marker.name
+        const text = starMapMarkerLabel(it.marker)
         const w = ctx.measureText(text).width
         const gap = it.r + 4
         // Right of the marker first, then left, above, below.
@@ -421,7 +424,7 @@ export default function StarMapSystemView({
   useEffect(() => {
     let raf = 0
     const loop = (t: number) => {
-      draw(t)
+      if (!boxingRef.current) draw(t)
       raf = requestAnimationFrame(loop)
     }
     raf = requestAnimationFrame(loop)
@@ -493,12 +496,16 @@ export default function StarMapSystemView({
     drag.moved = true
     if (drag.box) {
       e.currentTarget.style.cursor = 'crosshair'
-      setBox({
-        x0: drag.x - rect.left,
-        y0: drag.y - rect.top,
-        x1: e.clientX - rect.left,
-        y1: e.clientY - rect.top,
-      })
+      boxingRef.current = true
+      const el = boxElRef.current
+      if (el) {
+        const left = Math.min(drag.x, e.clientX) - rect.left
+        const top = Math.min(drag.y, e.clientY) - rect.top
+        el.style.display = 'block'
+        el.style.transform = `translate(${left}px, ${top}px)`
+        el.style.width = `${Math.abs(e.clientX - drag.x)}px`
+        el.style.height = `${Math.abs(e.clientY - drag.y)}px`
+      }
       return
     }
     e.currentTarget.style.cursor = 'grabbing'
@@ -514,12 +521,14 @@ export default function StarMapSystemView({
     e.currentTarget.style.cursor = 'grab'
     const rect = e.currentTarget.getBoundingClientRect()
     if (drag?.box && drag.moved) {
-      setBox(null)
+      boxingRef.current = false
+      if (boxElRef.current) boxElRef.current.style.display = 'none'
       const left = Math.min(drag.x, e.clientX) - rect.left
       const top = Math.min(drag.y, e.clientY) - rect.top
       const width = Math.abs(e.clientX - drag.x)
-      if (width < MIN_BOX_PX) return
-      setCam(boxZoomCamera(drag.cam, size, { left, top, width }))
+      const height = Math.abs(e.clientY - drag.y)
+      if (width < MIN_BOX_PX || height < MIN_BOX_PX) return
+      setCam(boxZoomCamera(drag.cam, size, { left, top, width, height }))
       return
     }
     if (!drag || drag.moved) return
@@ -539,7 +548,7 @@ export default function StarMapSystemView({
     readoutPos = { left, top }
   }
 
-  const jumpTarget = selected?.kind === 'jump_point' && selected.toSystem ? selected.toSystem : null
+  const jumpTarget = selected ? starMapJumpDestination(selected) : null
   const jumpTargetName = jumpTarget ? systemNames.get(jumpTarget) : undefined
 
   return (
@@ -553,22 +562,17 @@ export default function StarMapSystemView({
         onPointerUp={onPointerUp}
         onPointerCancel={() => {
           dragRef.current = null
-          setBox(null)
+          boxingRef.current = false
+          if (boxElRef.current) boxElRef.current.style.display = 'none'
         }}
         onContextMenu={(e) => e.preventDefault()}
       />
 
-      {box && (
-        <div
-          className="absolute pointer-events-none border-2 border-dashed border-slate-100/80"
-          style={{
-            left: Math.min(box.x0, box.x1),
-            top: Math.min(box.y0, box.y1),
-            width: Math.abs(box.x1 - box.x0),
-            height: Math.abs(box.y1 - box.y0),
-          }}
-        />
-      )}
+      <div
+        ref={boxElRef}
+        className="absolute left-0 top-0 pointer-events-none border-2 border-dashed border-slate-100/80 bg-slate-100/10"
+        style={{ display: 'none' }}
+      />
 
       <div className="absolute top-3 left-3 pointer-events-none">
         <div className="text-lg font-semibold text-slate-100">{system.name}</div>
@@ -577,7 +581,7 @@ export default function StarMapSystemView({
       <div className="absolute top-3 right-3 flex items-center gap-2">
         <SiteTooltip
           side="bottom"
-          content="Scroll to zoom and drag to pan. Hold left Shift and drag a box to zoom into that area."
+          content="Scroll to zoom and drag to pan. Hold left Shift and drag a box. That area fills the view."
         >
           <span
             className="site-btn-icon !p-1.5 rounded-lg text-xs font-semibold text-slate-300 cursor-help"
@@ -641,11 +645,11 @@ export default function StarMapSystemView({
           className="site-tooltip-panel absolute z-10 w-[280px] max-w-[280px]"
           style={{ left: readoutPos.left, top: readoutPos.top }}
           role="dialog"
-          aria-label={selected.name}
+          aria-label={starMapMarkerLabel(selected)}
         >
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">
-              <div className="text-sm font-semibold text-slate-100">{selected.name}</div>
+              <div className="text-sm font-semibold text-slate-100">{starMapMarkerLabel(selected)}</div>
               <div className="text-[11px] uppercase tracking-wide text-slate-400">
                 {readout?.subtitle}
                 {selected.parentName ? ` · ${selected.parentName}` : ''}
@@ -676,7 +680,7 @@ export default function StarMapSystemView({
               <button
                 type="button"
                 className="site-btn-primary mt-3 w-full !px-3 !py-2 text-xs"
-                onClick={() => onJump(selected)}
+                onClick={() => onJump(jumpTarget && jumpTarget !== selected.toSystem ? { ...selected, toSystem: jumpTarget } : selected)}
               >
                 Jump to {jumpTargetName}
               </button>
