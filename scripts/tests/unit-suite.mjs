@@ -3712,6 +3712,24 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
       paint.starDiscTurn(10000) > paint.starDiscTurn(0),
     'star map: some sun cells turn back, the rest bounce inside the limb, and the disc turns',
   )
+  const nudged = paint.starVelocityNudge(0.00007, 0, 0, 1, 0.2)
+  check(
+    paint.starSpotBand(0.95) === 2 &&
+      paint.starSpotBand(0.5) === 1 &&
+      paint.starSpotBand(0.1) === 0 &&
+      paint.starMoteOverlap(2, 1, 1) === 0 &&
+      paint.starMoteOverlap(1.5, 1, 1) > 0.2 &&
+      paint.starClusterPull(0.25, 20) > paint.starClusterPull(0.2, 20) &&
+      paint.starClusterPull(0.2, 20) > 0 &&
+      paint.starClusterPull(0.19, 0) === 0 &&
+      paint.starClusterPull(0.35, 20.5) === 0 &&
+      paint.starRepelScale(0.4, 2, 0) === 0.4 &&
+      paint.starRepelScale(0.4, 2, 1) === 0 &&
+      paint.starRepelScale(0.4, 1, 1) === 0 &&
+      Math.abs(Math.hypot(nudged.vx, nudged.vy) / 0.00007 - 1) < 1e-6 &&
+      nudged.vy > 0,
+    'star map: same colors cluster while overlapped and aligned, and only light and dark repel',
+  )
   check(
     hl.isStarMapPath('/star-map') &&
       hl.isStarMapPath('/star-map/') &&
