@@ -47,3 +47,52 @@ jobs:
         uses: github/codeql-action/analyze@915412ff23e8b7659517e607487dbeae018f2934 # v4.39.5
         with:
           category: "/language:${{ matrix.language }}"
+          output: sarif-results
+          # The action's own upload exits during the request and leaves no error.
+          # The next step sends the same SARIF and prints the response.
+          upload: never
+
+      - name: Upload code scanning results
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import base64, gzip, json, os, time, urllib.error, urllib.request
+          from pathlib import Path
+
+          files = sorted(Path("sarif-results").rglob("*.sarif"))
+          if not files:
+              raise SystemExit("CodeQL did not write a SARIF file")
+          token = os.environ["GH_TOKEN"]
+          repo = os.environ["GITHUB_REPOSITORY"]
+          url = f"https://api.github.com/repos/{repo}/code-scanning/sarifs"
+          for path in files:
+              payload = json.dumps({
+                  "commit_sha": os.environ["GITHUB_SHA"],
+                  "ref": os.environ["GITHUB_REF"],
+                  "sarif": base64.b64encode(gzip.compress(path.read_bytes())).decode(),
+              }).encode()
+              last = "upload failed"
+              for attempt in range(1, 6):
+                  req = urllib.request.Request(url, data=payload, headers={
+                      "Authorization": f"Bearer {token}",
+                      "Accept": "application/vnd.github+json",
+                      "Content-Type": "application/json",
+                      "User-Agent": "codeql-upload",
+                  })
+                  try:
+                      with urllib.request.urlopen(req, timeout=60) as resp:
+                          print(f"{path.name}: {resp.status} {resp.read()[:300].decode()}")
+                          last = ""
+                          break
+                  except urllib.error.HTTPError as exc:
+                      last = exc.read().decode("utf-8", "replace")
+                      print(f"{path.name}: attempt {attempt} HTTP {exc.code} {last[:500]}")
+                  except Exception as exc:
+                      last = str(exc)
+                      print(f"{path.name}: attempt {attempt} {last}")
+                  time.sleep(5 * attempt)
+              if last:
+                  raise SystemExit(last[:1000])
+          PY
