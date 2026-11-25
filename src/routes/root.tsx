@@ -30,6 +30,9 @@ import ExecutiveHangarRoute from './ExecutiveHangar.index'
 import LootFinderRoute from './LootFinder.index'
 import FlightProfileRoute from './FlightProfile.index'
 import DumperAppsRoute from './DumperApps.index'
+import StarMapIndexRoute from './StarMap.index'
+import StarMapSystemRoute from './StarMap.system'
+import { validateStarMapSearch } from '../lib/starMapHighlight'
 import { requireFeature, requireSuperAdmin } from '../lib/routeGuards'
 import type { FeatureId } from '../lib/featureAccess'
 
@@ -277,6 +280,22 @@ const dumperAppsRoute = createRoute({
   }),
 })
 
+const starMapRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/star-map',
+  component: StarMapIndexRoute,
+  beforeLoad: requireFeature('star_map'),
+  validateSearch: validateStarMapSearch,
+})
+
+const starMapSystemRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/star-map/$systemId',
+  component: StarMapSystemRoute,
+  beforeLoad: requireFeature('star_map'),
+  validateSearch: validateStarMapSearch,
+})
+
 export const routeTree = rootRoute.addChildren([
   indexRoute,
   publicBlueprintsRoute,
@@ -307,6 +326,8 @@ export const routeTree = rootRoute.addChildren([
   executiveHangarRoute,
   flightProfileRoute,
   dumperAppsRoute,
+  starMapRoute,
+  starMapSystemRoute,
 ])
 
 export default routeTree

@@ -94,16 +94,22 @@ function buildClusterRows(clusterPreset, baseSignature) {
   return { maxNodes, rows, clusterPresetKey: key, probabilityOfClustering }
 }
 
-function buildOverallProfile(locations, depositType, baseSignature, locationAliases) {
+export function buildOverallProfile(locations, depositType, baseSignature, locationAliases) {
   const filtered = locations.filter((l) => l.depositType === depositType)
   if (filtered.length === 0) return null
 
-  let maxNodes = 0
-  let bestLocation = filtered[0].spawnKey ?? filtered[0].locationName
-  let bestLocationSpawnPercent = filtered[0].effectiveSpawnPercent
+  // A site that is not in the game never wins a "best at" pick while a real one exists.
+  const reachable = filtered.filter(
+    (l) => !resolveAliasForSpawnKey(l.spawnKey ?? l.locationName, locationAliases).notInGame
+  )
+  const candidates = reachable.length ? reachable : filtered
 
-  for (const loc of filtered) {
-    maxNodes = Math.max(maxNodes, loc.maxNodes)
+  let maxNodes = 0
+  let bestLocation = candidates[0].spawnKey ?? candidates[0].locationName
+  let bestLocationSpawnPercent = candidates[0].effectiveSpawnPercent
+
+  for (const loc of candidates) maxNodes = Math.max(maxNodes, loc.maxNodes)
+  for (const loc of candidates) {
     if (loc.effectiveSpawnPercent > bestLocationSpawnPercent) {
       bestLocation = loc.spawnKey ?? loc.locationName
       bestLocationSpawnPercent = loc.effectiveSpawnPercent
@@ -115,7 +121,7 @@ function buildOverallProfile(locations, depositType, baseSignature, locationAlia
   for (let n = 2; n <= maxNodes; n++) {
     let bestChance = 0
     let bestAt = bestLocation
-    for (const loc of filtered) {
+    for (const loc of candidates) {
       const row = loc.clusterRows.find((r) => r.nodes === n)
       if (row && row.chancePercent > bestChance) {
         bestChance = row.chancePercent

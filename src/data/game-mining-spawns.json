@@ -1327,22 +1327,22 @@
               "nodes": 4,
               "rs": 16960,
               "chancePercent": 60,
-              "bestAtLocation": "Akiro Cluster",
-              "bestAtLocationDisplayName": "Akiro Cluster"
+              "bestAtLocation": "Pyro Warm01",
+              "bestAtLocationDisplayName": "Pyro I–II Lagrange belts"
             },
             {
               "nodes": 5,
               "rs": 21200,
               "chancePercent": 30,
-              "bestAtLocation": "Akiro Cluster",
-              "bestAtLocationDisplayName": "Akiro Cluster"
+              "bestAtLocation": "Pyro Warm01",
+              "bestAtLocationDisplayName": "Pyro I–II Lagrange belts"
             },
             {
               "nodes": 6,
               "rs": 25440,
               "chancePercent": 10,
-              "bestAtLocation": "Akiro Cluster",
-              "bestAtLocationDisplayName": "Akiro Cluster"
+              "bestAtLocation": "Pyro Warm01",
+              "bestAtLocationDisplayName": "Pyro I–II Lagrange belts"
             }
           ],
           "bestLocation": "Lagrange E",
@@ -1362,7 +1362,7 @@
         "Akiro Cluster|asteroid": {
           "locationName": "Akiro Cluster",
           "spawnKey": "Akiro Cluster",
-          "displayName": "Akiro Cluster",
+          "displayName": "Akiro Cluster (Not in game)",
           "guideName": "Akiro Cluster",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro_AkiroCluster",
           "system": "Pyro",
@@ -4075,7 +4075,7 @@
         "Akiro Cluster|asteroid": {
           "locationName": "Akiro Cluster",
           "spawnKey": "Akiro Cluster",
-          "displayName": "Akiro Cluster",
+          "displayName": "Akiro Cluster (Not in game)",
           "guideName": "Akiro Cluster",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro_AkiroCluster",
           "system": "Pyro",
@@ -5196,7 +5196,7 @@
         "Akiro Cluster|asteroid": {
           "locationName": "Akiro Cluster",
           "spawnKey": "Akiro Cluster",
-          "displayName": "Akiro Cluster",
+          "displayName": "Akiro Cluster (Not in game)",
           "guideName": "Akiro Cluster",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro_AkiroCluster",
           "system": "Pyro",
@@ -7271,22 +7271,22 @@
               "nodes": 4,
               "rs": 17020,
               "chancePercent": 60,
-              "bestAtLocation": "Akiro Cluster",
-              "bestAtLocationDisplayName": "Akiro Cluster"
+              "bestAtLocation": "Pyro Cool01",
+              "bestAtLocationDisplayName": "Pyro V Lagrange belts"
             },
             {
               "nodes": 5,
               "rs": 21275,
               "chancePercent": 30,
-              "bestAtLocation": "Akiro Cluster",
-              "bestAtLocationDisplayName": "Akiro Cluster"
+              "bestAtLocation": "Pyro Cool01",
+              "bestAtLocationDisplayName": "Pyro V Lagrange belts"
             },
             {
               "nodes": 6,
               "rs": 25530,
               "chancePercent": 10,
-              "bestAtLocation": "Akiro Cluster",
-              "bestAtLocationDisplayName": "Akiro Cluster"
+              "bestAtLocation": "Pyro Cool01",
+              "bestAtLocationDisplayName": "Pyro V Lagrange belts"
             }
           ],
           "bestLocation": "Aaron Halo",
@@ -7306,7 +7306,7 @@
         "Akiro Cluster|asteroid": {
           "locationName": "Akiro Cluster",
           "spawnKey": "Akiro Cluster",
-          "displayName": "Akiro Cluster",
+          "displayName": "Akiro Cluster (Not in game)",
           "guideName": "Akiro Cluster",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro_AkiroCluster",
           "system": "Pyro",
@@ -9282,19 +9282,19 @@
               "nodes": 2,
               "rs": 6770,
               "chancePercent": 30,
-              "bestAtLocation": "Akiro Cluster",
-              "bestAtLocationDisplayName": "Akiro Cluster"
+              "bestAtLocation": "Pyro Deepspaceasteroids",
+              "bestAtLocationDisplayName": "Pyro Asteroid Clusters"
             },
             {
               "nodes": 3,
               "rs": 10155,
               "chancePercent": 10,
-              "bestAtLocation": "Akiro Cluster",
-              "bestAtLocationDisplayName": "Akiro Cluster"
+              "bestAtLocation": "Pyro Deepspaceasteroids",
+              "bestAtLocationDisplayName": "Pyro Asteroid Clusters"
             }
           ],
-          "bestLocation": "Akiro Cluster",
-          "bestLocationDisplayName": "Akiro Cluster",
+          "bestLocation": "Pyro Deepspaceasteroids",
+          "bestLocationDisplayName": "Pyro Asteroid Clusters",
           "bestLocationSpawnPercent": 0.01,
           "scaleRange": {
             "min": 0.6,
@@ -9310,7 +9310,7 @@
         "Akiro Cluster|asteroid": {
           "locationName": "Akiro Cluster",
           "spawnKey": "Akiro Cluster",
-          "displayName": "Akiro Cluster",
+          "displayName": "Akiro Cluster (Not in game)",
           "guideName": "Akiro Cluster",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro_AkiroCluster",
           "system": "Pyro",
@@ -10863,12 +10863,12 @@
               "nodes": 2,
               "rs": 6370,
               "chancePercent": 25,
-              "bestAtLocation": "Akiro Cluster",
-              "bestAtLocationDisplayName": "Akiro Cluster"
+              "bestAtLocation": "Pyro Deepspaceasteroids",
+              "bestAtLocationDisplayName": "Pyro Asteroid Clusters"
             }
           ],
-          "bestLocation": "Akiro Cluster",
-          "bestLocationDisplayName": "Akiro Cluster",
+          "bestLocation": "Pyro Deepspaceasteroids",
+          "bestLocationDisplayName": "Pyro Asteroid Clusters",
           "bestLocationSpawnPercent": 0.002,
           "scaleRange": {
             "min": 0.6,
@@ -10884,7 +10884,7 @@
         "Akiro Cluster|asteroid": {
           "locationName": "Akiro Cluster",
           "spawnKey": "Akiro Cluster",
-          "displayName": "Akiro Cluster",
+          "displayName": "Akiro Cluster (Not in game)",
           "guideName": "Akiro Cluster",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro_AkiroCluster",
           "system": "Pyro",
@@ -16506,7 +16506,7 @@
         "Akiro Cluster|asteroid": {
           "locationName": "Akiro Cluster",
           "spawnKey": "Akiro Cluster",
-          "displayName": "Akiro Cluster",
+          "displayName": "Akiro Cluster (Not in game)",
           "guideName": "Akiro Cluster",
           "hppKey": "HarvestableProviderPreset.HPP_Pyro_AkiroCluster",
           "system": "Pyro",

@@ -1,0 +1,73 @@
+import { useEffect, useMemo } from 'react'
+import { useNavigate, useParams } from '@tanstack/react-router'
+import FeaturePageLayout from '../components/layout/FeaturePageLayout'
+import StarMapSystemView from '../components/starMap/StarMapSystemView'
+import { setAnalyticsSubTool } from '../lib/analytics'
+import type { StarMapMarker } from '../lib/starMap'
+import { expandRoute, markedIdsInSystem, type StarMapPayload } from '../lib/starMapHighlight'
+import { getStarMapData } from '../lib/starMapData'
+import {
+  clearStarMapSessionIfLeft,
+  getStarMapSession,
+  startStarMapSession,
+  updateStarMapSession,
+  useStarMapSession,
+} from '../lib/starMapSession'
+
+const EMPTY_PAYLOAD: StarMapPayload = {}
+
+export default function StarMapSystemRoute() {
+  const { systemId = '' } = useParams({ strict: false }) as { systemId?: string }
+  const navigate = useNavigate()
+  const { index, systems } = getStarMapData()
+  const system = systems[systemId]
+  const session = useStarMapSession()
+  const payload = session?.payload ?? EMPTY_PAYLOAD
+  const focusMarkerId = session?.focusMarkerId
+  const markedIds = useMemo(() => markedIdsInSystem(payload, systems, systemId), [payload, systems, systemId])
+  const routePoints = useMemo(() => expandRoute(payload, systems, index.links), [payload, systems, index])
+
+  useEffect(() => () => clearStarMapSessionIfLeft(), [])
+
+  useEffect(() => {
+    if (system) setAnalyticsSubTool(system.id)
+  }, [system])
+
+  const back = () => {
+    updateStarMapSession({ focusMarkerId: undefined, choicePending: false })
+    navigate({ to: '/star-map', search: {} })
+  }
+
+  const jump = (marker: StarMapMarker) => {
+    if (!marker.toSystem || !systems[marker.toSystem]) return
+    if (!getStarMapSession()) startStarMapSession({})
+    updateStarMapSession({ focusMarkerId: marker.toMarkerId ?? undefined, choicePending: false })
+    navigate({ to: '/star-map/$systemId', params: { systemId: marker.toSystem }, search: {} })
+  }
+
+  return (
+    <FeaturePageLayout title="Star Map">
+      <div className="site-surface relative h-[calc(100vh-11rem)] min-h-[480px] overflow-hidden">
+        {system ? (
+          <StarMapSystemView
+            key={`${system.id}:${focusMarkerId ?? ''}`}
+            system={system}
+            index={index}
+            markedIds={markedIds}
+            routePoints={routePoints}
+            focusMarkerId={focusMarkerId}
+            onBack={back}
+            onJump={jump}
+          />
+        ) : (
+          <div className="site-empty absolute inset-0 flex flex-col items-center justify-center gap-3">
+            <p>That system is not on the map.</p>
+            <button type="button" className="site-btn-secondary rounded-lg text-sm" onClick={back}>
+              Back
+            </button>
+          </div>
+        )}
+      </div>
+    </FeaturePageLayout>
+  )
+}

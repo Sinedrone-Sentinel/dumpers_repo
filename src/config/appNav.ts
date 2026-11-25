@@ -14,6 +14,8 @@ export interface AppNavItem {
   minRole?: UserRole
   /** Hidden from guests and members until the page is opened up. */
   officerOnly?: boolean
+  /** Hidden from everyone except super-admins while the page is being tested. */
+  superAdminOnly?: boolean
   /** Nested child items (for expandable menus) */
   children?: AppNavItem[]
 }
@@ -123,6 +125,14 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
     featureId: 'ship_shop',
   },
   {
+    id: 'star-map',
+    label: 'Star Map',
+    path: '/star-map',
+    icon: 'starmap',
+    featureId: 'star_map',
+    superAdminOnly: true,
+  },
+  {
     id: 'archive',
     label: 'Info Archive',
     path: '/archive',
@@ -156,6 +166,7 @@ export const NAV_GROUPS: { id: string; label: string; itemIds: string[] }[] = [
       'commodity-lookup',
       'loot-finder',
       'executive-hangar',
+      'star-map',
       'dumper-apps',
     ],
   },
@@ -171,6 +182,7 @@ export function canSeeNavItem(
   ctx: VisibilityContext,
   canAccess: (minRole: UserRole) => boolean
 ): boolean {
+  if (item.superAdminOnly) return ctx.isSuperAdmin
   if (item.officerOnly) return canAccess('officer')
 
   // Guests see the full menu — locked items show a preview page when clicked

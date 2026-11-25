@@ -128,6 +128,7 @@ function pathToTool(pathname: string): string | null {
   if (pathname.startsWith('/guest-locked')) return 'guest_locked'
   if (pathname.startsWith('/flight-profile')) return 'flight_profile'
   if (pathname.startsWith('/dumper-apps')) return 'dumper_apps'
+  if (pathname.startsWith('/star-map')) return 'star_map'
 
   return null
 }
@@ -288,6 +289,7 @@ export const ANALYTICS_TOOL_LABELS: Record<string, string> = {
   guest_locked: 'Guest Locked',
   flight_profile: 'Flight Profile',
   dumper_apps: 'Dumper Apps',
+  star_map: 'Star Map',
 }
 
 export const ANALYTICS_SUB_TOOL_LABELS: Record<string, string> = {
@@ -327,6 +329,10 @@ export const ANALYTICS_SUB_TOOL_LABELS: Record<string, string> = {
   factions: 'Factions',
   lore: 'Resource Lore',
   general: 'General Archive',
+  overview: 'Systems Overview',
+  stanton: 'Stanton',
+  pyro: 'Pyro',
+  nyx: 'Nyx',
 }
 
 export function formatAnalyticsDuration(totalSeconds: number): string {

@@ -383,6 +383,13 @@ function NavIcon({ name, className = '' }: NavIconProps) {
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
     ),
+    starmap: (
+      <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="2.5" strokeWidth={1.5} />
+        <ellipse cx="12" cy="12" rx="9" ry="4" strokeWidth={1.5} transform="rotate(-25 12 12)" />
+        <circle cx="19" cy="8" r="1.2" fill="currentColor" stroke="none" />
+      </svg>
+    ),
     ship: (
       <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 16l9-12 9 12h-5l-1 4H9l-1-4H3z" />

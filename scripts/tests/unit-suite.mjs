@@ -56,6 +56,8 @@ const modules = [
   'src/lib/flightProfile/catalog.ts',
   'src/lib/flightProfile/parseProfile.ts',
   'src/lib/lootBlueprintLookup.ts',
+  'src/lib/starMap.ts',
+  'src/lib/starMapHighlight.ts',
 ]
 
 console.log('Unit tests: bundling modules...')
@@ -904,6 +906,23 @@ check(
 const miningLocationData = JSON.parse(
   readFileSync(path.join(root, 'src/data/game-mining-locations.json'), 'utf8')
 )
+const akiroAlias = miningLocationData.locationAliases['Akiro Cluster']
+check(
+  akiroAlias?.notInGame === true && akiroAlias.displayName === 'Akiro Cluster (Not in game)',
+  'Akiro Cluster is labelled Not in game'
+)
+check(!/PYAM|L3/.test(akiroAlias?.navHint ?? ''), 'Akiro Cluster hint points nowhere in game')
+check(miningLocationData.oreLocations.Riccite.includes('Akiro Cluster'), 'Akiro Cluster keeps its ore list')
+const akiroBestPicks = []
+const miningSpawnData = JSON.parse(readFileSync(path.join(root, 'src/data/game-mining-spawns.json'), 'utf8'))
+for (const [oreName, ore] of Object.entries(miningSpawnData.ores)) {
+  for (const profile of Object.values(ore.overallByType)) {
+    if (!profile) continue
+    if (profile.bestLocation === 'Akiro Cluster') akiroBestPicks.push(oreName)
+    if (profile.clusterRows.some((row) => row.bestAtLocation === 'Akiro Cluster')) akiroBestPicks.push(oreName)
+  }
+}
+check(akiroBestPicks.length === 0, `Akiro Cluster never wins a best-at pick (${akiroBestPicks.join(', ')})`)
 const hepSites = miningLocationData.oreLocations.Hephaestanite
 for (const site of ['CRU-L3', 'MIC-L1', 'MIC-L2', 'MIC-L5', 'HUR-L5']) {
   check(hepSites.includes(site), `Hephaestanite lists ${site}`)
@@ -3394,6 +3413,163 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
     lootLookup.blueprintHasLootLocations(afterRemoveSoo, 'behr_rifle_ballistic_01') &&
       !lootLookup.blueprintHasLootLocations(afterRemoveSoo, 'orc_armor_light_core_01'),
     'loot chest: removing one location keeps the chest if another site remains; drops it when none remain',
+  )
+}
+
+{
+  const starMap = await import(pathToFileURL(path.join(outDir, 'starMap.mjs')).href)
+  const hl = await import(pathToFileURL(path.join(outDir, 'starMapHighlight.mjs')).href)
+  const mapDir = path.join(root, 'src/data/star-maps')
+  const smIndex = JSON.parse(readFileSync(path.join(mapDir, 'index.json'), 'utf8'))
+  const smSystems = {}
+  for (const s of smIndex.systems) smSystems[s.id] = JSON.parse(readFileSync(path.join(mapDir, `${s.id}.json`), 'utf8'))
+  const stanton = smSystems.stanton
+  const byName = (sys, name) => sys.markers.find((m) => m.name === name)
+
+  check(['stanton', 'pyro', 'nyx'].every((id) => smSystems[id]?.markers.length > 0), 'star map: one file per system')
+  check(
+    !stanton.markers.some((m) => /^lorville$/i.test(m.name) || /^om-?\d/i.test(m.name)),
+    'star map: surface cities and orbital markers stay off the map',
+  )
+  const halo = byName(stanton, 'Aaron Halo')
+  check(
+    stanton.markers.filter((m) => m.kind === 'belt' && !m.parentName).length === 1 &&
+      halo.innerRadiusM > Math.hypot(byName(stanton, 'Crusader').x, byName(stanton, 'Crusader').y) &&
+      halo.outerRadiusM < Math.hypot(byName(stanton, 'ArcCorp').x, byName(stanton, 'ArcCorp').y),
+    'star map: Aaron Halo is one band between Crusader and ArcCorp',
+  )
+
+  // Scale: game radii stay relative; icons are a fixed small size.
+  const crusader = byName(stanton, 'Crusader')
+  const hurston = byName(stanton, 'Hurston')
+  const yela = byName(stanton, 'Yela')
+  const fit = starMap.systemBodyScale(stanton, 400 / 7e10)
+  const ratio = starMap.orbDisplayRadiusPx(hurston, fit) / starMap.orbDisplayRadiusPx(crusader, fit)
+  check(Math.abs(ratio - hurston.radiusM / crusader.radiusM) < 0.01, 'star map: planet sizes follow game radii')
+  const close = starMap.systemBodyScale(stanton, 200 / crusader.radiusM)
+  const moonRatio = starMap.orbDisplayRadiusPx(yela, close) / starMap.orbDisplayRadiusPx(crusader, close)
+  check(Math.abs(moonRatio - yela.radiusM / crusader.radiusM) < 0.01, 'star map: moon size relative to its planet')
+  check(
+    starMap.ICON_PX <= starMap.orbDisplayRadiusPx(crusader, fit),
+    'star map: station icon is much smaller than the largest planet',
+  )
+  const starPx = starMap.orbDisplayRadiusPx(byName(stanton, 'Stanton'), fit)
+  check(
+    starPx > starMap.orbDisplayRadiusPx(crusader, fit) &&
+      starPx < Math.hypot(hurston.x, hurston.y) * fit.pxPerM,
+    'star map: star is larger than any planet but inside the first orbit',
+  )
+
+  // Declutter: zoomed out, a station sitting on its planet is hidden.
+  const project = (scale) =>
+    stanton.markers
+      .filter((m) => m.kind !== 'belt')
+      .map((m) => ({
+        marker: m,
+        sx: 450 + m.x * scale.pxPerM,
+        sy: 350 - m.y * scale.pxPerM,
+        r: starMap.ORB_KINDS.has(m.kind) ? starMap.orbDisplayRadiusPx(m, scale) : starMap.ICON_PX / 2,
+      }))
+  const seraphim = stanton.markers.find((m) => /seraphim/i.test(m.name))
+  const visibleFar = starMap.declutterMarkers(project(fit))
+  check(seraphim && !visibleFar.has(seraphim.id), 'star map: zoomed-out view hides a station on its planet')
+  check(visibleFar.has(crusader.id), 'star map: planets always show')
+  check(
+    seraphim && starMap.declutterMarkers(project(fit), new Set([seraphim.id])).has(seraphim.id),
+    'star map: a highlighted marker always shows',
+  )
+
+  // Highlight contract.
+  check(hl.normalizeMapName('PYR6 L3 · Endgame') === 'pyr6l3', 'star map: chip suffix is ignored')
+  check(hl.matchMarkers('CRU-L3', smSystems).some((m) => m.systemId === 'stanton'), 'star map: CRU-L3 finds the station')
+  check(hl.matchMarkers('Daymar', smSystems)[0]?.kind === 'moon', 'star map: surface ore resolves to its moon')
+  check(hl.matchMarkers('microTech', smSystems)[0]?.kind === 'planet', 'star map: surface ore resolves to its planet')
+  const poolG = hl.matchMarkers('Lagrange G', smSystems)
+  check(
+    poolG.length > 0 && poolG.every((m) => m.systemId === 'pyro' && (m.kind === 'rab' || m.kind === 'rmb')) &&
+      hl.matchMarkers('Lagrange Occupied', smSystems).length === poolG.length,
+    'star map: Lagrange G / Occupied pools blink the Pyro RAB and RMB sites',
+  )
+  const two = hl.resolveStarMapSystem({ marks: ['Hurston', 'Monox'] }, smSystems, smIndex)
+  check(
+    two.kind === 'multiple' && two.systemIds.length === 2 && two.systemIds.includes('stanton') && two.systemIds.includes('pyro'),
+    'star map: marks in two systems offer those two systems',
+  )
+  const none = hl.resolveStarMapSystem({ marks: ['Nowhere Special'] }, smSystems, smIndex)
+  check(none.kind === 'none' && none.systemIds.length === smIndex.systems.length, 'star map: no match offers every system')
+  const one = hl.resolveStarMapSystem({ marks: ['Daymar', 'Yela'] }, smSystems, smIndex)
+  check(one.kind === 'single' && one.systemId === 'stanton', 'star map: one system opens directly')
+  const search = hl.starMapSearch({ marks: ['Daymar', 'CRU-L3'], route: ['Hurston', 'Monox'] })
+  const back = hl.payloadFromSearch(search)
+  check(back.marks.join() === 'Daymar,CRU-L3' && back.route.join() === 'Hurston,Monox', 'star map: search params round-trip')
+
+  // Blink: 500ms fade in, 750ms fade out.
+  check(starMap.blinkAlpha(0) === 0, 'blink: starts hidden')
+  check(starMap.blinkAlpha(500) === 1, 'blink: full after 500ms fade in')
+  check(Math.abs(starMap.blinkAlpha(500 + 375) - 0.5) < 1e-9, 'blink: half way through the 750ms fade out')
+  check(starMap.blinkAlpha(1250) === 0, 'blink: cycle repeats at 1250ms')
+
+  // Route across two systems.
+  const routePayload = { start: 'Hurston', route: ['Monox'] }
+  const routeStart = hl.resolveStarMapSystem(routePayload, smSystems, smIndex)
+  check(routeStart.kind === 'single' && routeStart.systemId === 'stanton', 'route: opens the start system')
+  const points = hl.expandRoute(routePayload, smSystems, smIndex.links)
+  const stantonLegs = hl.routeSegmentsInSystem(points, 'stanton')
+  const lastStanton = stantonLegs[stantonLegs.length - 1]?.[1]
+  check(lastStanton?.kind === 'jump_point' && lastStanton.toSystem === 'pyro', 'route: Stanton leg stops at the departure jump')
+  const pyroLegs = hl.routeSegmentsInSystem(points, 'pyro')
+  check(
+    pyroLegs[0]?.[0].kind === 'jump_point' && pyroLegs[pyroLegs.length - 1]?.[1].name === 'Monox',
+    'route: continues from the arrival jump to the stop',
+  )
+  check(
+    hl.systemPath('stanton', 'nyx', smIndex.links)?.join('>') === 'stanton>pyro>nyx',
+    'route: crosses systems through jump links',
+  )
+
+  // Nyx belts sit on their own segment orbits.
+  const nyx = smSystems.nyx
+  const glaciem = byName(nyx, 'Glaciem Ring')
+  const keeger = byName(nyx, 'Keeger Belt')
+  check(glaciem && keeger && glaciem.outerRadiusM < keeger.innerRadiusM, 'star map: Glaciem Ring is inside Keeger Belt')
+  const nyxStations = nyx.markers.filter((m) => m.kind === 'qv' || m.kind === 'outlaw')
+  const onKeeger = nyxStations.filter((m) => {
+    const d = Math.hypot(m.x, m.y)
+    return d >= keeger.innerRadiusM && d <= keeger.outerRadiusM
+  })
+  check(onKeeger.length / nyxStations.length > 0.5, 'star map: Nyx QV and outlaw stations ride the Keeger Belt')
+
+  // Planet and moon asteroid rings are centred on their body.
+  const yelaRing = byName(stanton, 'Yela Ring')
+  check(
+    yelaRing?.kind === 'belt' && yelaRing.parentName === 'Yela' && yelaRing.x === yela.x && yelaRing.y === yela.y &&
+      yelaRing.innerRadiusM > yela.radiusM && yelaRing.outerRadiusM > yelaRing.innerRadiusM,
+    'star map: Yela Ring circles Yela outside its surface',
+  )
+  const terminus = byName(smSystems.pyro, 'Terminus')
+  const terminusRing = byName(smSystems.pyro, 'Terminus Ring')
+  check(
+    terminusRing?.parentName === 'Terminus' && terminusRing.x === terminus.x && terminusRing.innerRadiusM > terminus.radiusM,
+    'star map: Terminus Ring circles Pyro VI',
+  )
+  check(hl.matchMarkers('Yela Ring', smSystems)[0]?.id === yelaRing.id, 'star map: Yela Ring marks its own band')
+  const ringScale = starMap.systemBodyScale(stanton, 400 / 7e10)
+  check(
+    yelaRing.innerRadiusM * starMap.beltPxPerM(yelaRing, yela, ringScale) > starMap.orbDisplayRadiusPx(yela, ringScale),
+    'star map: zoomed out, Yela Ring is still drawn outside the enlarged moon',
+  )
+  check(starMap.beltPxPerM(byName(stanton, 'Aaron Halo'), null, ringScale) === ringScale.pxPerM, 'star map: star belts use map scale')
+
+  // Box zoom: box top-left becomes view top-left; box width spans the view.
+  const cam0 = { cx: 0, cy: 0, pxPerM: 1 }
+  const view = { w: 800, h: 600 }
+  const zoomed = starMap.boxZoomCamera(cam0, view, { left: 100, top: 50, width: 200 })
+  const worldTopLeft = { x: cam0.cx + (100 - 400), y: cam0.cy - (50 - 300) }
+  const newTopLeft = { x: zoomed.cx - 400 / zoomed.pxPerM, y: zoomed.cy + 300 / zoomed.pxPerM }
+  check(zoomed.pxPerM === 4, 'box zoom: width spans the view')
+  check(
+    Math.abs(newTopLeft.x - worldTopLeft.x) < 1e-9 && Math.abs(newTopLeft.y - worldTopLeft.y) < 1e-9,
+    'box zoom: box top-left becomes the view top-left',
   )
 }
 

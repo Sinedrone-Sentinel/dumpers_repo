@@ -22,6 +22,8 @@ export interface LocationAlias {
   navHint?: string
   /** Structured QT marker/station lists grouped by belt/region. */
   navMarkers?: NavMarkerGroup[]
+  /** Ores still list it, but the site cannot be reached in game. */
+  notInGame?: boolean
 }
 
 const locationAliases = miningLocations.locationAliases ?? {}

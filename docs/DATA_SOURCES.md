@@ -11,7 +11,7 @@ All blueprint, component, mining, ordnance, reputation, and Archive lore data co
 1. **Extract DataForge**: Run `.\scripts\extract-game-data.ps1`
    - Step 1: full DCB extract to JSON (`extracted-data/libs/foundry/records/`)
    - Step 2: English localization from `Data.p4k`
-   - Step 3: star system containers (`Data/ObjectContainers/PU/system/*/*.socpak`). The parse writes `nav-systems.json` from these
+   - Step 3: star system containers (`Data/ObjectContainers/PU/system/*/*.socpak`). The parse writes `nav-systems.json` and `src/data/star-maps/` from these. The same step also pulls `system/*/lagrangepoints/*.socpak` and segmented belt / ring folders (`system/*/*belt*/**`, `system/*/*ring*/**`, plus the capitalised `*Belt*` / `*Ring*`, because p4k filters are case-sensitive and Nyx ships `glaciemRing/`). The Star Map reads Nyx belt orbits from those segments and the band edge from `*_bg.socpak` bounds. Planet and moon asteroid rings (Yela, Pyro VI) come from the `AsteroidRing` entity inside that body's own container
    - Step 4: shop socpaks + ShopInventories **only** with `-IncludeShopData` (skipped by default)
    - Quality bands and mission broker data come from the DCB extract — no separate `dcb query` steps
 
