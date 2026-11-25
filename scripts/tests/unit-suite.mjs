@@ -3571,6 +3571,48 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
     pyroLegs[0]?.[0].kind === 'jump_point' && pyroLegs[pyroLegs.length - 1]?.[1].name === 'Monox',
     'route: continues from the arrival jump to the stop',
   )
+  const shopHere = hl.shoppingMapPayload({
+    from: 'Seraphim Station',
+    stops: [{ place: 'Seraphim Station', lines: [{ action: 'buy', label: '40 SCU of Chlorine' }] }],
+    progressive: true,
+  }, smSystems)
+  check(
+    shopHere.category === 'shopping' && shopHere.marks?.join() === 'Seraphim Station' && !shopHere.route && !shopHere.active,
+    'star map: a haul that starts where it buys blinks that place',
+  )
+  const shopOn = hl.shoppingMapPayload({
+    from: 'Area18',
+    progressive: true,
+    stops: [
+      { place: 'Area18', lines: [{ action: 'buy', label: 'Chlorine' }] },
+      { place: 'Seraphim Station', lines: [{ action: 'sell', label: 'Chlorine' }] },
+    ],
+  }, smSystems)
+  check(
+    shopOn.start === 'ArcCorp' && shopOn.route?.join() === 'Seraphim Station' && shopOn.active === 'Seraphim Station' && shopOn.shops?.[0]?.place === 'Area18',
+    'star map: a haul in progress routes from the start to the current stop',
+  )
+  const cart = hl.shoppingMapPayload({
+    from: 'Area18',
+    stops: [
+      { place: 'Area18', lines: [{ action: 'buy', label: 'Gatling' }] },
+      { place: 'HUR-L5 High Course Station', lines: [{ action: 'buy', label: 'Bomb' }] },
+    ],
+  }, smSystems)
+  check(!cart.active && cart.start === 'ArcCorp' && cart.route?.join() === 'HUR-L5 High Course Station', 'star map: a cart route is all current, with no dimmed leg')
+  const jumped = [
+    { name: 'Area18', kind: 'landing' },
+    { name: 'Seraphim Station', kind: 'station' },
+    { name: 'Stanton - Pyro Jump Point', kind: 'jump_point' },
+    { name: 'Pyro-Stanton Jump Point', kind: 'jump_point' },
+    { name: 'Checkmate', kind: 'station' },
+  ]
+  check(
+    hl.routeLegTone(jumped, 0, 'Checkmate') === 'dim' &&
+      hl.routeLegTone(jumped, 1, 'Checkmate') === 'bright' &&
+      hl.routeLegTone(jumped, 3, 'Checkmate') === 'bright',
+    'star map: traveled haul legs are dim and the current leg, including its jumps, is bright',
+  )
   check(
     hl.systemPath('stanton', 'nyx', smIndex.links)?.join('>') === 'stanton>pyro>nyx',
     'route: crosses systems through jump links',

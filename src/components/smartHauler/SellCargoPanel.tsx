@@ -1,5 +1,8 @@
 import { useMemo, useState } from 'react'
 import { navMap, pointById } from '../../lib/navSystems'
+import { shoppingMapPayload } from '../../lib/starMapHighlight'
+import { getStarMapData } from '../../lib/starMapData'
+import StarMapViewButton from '../starMap/StarMapViewButton'
 import {
   CRATE_SCU,
   applyHaulAvailability,
@@ -218,7 +221,19 @@ export default function SellCargoPanel({
 
             {row.status === 'found' && row.buyer && (
               <div className="space-y-1 text-sm text-white">
-                <p className="text-blue-400">Go to {row.buyer.offer.place}{from ? ` from ${from.name}` : ''}.</p>
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-blue-400">Go to {row.buyer.offer.place}{from ? ` from ${from.name}` : ''}.</p>
+                  <StarMapViewButton
+                    payload={shoppingMapPayload({
+                      from: from?.name,
+                      progressive: true,
+                      stops: [{
+                        place: row.buyer.offer.place,
+                        lines: [{ action: 'sell', label: `${row.buyer.scu} SCU of ${row.commodity}` }],
+                      }],
+                    }, getStarMapData().systems)}
+                  />
+                </div>
                 {travel && <p>{travel}</p>}
                 <p>
                   Sell {row.buyer.scu} SCU of {row.commodity} at {money(row.buyer.offer.price)} per SCU, about {money(row.buyer.scu * row.buyer.offer.price)}.

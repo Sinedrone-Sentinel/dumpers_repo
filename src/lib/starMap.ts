@@ -104,6 +104,8 @@ export const STAR_MAP_COLORS = {
   belt: 'rgba(168, 184, 156, 0.06)',
   beltLabel: 'rgba(198, 206, 188, 0.8)',
   route: '#facc15',
+  routeDim: 'rgba(250, 204, 21, 0.35)',
+  shopping: '#f59e0b',
   blink: '#facc15',
 } as const
 

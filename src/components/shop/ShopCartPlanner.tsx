@@ -1,7 +1,10 @@
 import { Fragment, useEffect, useRef, useState } from 'react'
 import AppModal from '../layout/AppModal'
 import ShopRouteHeader, { type RouteHeaderSettings } from '../nav/ShopRouteHeader'
-import { describeJumps, navMap, systemById } from '../../lib/navSystems'
+import { describeJumps, navMap, pointById, systemById } from '../../lib/navSystems'
+import { shoppingMapPayload } from '../../lib/starMapHighlight'
+import { getStarMapData } from '../../lib/starMapData'
+import StarMapViewButton from '../starMap/StarMapViewButton'
 import { removeShopCartLine, type ShopCartLine } from '../../lib/shopCart'
 import { offersForShopLine, shopCartLineKey } from '../../lib/shopCartRoute'
 import { planShopRoute, type ShopRouteLine, type ShopRouteMode, type ShopRouteResult, type ShopRouteStopLine } from '../../lib/shopRoute'
@@ -81,6 +84,7 @@ function classify(lines: ShopCartLine[], settings: RouteHeaderSettings): RouteGa
 
 export default function ShopCartPlanner({ lines }: { lines: ShopCartLine[] }) {
   const [route, setRoute] = useState<ShopRouteResult | null>(null)
+  const [routeStartId, setRouteStartId] = useState<string | null>(null)
   const [routeMode, setRouteMode] = useState<ShopRouteMode>('fewest')
   const [includeSystems, setIncludeSystems] = useState<string[]>([])
   const [includeToken, setIncludeToken] = useState(0)
@@ -100,6 +104,7 @@ export default function ShopCartPlanner({ lines }: { lines: ShopCartLine[] }) {
   const ship = lines.find((line) => line.id.startsWith('ship:'))
   const publish = (settings: RouteHeaderSettings, routeLines: ShopRouteLine[]) => {
     setRouteMode(settings.mode)
+    setRouteStartId(settings.startId)
     setRoute(planShopRoute({
       nav: navMap,
       lines: routeLines,
@@ -177,7 +182,18 @@ export default function ShopCartPlanner({ lines }: { lines: ShopCartLine[] }) {
           {routeTotal > 0 && <p className="text-sm font-semibold text-white">Route total {money(routeTotal)}</p>}
           {route.legs.length > 0 && (
             <section>
-              <h3 className="text-xs font-semibold uppercase tracking-wide text-white">Stops</h3>
+              <div className="flex items-center justify-between gap-3">
+                <h3 className="text-xs font-semibold uppercase tracking-wide text-white">Stops</h3>
+                <StarMapViewButton
+                  payload={shoppingMapPayload({
+                    from: pointById(navMap, routeStartId)?.name,
+                    stops: route.legs.map((leg) => ({
+                      place: leg.stop.name,
+                      lines: leg.stop.lines.map((line) => ({ action: 'buy' as const, label: line.label })),
+                    })),
+                  }, getStarMapData().systems)}
+                />
+              </div>
               <ol className="mt-2 space-y-3">
                 {route.legs.map((leg, index) => (
                   <Fragment key={`${leg.stop.pointId}-${index}`}>

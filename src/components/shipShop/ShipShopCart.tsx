@@ -5,6 +5,9 @@ import { useBodyScrollLock } from '../../hooks/useBodyScrollLock'
 import ShopRouteHeader, { type RouteHeaderSettings } from '../nav/ShopRouteHeader'
 import { formatShopNumber } from '../../lib/shipShopMath'
 import { describeJumps, navMap, pointById, resolveShopPlace, systemById } from '../../lib/navSystems'
+import { shoppingMapPayload } from '../../lib/starMapHighlight'
+import { getStarMapData } from '../../lib/starMapData'
+import StarMapViewButton from '../starMap/StarMapViewButton'
 import { planShopRoute, type ShopRouteLine, type ShopRouteMode, type ShopRouteResult, type ShopRouteStopLine } from '../../lib/shopRoute'
 import {
   SHOP_ATTRIBUTION,
@@ -283,6 +286,7 @@ export function ShopCartModal({
   const buyLines = lines.filter((line) => !line.crafted)
   const crafted = lines.filter((line) => line.crafted)
   const [route, setRoute] = useState<ShopRouteResult | null>(null)
+  const [routeStartId, setRouteStartId] = useState<string | null>(null)
   const [routeMode, setRouteMode] = useState<ShopRouteMode>('fewest')
   const [includeSystems, setIncludeSystems] = useState<string[]>([])
   const [includeToken, setIncludeToken] = useState(0)
@@ -303,6 +307,7 @@ export function ShopCartModal({
     const ship = buyLines.find((line) => line.kind === 'ship')
     const shipId = ship ? cartLineKey(ship) : null
     setRouteMode(settings.mode)
+    setRouteStartId(settings.startId)
     setRoute(planShopRoute({
       nav: navMap,
       lines: routeLines,
@@ -421,7 +426,18 @@ export function ShopCartModal({
                 <p className="site-banner-info">{ROUTE_NOTICE[routeMode]}</p>
                 {route.legs.length > 0 && (
                   <section>
-                    <h4 className="text-xs font-semibold uppercase tracking-wide text-slate-300">Stops</h4>
+                    <div className="flex items-center justify-between gap-3">
+                      <h4 className="text-xs font-semibold uppercase tracking-wide text-slate-300">Stops</h4>
+                      <StarMapViewButton
+                        payload={shoppingMapPayload({
+                          from: pointById(navMap, routeStartId)?.name,
+                          stops: route.legs.map((leg) => ({
+                            place: leg.stop.name,
+                            lines: leg.stop.lines.map((line) => ({ action: 'buy' as const, label: line.label })),
+                          })),
+                        }, getStarMapData().systems)}
+                      />
+                    </div>
                     <ol className="mt-2 space-y-3">
                       {route.legs.map((leg, index) => (
                         <Fragment key={`${leg.stop.pointId}-${index}`}>

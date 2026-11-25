@@ -5,6 +5,7 @@ import type {
   StarMapMarker,
   StarMapSystems,
 } from './starMap'
+import { navMap } from './navSystems'
 
 // ── Name matching ──────────────────────────────────────────────────────────
 
@@ -65,7 +66,52 @@ export function findMarkerById(id: string, systems: StarMapSystems): StarMapMark
   return systems[systemId]?.markers.find((m) => m.id === id) ?? null
 }
 
+/**
+ * A shopping stop on the map. A station matches itself. A surface city, which
+ * is not a map marker, uses the planet or moon it sits on.
+ */
+export function resolveShopMarker(place: string, systems: StarMapSystems): StarMapMarker | null {
+  const exact = matchMarkers(place, systems)
+  if (exact.length) return exact[0]
+  const key = normalizeMapName(place)
+  if (!key) return null
+  const point = navMap.points.find(
+    (p) => normalizeMapName(p.name) === key || p.aliases.some((alias) => normalizeMapName(alias) === key),
+  )
+  const sys = point ? systems[point.system] : undefined
+  if (!point || !sys) return null
+  const kinds: StarMapKind[] = point.kind === 'city' || point.surface ? ['planet', 'moon'] : ['station', 'landing', 'planet', 'moon']
+  let best: StarMapMarker | null = null
+  let bestD = Infinity
+  for (const marker of sys.markers) {
+    if (!kinds.includes(marker.kind)) continue
+    const d = Math.hypot(marker.x - point.x, marker.y - point.y)
+    if (d < bestD) {
+      bestD = d
+      best = marker
+    }
+  }
+  return best
+}
+
+function shopRouteName(place: string, systems?: StarMapSystems): string {
+  const trimmed = place.trim()
+  if (!systems) return trimmed
+  return resolveShopMarker(trimmed, systems)?.name || trimmed
+}
+
 // ── Payload (search params) ────────────────────────────────────────────────
+
+export interface StarMapShopLine {
+  action: 'buy' | 'sell'
+  label: string
+}
+
+/** One place on a shopping run, and what to buy or sell there. */
+export interface StarMapShopStop {
+  place: string
+  lines: StarMapShopLine[]
+}
 
 export interface StarMapPayload {
   /** Location names to blink. */
@@ -74,6 +120,72 @@ export interface StarMapPayload {
   route?: string[]
   /** Where the route starts; defaults to the first matched stop. */
   start?: string
+  /** Shopping stops keep a temporary icon and a buy/sell list. Not put in the URL. */
+  category?: 'shopping'
+  shops?: StarMapShopStop[]
+  /** Place the bright leg ends at. Earlier legs are dim. Carts omit this. */
+  active?: string
+}
+
+/**
+ * A shopping run. One place, or a start that is the only stop, blinks.
+ * A calculated cart draws every leg bright. A haul in progress draws the
+ * leg into the current stop bright and the legs already traveled dim.
+ */
+export function shoppingMapPayload(
+  input: {
+    from?: string | null
+    stops: StarMapShopStop[]
+    progressive?: boolean
+  },
+  systems?: StarMapSystems,
+): StarMapPayload {
+  const stops = input.stops
+    .map((stop) => ({ place: stop.place.trim(), lines: stop.lines.filter((line) => line.label.trim()) }))
+    .filter((stop) => stop.place)
+  const places: string[] = []
+  const push = (name?: string | null) => {
+    const next = name?.trim()
+    if (!next) return
+    const routed = shopRouteName(next, systems)
+    if (places.length && normalizeMapName(places[places.length - 1]) === normalizeMapName(routed)) return
+    places.push(routed)
+  }
+  push(input.from)
+  for (const stop of stops) push(stop.place)
+  const blink = places.length <= 1
+  return {
+    category: 'shopping',
+    shops: stops,
+    marks: blink && places[0] ? [places[0]] : undefined,
+    start: blink ? undefined : places[0],
+    route: blink ? undefined : places.slice(1),
+    active: input.progressive && !blink ? places[places.length - 1] : undefined,
+  }
+}
+
+/** Bright on the leg that arrives at `active`, including the jumps in that leg. Earlier legs are dim. */
+export function routeLegTone(
+  points: { name: string; aliases?: string[]; kind?: string }[],
+  fromIndex: number,
+  active?: string,
+): 'bright' | 'dim' {
+  const key = active ? normalizeMapName(active) : ''
+  if (!key || fromIndex < 0) return 'bright'
+  let activeAt = -1
+  for (let i = 0; i < points.length; i++) {
+    const names = [points[i].name, ...(points[i].aliases || [])].map(normalizeMapName)
+    if (names.includes(key)) activeAt = i
+  }
+  if (activeAt <= 0) return 'bright'
+  let prevStop = 0
+  for (let i = activeAt - 1; i >= 0; i--) {
+    if (points[i].kind !== 'jump_point') {
+      prevStop = i
+      break
+    }
+  }
+  return fromIndex < prevStop ? 'dim' : 'bright'
 }
 
 export interface StarMapSearch {

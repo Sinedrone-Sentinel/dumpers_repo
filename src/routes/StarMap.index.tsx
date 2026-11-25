@@ -6,6 +6,7 @@ import { payloadFromSearch, resolveStarMapSystem, type StarMapSearch } from '../
 import { getStarMapData } from '../lib/starMapData'
 import {
   clearStarMapSessionIfLeft,
+  getStarMapSession,
   startStarMapSession,
   updateStarMapSession,
   useStarMapSession,
@@ -37,6 +38,17 @@ export default function StarMapIndexRoute() {
       navigate({ to: '/star-map', search: {}, replace: true })
     }
   }, [hasIncoming, search, systems, index, navigate])
+
+  // A shopping run is kept on the session, not in the URL.
+  useEffect(() => {
+    if (hasIncoming) return
+    const current = getStarMapSession()
+    if (!current?.choicePending) return
+    const res = resolveStarMapSystem(current.payload, systems, index)
+    if (res.kind !== 'single') return
+    updateStarMapSession({ choicePending: false })
+    void navigate({ to: '/star-map/$systemId', params: { systemId: res.systemId }, search: {}, replace: true })
+  }, [hasIncoming, session, systems, index, navigate])
 
   const resolution = useMemo(
     () => (session ? resolveStarMapSystem(session.payload, systems, index) : null),
