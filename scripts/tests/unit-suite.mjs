@@ -3464,20 +3464,36 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
     'star map: star is larger than any planet but inside the first orbit',
   )
 
-  // Declutter: zoomed out, a station sitting on its planet is hidden.
+  // Orbital stations are drawn just outside the planet and stay on the map.
   const project = (scale) =>
     stanton.markers
       .filter((m) => m.kind !== 'belt')
-      .map((m) => ({
-        marker: m,
-        sx: 450 + m.x * scale.pxPerM,
-        sy: 350 - m.y * scale.pxPerM,
-        r: starMap.ORB_KINDS.has(m.kind) ? starMap.orbDisplayRadiusPx(m, scale) : starMap.ICON_PX / 2,
-      }))
+      .map((m) => {
+        const at = starMap.displayPositionM(m, scale)
+        return {
+          marker: m,
+          sx: 450 + at.x * scale.pxPerM,
+          sy: 350 - at.y * scale.pxPerM,
+          r: starMap.ORB_KINDS.has(m.kind) ? starMap.orbDisplayRadiusPx(m, scale) : starMap.ICON_PX / 2,
+        }
+      })
   const seraphim = stanton.markers.find((m) => /seraphim/i.test(m.name))
   const visibleFar = starMap.declutterMarkers(project(fit))
-  check(seraphim && !visibleFar.has(seraphim.id), 'star map: zoomed-out view hides a station on its planet')
+  const clearsPlanet = (station, planet) => {
+    const at = starMap.displayPositionM(station, fit)
+    const d = Math.hypot(at.x - planet.x, at.y - planet.y) * fit.pxPerM
+    return d > starMap.orbDisplayRadiusPx(planet, fit) + starMap.ICON_PX / 2
+  }
+  const everus = byName(stanton, 'Everus Harbor')
+  const baijini = byName(stanton, 'Baijini Point')
+  const tressler = byName(stanton, 'Port Tressler')
   check(visibleFar.has(crusader.id), 'star map: planets always show')
+  check(
+    seraphim && visibleFar.has(seraphim.id) && clearsPlanet(seraphim, crusader) &&
+      clearsPlanet(everus, hurston) && clearsPlanet(baijini, byName(stanton, 'ArcCorp')) &&
+      clearsPlanet(tressler, byName(stanton, 'microTech')),
+    'star map: orbital stations show just outside their planet',
+  )
   check(
     seraphim && starMap.declutterMarkers(project(fit), new Set([seraphim.id])).has(seraphim.id),
     'star map: a highlighted marker always shows',
@@ -3632,6 +3648,38 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
     'star map: Checkmate, Orbituary and Ruin Station are plain stations',
   )
   check(hl.matchMarkers('PYR3 L4', smSystems)[0]?.name === 'PYAM-SUPVISR-3-4', 'star map: PYR3 L4 finds PYAM-SUPVISR-3-4')
+
+  const nyxQv = nyx.markers.filter((m) => m.kind === 'qv')
+  const hiddenQv = nyxQv.filter((m) => starMap.isHiddenStarMapMarker(m))
+  check(
+    hiddenQv.length === 40 && hiddenQv.every((m) => m.name === 'QV Extraction Station') &&
+      hiddenQv.every((m) => starMap.starMapPoiGroup(m) === null),
+    'star map: uninitialized QV extraction stations stay off the map',
+  )
+  const qvGroups = [...new Set(nyxQv.filter((m) => !starMap.isHiddenStarMapMarker(m)).map((m) => starMap.starMapPoiGroup(m)?.id))]
+  check(
+    qvGroups.includes('qv_breaker') && qvGroups.includes('qv_breaker_named') && qvGroups.includes('qv_rockcracker') &&
+      !qvGroups.includes('qv_extraction'),
+    'star map: QV breaker, numbered breaker and rockcracker are separate key rows',
+  )
+  const genericBreaker = nyxQv.find((m) => m.name === 'QV Breaker Station' && m.description && !m.description.includes('UNINITIALIZED'))
+  const namedBreaker = nyxQv.find((m) => m.name.startsWith('QV Breaker Station BRK-'))
+  const rockcracker = nyxQv.find((m) => m.name === 'Rockcracker Site')
+  check(
+    [genericBreaker, namedBreaker, rockcracker].every((m) => starMap.starMapPoiGroup(m)?.startsHidden) &&
+      !starMap.starMapMarkerShown(genericBreaker, {}) &&
+      starMap.starMapMarkerShown(genericBreaker, { qv_breaker: true }) &&
+      !starMap.starMapMarkerShown(namedBreaker, { qv_breaker: true }),
+    'star map: each QV type starts hidden and toggles on its own',
+  )
+  const genericReadout = starMap.starMapMarkerReadout(genericBreaker)
+  const hiddenReadout = starMap.starMapMarkerReadout(hiddenQv[0])
+  check(
+    genericReadout.mission === 'Potential mission location. A contract can send you here.' &&
+      genericReadout.description === genericBreaker.description &&
+      hiddenReadout.description === null && hiddenReadout.mission === null,
+    'star map: QV tooltip says potential mission location and never prints uninitialized',
+  )
 
   // Box zoom: box top-left becomes view top-left; box width spans the view.
   const cam0 = { cx: 0, cy: 0, pxPerM: 1 }

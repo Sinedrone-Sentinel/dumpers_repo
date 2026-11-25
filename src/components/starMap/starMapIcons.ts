@@ -53,9 +53,9 @@ export function drawStarMapIcon(
   x: number,
   y: number,
   size: number,
+  color: string = STAR_MAP_ICON_COLORS[kind],
 ): void {
   const path = iconPath(kind)
-  const color = STAR_MAP_ICON_COLORS[kind]
   ctx.save()
   const glow = ctx.createRadialGradient(x, y, size * 0.15, x, y, size * 0.95)
   glow.addColorStop(0, withAlpha(color, 0.32))
