@@ -3,20 +3,22 @@ import {
   ICON_PX,
   ORB_KINDS,
   STAR_MAP_COLORS,
-  STAR_MAP_ICON_COLORS,
-  STAR_MAP_KIND_LABELS,
+  STAR_MAP_POI_ORDER,
   beltPxPerM,
   blinkAlpha,
   boxZoomCamera,
   declutterMarkers,
   displayPositionM,
   orbDisplayRadiusPx,
+  starMapMarkerReadout,
+  starMapMarkerShown,
+  starMapPoiGroup,
   systemBodyScale,
   type ProjectedMarker,
   type StarMapCamera,
   type StarMapIndex,
-  type StarMapKind,
   type StarMapMarker,
+  type StarMapPoiGroup,
   type StarMapSystem,
 } from '../../lib/starMap'
 import { routeSegmentsInSystem } from '../../lib/starMapHighlight'
@@ -71,6 +73,7 @@ export default function StarMapSystemView({
   const [size, setSize] = useState({ w: 0, h: 0 })
   const camRef = useRef<Cam | null>(null)
   const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [poiOn, setPoiOn] = useState<Record<string, boolean>>({})
   const projectedRef = useRef<{ items: ProjectedMarker[]; visible: Set<string> }>({ items: [], visible: new Set() })
   const dragRef = useRef<{ x: number; y: number; cam: Cam; moved: boolean; box: boolean } | null>(null)
   const leftShiftRef = useRef(false)
@@ -108,11 +111,22 @@ export default function StarMapSystemView({
   const segments = useMemo(() => routeSegmentsInSystem(routePoints, system.id), [routePoints, system.id])
   const routeIds = useMemo(() => new Set(segments.flatMap(([a, b]) => [a.id, b.id])), [segments])
   const systemNames = useMemo(() => new Map(index.systems.map((s) => [s.id, s.name])), [index])
-  const kindsPresent = useMemo(() => {
-    const seen = new Set<StarMapKind>()
-    for (const m of system.markers) if (STAR_MAP_ICON_PATHS[m.kind]) seen.add(m.kind)
-    return [...seen]
+  const legend = useMemo(() => {
+    const seen = new Map<string, StarMapPoiGroup>()
+    for (const m of system.markers) {
+      const group = starMapPoiGroup(m)
+      if (group && STAR_MAP_ICON_PATHS[group.iconKind]) seen.set(group.id, group)
+    }
+    const rank = (id: string) => {
+      const i = STAR_MAP_POI_ORDER.indexOf(id)
+      return i < 0 ? STAR_MAP_POI_ORDER.length : i
+    }
+    return [...seen.values()].sort((a, b) => rank(a.id) - rank(b.id))
   }, [system])
+  const groupOn = useCallback(
+    (group: StarMapPoiGroup) => (Object.prototype.hasOwnProperty.call(poiOn, group.id) ? poiOn[group.id] : !group.startsHidden),
+    [poiOn],
+  )
 
   const fitPxPerM = size.w && size.h ? (Math.min(size.w, size.h) / 2 - FIT_PADDING_PX) / extentM : 0
 
@@ -220,7 +234,7 @@ export default function StarMapSystemView({
       // Project bodies and icons.
       const items: ProjectedMarker[] = []
       for (const m of system.markers) {
-        if (m.kind === 'belt') continue
+        if (m.kind === 'belt' || !starMapMarkerShown(m, poiOn)) continue
         const at = displayPositionM(m, scale)
         const p = toScreen(at.x, at.y, cam)
         const r = ORB_KINDS.has(m.kind) ? orbDisplayRadiusPx(m, scale) : ICON_PX / 2
@@ -284,7 +298,7 @@ export default function StarMapSystemView({
       // Icons.
       for (const it of items) {
         if (ORB_KINDS.has(it.marker.kind) || !visible.has(it.marker.id)) continue
-        drawStarMapIcon(ctx, it.marker.kind, it.sx, it.sy, ICON_PX)
+        drawStarMapIcon(ctx, it.marker.kind, it.sx, it.sy, ICON_PX, starMapPoiGroup(it.marker)?.color)
       }
 
       // Blink.
@@ -398,7 +412,7 @@ export default function StarMapSystemView({
         ctx.fillText(text, placed.x, placed.y + 7)
       }
     },
-    [system, size, toScreen, starX, starY, markedIds, routeIds, selectedId, segments, planetsByName, fitPxPerM],
+    [system, size, toScreen, starX, starY, markedIds, routeIds, selectedId, segments, planetsByName, fitPxPerM, poiOn],
   )
 
   // The star surface and belt dust move, so the view redraws continuously.
@@ -511,7 +525,8 @@ export default function StarMapSystemView({
     setSelectedId(hit ? hit.id : null)
   }
 
-  const selected = selectedId ? system.markers.find((m) => m.id === selectedId) : undefined
+  const selected = selectedId ? system.markers.find((m) => m.id === selectedId && starMapMarkerShown(m, poiOn)) : undefined
+  const readout = selected ? starMapMarkerReadout(selected) : null
   const cam = camRef.current
   let readoutPos: { left: number; top: number } | null = null
   if (selected && cam && size.w) {
@@ -575,27 +590,46 @@ export default function StarMapSystemView({
         </button>
       </div>
 
-      {kindsPresent.length > 0 && (
-        <div className="absolute bottom-3 left-3 site-tooltip-panel pointer-events-none max-w-[16rem]">
-          <ul className="grid grid-cols-1 gap-1">
-            {kindsPresent.map((kind) => (
-              <li key={kind} className="flex items-center gap-2">
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke={STAR_MAP_ICON_COLORS[kind]}
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden
-                >
-                  <path d={STAR_MAP_ICON_PATHS[kind]} />
-                </svg>
-                <span>{STAR_MAP_KIND_LABELS[kind]}</span>
-              </li>
-            ))}
+      {legend.length > 0 && (
+        <div className="absolute bottom-3 left-3 site-tooltip-panel max-h-[46vh] max-w-[18rem] overflow-y-auto">
+          <ul className="grid grid-cols-1 gap-0.5">
+            {legend.map((group) => {
+              const on = groupOn(group)
+              return (
+                <li key={group.id}>
+                  <SiteTooltip side="right" content={on ? 'Hide these on the map.' : 'Show these on the map.'}>
+                    <button
+                      type="button"
+                      aria-pressed={on}
+                      onClick={() => {
+                        setPoiOn((prev) => ({ ...prev, [group.id]: !on }))
+                        setSelectedId((id) => {
+                          if (!id) return id
+                          const marker = system.markers.find((m) => m.id === id)
+                          return marker && starMapPoiGroup(marker)?.id === group.id && on ? null : id
+                        })
+                      }}
+                      className={`flex w-full items-center gap-2 rounded px-1 py-0.5 text-left ${on ? 'opacity-100' : 'opacity-35'}`}
+                    >
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke={on ? group.color : '#64748b'}
+                        strokeWidth={2}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden
+                      >
+                        <path d={STAR_MAP_ICON_PATHS[group.iconKind]} />
+                      </svg>
+                      <span className={on ? 'text-slate-100' : 'text-slate-500'}>{group.label}</span>
+                    </button>
+                  </SiteTooltip>
+                </li>
+              )
+            })}
           </ul>
         </div>
       )}
@@ -611,7 +645,7 @@ export default function StarMapSystemView({
             <div className="min-w-0">
               <div className="text-sm font-semibold text-slate-100">{selected.name}</div>
               <div className="text-[11px] uppercase tracking-wide text-slate-400">
-                {STAR_MAP_KIND_LABELS[selected.kind]}
+                {readout?.subtitle}
                 {selected.parentName ? ` · ${selected.parentName}` : ''}
               </div>
             </div>
@@ -626,7 +660,8 @@ export default function StarMapSystemView({
               </svg>
             </button>
           </div>
-          {selected.description && <p className="mt-2 text-slate-300">{selected.description}</p>}
+          {readout?.mission && <p className="mt-2 text-slate-300">{readout.mission}</p>}
+          {readout?.description && <p className="mt-2 text-slate-300">{readout.description}</p>}
           {selected.notes.length > 0 && (
             <ul className="mt-2 list-disc pl-4 text-slate-300">
               {selected.notes.map((n) => (
