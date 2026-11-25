@@ -529,15 +529,16 @@ function paintStarSurface(
     const ang = Math.atan2(spot.y, spot.x) + turn
     const x = sx + Math.cos(ang) * dist * r
     const y = sy + Math.sin(ang) * dist * r
-    const rad = spot.mote.size * r
+    const body = spot.mote.size * r
+    const rad = body * 1.6
     const band = starSpotBand(spot.mote.roll)
     const core = band === 2 ? hot : band === 1 ? mid : cool
-    const peak = 0.16 + spot.mote.roll * 0.2
+    const peak = 0.13 + spot.mote.roll * 0.16
     const grd = ctx.createRadialGradient(x, y, 0, x, y, rad)
     grd.addColorStop(0, starRgba(core, peak))
-    grd.addColorStop(0.16, starRgba(core, peak * 0.45))
-    grd.addColorStop(0.4, starRgba(core, peak * 0.16))
-    grd.addColorStop(0.7, starRgba(core, peak * 0.04))
+    grd.addColorStop(0.58, starRgba(core, peak))
+    grd.addColorStop(0.7, starRgba(core, peak * 0.55))
+    grd.addColorStop(0.86, starRgba(core, peak * 0.16))
     grd.addColorStop(1, starRgba(core, 0))
     ctx.fillStyle = grd
     ctx.beginPath()
