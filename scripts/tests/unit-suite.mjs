@@ -3764,6 +3764,24 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
     { name: 'Pyro-Stanton Jump Point', kind: 'jump_point' },
     { name: 'Checkmate', kind: 'station' },
   ]
+  const revisited = [
+    { name: 'Ruin Station', kind: 'station' },
+    { name: 'Monox', kind: 'station' },
+    { name: 'Ruin Station', kind: 'station' },
+    { name: 'Gaslight', kind: 'station' },
+  ]
+  const revisitedLegs = hl.routeSegmentsInSystem(
+    revisited.map((point, i) => ({ ...point, id: String(i), systemId: 'pyro' })),
+    'pyro',
+  )
+  check(
+    hl.routeLegTone(revisited, 0, 'Ruin Station') === 'dim' &&
+      hl.routeLegTone(revisited, 1, 'Monox') === 'dim' &&
+      hl.routeLegTone(revisited, 2, 'Monox') === 'bright' &&
+      hl.routeLegTone(revisited, 0, undefined) === 'bright' &&
+      revisitedLegs.map((leg) => leg[2]).join() === '0,1,2',
+    'star map: a haul keeps earlier legs dim when a stop is visited again or the active name matches an earlier marker',
+  )
   check(
     hl.routeLegTone(jumped, 0, 'Checkmate') === 'dim' &&
       hl.routeLegTone(jumped, 1, 'Checkmate') === 'bright' &&

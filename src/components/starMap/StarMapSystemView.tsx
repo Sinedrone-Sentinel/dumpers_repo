@@ -299,11 +299,10 @@ export default function StarMapSystemView({
         ctx.lineCap = 'round'
         ctx.setLineDash([0.1, 10])
         ctx.lineDashOffset = -((t / 40) % 10.1)
-        for (const [a, b] of segments) {
+        for (const [a, b, fromIndex] of segments) {
           const pa = byId.get(a.id)
           const pb = byId.get(b.id)
           if (!pa || !pb) continue
-          const fromIndex = routePoints.findIndex((p, i) => p.id === a.id && routePoints[i + 1]?.id === b.id)
           const tone = routeLegTone(routePoints, fromIndex, active)
           ctx.strokeStyle = tone === 'dim' ? STAR_MAP_COLORS.routeDim : STAR_MAP_COLORS.route
           ctx.lineWidth = tone === 'dim' ? 2 : 3
