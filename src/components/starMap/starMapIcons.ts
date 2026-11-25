@@ -4,6 +4,7 @@ import { STAR_MAP_ICON_COLORS, type StarMapKind } from '../../lib/starMap'
 export const STAR_MAP_ICON_PATHS: Partial<Record<StarMapKind, string>> = {
   station:
     'M19 12a7 7 0 1 1-14 0a7 7 0 1 1 14 0Z M14.5 12a2.5 2.5 0 1 1-5 0a2.5 2.5 0 1 1 5 0Z M12 5v4.5 M12 14.5V19 M5 12h4.5 M14.5 12H19',
+  transit: 'M12 4a8 8 0 1 1 0 16a8 8 0 1 1 0-16Z M12 8v8 M8 12h8',
   landing: 'M4 11l8-7 8 7 M6 10.5V20h12V10.5 M10 20v-5h4v5',
   jump_point:
     'M12 3a9 9 0 1 1 0 18a9 9 0 1 1 0-18Z M12 7a5 5 0 1 1-5 5 M12 10a2 2 0 1 1-2 2',

@@ -4,6 +4,7 @@ export type StarMapKind =
   | 'moon'
   | 'belt'
   | 'station'
+  | 'transit'
   | 'landing'
   | 'jump_point'
   | 'wikelo'
@@ -76,6 +77,7 @@ export const STAR_MAP_KIND_LABELS: Record<StarMapKind, string> = {
   moon: 'Moon',
   belt: 'Asteroid Belt',
   station: 'Station',
+  transit: 'Transit Point',
   landing: 'Landing Zone',
   jump_point: 'Jump Point',
   wikelo: 'Wikelo Station',
@@ -111,6 +113,7 @@ export const STAR_MAP_ICON_COLORS: Record<StarMapKind, string> = {
   moon: STAR_MAP_COLORS.moon,
   belt: '#4ade80',
   station: '#a78bfa',
+  transit: '#67e8f9',
   landing: '#f0c674',
   jump_point: '#ef4444',
   wikelo: '#fbbf24',
@@ -180,11 +183,11 @@ export function starMapPoiGroup(marker: StarMapMarker): StarMapPoiGroup | null {
     if (/BRK-\d+/i.test(name)) {
       return {
         id: 'qv_breaker_named',
-        label: 'QV Breaker BRK',
+        label: 'QV Breaker Station',
         iconKind: 'qv',
         color: '#c4b5fd',
-        startsHidden: true,
-        missionLocation: true,
+        startsHidden: false,
+        missionLocation: false,
       }
     }
     return {
@@ -218,10 +221,12 @@ export function starMapMarkerShown(marker: StarMapMarker, enabled: Readonly<Reco
 /**
  * System a jump point opens for the member. Stanton's Magnus jump is the live
  * route to Nyx, so it reads as Nyx while the record name stays Magnus.
+ * Nyx's Castra file is the live Stanton jump until that system exists.
  */
 export function starMapJumpDestination(marker: StarMapMarker): string | null {
   if (marker.kind !== 'jump_point') return null
   if (marker.toSystem === 'magnus' || /magnus/i.test(marker.name)) return 'nyx'
+  if (marker.systemId === 'nyx' && (marker.toSystem === 'castra' || /castra/i.test(marker.name))) return 'stanton'
   return marker.toSystem
 }
 
@@ -253,6 +258,7 @@ export function starMapMarkerReadout(marker: StarMapMarker): { subtitle: string;
 export const STAR_MAP_POI_ORDER = [
   'jump_point',
   'station',
+  'transit',
   'landing',
   'wikelo',
   'comm_array',
@@ -278,6 +284,7 @@ const ICON_PRIORITY: Partial<Record<StarMapKind, number>> = {
   supervisor: 2,
   landing: 2,
   station: 3,
+  transit: 3,
   pa_station: 3,
   outlaw: 4,
   rab: 5,
@@ -334,7 +341,6 @@ export interface BodyScale {
 }
 
 /** A planet never covers more than this share of the gap to its first moon or neighbour. */
-const BODY_CLEAR_SHARE = 0.45
 /** Markers within this many body radii (and inside the first moon orbit) ride on that body. */
 const ATTACH_RADII = 30
 
@@ -437,6 +443,16 @@ export function systemBodyScale(
 /** Gas giants read a little larger. Every other planet is the same disc. */
 const GAS_GIANT_NAMES = new Set(['Crusader', 'Pyro V', 'Nyx III'])
 
+/** Largest on-screen radius for a planet, as a multiple of the system-view disc. */
+const PLANET_CEILING = 3
+/** Largest on-screen radius for a moon. */
+const MOON_MAX_PX = 16
+
+function planetCeilingPx(marker: StarMapMarker, scale: BodyScale): number {
+  const gas = GAS_GIANT_NAMES.has(marker.name) ? 1 : 0.9
+  return scale.maxPlanetPx * gas * PLANET_CEILING
+}
+
 /** Pixels between a planet's disc and its first moon once the moons spread out. */
 const MOON_GAP_PX = 12
 /** The spread moons stay inside this share of the gap to the planet's nearest neighbour. */
@@ -447,14 +463,14 @@ const MOON_SPREAD_SHARE = 0.6
  * scaled against the other planets in the system — a rocky world stays a disc
  * beside a gas giant. It grows as the view zooms. It stops growing only when
  * the next step would cover the moons and there is no room to push them out,
- * or once the first moon orbit is on screen and the disc would cross it.
+ * or when pushing the moons out would run into a neighbour.
  */
 function planetPx(marker: StarMapMarker, scale: BodyScale): number {
   const floor = scale.maxPlanetPx * (GAS_GIANT_NAMES.has(marker.name) ? 1 : 0.9)
   const zoom = Math.max(1, scale.pxPerM / scale.fitPxPerM)
-  // Grow from the first zoom step. Holding the disc at `floor` until the moon
-  // orbit caught up made a long stretch of the scroll wheel change nothing.
-  let size = floor * Math.pow(zoom, 0.65)
+  // Grow from the first zoom step, then stop at the on-screen ceiling.
+  // Further zoom opens space around the disc instead of filling the view.
+  let size = Math.min(floor * Math.pow(zoom, 0.65), planetCeilingPx(marker, scale))
   const span = scale.layout.moonSpanM.get(marker.id)
   const neighbour = scale.layout.neighbourM.get(marker.id)
   if (span && neighbour !== undefined && Number.isFinite(neighbour)) {
@@ -463,8 +479,6 @@ function planetPx(marker: StarMapMarker, scale: BodyScale): number {
     const spreadMax = room * (span.inner / span.outer) - MOON_GAP_PX - 0.25
     if (spreadMax > floor) size = Math.min(size, spreadMax)
   }
-  const cap = (scale.layout.clearM.get(marker.id) ?? Infinity) * scale.pxPerM * BODY_CLEAR_SHARE
-  if (cap > floor) size = Math.min(size, cap)
   return size
 }
 
@@ -485,9 +499,9 @@ export function orbDisplayRadiusPx(marker: StarMapMarker, scale: BodyScale): num
     const parent = marker.parentName ? scale.layout.byName.get(marker.parentName) : undefined
     if (!parent?.radiusM) return Math.max(realPx, 1.5)
     const share = (marker.radiusM || 0) / parent.radiusM
-    return Math.max(orbDisplayRadiusPx(parent, scale) * share, 1.5)
+    return Math.min(Math.max(orbDisplayRadiusPx(parent, scale) * share, 1.5), MOON_MAX_PX)
   }
-  return Math.max(planetPx(marker, scale), realPx, 10)
+  return Math.min(Math.max(planetPx(marker, scale), 10), planetCeilingPx(marker, scale))
 }
 
 /** How much a body is drawn larger than true size (1 = true size). */

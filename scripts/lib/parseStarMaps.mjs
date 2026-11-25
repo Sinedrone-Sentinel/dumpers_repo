@@ -407,11 +407,28 @@ export function parseStarMaps({ extractedRoot, localization }) {
       })
       if (!kind && /jumppoints\/jumppoint_/.test(path)) kind = 'jump_point'
       if (!kind && /star\.socpak$/.test(path)) kind = 'star'
+      if (!kind && (/transitpoint/i.test(String(world.attr.entityName || '')) || /TransitPoint/.test(record?.recordName || ''))) {
+        kind = 'transit'
+      }
+      const social = String(world.attr.entityName || '').match(/segment_social_(\d+)/i)
+      if (social) {
+        const socialName = locName(localization, `Nyx_SocialStation_${social[1]}`)
+        if (socialName) {
+          kind = 'pa_station'
+          name = socialName
+        }
+      }
       if (!kind) return
       if (isSurfaceNoise(path, kind)) return
-      if (/\/_bg\.socpak$|segment_mission|segment_social|segment_levski/.test(path)) return
+      if (/\/_bg\.socpak$|segment_mission|segment_levski/.test(path)) return
+      if (/segment_social/.test(path) && kind !== 'pa_station') return
       // Nyx planets are placed via dummyplanet containers with real starmap records.
-      if (/dummyplanet/.test(path) && !(record && (record.navIcon === 'Planet' || record.navIcon === 'Moon'))) return
+      // The Glaciem transit points use that same container and stay.
+      if (
+        /dummyplanet/.test(path)
+        && kind !== 'transit'
+        && !(record && (record.navIcon === 'Planet' || record.navIcon === 'Moon'))
+      ) return
       // Path wins for outlaw / rockcracker / breaker segments even when the display name is generic.
       if (/outlaw/.test(path)) {
         kind = 'outlaw'
@@ -424,6 +441,9 @@ export function parseStarMaps({ extractedRoot, localization }) {
         name = name || 'QV Breaker Station'
       }
       if (!name || /[_@]/.test(name) || name.startsWith('LOC_')) return
+      // Only the numbered abandoned breakers are on the Nyx map. Extraction
+      // sites, generic breakers and rockcrackers are not stored.
+      if (kind === 'qv' && !/BRK-\d+/.test(name)) return
       let toSystem = null
       let toMarkerName = null
       if (kind === 'jump_point') {

@@ -3450,9 +3450,13 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
     hurstonFit >= 10 && crusaderFit > hurstonFit && hurstonFit / crusaderFit > hurston.radiusM / crusader.radiusM,
     'star map: zoomed out, rocky planets stay discs and Crusader stays the largest',
   )
-  const close = starMap.systemBodyScale(stanton, 200 / crusader.radiusM)
+  const close = starMap.systemBodyScale(stanton, 200 / crusader.radiusM, 400 / 7e10)
   const moonRatio = starMap.orbDisplayRadiusPx(yela, close) / starMap.orbDisplayRadiusPx(crusader, close)
-  check(Math.abs(moonRatio - yela.radiusM / crusader.radiusM) < 0.01, 'star map: moon size relative to its planet')
+  check(
+    starMap.orbDisplayRadiusPx(crusader, close) <= 48 &&
+      Math.abs(moonRatio - yela.radiusM / crusader.radiusM) < 0.01,
+    'star map: moon size relative to its planet',
+  )
   check(
     starMap.ICON_PX <= starMap.orbDisplayRadiusPx(crusader, fit),
     'star map: station icon is much smaller than the largest planet',
@@ -3613,8 +3617,9 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
   )
   check(
     starMap.orbDisplayRadiusPx(hurston, at(50)) >= hurstonFit &&
-      starMap.orbDisplayRadiusPx(hurston, hurstonMoons) > hurstonFit,
-    'star map: zooming in does not shrink Hurston, and it grows beside its moons',
+      starMap.orbDisplayRadiusPx(hurston, hurstonMoons) > hurstonFit &&
+      starMap.orbDisplayRadiusPx(hurston, at(80)) === starMap.orbDisplayRadiusPx(hurston, at(200)),
+    'star map: Hurston grows, then stops at its on-screen maximum',
   )
   check(
     Math.abs(
@@ -3625,8 +3630,9 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
   )
   const crusaderMoons = at(60 / 50.9e6 / fitPx)
   check(
-    starMap.orbDisplayRadiusPx(crusader, crusaderMoons) <= 50.9e6 * crusaderMoons.pxPerM * 0.5,
-    'star map: Crusader never covers its first moon orbit',
+    starMap.orbDisplayRadiusPx(crusader, crusaderMoons) <= starMap.orbDisplayRadiusPx(crusader, at(200)) &&
+      starMap.orbDisplayRadiusPx(crusader, at(200)) === starMap.orbDisplayRadiusPx(crusader, at(400)),
+    'star map: Crusader stops growing at its on-screen maximum',
   )
   // Zoomed to Crusader with Aaron Halo crossing the view: the moons spread past the disc.
   const crusaderArea = at(140 / (halo.outerRadiusM - halo.innerRadiusM) / fitPx)
@@ -3671,7 +3677,9 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
       starMap.starMapMarkerLabel(magnus) === 'Nyx Jump Point' &&
       starMap.starMapJumpDestination(magnus) === 'nyx' &&
       starMap.starMapMarkerLabel(byName(stanton, 'Stanton-Pyro Jump Point')) === 'Pyro Jump Point' &&
-      starMap.starMapMarkerLabel(byName(smSystems.pyro, 'Pyro-Stanton Jump Point')) === 'Stanton Jump Point',
+      starMap.starMapMarkerLabel(byName(smSystems.pyro, 'Pyro-Stanton Jump Point')) === 'Stanton Jump Point' &&
+      starMap.starMapMarkerLabel(byName(smSystems.nyx, 'Nyx - Castra Jump Point')) === 'Stanton Jump Point' &&
+      starMap.starMapJumpDestination(byName(smSystems.nyx, 'Nyx - Castra Jump Point')) === 'stanton',
     'star map: jump labels name the destination, and Magnus reads as Nyx',
   )
   const pyroStantonJump = byName(smSystems.pyro, 'Pyro-Stanton Jump Point')
@@ -3682,35 +3690,25 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
   )
 
   const nyxQv = nyx.markers.filter((m) => m.kind === 'qv')
-  const hiddenQv = nyxQv.filter((m) => starMap.isHiddenStarMapMarker(m))
+  const transits = nyx.markers.filter((m) => m.kind === 'transit').map((m) => m.name).sort()
   check(
-    hiddenQv.length === 40 && hiddenQv.every((m) => m.name === 'QV Extraction Station') &&
-      hiddenQv.every((m) => starMap.starMapPoiGroup(m) === null),
-    'star map: uninitialized QV extraction stations stay off the map',
+    nyxQv.length === 10 && nyxQv.every((m) => /BRK-\d+/.test(m.name)) &&
+      !nyx.markers.some((m) => m.name === 'QV Extraction Station' || m.name === 'Rockcracker Site' || m.name === 'QV Breaker Station') &&
+      transits.join() === 'Transit Point Glaciem Alpha,Transit Point Glaciem Bravo,Transit Point Glaciem Charlie',
+    'star map: Nyx keeps numbered breakers and the Glaciem transit points only',
   )
-  const qvGroups = [...new Set(nyxQv.filter((m) => !starMap.isHiddenStarMapMarker(m)).map((m) => starMap.starMapPoiGroup(m)?.id))]
+  const service = nyx.markers.filter((m) => m.kind === 'pa_station').map((m) => m.name).sort()
   check(
-    qvGroups.includes('qv_breaker') && qvGroups.includes('qv_breaker_named') && qvGroups.includes('qv_rockcracker') &&
-      !qvGroups.includes('qv_extraction'),
-    'star map: QV breaker, numbered breaker and rockcracker are separate key rows',
+    service.join() === "People's Service Station Alpha,People's Service Station Delta,People's Service Station Lambda,People's Service Station Theta",
+    'star map: Nyx shows the People\'s Service Stations',
   )
-  const genericBreaker = nyxQv.find((m) => m.name === 'QV Breaker Station' && m.description && !m.description.includes('UNINITIALIZED'))
   const namedBreaker = nyxQv.find((m) => m.name.startsWith('QV Breaker Station BRK-'))
-  const rockcracker = nyxQv.find((m) => m.name === 'Rockcracker Site')
   check(
-    [genericBreaker, namedBreaker, rockcracker].every((m) => starMap.starMapPoiGroup(m)?.startsHidden) &&
-      !starMap.starMapMarkerShown(genericBreaker, {}) &&
-      starMap.starMapMarkerShown(genericBreaker, { qv_breaker: true }) &&
-      !starMap.starMapMarkerShown(namedBreaker, { qv_breaker: true }),
-    'star map: each QV type starts hidden and toggles on its own',
-  )
-  const genericReadout = starMap.starMapMarkerReadout(genericBreaker)
-  const hiddenReadout = starMap.starMapMarkerReadout(hiddenQv[0])
-  check(
-    genericReadout.mission === 'Potential mission location. A contract can send you here.' &&
-      genericReadout.description === genericBreaker.description &&
-      hiddenReadout.description === null && hiddenReadout.mission === null,
-    'star map: QV tooltip says potential mission location and never prints uninitialized',
+    starMap.starMapPoiGroup(namedBreaker)?.id === 'qv_breaker_named' &&
+      starMap.starMapPoiGroup(namedBreaker)?.startsHidden === false &&
+      starMap.starMapMarkerShown(namedBreaker, {}) &&
+      starMap.starMapMarkerReadout(namedBreaker).mission === null,
+    'star map: numbered breaker stations show on the Nyx map',
   )
 
   // Box zoom: the rectangle's centre becomes the view centre, and the whole rectangle fits.

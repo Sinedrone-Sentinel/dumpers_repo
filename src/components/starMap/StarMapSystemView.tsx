@@ -354,7 +354,7 @@ export default function StarMapSystemView({
         if (it.marker.kind === 'star') return 0
         if (forced.has(it.marker.id)) return 1
         if (it.marker.kind === 'planet') return 2
-        if (it.marker.kind === 'station' || it.marker.kind === 'landing') return 3
+        if (it.marker.kind === 'station' || it.marker.kind === 'transit' || it.marker.kind === 'landing') return 3
         if (it.marker.kind === 'moon') return 4
         return 5
       }
@@ -380,7 +380,7 @@ export default function StarMapSystemView({
             ),
         )
         // Orbital stations keep a name even when the planet disc is the only thing nearby.
-        const box = clear ?? (it.marker.kind === 'station' || it.marker.kind === 'landing' ? onScreen[0] : undefined)
+        const box = clear ?? (it.marker.kind === 'station' || it.marker.kind === 'transit' || it.marker.kind === 'landing' ? onScreen[0] : undefined)
         if (!box) continue
         boxes.push(box)
         ctx.fillStyle = ORB_KINDS.has(it.marker.kind) ? '#e2e8f0' : 'rgba(203, 213, 225, 0.85)'
