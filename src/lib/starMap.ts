@@ -8,7 +8,7 @@ export type StarMapKind =
   | 'wikelo'
   | 'comm_array'
   | 'executive_hangar'
-  | 'admin_base'
+  | 'supervisor'
   | 'olp'
   | 'pa_station'
   | 'qv'
@@ -79,7 +79,7 @@ export const STAR_MAP_KIND_LABELS: Record<StarMapKind, string> = {
   wikelo: 'Wikelo Station',
   comm_array: 'Comm Array',
   executive_hangar: 'Executive Hangar',
-  admin_base: 'Admin Station',
+  supervisor: 'Supervisor Station',
   olp: 'Orbital Laser Platform',
   pa_station: "People's Alliance Station",
   qv: 'QV Breaker Station',
@@ -112,7 +112,7 @@ export const STAR_MAP_ICON_COLORS: Record<StarMapKind, string> = {
   wikelo: '#fbbf24',
   comm_array: '#67e8f9',
   executive_hangar: '#f472b6',
-  admin_base: '#2dd4bf',
+  supervisor: '#2dd4bf',
   olp: '#a3e635',
   pa_station: '#4ade80',
   qv: '#93c5fd',
@@ -127,7 +127,7 @@ const ICON_PRIORITY: Partial<Record<StarMapKind, number>> = {
   jump_point: 0,
   wikelo: 1,
   executive_hangar: 1,
-  admin_base: 2,
+  supervisor: 2,
   station: 3,
   pa_station: 3,
   outlaw: 4,
@@ -157,18 +157,93 @@ export function blinkAlpha(timeMs: number): number {
 /** Screen size for stations, jumps, clusters and every other icon. */
 export const ICON_PX = 14
 
+/** Who sits around which planet or moon, worked out once per system. */
+interface BodyLayout {
+  byName: Map<string, StarMapMarker>
+  /** Body id → closest neighbour that is not riding on it (its first moon orbit for a planet), meters. */
+  clearM: Map<string, number>
+  /** Station / comm array / other marker id → the body it orbits close in. */
+  attachedTo: Map<string, StarMapMarker>
+}
+
 export interface BodyScale {
   /** Pixels per meter of map position. */
   pxPerM: number
+  /** Pixels per meter when the whole system fits the view. */
+  fitPxPerM: number
   /** Largest planet radius in the system, in meters. */
   maxPlanetRadiusM: number
-  /** Display radius of the largest planet, in pixels. */
+  /** Display radius of the largest planet at the fit zoom, in pixels. */
   maxPlanetPx: number
   /** Distance from the star to the closest planet, in meters. */
   innerOrbitM: number
+  layout: BodyLayout
 }
 
-export function systemBodyScale(system: StarMapSystem, pxPerM: number, maxPlanetPx = 16): BodyScale {
+/** A planet never covers more than this share of the gap to its first moon or neighbour. */
+const BODY_CLEAR_SHARE = 0.45
+/** Markers within this many body radii (and inside the first moon orbit) ride on that body. */
+const ATTACH_RADII = 30
+
+const layoutCache = new WeakMap<StarMapSystem, BodyLayout>()
+
+function bodyLayout(system: StarMapSystem): BodyLayout {
+  const cached = layoutCache.get(system)
+  if (cached) return cached
+  const byName = new Map<string, StarMapMarker>()
+  const bodies = system.markers.filter((m) => m.kind === 'planet' || m.kind === 'moon')
+  for (const m of system.markers) if (ORB_KINDS.has(m.kind)) byName.set(m.name, m)
+  const dist = (a: StarMapMarker, b: StarMapMarker) => Math.hypot(a.x - b.x, a.y - b.y)
+
+  const firstMoonM = new Map<string, number>()
+  for (const moon of bodies) {
+    if (moon.kind !== 'moon' || !moon.parentName) continue
+    const parent = byName.get(moon.parentName)
+    if (!parent) continue
+    firstMoonM.set(parent.id, Math.min(firstMoonM.get(parent.id) ?? Infinity, dist(moon, parent)))
+  }
+
+  const attachedTo = new Map<string, StarMapMarker>()
+  for (const m of system.markers) {
+    if (ORB_KINDS.has(m.kind) || m.kind === 'belt' || m.kind === 'jump_point') continue
+    let best: StarMapMarker | null = null
+    let bestD = Infinity
+    for (const b of bodies) {
+      const d = dist(m, b)
+      if (d < bestD) {
+        bestD = d
+        best = b
+      }
+    }
+    if (!best?.radiusM) continue
+    const limit = Math.min(best.radiusM * ATTACH_RADII, (firstMoonM.get(best.id) ?? Infinity) * 0.9)
+    if (bestD < limit) attachedTo.set(m.id, best)
+  }
+
+  const clearM = new Map<string, number>()
+  for (const b of bodies) {
+    let clear = firstMoonM.get(b.id) ?? Infinity
+    for (const m of system.markers) {
+      if (m.id === b.id || m.kind === 'star' || m.kind === 'belt') continue
+      if (attachedTo.get(m.id)?.id === b.id) continue
+      if (m.kind === 'moon' && m.parentName === b.name) continue
+      if (b.kind === 'moon' && m.name === b.parentName) continue
+      clear = Math.min(clear, dist(m, b))
+    }
+    clearM.set(b.id, clear)
+  }
+
+  const layout = { byName, clearM, attachedTo }
+  layoutCache.set(system, layout)
+  return layout
+}
+
+export function systemBodyScale(
+  system: StarMapSystem,
+  pxPerM: number,
+  fitPxPerM: number = pxPerM,
+  maxPlanetPx = 16,
+): BodyScale {
   const star = system.markers.find((m) => m.kind === 'star')
   const cx = star?.x ?? 0
   const cy = star?.y ?? 0
@@ -181,16 +256,28 @@ export function systemBodyScale(system: StarMapSystem, pxPerM: number, maxPlanet
   }
   return {
     pxPerM,
+    fitPxPerM: fitPxPerM > 0 ? fitPxPerM : pxPerM,
     maxPlanetRadiusM: maxPlanetRadiusM || 1,
     maxPlanetPx,
     innerOrbitM: Number.isFinite(innerOrbitM) ? innerOrbitM : Infinity,
+    layout: bodyLayout(system),
   }
 }
 
+/** Planet radius in pixels before the true-size and minimum-size floors. */
+function planetPx(marker: StarMapMarker, scale: BodyScale): number {
+  const fitPx = scale.maxPlanetPx * ((marker.radiusM || 0) / scale.maxPlanetRadiusM)
+  const grown = fitPx * Math.sqrt(Math.max(1, scale.pxPerM / scale.fitPxPerM))
+  const clear = scale.layout.clearM.get(marker.id) ?? Infinity
+  return Math.min(grown, Math.max(fitPx, clear * scale.pxPerM * BODY_CLEAR_SHARE))
+}
+
 /**
- * Orb radius in pixels. Planets and moons keep their game radii relative to the
- * largest planet; the star is drawn larger than any planet but never past half
- * the innermost planet orbit. Real size wins once the view is zoomed in that far.
+ * Orb radius in pixels. Every planet and moon shares one size scale, so
+ * planet-to-planet and moon-to-planet ratios match the game. Bodies grow as
+ * the view zooms in, but a planet never covers its first moon orbit, and true
+ * size wins once the view is zoomed in that far. The star is larger than any
+ * planet but never past half the innermost planet orbit.
  */
 export function orbDisplayRadiusPx(marker: StarMapMarker, scale: BodyScale): number {
   const realPx = (marker.radiusM || 0) * scale.pxPerM
@@ -199,10 +286,21 @@ export function orbDisplayRadiusPx(marker: StarMapMarker, scale: BodyScale): num
     const want = scale.maxPlanetPx * 1.6
     return Math.max(Math.min(want, cap), realPx, 3)
   }
-  const rel = (marker.radiusM || 0) / scale.maxPlanetRadiusM
-  const display = scale.maxPlanetPx * rel
-  const floor = marker.kind === 'planet' ? 2 : 1.5
-  return Math.max(display, realPx, floor)
+  if (marker.kind === 'moon') {
+    const parent = marker.parentName ? scale.layout.byName.get(marker.parentName) : undefined
+    const own = planetPx(marker, scale)
+    const px = parent?.radiusM
+      ? Math.min(own, orbDisplayRadiusPx(parent, scale) * ((marker.radiusM || 0) / parent.radiusM))
+      : own
+    return Math.max(px, realPx, 1.5)
+  }
+  return Math.max(planetPx(marker, scale), realPx, 2)
+}
+
+/** How much a body is drawn larger than true size (1 = true size). */
+export function bodyEnlargement(body: StarMapMarker, scale: BodyScale): number {
+  if (!body.radiusM) return 1
+  return Math.max(orbDisplayRadiusPx(body, scale) / (body.radiusM * scale.pxPerM), 1)
 }
 
 /**
@@ -211,7 +309,19 @@ export function orbDisplayRadiusPx(marker: StarMapMarker, scale: BodyScale): num
  */
 export function beltPxPerM(belt: StarMapMarker, parent: StarMapMarker | null, scale: BodyScale): number {
   if (!parent?.radiusM) return scale.pxPerM
-  return Math.max(orbDisplayRadiusPx(parent, scale) / parent.radiusM, scale.pxPerM)
+  return scale.pxPerM * bodyEnlargement(parent, scale)
+}
+
+/**
+ * Map position to draw a marker at. A station or comm array close in to a
+ * planet or moon keeps its direction but moves out with the enlarged body,
+ * so it is never hidden under the disc.
+ */
+export function displayPositionM(marker: StarMapMarker, scale: BodyScale): { x: number; y: number } {
+  const body = scale.layout.attachedTo.get(marker.id)
+  if (!body) return { x: marker.x, y: marker.y }
+  const k = bodyEnlargement(body, scale)
+  return { x: body.x + (marker.x - body.x) * k, y: body.y + (marker.y - body.y) * k }
 }
 
 // ── 2D camera ──────────────────────────────────────────────────────────────

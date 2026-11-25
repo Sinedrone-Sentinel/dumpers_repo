@@ -264,7 +264,6 @@ function classifyMarker({ path, record, name, entity }) {
   if (/thecollector|collector_station|wikelo/.test(blob)) return 'wikelo'
   if (/commarray|comm_array|_comm\d/.test(blob) || /comm array/.test(n)) return 'comm_array'
   if (/executive/.test(blob)) return 'executive_hangar'
-  if (/\b(checkmate|orbituary)\b/.test(n) || /checkmate|orbituary/.test(rec + file)) return 'admin_base'
   if (/outpost_olp|_olp_|orbital.?laser|\bolp\b/.test(blob)) return 'olp'
   if (/outpost_paf|_paf_|people.?s alliance|\bpaf\b/.test(blob)) return 'pa_station'
   if (/outlaw/.test(blob)) return 'outlaw'
@@ -418,8 +417,6 @@ export function parseStarMaps({ extractedRoot, localization }) {
         name = name || 'QV Breaker Station'
       }
       if (!name || /[_@]/.test(name) || name.startsWith('LOC_')) return
-      if (/^(checkmate|orbituary)$/i.test(name)) kind = 'admin_base'
-
       let toSystem = null
       let toMarkerName = null
       if (kind === 'jump_point') {
@@ -488,6 +485,18 @@ export function parseStarMaps({ extractedRoot, localization }) {
         parentName: null,
       })
     })
+
+    // PYAM supervisor stations sit on an L-point (AsteroidBase_P3_L4 = PYAM-SUPVISR-3-4).
+    for (const marker of markers) {
+      const lpoint = marker.name.match(/^PYR(\d) L(\d)$/)
+      if (!lpoint) continue
+      const base = locName(localization, `AsteroidBase_P${lpoint[1]}_L${lpoint[2]}`)
+      if (!base || !/SUPVISR/i.test(base)) continue
+      marker.aliases = [...new Set([...marker.aliases, marker.name])]
+      marker.name = base
+      marker.kind = 'supervisor'
+      marker.id = `${systemId}:${slug(base)}`
+    }
 
     for (const ring of bodyRings) {
       addMarker(markers, {
@@ -578,13 +587,11 @@ export function parseStarMaps({ extractedRoot, localization }) {
         for (const point of nav.points || []) {
           if (point.system !== systemId || point.kind !== 'station') continue
           if (markers.some((m) => m.name.toLowerCase() === String(point.name).toLowerCase())) continue
-          let kind = 'station'
-          if (/^(checkmate|orbituary)$/i.test(point.name)) kind = 'admin_base'
           addMarker(markers, {
             systemId,
             name: point.name,
             aliases: point.aliases || [],
-            kind,
+            kind: 'station',
             description: null,
             x: point.x,
             y: point.y,

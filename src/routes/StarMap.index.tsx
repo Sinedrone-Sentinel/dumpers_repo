@@ -45,7 +45,7 @@ export default function StarMapIndexRoute() {
   )
 
   const enter = (systemId: string) => {
-    updateStarMapSession({ choicePending: false, focusMarkerId: undefined })
+    updateStarMapSession({ choicePending: false, wholeSystem: undefined })
     navigate({ to: '/star-map/$systemId', params: { systemId }, search: {} })
   }
 

@@ -3486,9 +3486,9 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
   check(hl.matchMarkers('microTech', smSystems)[0]?.kind === 'planet', 'star map: surface ore resolves to its planet')
   const poolG = hl.matchMarkers('Lagrange G', smSystems)
   check(
-    poolG.length > 0 && poolG.every((m) => m.systemId === 'pyro' && (m.kind === 'rab' || m.kind === 'rmb')) &&
+    poolG.length > 0 && poolG.every((m) => m.systemId === 'pyro' && m.kind === 'cluster') &&
       hl.matchMarkers('Lagrange Occupied', smSystems).length === poolG.length,
-    'star map: Lagrange G / Occupied pools blink the Pyro RAB and RMB sites',
+    'star map: Lagrange G / Occupied pools blink the numbered Pyro asteroid clusters',
   )
   const two = hl.resolveStarMapSystem({ marks: ['Hurston', 'Monox'] }, smSystems, smIndex)
   check(
@@ -3559,6 +3559,49 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
     'star map: zoomed out, Yela Ring is still drawn outside the enlarged moon',
   )
   check(starMap.beltPxPerM(byName(stanton, 'Aaron Halo'), null, ringScale) === ringScale.pxPerM, 'star map: star belts use map scale')
+
+  // Zooming in grows every body on one shared scale.
+  const fitPx = 400 / 7e10
+  const at = (zoom) => starMap.systemBodyScale(stanton, fitPx * zoom, fitPx)
+  check(
+    starMap.orbDisplayRadiusPx(hurston, at(50)) > starMap.orbDisplayRadiusPx(hurston, at(1)) * 3,
+    'star map: zooming in makes Hurston bigger',
+  )
+  const arial = byName(stanton, 'Arial')
+  const hurstonMoons = at(80000 / 52.7e6 / fitPx)
+  check(
+    Math.abs(
+      starMap.orbDisplayRadiusPx(arial, hurstonMoons) / starMap.orbDisplayRadiusPx(hurston, hurstonMoons) -
+        arial.radiusM / hurston.radiusM,
+    ) < 0.01 && starMap.orbDisplayRadiusPx(arial, hurstonMoons) > 3,
+    "star map: around Hurston, Arial is drawn at its true share of Hurston's size",
+  )
+  const crusaderMoons = at(60 / 50.9e6 / fitPx)
+  check(
+    starMap.orbDisplayRadiusPx(crusader, crusaderMoons) <= 50.9e6 * crusaderMoons.pxPerM * 0.5,
+    'star map: Crusader never covers its first moon orbit',
+  )
+  const grimHex = byName(stanton, 'Grim HEX')
+  const yelaZoom = at(150 / 782e3 / fitPx)
+  const grimAt = starMap.displayPositionM(grimHex, yelaZoom)
+  const grimD = Math.hypot(grimAt.x - yela.x, grimAt.y - yela.y) * yelaZoom.pxPerM
+  const k = starMap.beltPxPerM(yelaRing, yela, yelaZoom)
+  check(
+    grimD > yelaRing.innerRadiusM * k && grimD < yelaRing.outerRadiusM * k &&
+      grimD > starMap.orbDisplayRadiusPx(yela, yelaZoom),
+    'star map: Grim HEX is drawn inside Yela Ring and off the moon',
+  )
+  const supervisors = smSystems.pyro.markers.filter((m) => m.kind === 'supervisor').map((m) => m.name).sort()
+  check(
+    supervisors.join() === 'PYAM-SUPVISR-3-4,PYAM-SUPVISR-3-5' &&
+      starMap.STAR_MAP_KIND_LABELS.supervisor === 'Supervisor Station',
+    `star map: only the two PYAM supervisor stations use the Supervisor icon (${supervisors.join(', ')})`,
+  )
+  check(
+    ['Checkmate', 'Orbituary', 'Ruin Station'].every((n) => byName(smSystems.pyro, n)?.kind === 'station'),
+    'star map: Checkmate, Orbituary and Ruin Station are plain stations',
+  )
+  check(hl.matchMarkers('PYR3 L4', smSystems)[0]?.name === 'PYAM-SUPVISR-3-4', 'star map: PYR3 L4 finds PYAM-SUPVISR-3-4')
 
   // Box zoom: box top-left becomes view top-left; box width spans the view.
   const cam0 = { cx: 0, cy: 0, pxPerM: 1 }
