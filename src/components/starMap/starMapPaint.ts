@@ -161,11 +161,11 @@ function motesFor(kind: StarKind): StarMote[] {
   if (cached) return cached
   const rnd = makeRng(kind === 'nyx' ? 11 : kind === 'pyro' ? 29 : 5)
   const motes: StarMote[] = []
-  for (let i = 0; i < 210; i++) {
+  for (let i = 0; i < 56; i++) {
     motes.push({
       ang: rnd() * Math.PI * 2,
-      dist: Math.sqrt(rnd()) * 0.9,
-      size: 0.012 + rnd() * (rnd() > 0.82 ? 0.07 : 0.04),
+      dist: Math.sqrt(rnd()) * 0.82,
+      size: 0.2 + rnd() * 0.07,
       roll: rnd(),
       phase: rnd() * Math.PI * 2,
       spin: 0.45 + rnd() * 1.1,
@@ -189,7 +189,7 @@ function motesFor(kind: StarKind): StarMote[] {
 
 /** Slow turn of the whole disc, added on top of each cell's own motion. */
 export function starDiscTurn(t: number): number {
-  return t * 0.00008
+  return t * 0.00004
 }
 
 function wanderMote(mote: { roll?: number; phase: number }): boolean {
@@ -208,9 +208,9 @@ function wanderPoint(mote: { ang: number; dist: number; phase: number; spin: num
   const base = Math.min(Math.max(0.05, mote.dist), 0.72)
   const pace = 0.7 + (mote.spin % 1.5) / 1.5
   const reach = 0.06 + 0.12 * pace
-  const along = Math.sin(t * 0.00115 * pace + mote.phase)
-  const across = Math.sin(t * 0.00047 * (1.4 - pace * 0.3) + mote.phase * 1.7)
-  const head = mote.phase + Math.sin(t * 0.00018 * pace + mote.phase) * 2.1
+  const along = Math.sin(t * 0.000575 * pace + mote.phase)
+  const across = Math.sin(t * 0.000235 * (1.4 - pace * 0.3) + mote.phase * 1.7)
+  const head = mote.phase + Math.sin(t * 0.00009 * pace + mote.phase) * 2.1
   const c = Math.cos(head)
   const s = Math.sin(head)
   return clampLimb(
@@ -286,7 +286,7 @@ function bouncePoint(
   mote: { ang: number; dist: number; phase: number; spin: number },
   t: number,
 ): { x: number; y: number } {
-  const speed = 0.00009 + mote.spin * 0.00005
+  const speed = 0.000045 + mote.spin * 0.000025
   let x = Math.cos(mote.ang) * Math.min(mote.dist, STAR_LIMB - 0.02)
   let y = Math.sin(mote.ang) * Math.min(mote.dist, STAR_LIMB - 0.02)
   let vx = Math.cos(mote.phase) * speed
@@ -333,9 +333,9 @@ function paintStarSurface(
     const rad = mote.size * r
     const core = mote.roll > 0.86 ? hot : mote.roll > 0.4 ? mid : cool
     const grd = ctx.createRadialGradient(x, y, 0, x, y, rad)
-    grd.addColorStop(0, starRgba(core, 0.55))
-    grd.addColorStop(0.22, starRgba(core, 0.28))
-    grd.addColorStop(0.55, starRgba(mid, 0.12))
+    grd.addColorStop(0, starRgba(core, 0.92))
+    grd.addColorStop(0.46, starRgba(core, 0.78))
+    grd.addColorStop(0.72, starRgba(mid, 0.2))
     grd.addColorStop(1, starRgba(base, 0))
     ctx.fillStyle = grd
     ctx.beginPath()
