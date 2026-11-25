@@ -2,8 +2,9 @@ import { useSyncExternalStore } from 'react'
 import type { StarMapPayload } from './starMapHighlight'
 
 /**
- * Data sent to the Star Map lives here only while the member stays on
- * `/star-map*`. A new send replaces it; leaving the map clears it.
+ * What the open map is drawing. Leaving the map clears this copy.
+ * A Smart Hauler run is also stored apart from this, so closing the map
+ * does not forget the stops or which leg is current.
  */
 export interface StarMapSession {
   payload: StarMapPayload
@@ -24,6 +25,16 @@ function emit() {
 
 export function startStarMapSession(payload: StarMapPayload): void {
   session = { payload, choicePending: true, focusId: Date.now() }
+  emit()
+}
+
+/** Replace the drawn run without asking the member to pick a system again. */
+export function showStarMapPayload(payload: StarMapPayload): void {
+  if (!session) {
+    session = { payload, choicePending: false, focusId: Date.now() }
+  } else {
+    session = { ...session, payload, choicePending: false }
+  }
   emit()
 }
 

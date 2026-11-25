@@ -135,18 +135,29 @@ export interface StarMapPayload {
  * A calculated cart draws every leg bright. A haul in progress draws the
  * leg into the current stop bright and the legs already traveled dim.
  */
+function cleanStops(stops: StarMapShopStop[]): StarMapShopStop[] {
+  return stops
+    .map((stop) => ({ place: stop.place.trim(), lines: stop.lines.filter((line) => line.label.trim()) }))
+    .filter((stop) => stop.place)
+}
+
 export function shoppingMapPayload(
   input: {
     from?: string | null
+    /** Stops the route line runs through, in order. The last one is the current leg when progressive. */
     stops: StarMapShopStop[]
+    /**
+     * Every buy and sell to keep on the map. Defaults to `stops`.
+     * Later mission stops stay listed here before the route line reaches them.
+     */
+    pins?: StarMapShopStop[]
     progressive?: boolean
     category?: StarMapTelemetry
   },
   systems?: StarMapSystems,
 ): StarMapPayload {
-  const stops = input.stops
-    .map((stop) => ({ place: stop.place.trim(), lines: stop.lines.filter((line) => line.label.trim()) }))
-    .filter((stop) => stop.place)
+  const stops = cleanStops(input.stops)
+  const pins = cleanStops(input.pins ?? input.stops)
   const places: string[] = []
   const push = (name?: string | null) => {
     const next = name?.trim()
@@ -160,12 +171,36 @@ export function shoppingMapPayload(
   const blink = places.length <= 1
   return {
     category: input.category ?? 'shopping',
-    shops: stops,
+    shops: pins,
     marks: blink && places[0] ? [places[0]] : undefined,
     start: blink ? undefined : places[0],
     route: blink ? undefined : places.slice(1),
     active: input.progressive && !blink ? places[places.length - 1] : undefined,
   }
+}
+
+/**
+ * The haul that is underway. Pins are the whole mission. The route line runs
+ * only through the current stop, so traveled legs can dim and the current leg stays bright.
+ */
+export function haulMapPayload(
+  input: {
+    from?: string | null
+    stops: StarMapShopStop[]
+    /** Index into `stops` of the stop the member is on now. */
+    current: number
+  },
+  systems?: StarMapSystems,
+): StarMapPayload {
+  const stops = cleanStops(input.stops)
+  const current = Math.max(0, Math.min(input.current, Math.max(0, stops.length - 1)))
+  return shoppingMapPayload({
+    category: 'hauler',
+    from: input.from,
+    progressive: true,
+    stops: stops.slice(0, current + 1),
+    pins: stops,
+  }, systems)
 }
 
 export interface StarMapShopPin {
@@ -275,6 +310,8 @@ export function validateStarMapSearch(search: Record<string, unknown>): StarMapS
 }
 
 const HANDOFF_KEY = 'dumper-star-map-handoff'
+/** The Smart Hauler run, kept while that run is active even if the map tab is closed. */
+export const STAR_MAP_HAUL_KEY = 'dumper-star-map-haul'
 export const STAR_MAP_CHANNEL = 'dumper-star-map'
 export const STAR_MAP_WINDOW = 'dumper-star-map'
 
@@ -313,6 +350,45 @@ export function readStarMapHandoff(id: string): StarMapPayload | null {
     const parsed = JSON.parse(raw) as { id?: string; payload?: StarMapPayload }
     if (parsed.id !== id || !parsed.payload) return null
     return parsed.payload
+  } catch {
+    return null
+  }
+}
+
+let lastHaulBody: string | null = null
+
+/** Remember the haul, and tell an open map. `null` means the run ended. */
+export function writeLiveHaul(payload: StarMapPayload | null): void {
+  const body = payload ? JSON.stringify(payload) : ''
+  if (body === lastHaulBody) return
+  lastHaulBody = body
+  try {
+    if (typeof localStorage !== 'undefined') {
+      if (payload) localStorage.setItem(STAR_MAP_HAUL_KEY, body)
+      else localStorage.removeItem(STAR_MAP_HAUL_KEY)
+    }
+  } catch {
+    // Private mode can refuse storage. The open map still hears the channel.
+  }
+  try {
+    const channel = new BroadcastChannel(STAR_MAP_CHANNEL)
+    channel.postMessage({ kind: 'haul', payload })
+    channel.close()
+  } catch {
+    // The map reads localStorage when it opens.
+  }
+}
+
+/** The haul still in progress, or null. */
+export function readLiveHaul(): StarMapPayload | null {
+  try {
+    if (typeof localStorage === 'undefined') return null
+    const raw = localStorage.getItem(STAR_MAP_HAUL_KEY)
+    if (!raw) return null
+    const payload = JSON.parse(raw) as StarMapPayload
+    if (!payload || payload.category !== 'hauler') return null
+    if (!payload.route?.length && !payload.marks?.length && !payload.shops?.length) return null
+    return payload
   } catch {
     return null
   }
@@ -491,6 +567,14 @@ export function resolveStarMapSystem(
   const route = payload.route || []
   const allIds = index.systems.map((s) => s.id).filter((id) => systems[id])
   if (!marks.length && !route.length && !payload.start) return { kind: 'empty' }
+
+  // A haul in progress opens on the stop they are traveling to, not the start they already left.
+  if (payload.active) {
+    const points = expandRoute(payload, systems, index.links)
+    const key = normalizeMapName(payload.active)
+    const hit = points.find((point) => [point.name, ...(point.aliases || [])].some((name) => normalizeMapName(name) === key))
+    if (hit) return { kind: 'single', systemId: hit.systemId }
+  }
 
   if (route.length || payload.start) {
     const points = expandRoute(payload, systems, index.links)
