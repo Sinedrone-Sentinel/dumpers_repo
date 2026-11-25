@@ -3498,6 +3498,26 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
       clearsPlanet(tressler, byName(stanton, 'microTech')),
     'star map: orbital stations show just outside their planet',
   )
+  const comm = byName(stanton, 'Comm Array ST1-61')
+  const hurstonClose = starMap.systemBodyScale(stanton, fit.pxPerM * 40, fit.pxPerM)
+  const commAt = starMap.displayPositionM(comm, hurstonClose)
+  const commClear = Math.hypot(commAt.x - hurston.x, commAt.y - hurston.y) * hurstonClose.pxPerM
+  const projectClose = (scale) =>
+    stanton.markers.map((m) => {
+      const at = starMap.displayPositionM(m, scale)
+      return {
+        marker: m,
+        sx: at.x * scale.pxPerM,
+        sy: -at.y * scale.pxPerM,
+        r: starMap.ORB_KINDS.has(m.kind) ? starMap.orbDisplayRadiusPx(m, scale) : starMap.ICON_PX / 2,
+      }
+    })
+  check(
+    comm &&
+      commClear > starMap.orbDisplayRadiusPx(hurston, hurstonClose) + starMap.ICON_PX / 2 &&
+      starMap.declutterMarkers(projectClose(hurstonClose)).has(comm.id),
+    'star map: a comm array beside Hurston shows once it clears the disc',
+  )
   check(
     seraphim && starMap.declutterMarkers(project(fit), new Set([seraphim.id])).has(seraphim.id),
     'star map: a highlighted marker always shows',
