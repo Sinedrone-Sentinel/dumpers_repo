@@ -324,8 +324,6 @@ interface BodyLayout {
   moonSpanM: Map<string, { inner: number; outer: number }>
   /** Planet id → closest marker that is not the planet, its moons, or anything riding on them, meters. */
   neighbourM: Map<string, number>
-  /** Planet id → radius of its largest moon, meters. */
-  moonMaxRadiusM: Map<string, number>
 }
 
 export interface BodyScale {
@@ -358,7 +356,6 @@ function bodyLayout(system: StarMapSystem): BodyLayout {
 
   const firstMoonM = new Map<string, number>()
   const moonSpanM = new Map<string, { inner: number; outer: number }>()
-  const moonMaxRadiusM = new Map<string, number>()
   for (const moon of bodies) {
     if (moon.kind !== 'moon' || !moon.parentName) continue
     const parent = byName.get(moon.parentName)
@@ -367,7 +364,6 @@ function bodyLayout(system: StarMapSystem): BodyLayout {
     firstMoonM.set(parent.id, Math.min(firstMoonM.get(parent.id) ?? Infinity, d))
     const span = moonSpanM.get(parent.id) ?? { inner: Infinity, outer: 0 }
     moonSpanM.set(parent.id, { inner: Math.min(span.inner, d), outer: Math.max(span.outer, d) })
-    moonMaxRadiusM.set(parent.id, Math.max(moonMaxRadiusM.get(parent.id) ?? 0, moon.radiusM || 0))
   }
 
   const attachedTo = new Map<string, StarMapMarker>()
@@ -413,7 +409,7 @@ function bodyLayout(system: StarMapSystem): BodyLayout {
     neighbourM.set(planet.id, near)
   }
 
-  const layout = { byName, clearM, attachedTo, moonSpanM, neighbourM, moonMaxRadiusM }
+  const layout = { byName, clearM, attachedTo, moonSpanM, neighbourM }
   layoutCache.set(system, layout)
   return layout
 }
@@ -478,40 +474,23 @@ function planetPx(marker: StarMapMarker, scale: BodyScale): number {
 }
 
 /**
- * Moon radius before it has to fit around its planet. At least one icon, and
- * the largest moon of a planet stops at four icons across.
+ * Moon radius before it has to fit around its planet. Every moon is the same
+ * disc: one icon across at the system view, four icons across once zoomed in.
+ * Real radius does not change it.
  */
-function moonWantPx(marker: StarMapMarker, scale: BodyScale): number {
+function moonWantPx(scale: BodyScale): number {
   const iconR = ICON_PX / 2
   const zoom = Math.max(1, scale.pxPerM / scale.fitPxPerM)
   const grow = Math.min(Math.pow(zoom, 0.65), MOON_MAX_ICONS)
-  const parent = marker.parentName ? scale.layout.byName.get(marker.parentName) : undefined
-  const familyMax = (parent && scale.layout.moonMaxRadiusM.get(parent.id)) || marker.radiusM || 0
-  const share = familyMax > 0 ? (marker.radiusM || 0) / familyMax : 1
-  return Math.min(Math.max(iconR, iconR * grow * share), iconR * MOON_MAX_ICONS)
+  return iconR * grow
 }
 
 /**
- * Moon radius in pixels. The icon-size floor applies once the moon's center
- * is outside its planet. While the center is still inside the planet, the
- * disc stays inside too, so it does not cover stations parked on the rim.
- */
-function moonRadiusPx(marker: StarMapMarker, scale: BodyScale): number {
-  const want = moonWantPx(marker, scale)
-  const parent = marker.parentName ? scale.layout.byName.get(marker.parentName) : undefined
-  if (!parent) return want
-  const centerPx = Math.hypot(marker.x - parent.x, marker.y - parent.y) * moonSpread(parent, scale) * scale.pxPerM
-  const parentR = orbDisplayRadiusPx(parent, scale)
-  if (centerPx >= parentR + 1) return want
-  return Math.max(Math.min(want, parentR - centerPx - 1), 1.5)
-}
-
-/**
- * Orb radius in pixels. Planets share one readable size (gas giants a step
- * larger). Moons grow with the zoom from one icon up to four. The star is
- * larger than any planet but never past half the innermost planet orbit.
- * True pixel size takes over for the star only when the view is zoomed in
- * that far.
+ * Orb radius in pixels. Every system uses this. Rocky planets share one disc.
+ * Gas giants share one slightly larger disc. Every moon is the same disc and
+ * grows from one icon up to four. The star is larger than any planet but
+ * never past half the innermost planet orbit. True pixel size takes over for
+ * the star only when the view is zoomed in that far.
  */
 export function orbDisplayRadiusPx(marker: StarMapMarker, scale: BodyScale): number {
   const realPx = (marker.radiusM || 0) * scale.pxPerM
@@ -520,7 +499,7 @@ export function orbDisplayRadiusPx(marker: StarMapMarker, scale: BodyScale): num
     const want = scale.maxPlanetPx * 1.6
     return Math.max(Math.min(want, cap), realPx, 3)
   }
-  if (marker.kind === 'moon') return moonRadiusPx(marker, scale)
+  if (marker.kind === 'moon') return moonWantPx(scale)
   return Math.min(Math.max(planetPx(marker, scale), 10), planetCeilingPx(marker, scale))
 }
 
@@ -549,10 +528,7 @@ export function moonSpread(planet: StarMapMarker, scale: BodyScale): number {
   const span = scale.layout.moonSpanM.get(planet.id)
   if (!span) return 1
   const p = scale.pxPerM
-  let moonR = ICON_PX / 2
-  for (const other of scale.layout.byName.values()) {
-    if (other.kind === 'moon' && other.parentName === planet.name) moonR = Math.max(moonR, moonWantPx(other, scale))
-  }
+  const moonR = moonWantPx(scale)
   const planetR = orbDisplayRadiusPx(planet, scale)
   const full = (planetR + moonR + MOON_GAP_PX) / (span.inner * p)
   if (full <= 1) return 1

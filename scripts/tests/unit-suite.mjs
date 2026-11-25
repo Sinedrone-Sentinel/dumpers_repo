@@ -3454,12 +3454,13 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
   const iconR = starMap.ICON_PX / 2
   const moonCap = iconR * 4
   const cellin = byName(stanton, 'Cellin')
+  const daymar = byName(stanton, 'Daymar')
   check(
     starMap.orbDisplayRadiusPx(crusader, close) <= 48 &&
       starMap.orbDisplayRadiusPx(yela, close) === moonCap &&
-      starMap.orbDisplayRadiusPx(cellin, close) >= iconR &&
-      starMap.orbDisplayRadiusPx(cellin, close) < starMap.orbDisplayRadiusPx(yela, close),
-    'star map: a zoomed moon is between one icon and four, with the largest at four',
+      starMap.orbDisplayRadiusPx(cellin, close) === moonCap &&
+      starMap.orbDisplayRadiusPx(daymar, close) === moonCap,
+    'star map: zoomed moons are one size, four icons across',
   )
   check(
     starMap.ICON_PX <= starMap.orbDisplayRadiusPx(crusader, fit),
@@ -3671,9 +3672,30 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
     }
   }
   check(
-    moonsInRange && starMap.orbDisplayRadiusPx(arial, hurstonMoons) >= iconR && starMap.orbDisplayRadiusPx(arial, hurstonMoons) <= iconR * 4,
-    'star map: every moon stays between one icon and four icons as you zoom',
+    moonsInRange &&
+      starMap.orbDisplayRadiusPx(arial, hurstonMoons) === iconR * 4 &&
+      starMap.orbDisplayRadiusPx(byName(stanton, 'Aberdeen'), hurstonMoons) === iconR * 4,
+    'star map: every moon is the same size, from one icon up to four',
   )
+  const gasNames = new Set(['Crusader', 'Pyro V', 'Nyx III'])
+  let mapsShareScale = true
+  for (const zoom of [1, 8, 80]) {
+    const rocky = []
+    const gas = []
+    const moons = []
+    for (const id of ['stanton', 'pyro', 'nyx']) {
+      const sys = smSystems[id]
+      const scale = starMap.systemBodyScale(sys, fitPx * zoom, fitPx)
+      for (const marker of sys.markers) {
+        const px = starMap.orbDisplayRadiusPx(marker, scale)
+        if (marker.kind === 'planet') (gasNames.has(marker.name) ? gas : rocky).push(px)
+        if (marker.kind === 'moon') moons.push(px)
+      }
+    }
+    const same = (vals) => vals.length > 0 && vals.every((n) => Math.abs(n - vals[0]) < 1e-6)
+    if (!same(rocky) || !same(gas) || !same(moons)) mapsShareScale = false
+  }
+  check(mapsShareScale, 'star map: Stanton, Pyro, and Nyx share one planet size and one moon size')
   const crusaderMoons = at(60 / 50.9e6 / fitPx)
   check(
     starMap.orbDisplayRadiusPx(crusader, crusaderMoons) <= starMap.orbDisplayRadiusPx(crusader, at(200)) &&
