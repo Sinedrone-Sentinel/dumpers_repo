@@ -130,7 +130,6 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
     path: '/star-map',
     icon: 'starmap',
     featureId: 'star_map',
-    superAdminOnly: true,
   },
   {
     id: 'archive',
@@ -160,13 +159,13 @@ export const NAV_GROUPS: { id: string; label: string; itemIds: string[] }[] = [
     id: 'tools',
     label: 'Tools',
     itemIds: [
+      'star-map',
       'ship-shop',
       'fulfillment',
       'custom-orders',
       'commodity-lookup',
       'loot-finder',
       'executive-hangar',
-      'star-map',
       'dumper-apps',
     ],
   },
