@@ -54,6 +54,8 @@ export default function StarMapSystemRoute() {
             index={index}
             markedIds={markedIds}
             routePoints={routePoints}
+            shops={payload.category === 'shopping' ? payload.shops : undefined}
+            active={payload.active}
             wholeSystem={wholeSystem}
             onBack={back}
             onJump={jump}

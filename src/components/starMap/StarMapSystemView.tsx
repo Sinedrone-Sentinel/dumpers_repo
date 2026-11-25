@@ -23,8 +23,8 @@ import {
   type StarMapPoiGroup,
   type StarMapSystem,
 } from '../../lib/starMap'
-import { routeSegmentsInSystem } from '../../lib/starMapHighlight'
-import { STAR_MAP_ICON_PATHS, drawStarMapIcon } from './starMapIcons'
+import { resolveShopMarker, routeLegTone, routeSegmentsInSystem, type StarMapShopStop } from '../../lib/starMapHighlight'
+import { STAR_MAP_ICON_PATHS, drawShoppingIcon, drawStarMapIcon } from './starMapIcons'
 import { paintBelt, paintBody, paintStar, paintStarfield } from './starMapPaint'
 import SiteTooltip from '../SiteTooltip'
 
@@ -33,6 +33,10 @@ interface Props {
   index: StarMapIndex
   markedIds: ReadonlySet<string>
   routePoints: StarMapMarker[]
+  /** Shopping stops drawn as a temporary icon. Click one for the buy or sell list. */
+  shops?: StarMapShopStop[]
+  /** Place the bright route leg ends at. Earlier legs are dim. */
+  active?: string
   /** Open zoomed out to the whole system, ignoring marks and route. */
   wholeSystem?: boolean
   onBack: () => void
@@ -66,6 +70,8 @@ export default function StarMapSystemView({
   index,
   markedIds,
   routePoints,
+  shops,
+  active,
   wholeSystem,
   onBack,
   onJump,
@@ -75,6 +81,8 @@ export default function StarMapSystemView({
   const [size, setSize] = useState({ w: 0, h: 0 })
   const camRef = useRef<Cam | null>(null)
   const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [selectedShop, setSelectedShop] = useState<string | null>(null)
+  const shopHitsRef = useRef<{ place: string; sx: number; sy: number }[]>([])
   const [poiOn, setPoiOn] = useState<Record<string, boolean>>({})
   const projectedRef = useRef<{ items: ProjectedMarker[]; visible: Set<string> }>({ items: [], visible: new Set() })
   const dragRef = useRef<{ x: number; y: number; cam: Cam; moved: boolean; box: boolean } | null>(null)
@@ -271,11 +279,9 @@ export default function StarMapSystemView({
         ctx.stroke()
       }
 
-      // Route: bright yellow dots moving toward the next stop.
+      // Route: the current leg is bright yellow. Legs already traveled are dim.
       if (segments.length) {
         ctx.save()
-        ctx.strokeStyle = STAR_MAP_COLORS.route
-        ctx.lineWidth = 3
         ctx.lineCap = 'round'
         ctx.setLineDash([0.1, 10])
         ctx.lineDashOffset = -((t / 40) % 10.1)
@@ -283,6 +289,10 @@ export default function StarMapSystemView({
           const pa = byId.get(a.id)
           const pb = byId.get(b.id)
           if (!pa || !pb) continue
+          const fromIndex = routePoints.findIndex((p, i) => p.id === a.id && routePoints[i + 1]?.id === b.id)
+          const tone = routeLegTone(routePoints, fromIndex, active)
+          ctx.strokeStyle = tone === 'dim' ? STAR_MAP_COLORS.routeDim : STAR_MAP_COLORS.route
+          ctx.lineWidth = tone === 'dim' ? 2 : 3
           ctx.beginPath()
           ctx.moveTo(pa.sx, pa.sy)
           ctx.lineTo(pb.sx, pb.sy)
@@ -290,6 +300,27 @@ export default function StarMapSystemView({
         }
         ctx.restore()
       }
+
+      // Shopping icons sit just off the stop so the place itself stays visible.
+      const shopHits: { place: string; sx: number; sy: number }[] = []
+      if (shops?.length) {
+        const seen = new Map<string, number>()
+        for (const shop of shops) {
+          const marker = resolveShopMarker(shop.place, { [system.id]: system })
+          if (!marker) continue
+          const at = displayPositionM(marker, scale)
+          const p = toScreen(at.x, at.y, cam)
+          const body = byId.get(marker.id)
+          const gap = (body?.r ?? ICON_PX / 2) + ICON_PX
+          const n = seen.get(marker.id) ?? 0
+          seen.set(marker.id, n + 1)
+          const sx = p.sx + gap
+          const sy = p.sy - gap - n * (ICON_PX + 4)
+          drawShoppingIcon(ctx, sx, sy, ICON_PX)
+          shopHits.push({ place: shop.place, sx, sy })
+        }
+      }
+      shopHitsRef.current = shopHits
 
       // Orbs. Stars carry a moving surface; planets and moons are lit from the star.
       for (const it of items) {
@@ -424,7 +455,7 @@ export default function StarMapSystemView({
         ctx.fillText(text, placed.x, placed.y + 7)
       }
     },
-    [system, size, toScreen, starX, starY, markedIds, routeIds, selectedId, segments, planetsByName, fitPxPerM, poiOn],
+    [system, size, toScreen, starX, starY, markedIds, routeIds, selectedId, segments, routePoints, shops, active, planetsByName, fitPxPerM, poiOn],
   )
 
   // The star surface and belt dust move, so the view redraws continuously.
@@ -464,7 +495,16 @@ export default function StarMapSystemView({
     return () => canvas.removeEventListener('wheel', onWheel)
   }, [size, clampCam, setCam])
 
+  const shopAt = (mx: number, my: number): string | null => {
+    for (let i = shopHitsRef.current.length - 1; i >= 0; i--) {
+      const hit = shopHitsRef.current[i]
+      if (Math.hypot(mx - hit.sx, my - hit.sy) <= ICON_PX / 2 + 3) return hit.place
+    }
+    return null
+  }
+
   const hitTest = (mx: number, my: number): StarMapMarker | null => {
+    if (shopAt(mx, my)) return null
     const { items, visible } = projectedRef.current
     for (let i = items.length - 1; i >= 0; i--) {
       const it = items[i]
@@ -496,7 +536,7 @@ export default function StarMapSystemView({
     const drag = dragRef.current
     const rect = e.currentTarget.getBoundingClientRect()
     if (!drag) {
-      e.currentTarget.style.cursor = hitTest(e.clientX - rect.left, e.clientY - rect.top) ? 'pointer' : 'grab'
+      e.currentTarget.style.cursor = shopAt(e.clientX - rect.left, e.clientY - rect.top) || hitTest(e.clientX - rect.left, e.clientY - rect.top) ? 'pointer' : 'grab'
       return
     }
     const dx = e.clientX - drag.x
@@ -541,19 +581,32 @@ export default function StarMapSystemView({
       return
     }
     if (!drag || drag.moved) return
+    const shop = shopAt(e.clientX - rect.left, e.clientY - rect.top)
+    if (shop) {
+      setSelectedShop(shop)
+      setSelectedId(null)
+      return
+    }
     const hit = hitTest(e.clientX - rect.left, e.clientY - rect.top)
+    setSelectedShop(null)
     setSelectedId(hit ? hit.id : null)
   }
 
+  const shopStop = selectedShop ? shops?.find((shop) => shop.place === selectedShop) : undefined
+  const shopHit = shopStop ? shopHitsRef.current.find((hit) => hit.place === shopStop.place) : undefined
   const selected = selectedId ? system.markers.find((m) => m.id === selectedId && starMapMarkerShown(m, poiOn)) : undefined
   const readout = selected ? starMapMarkerReadout(selected) : null
   const cam = camRef.current
   let readoutPos: { left: number; top: number } | null = null
-  if (selected && cam && size.w) {
-    const p = toScreen(selected.x, selected.y, cam)
+  const anchor = selected && cam && size.w
+    ? toScreen(selected.x, selected.y, cam)
+    : shopHit
+      ? { sx: shopHit.sx, sy: shopHit.sy }
+      : null
+  if (anchor && size.w) {
     const panelW = 280
-    const left = p.sx + 18 + panelW > size.w ? Math.max(8, p.sx - 18 - panelW) : p.sx + 18
-    const top = Math.min(Math.max(8, p.sy - 24), Math.max(8, size.h - 200))
+    const left = anchor.sx + 18 + panelW > size.w ? Math.max(8, anchor.sx - 18 - panelW) : anchor.sx + 18
+    const top = Math.min(Math.max(8, anchor.sy - 24), Math.max(8, size.h - 200))
     readoutPos = { left, top }
   }
 
@@ -645,6 +698,34 @@ export default function StarMapSystemView({
                 </li>
               )
             })}
+          </ul>
+        </div>
+      )}
+
+      {shopStop && readoutPos && (
+        <div
+          className="site-tooltip-panel absolute z-10 w-[280px] max-w-[280px]"
+          style={{ left: readoutPos.left, top: readoutPos.top }}
+          role="dialog"
+          aria-label={shopStop.place}
+        >
+          <div className="flex items-start justify-between gap-2">
+            <div className="min-w-0">
+              <div className="text-sm font-semibold text-slate-100">{shopStop.place}</div>
+              <div className="text-[11px] uppercase tracking-wide text-amber-300">Shopping</div>
+            </div>
+            <button type="button" className="site-btn-icon !p-1" aria-label="Close" onClick={() => setSelectedShop(null)}>
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeWidth={2} d="M6 6l12 12M18 6L6 18" />
+              </svg>
+            </button>
+          </div>
+          <ul className="mt-2 space-y-1">
+            {shopStop.lines.map((line) => (
+              <li key={`${line.action}:${line.label}`} className="text-sm text-slate-200">
+                <span className="text-amber-300">{line.action === 'buy' ? 'Buy' : 'Sell'}</span> {line.label}
+              </li>
+            ))}
           </ul>
         </div>
       )}

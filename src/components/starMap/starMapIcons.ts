@@ -84,3 +84,38 @@ export function drawStarMapIcon(
   }
   ctx.restore()
 }
+
+const SHOPPING_ICON = 'M6 8h12l-1.2 12H7.2L6 8Z M9 8V6.2a3 3 0 0 1 6 0V8'
+
+/** Temporary shopping marker. Amber bag, same size as the other icons. */
+export function drawShoppingIcon(ctx: CanvasRenderingContext2D, x: number, y: number, size: number): void {
+  const color = '#f59e0b'
+  let path = pathCache.get('shopping')
+  if (!path) {
+    path = new Path2D(SHOPPING_ICON)
+    pathCache.set('shopping', path)
+  }
+  ctx.save()
+  const glow = ctx.createRadialGradient(x, y, size * 0.15, x, y, size * 0.95)
+  glow.addColorStop(0, withAlpha(color, 0.32))
+  glow.addColorStop(1, withAlpha(color, 0))
+  ctx.fillStyle = glow
+  ctx.beginPath()
+  ctx.arc(x, y, size * 0.95, 0, Math.PI * 2)
+  ctx.fill()
+  ctx.beginPath()
+  ctx.arc(x, y, size / 2 + 1, 0, Math.PI * 2)
+  ctx.fillStyle = 'rgba(7, 11, 18, 0.8)'
+  ctx.fill()
+  ctx.lineWidth = 1
+  ctx.strokeStyle = withAlpha(color, 0.5)
+  ctx.stroke()
+  ctx.translate(x - size / 2, y - size / 2)
+  ctx.scale(size / 24, size / 24)
+  ctx.lineWidth = 1.65
+  ctx.lineCap = 'round'
+  ctx.lineJoin = 'round'
+  ctx.strokeStyle = color
+  ctx.stroke(path)
+  ctx.restore()
+}

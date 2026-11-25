@@ -5,6 +5,9 @@ import ShipHangarModal from '../shipHangar/ShipHangarModal'
 import SellCargoPanel from './SellCargoPanel'
 import { SHIPS, getShip } from '../../lib/shipShopData'
 import { navMap, pointById, searchNavPoints } from '../../lib/navSystems'
+import { shoppingMapPayload } from '../../lib/starMapHighlight'
+import { getStarMapData } from '../../lib/starMapData'
+import StarMapViewButton from '../starMap/StarMapViewButton'
 import {
   HAUL_MAX_TRADES,
   HAUL_PROFIT_GOAL_MIN_SCU,
@@ -626,7 +629,19 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
           zIndex={80}
         >
           <div className="space-y-3 text-sm text-white">
-            <p className="text-blue-400">Go to {current.place}.</p>
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-blue-400">Go to {current.place}.</p>
+              <StarMapViewButton
+                payload={shoppingMapPayload({
+                  from: pointById(navMap, startId)?.name,
+                  progressive: true,
+                  stops: route.stops.slice(0, step + 1).map((stop) => ({
+                    place: stop.place,
+                    lines: [{ action: stop.kind, label: `${stop.scu} SCU of ${stop.commodity}` }],
+                  })),
+                }, getStarMapData().systems)}
+              />
+            </div>
             {travelText(step === 0 ? startId : route.stops[step - 1]?.pointId || startId, current.pointId) && (
               <p>{travelText(step === 0 ? startId : route.stops[step - 1]?.pointId || startId, current.pointId)}</p>
             )}
