@@ -454,7 +454,7 @@ const GAS_GIANT_NAMES = new Set(['Crusader', 'Pyro V', 'Nyx III'])
 /** Largest on-screen radius for a planet, as a multiple of the zoomed-out disc. */
 const PLANET_CEILING = 3
 /** A fully zoomed moon is this many times an icon across. It is never smaller than one icon. */
-const MOON_MAX_ICONS = 4
+const MOON_MAX_ICONS = 2
 /** Zoomed-out planet diameter, in icon widths. Gas giants use the full width. */
 const PLANET_ICON_WIDTHS = 2
 /**

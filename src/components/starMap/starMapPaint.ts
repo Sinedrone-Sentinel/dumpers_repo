@@ -148,17 +148,6 @@ export function paintBelt(
   ctx.fillStyle = glow
   ctx.fill()
 
-  ctx.save()
-  ctx.strokeStyle = `rgba(236, 220, 170, ${0.55 + marked * 0.25})`
-  ctx.lineWidth = Math.max(1.25, Math.min(span * 0.04, 2.5))
-  for (const radius of [innerPx, outerPx]) {
-    if (radius < 1) continue
-    ctx.beginPath()
-    ctx.arc(sx, sy, radius, 0, Math.PI * 2)
-    ctx.stroke()
-  }
-  ctx.restore()
-
   const count = Math.min(180, Math.max(24, Math.floor(span / 1.6)))
   const seed = (Math.round(sx) * 13 + Math.round(sy)) % 997
   for (let i = 0; i < count; i++) {
