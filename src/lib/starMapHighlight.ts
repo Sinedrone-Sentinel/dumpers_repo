@@ -251,19 +251,29 @@ export function groupShopPins(shops: StarMapShopStop[], systems: StarMapSystems,
   })
 }
 
-/** Bright on the leg that arrives at `active`, including the jumps in that leg. Earlier legs are dim. */
+/**
+ * Bright on the leg that arrives at the current stop, including the jumps in
+ * that leg. Earlier legs are dim. A haul route already ends at the current
+ * stop, so a name that only matches an earlier marker cannot light the whole path.
+ */
 export function routeLegTone(
   points: { name: string; aliases?: string[]; kind?: string }[],
   fromIndex: number,
   active?: string,
 ): 'bright' | 'dim' {
-  const key = active ? normalizeMapName(active) : ''
-  if (!key || fromIndex < 0) return 'bright'
+  if (!active || fromIndex < 0 || points.length < 2) return 'bright'
+  const key = normalizeMapName(active)
   let activeAt = -1
-  for (let i = 0; i < points.length; i++) {
-    const names = [points[i].name, ...(points[i].aliases || [])].map(normalizeMapName)
-    if (names.includes(key)) activeAt = i
+  if (key) {
+    for (let i = points.length - 1; i >= 0; i--) {
+      const names = [points[i].name, ...(points[i].aliases || [])].map(normalizeMapName)
+      if (names.includes(key)) {
+        activeAt = i
+        break
+      }
+    }
   }
+  if (activeAt < points.length - 1) activeAt = points.length - 1
   if (activeAt <= 0) return 'bright'
   let prevStop = 0
   for (let i = activeAt - 1; i >= 0; i--) {
@@ -544,13 +554,13 @@ export function placeCallout(
   return { x: anchorX + Math.cos(ang) * reach, y: anchorY + Math.sin(ang) * reach }
 }
 
-/** Consecutive route pairs that are drawn inside one system. */
-export function routeSegmentsInSystem(points: StarMapMarker[], systemId: string): [StarMapMarker, StarMapMarker][] {
-  const out: [StarMapMarker, StarMapMarker][] = []
+/** Consecutive route pairs that are drawn inside one system. The third value is the index of the first point in the full route. */
+export function routeSegmentsInSystem(points: StarMapMarker[], systemId: string): [StarMapMarker, StarMapMarker, number][] {
+  const out: [StarMapMarker, StarMapMarker, number][] = []
   for (let i = 0; i < points.length - 1; i++) {
     const a = points[i]
     const b = points[i + 1]
-    if (a.systemId === systemId && b.systemId === systemId) out.push([a, b])
+    if (a.systemId === systemId && b.systemId === systemId) out.push([a, b, i])
   }
   return out
 }
