@@ -105,6 +105,14 @@ export function beltSpeckSize(roll: number): number {
   return 1.1 + u * 1.4
 }
 
+/** Which eruption a slot draws. Split so a run shows arches, loop fans, and sprays. */
+export function flareStyle(roll: number): 'arch' | 'fan' | 'spray' {
+  const u = Math.min(1, Math.max(0, roll))
+  if (u < 0.34) return 'arch'
+  if (u < 0.67) return 'fan'
+  return 'spray'
+}
+
 /** Flare length past the surface, in star radii. Pyro can run long. Stanton and Nyx stay medium. */
 export function flareReach(name: string, scale: number): number {
   const u = Math.min(1, Math.max(0, scale))
@@ -423,7 +431,7 @@ export function paintBelt(
   ctx.globalAlpha = 1
 }
 
-/** One prominence: a ribbon that leaves the limb and comes back down. */
+/** One prominence: a ribbon that leaves the limb and comes back down. `skew` leans the crest. */
 function strokeProminence(
   ctx: CanvasRenderingContext2D,
   r: number,
@@ -433,6 +441,7 @@ function strokeProminence(
   fade: number,
   rgb: string,
   width: number,
+  skew = 0,
 ): void {
   const a0 = ang - span / 2
   const a1 = ang + span / 2
@@ -442,8 +451,9 @@ function strokeProminence(
   const y1 = Math.sin(a1) * r * 0.97
   // A quadratic control sits beyond the visible crest, so the arch peaks near `height`.
   const peak = r + height * 2
-  const cx = Math.cos(ang) * peak
-  const cy = Math.sin(ang) * peak
+  const crest = ang + skew
+  const cx = Math.cos(crest) * peak
+  const cy = Math.sin(crest) * peak
   ctx.beginPath()
   ctx.moveTo(x0, y0)
   ctx.quadraticCurveTo(cx, cy, x1, y1)
@@ -460,6 +470,110 @@ function strokeProminence(
     ctx.lineWidth = Math.max(0.8, width * 0.42)
     ctx.stroke()
   }
+}
+
+/** Hot foot where a fan or a spray is rooted. */
+function paintFoot(
+  ctx: CanvasRenderingContext2D,
+  r: number,
+  ang: number,
+  radius: number,
+  fade: number,
+  rgb: string,
+): void {
+  const x = Math.cos(ang) * r * 0.92
+  const y = Math.sin(ang) * r * 0.92
+  const glow = ctx.createRadialGradient(x, y, 0, x, y, radius)
+  glow.addColorStop(0, `rgba(255, 248, 230, ${0.9 * fade})`)
+  glow.addColorStop(0.28, `rgba(${rgb}, ${0.45 * fade})`)
+  glow.addColorStop(1, `rgba(${rgb}, 0)`)
+  ctx.fillStyle = glow
+  ctx.beginPath()
+  ctx.arc(x, y, radius, 0, Math.PI * 2)
+  ctx.fill()
+}
+
+/** Nested loops of different heights, sharing one bright foot. */
+function paintLoopFan(
+  ctx: CanvasRenderingContext2D,
+  r: number,
+  ang: number,
+  span: number,
+  height: number,
+  fade: number,
+  rgb: string,
+  width: number,
+  slot: number,
+  strands: number,
+): void {
+  paintFoot(ctx, r, ang, Math.min(height * 0.42, r * 0.5), fade, rgb)
+  for (let s = 0; s < strands; s++) {
+    const t = strands === 1 ? 0.5 : s / (strands - 1)
+    const lean = (t - 0.5) * span
+    const crest = height * (0.28 + 0.72 * Math.sin(t * Math.PI))
+    const loopSpan = span * (0.28 + 0.55 * (0.35 + Math.abs(t - 0.5)))
+    strokeProminence(ctx, r, ang + lean * 0.35, loopSpan, crest, fade * (0.55 + 0.45 * Math.sin(t * Math.PI)), rgb, width * 0.55, lean * 0.35)
+  }
+  for (let s = 0; s < 4; s++) {
+    const a = ang + (hash(slot * 19 + s * 2.6) - 0.5) * span
+    const len = height * (0.3 + hash(slot * 7 + s) * 0.55)
+    ctx.beginPath()
+    ctx.moveTo(Math.cos(a) * r * 0.98, Math.sin(a) * r * 0.98)
+    const bend = (hash(slot + s * 4.1) - 0.5) * 0.35
+    const end = a + bend
+    ctx.quadraticCurveTo(
+      Math.cos(a + bend * 0.4) * (r + len * 0.55),
+      Math.sin(a + bend * 0.4) * (r + len * 0.55),
+      Math.cos(end) * (r + len),
+      Math.sin(end) * (r + len),
+    )
+    ctx.strokeStyle = `rgba(${rgb}, ${0.16 * fade})`
+    ctx.lineWidth = Math.max(0.6, width * 0.35)
+    ctx.stroke()
+  }
+}
+
+/** A tangled burst: open wisps of uneven length, plus a short loop in the middle. */
+function paintSpray(
+  ctx: CanvasRenderingContext2D,
+  r: number,
+  ang: number,
+  span: number,
+  height: number,
+  fade: number,
+  rgb: string,
+  width: number,
+  slot: number,
+  strands: number,
+): void {
+  paintFoot(ctx, r, ang, Math.min(height * 0.28, r * 0.36), fade, rgb)
+  for (let s = 0; s < strands; s++) {
+    const roll = hash(slot * 23 + s * 3.3)
+    const a = ang + (roll - 0.5) * span
+    const h = height * (0.2 + hash(slot * 11 + s * 1.7) * 0.9)
+    const bend = (hash(slot * 5 + s * 8.2) - 0.5) * 1.1
+    const x0 = Math.cos(a) * r * 0.98
+    const y0 = Math.sin(a) * r * 0.98
+    const end = a + bend * 0.45
+    const x1 = Math.cos(end) * (r + h)
+    const y1 = Math.sin(end) * (r + h)
+    ctx.beginPath()
+    ctx.moveTo(x0, y0)
+    ctx.quadraticCurveTo(
+      Math.cos(a + bend * 0.25) * (r + h * (0.35 + roll * 0.4)),
+      Math.sin(a + bend * 0.25) * (r + h * (0.35 + roll * 0.4)),
+      x1,
+      y1,
+    )
+    ctx.lineCap = 'round'
+    ctx.strokeStyle = `rgba(${rgb}, ${(0.18 + roll * 0.2) * fade})`
+    ctx.lineWidth = width * (0.7 + roll * 1.3)
+    ctx.stroke()
+    ctx.strokeStyle = `rgba(255, 236, 210, ${0.4 * fade})`
+    ctx.lineWidth = Math.max(0.6, width * 0.4)
+    ctx.stroke()
+  }
+  strokeProminence(ctx, r, ang, span * 0.42, height * 0.38, fade * 0.8, rgb, width * 0.7, span * 0.08)
 }
 
 function paintFlares(
@@ -489,9 +603,17 @@ function paintFlares(
     const span = (0.22 + hash(seed + i * 6.4) * (pyro ? 0.95 : 0.5)) * (0.75 + 0.25 * fade)
     const height = r * flareReach(name, scale) * (0.35 + 0.65 * fade)
     const width = Math.max(1.05, r * (0.018 + scale * (pyro ? 0.028 : 0.016)))
-    strokeProminence(ctx, r, ang, span, height, fade, hot, width)
-    if (scale > 0.45) {
-      strokeProminence(ctx, r, ang + span * 0.08, span * 0.72, height * 0.62, fade * 0.75, hot, width * 0.65)
+    const style = flareStyle(hash(seed * 29 + i * 8.5))
+    if (style === 'fan') {
+      paintLoopFan(ctx, r, ang, span, height, fade, hot, width, seed + i * 13, pyro ? 7 : 5)
+    } else if (style === 'spray') {
+      paintSpray(ctx, r, ang, span * 0.85, height, fade, hot, width, seed + i * 17, pyro ? 8 : 5)
+    } else {
+      const skew = (hash(seed + i * 4.8) - 0.5) * span * 0.45
+      strokeProminence(ctx, r, ang, span, height, fade, hot, width, skew)
+      if (scale > 0.4) {
+        strokeProminence(ctx, r, ang + skew * 0.2, span * 0.7, height * 0.58, fade * 0.7, hot, width * 0.6, skew * 0.5)
+      }
     }
   }
   ctx.restore()
