@@ -41,6 +41,7 @@ const FIT_PADDING_PX = 32
 const MAX_ZOOM_FACTOR = 5_000_000
 const MIN_BELT_HALF_PX = 3
 const MIN_BOX_PX = 6
+const MIN_BELT_LABEL_RADIUS_PX = 40
 
 function systemExtentM(system: StarMapSystem, cx: number, cy: number): number {
   let ext = 0
@@ -201,10 +202,12 @@ export default function StarMapSystemView({
       const sc = toScreen(starX, starY, cam)
 
       // Belts: one translucent band each.
+      const beltBands: { marker: StarMapMarker; sx: number; sy: number; midPx: number }[] = []
       for (const m of system.markers) {
         if (m.kind !== 'belt' || !m.innerRadiusM || !m.outerRadiusM) continue
-        const c = toScreen(m.x, m.y, cam)
         const parent = m.parentName ? system.markers.find((p) => p.name === m.parentName && ORB_KINDS.has(p.kind)) ?? null : null
+        const centre = parent ? displayPositionM(parent, scale) : m
+        const c = toScreen(centre.x, centre.y, cam)
         const k = beltPxPerM(m, parent, scale)
         const mid = ((m.outerRadiusM + m.innerRadiusM) / 2) * k
         const half = Math.max(((m.outerRadiusM - m.innerRadiusM) / 2) * k, parent ? 1 : MIN_BELT_HALF_PX)
@@ -222,6 +225,7 @@ export default function StarMapSystemView({
           ctx.fill('evenodd')
           ctx.restore()
         }
+        beltBands.push({ marker: m, sx: c.sx, sy: c.sy, midPx: mid })
       }
 
       // Project bodies and icons.
@@ -389,6 +393,36 @@ export default function StarMapSystemView({
         boxes.push(box)
         ctx.fillStyle = ORB_KINDS.has(it.marker.kind) ? '#e2e8f0' : 'rgba(203, 213, 225, 0.85)'
         ctx.fillText(text, box.x, box.y + 7)
+      }
+
+      // Belt and ring names sit on the band where it crosses the view, nudged along it to dodge other labels.
+      const free = (s: Box) =>
+        s.x >= 0 &&
+        s.y >= 0 &&
+        s.x + s.w <= size.w &&
+        s.y + s.h <= size.h &&
+        !boxes.some((b) => s.x < b.x + b.w && s.x + s.w > b.x && s.y < b.y + b.h && s.y + s.h > b.y)
+      for (const band of beltBands) {
+        if (band.midPx < MIN_BELT_LABEL_RADIUS_PX && !forced.has(band.marker.id)) continue
+        const text = band.marker.name
+        const w = ctx.measureText(text).width
+        const toCentre = Math.atan2(size.h / 2 - band.sy, size.w / 2 - band.sx)
+        const base = Math.hypot(size.w / 2 - band.sx, size.h / 2 - band.sy) < 1 ? -Math.PI / 2 : toCentre
+        let placed: Box | null = null
+        for (const step of [0, 1, -1, 2, -2, 3, -3, 4, -4]) {
+          const a = base + step * (Math.PI / 24)
+          const px = band.sx + Math.cos(a) * band.midPx
+          const py = band.sy + Math.sin(a) * band.midPx
+          const s: Box = { x: px - w / 2, y: py - 7, w, h: 14, owner: band.marker.id }
+          if (free(s)) {
+            placed = s
+            break
+          }
+        }
+        if (!placed) continue
+        boxes.push(placed)
+        ctx.fillStyle = STAR_MAP_COLORS.beltLabel
+        ctx.fillText(text, placed.x, placed.y + 7)
       }
     },
     [system, size, toScreen, starX, starY, markedIds, routeIds, selectedId, segments, planetsByName, fitPxPerM],
