@@ -4135,6 +4135,25 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
     'location card: Grim HEX and gateway stores land on their own marker, not the nearby body',
   )
 
+  const paintMod = await import(pathToFileURL(path.join(outDir, 'starMapPaint.mjs')).href)
+  const pxSpeed = (key, midPx) => {
+    paintMod.beltPhase(key, 0, midPx)
+    return (paintMod.beltPhase(key, 50, midPx) * midPx) / 50
+  }
+  const terminusPace = pxSpeed('t-terminus', 24)
+  check(
+    Math.abs(terminusPace - 0.00003 * 24) < 1e-12 &&
+      [80, 140, 470].every((mid, i) => Math.abs(pxSpeed(`t-belt-${i}`, mid) - terminusPace) < 1e-12),
+    'star map belts: every ring moves its specks at Terminus ring screen speed',
+  )
+  paintMod.beltPhase('t-zoom', 0, 24)
+  const beforeZoom = paintMod.beltPhase('t-zoom', 16, 24)
+  const afterZoom = paintMod.beltPhase('t-zoom', 32, 400)
+  check(
+    afterZoom > beforeZoom && afterZoom - beforeZoom < 0.001 && paintMod.beltPhase('t-zoom', 1e7, 400) - afterZoom < 0.001,
+    'star map belts: zooming or a long pause does not make the specks jump',
+  )
+
   const { chemicalSymbol } = await import(pathToFileURL(path.join(root, 'scripts/lib/parseStarMaps.mjs')).href)
   check(
     chemicalSymbol('CH<font size="%d">3</font>OH') === 'CH3OH' &&

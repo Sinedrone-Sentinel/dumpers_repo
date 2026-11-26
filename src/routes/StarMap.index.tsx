@@ -3,6 +3,7 @@ import { useNavigate, useSearch } from '@tanstack/react-router'
 import StarMapHandoffListener from '../components/starMap/StarMapHandoffListener'
 import StarMapOverview from '../components/starMap/StarMapOverview'
 import { starMapCanvasClass, starMapStageClass } from '../components/starMap/starMapFrame'
+import { usePanelDrag } from '../components/starMap/usePanelDrag'
 import { useAuth } from '../contexts/AuthContext'
 import { setAnalyticsSubTool } from '../lib/analytics'
 import { isDedicatedStarMapWindow, payloadFromSearch, readStarMapHandoff, resolveStarMapSystem, type StarMapSearch } from '../lib/starMapHighlight'
@@ -86,6 +87,7 @@ export default function StarMapIndexRoute() {
       ? resolution
       : null
   const nameOf = (id: string) => index.systems.find((s) => s.id === id)?.name ?? id
+  const choiceDrag = usePanelDrag(choice ? `${choice.kind}:${choice.systemIds.join()}` : null)
 
   if (mapOnly) {
     return (
@@ -103,8 +105,13 @@ export default function StarMapIndexRoute() {
         <StarMapHandoffListener />
         <StarMapOverview index={index} onEnter={enter} />
         {choice && (
-          <div className="site-tooltip-panel absolute top-4 left-1/2 -translate-x-1/2 z-20 w-[min(92%,26rem)]" role="dialog">
-            <div className="flex items-start justify-between gap-2">
+          <div
+            ref={choiceDrag.panelRef}
+            className="site-tooltip-panel absolute top-4 left-1/2 -translate-x-1/2 z-20 w-[min(92%,26rem)]"
+            style={choiceDrag.style}
+            role="dialog"
+          >
+            <div {...choiceDrag.handleProps} className={`flex items-start justify-between gap-2 ${choiceDrag.handleProps.className}`}>
               <p className="text-sm text-slate-200">
                 {choice.kind === 'multiple'
                   ? 'This information covers more than one system. Choose a system to view it in.'

@@ -1,8 +1,9 @@
-import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useLayoutEffect, useState, type ReactNode } from 'react'
 import { STAR_MAP_ICON_COLORS, starMapMarkerLabel, starMapMarkerReadout, type StarMapMarker } from '../../lib/starMap'
 import { getStarMapData } from '../../lib/starMapData'
 import type { ServiceGroup, StarMapLocationInfo } from '../../lib/starMapLocationInfo'
 import SiteTooltip from '../SiteTooltip'
+import { usePanelDrag } from './usePanelDrag'
 
 type InfoModule = typeof import('../../lib/starMapLocationInfo')
 
@@ -367,7 +368,8 @@ function Description({ text }: { text: string }) {
 export default function StarMapLocationCard({ marker, anchor, bounds, onClose, footer }: Props) {
   const [info, setInfo] = useState<StarMapLocationInfo | null>(null)
   const [height, setHeight] = useState(0)
-  const ref = useRef<HTMLDivElement>(null)
+  const drag = usePanelDrag(marker.id)
+  const ref = drag.panelRef
 
   useEffect(() => {
     let live = true
@@ -392,7 +394,7 @@ export default function StarMapLocationCard({ marker, anchor, bounds, onClose, f
     const observer = new ResizeObserver(update)
     observer.observe(el)
     return () => observer.disconnect()
-  }, [])
+  }, [ref])
 
   const readout = starMapMarkerReadout(marker)
   const label = starMapMarkerLabel(marker)
@@ -459,11 +461,14 @@ export default function StarMapLocationCard({ marker, anchor, bounds, onClose, f
     <div
       ref={ref}
       className="site-tooltip-panel absolute z-10 flex flex-col !overflow-hidden !p-0"
-      style={{ left, top, width, maxWidth: width, maxHeight: maxH }}
+      style={{ left, top, width, maxWidth: width, maxHeight: maxH, ...drag.style }}
       role="dialog"
       aria-label={label}
     >
-      <div className="flex items-start justify-between gap-2 border-b border-slate-700/60 px-3 py-2.5">
+      <div
+        {...drag.handleProps}
+        className={`flex items-start justify-between gap-2 border-b border-slate-700/60 px-3 py-2.5 ${drag.handleProps.className}`}
+      >
         <div className="min-w-0">
           <div className="text-sm font-semibold text-slate-100">{label}</div>
           <div className="mt-1 flex flex-wrap items-center gap-1.5 text-[11px]">
