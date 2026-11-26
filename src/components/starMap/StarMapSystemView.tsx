@@ -30,6 +30,7 @@ import { STAR_MAP_ICON_PATHS, drawStarMapIcon, drawTelemetryIcon, paintJumpCallo
 import { paintBelt, paintBody, paintStar, paintStarfield } from './starMapPaint'
 import SiteTooltip from '../SiteTooltip'
 import StarMapLocationCard from './StarMapLocationCard'
+import { containWheel } from './containWheel'
 
 interface Props {
   system: StarMapSystem
@@ -496,6 +497,11 @@ export default function StarMapSystemView({
     raf = requestAnimationFrame(loop)
     return () => cancelAnimationFrame(raf)
   }, [draw])
+
+  useEffect(() => {
+    const wrap = wrapRef.current
+    return wrap ? containWheel(wrap) : undefined
+  }, [])
 
   // Wheel zooms toward the cursor.
   useEffect(() => {

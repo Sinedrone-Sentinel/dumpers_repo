@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { StarMapIndex, StarMapSystemSummary } from '../../lib/starMap'
 import { paintStar } from './starMapPaint'
+import { containWheel } from './containWheel'
 
 interface Props {
   index: StarMapIndex
@@ -233,6 +234,11 @@ export default function StarMapOverview({ index, onEnter }: Props) {
     }
     raf = requestAnimationFrame(loop)
     return () => cancelAnimationFrame(raf)
+  }, [])
+
+  useEffect(() => {
+    const wrap = wrapRef.current
+    return wrap ? containWheel(wrap) : undefined
   }, [])
 
   useEffect(() => {
