@@ -252,7 +252,7 @@ export default function StarMapSystemView({
         const half = Math.max(((m.outerRadiusM - m.innerRadiusM) / 2) * k, parent ? 1 : MIN_BELT_HALF_PX)
         const ro = mid + half
         const ri = Math.max(0, mid - half)
-        paintBelt(ctx, c.sx, c.sy, ri, ro, t, markedIds.has(m.id) ? blinkAlpha(t) : 0)
+        paintBelt(ctx, c.sx, c.sy, ri, ro, t, markedIds.has(m.id) ? blinkAlpha(t) : 0, m.id)
         beltBands.push({ marker: m, sx: c.sx, sy: c.sy, midPx: mid })
       }
 

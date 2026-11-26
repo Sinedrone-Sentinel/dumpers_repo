@@ -720,8 +720,38 @@ export function paintStarfield(ctx: CanvasRenderingContext2D, w: number, h: numb
 }
 
 /**
+ * Speck speed along the middle of every belt, in screen px per ms. Terminus's
+ * ring in the whole-system view (about 24 px across the middle) set this pace.
+ */
+export const BELT_SPECK_PX_PER_MS = 0.00003 * 24
+const MIN_BELT_MID_PX = 12
+/** Longest frame gap that still moves the specks, so a hidden tab does not jump. */
+const MAX_BELT_STEP_MS = 100
+
+const beltPhases = new Map<string, { t: number; phase: number }>()
+
+/**
+ * Radians a belt's specks have turned. The rate keeps the same screen speed at
+ * any size, and the phase carries over as the zoom changes so nothing jumps.
+ */
+export function beltPhase(key: string, t: number, midPx: number): number {
+  const rate = BELT_SPECK_PX_PER_MS / Math.max(midPx, MIN_BELT_MID_PX)
+  const prev = beltPhases.get(key)
+  if (!prev) {
+    const start = { t, phase: 0 }
+    beltPhases.set(key, start)
+    return start.phase
+  }
+  const dt = Math.min(Math.max(t - prev.t, 0), MAX_BELT_STEP_MS)
+  prev.phase += dt * rate
+  prev.t = t
+  return prev.phase
+}
+
+/**
  * An asteroid belt or ring. A soft dust band, a brighter glow along the
  * middle, and drifting specks. The fill fades out at both edges. `marked` is 0–1.
+ * `key` names the belt so its specks keep their place between frames.
  */
 export function paintBelt(
   ctx: CanvasRenderingContext2D,
@@ -731,6 +761,7 @@ export function paintBelt(
   outerPx: number,
   t: number,
   marked: number,
+  key = `${Math.round(sx)}:${Math.round(sy)}`,
 ): void {
   const span = Math.max(outerPx - innerPx, 8)
   const feather = Math.max(14, span * 0.65)
@@ -764,10 +795,11 @@ export function paintBelt(
 
   const count = beltSpeckCount(mid)
   const seed = (Math.round(sx) * 13 + Math.round(sy)) % 997
+  const phase = beltPhase(key, t, mid)
   for (let i = 0; i < count; i++) {
     const u = fract(Math.sin(i * 127.1 + seed) * 43758.5453)
     const v = fract(Math.sin(i * 269.5 + seed * 0.37) * 24634.6345)
-    const ang = u * Math.PI * 2 + t * 0.00003 * (0.4 + v)
+    const ang = u * Math.PI * 2 + phase * (0.4 + v)
     const rad = innerPx + v * (outerPx - innerPx)
     const x = sx + Math.cos(ang) * rad
     const y = sy + Math.sin(ang) * rad
