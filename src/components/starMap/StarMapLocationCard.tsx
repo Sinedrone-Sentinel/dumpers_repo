@@ -48,10 +48,13 @@ interface Props {
   onClose: () => void
   /** Jump button for a jump point. */
   footer?: ReactNode
+  zIndex?: number
+  /** Bring this card in front of the other open popups. */
+  onRaise?: () => void
 }
 
-function Section({ title, count, defaultOpen = true, children }: { title: string; count?: number; defaultOpen?: boolean; children: ReactNode }) {
-  const [open, setOpen] = useState(defaultOpen)
+function Section({ title, count, children }: { title: string; count?: number; children: ReactNode }) {
+  const [open, setOpen] = useState(false)
   return (
     <section className="site-section !rounded-lg">
       <button
@@ -235,13 +238,13 @@ function ShopsBlock({ info }: { info: StarMapLocationInfo }) {
       {places.map((place) => (
         <div key={place || '_self'} className="space-y-1">
           {placeHeading(place || null)}
-          <ul className="space-y-0.5">
+          <ul className="space-y-1.5">
             {info.shops
               .filter((s) => (s.place || '') === place)
               .map((s) => (
-                <li key={s.store} className="flex items-baseline justify-between gap-2 text-[11px]">
-                  <span className="min-w-0 truncate text-slate-200">{s.store}</span>
-                  <span className="shrink-0 text-right text-slate-400">{s.kinds.join(', ')}</span>
+                <li key={s.store} className="text-[11px] leading-4">
+                  <div className="font-semibold text-slate-100">{s.store}</div>
+                  <div className="text-slate-400">{s.kinds.join(', ')}</div>
                 </li>
               ))}
           </ul>
@@ -365,7 +368,7 @@ function Description({ text }: { text: string }) {
   )
 }
 
-export default function StarMapLocationCard({ marker, anchor, bounds, onClose, footer }: Props) {
+export default function StarMapLocationCard({ marker, anchor, bounds, onClose, footer, zIndex = 10, onRaise }: Props) {
   const [info, setInfo] = useState<StarMapLocationInfo | null>(null)
   const [height, setHeight] = useState(0)
   const drag = usePanelDrag(marker.id)
@@ -415,7 +418,7 @@ export default function StarMapLocationCard({ marker, anchor, bounds, onClose, f
     }
     if (info.services.length) {
       sections.push(
-        <Section key="services" title="Services" count={info.services.length > 1 ? info.services.length : undefined} defaultOpen={info.services.length <= 4}>
+        <Section key="services" title="Services" count={info.services.length > 1 ? info.services.length : undefined}>
           <ServicesBlock info={info} />
         </Section>,
       )
@@ -443,14 +446,14 @@ export default function StarMapLocationCard({ marker, anchor, bounds, onClose, f
     }
     if (info.trade.length) {
       sections.push(
-        <Section key="trade" title="Commodity Trading" count={info.trade.length > 1 ? info.trade.length : undefined} defaultOpen={info.trade.length <= 2}>
+        <Section key="trade" title="Commodity Trading" count={info.trade.length > 1 ? info.trade.length : undefined}>
           <TradeBlock info={info} />
         </Section>,
       )
     }
     if (info.shops.length) {
       sections.push(
-        <Section key="shops" title="Stores" count={info.shops.length} defaultOpen={info.shops.length <= 6}>
+        <Section key="shops" title="Stores" count={info.shops.length}>
           <ShopsBlock info={info} />
         </Section>,
       )
@@ -460,10 +463,11 @@ export default function StarMapLocationCard({ marker, anchor, bounds, onClose, f
   return (
     <div
       ref={ref}
-      className="site-tooltip-panel absolute z-10 flex flex-col !overflow-hidden !p-0"
-      style={{ left, top, width, maxWidth: width, maxHeight: maxH, ...drag.style }}
+      className="site-tooltip-panel absolute flex flex-col !overflow-hidden !p-0"
+      style={{ left, top, width, maxWidth: width, maxHeight: maxH, zIndex, ...drag.style }}
       role="dialog"
       aria-label={label}
+      onPointerDownCapture={onRaise}
     >
       <div
         {...drag.handleProps}
