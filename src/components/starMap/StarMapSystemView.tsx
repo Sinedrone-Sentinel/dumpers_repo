@@ -31,7 +31,7 @@ import { paintBelt, paintBody, paintStar, paintStarfield } from './starMapPaint'
 import SiteTooltip from '../SiteTooltip'
 import StarMapLocationCard from './StarMapLocationCard'
 import { containWheel } from './containWheel'
-import { usePanelDrag } from './usePanelDrag'
+import StarMapShopPopup from './StarMapShopPopup'
 
 interface Props {
   system: StarMapSystem
@@ -91,9 +91,18 @@ export default function StarMapSystemView({
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [size, setSize] = useState({ w: 0, h: 0 })
   const camRef = useRef<Cam | null>(null)
-  const [selectedId, setSelectedId] = useState<string | null>(null)
-  const [selectedShop, setSelectedShop] = useState<number | null>(null)
-  const shopDrag = usePanelDrag(selectedShop)
+  /** Open popups, back to front. `m:<marker id>` or `s:<shop pin index>`. Only their X closes them. */
+  const [openPopups, setOpenPopups] = useState<string[]>([])
+  const openMarkerIds = useMemo(
+    () => openPopups.filter((key) => key.startsWith('m:')).map((key) => key.slice(2)),
+    [openPopups],
+  )
+  const raisePopup = useCallback((key: string) => {
+    setOpenPopups((prev) => (prev[prev.length - 1] === key ? prev : [...prev.filter((k) => k !== key), key]))
+  }, [])
+  const closePopup = useCallback((key: string) => {
+    setOpenPopups((prev) => prev.filter((k) => k !== key))
+  }, [])
   const shopHitsRef = useRef<{ index: number; sx: number; sy: number }[]>([])
   const shopPins = useMemo(
     () => groupShopPins(shops ?? [], { [system.id]: system }, system.id),
@@ -107,7 +116,7 @@ export default function StarMapSystemView({
   const boxingRef = useRef(false)
 
   useEffect(() => {
-    setSelectedShop(null)
+    setOpenPopups((prev) => prev.filter((key) => !key.startsWith('s:')))
   }, [focusId])
 
   useEffect(() => {
@@ -269,7 +278,7 @@ export default function StarMapSystemView({
         items.push({ marker: m, sx: p.sx, sy: p.sy, r })
       }
       const forced = new Set<string>([...markedIds, ...routeIds])
-      if (selectedId) forced.add(selectedId)
+      for (const id of openMarkerIds) forced.add(id)
       const visible = declutterMarkers(items, forced)
       projectedRef.current = { items, visible }
       const byId = new Map(items.map((it) => [it.marker.id, it]))
@@ -350,9 +359,9 @@ export default function StarMapSystemView({
         ctx.restore()
       }
 
-      // Selection.
-      if (selectedId) {
-        const it = byId.get(selectedId)
+      // Every marker with an open card.
+      for (const id of openMarkerIds) {
+        const it = byId.get(id)
         if (it) {
           ctx.save()
           ctx.strokeStyle = '#f8fafc'
@@ -486,7 +495,7 @@ export default function StarMapSystemView({
         boxes.push({ x: at.x - w / 2, y: at.y - h / 2, w, h, owner: callout.markerId })
       }
     },
-    [system, size, toScreen, starX, starY, markedIds, routeIds, selectedId, segments, routePoints, shopPins, telemetry, active, planetsByName, fitPxPerM, poiOn, index],
+    [system, size, toScreen, starX, starY, markedIds, routeIds, openMarkerIds, segments, routePoints, shopPins, telemetry, active, planetsByName, fitPxPerM, poiOn, index],
   )
 
   // The star surface and belt dust move, so the view redraws continuously.
@@ -620,34 +629,65 @@ export default function StarMapSystemView({
     if (!drag || drag.moved) return
     const shop = shopAt(e.clientX - rect.left, e.clientY - rect.top)
     if (shop != null) {
-      setSelectedShop(shop)
-      setSelectedId(null)
+      raisePopup(`s:${shop}`)
       return
     }
     const hit = hitTest(e.clientX - rect.left, e.clientY - rect.top)
-    setSelectedShop(null)
-    setSelectedId(hit ? hit.id : null)
+    if (hit) raisePopup(`m:${hit.id}`)
   }
 
-  const shopStop = selectedShop != null ? shopPins[selectedShop] : undefined
-  const shopHit = shopStop ? shopHitsRef.current.find((hit) => hit.index === selectedShop) : undefined
-  const selected = selectedId ? system.markers.find((m) => m.id === selectedId && starMapMarkerShown(m, poiOn)) : undefined
   const cam = camRef.current
-  let readoutPos: { left: number; top: number } | null = null
-  const anchor = selected && cam && size.w
-    ? toScreen(selected.x, selected.y, cam)
-    : shopHit
-      ? { sx: shopHit.sx, sy: shopHit.sy }
-      : null
-  if (anchor && size.w) {
-    const panelW = 280
-    const left = anchor.sx + 18 + panelW > size.w ? Math.max(8, anchor.sx - 18 - panelW) : anchor.sx + 18
-    const top = Math.min(Math.max(8, anchor.sy - 24), Math.max(8, size.h - 200))
-    readoutPos = { left, top }
-  }
 
-  const jumpTarget = selected ? starMapJumpDestination(selected) : null
-  const jumpTargetName = jumpTarget ? systemNames.get(jumpTarget) : undefined
+  const popups = openPopups.map((key, order) => {
+    const zIndex = 10 + order
+    if (key.startsWith('s:')) {
+      const index = Number(key.slice(2))
+      const stop = shopPins[index]
+      const hit = shopHitsRef.current.find((h) => h.index === index)
+      if (!stop || !hit || !size.w) return null
+      return (
+        <StarMapShopPopup
+          key={key}
+          stop={stop}
+          telemetry={telemetry}
+          anchor={{ sx: hit.sx, sy: hit.sy }}
+          bounds={size}
+          zIndex={zIndex}
+          onRaise={() => raisePopup(key)}
+          onClose={() => closePopup(key)}
+        />
+      )
+    }
+    const marker = system.markers.find((m) => m.id === key.slice(2) && starMapMarkerShown(m, poiOn))
+    if (!marker || !cam || !size.w) return null
+    const jumpTarget = starMapJumpDestination(marker)
+    const jumpTargetName = jumpTarget ? systemNames.get(jumpTarget) : undefined
+    return (
+      <StarMapLocationCard
+        key={key}
+        marker={marker}
+        anchor={toScreen(marker.x, marker.y, cam)}
+        bounds={size}
+        zIndex={zIndex}
+        onRaise={() => raisePopup(key)}
+        onClose={() => closePopup(key)}
+        footer={
+          jumpTarget &&
+          (jumpTargetName ? (
+            <button
+              type="button"
+              className="site-btn-primary w-full !px-3 !py-2 text-xs"
+              onClick={() => onJump(jumpTarget !== marker.toSystem ? { ...marker, toSystem: jumpTarget } : marker)}
+            >
+              Jump to {jumpTargetName}
+            </button>
+          ) : (
+            <p className="text-xs text-slate-400">Leads to {titleCase(jumpTarget)}</p>
+          ))
+        }
+      />
+    )
+  })
 
   return (
     <div ref={wrapRef} className="absolute inset-0 overflow-hidden select-none">
@@ -707,11 +747,15 @@ export default function StarMapSystemView({
                       aria-pressed={on}
                       onClick={() => {
                         setPoiOn((prev) => ({ ...prev, [group.id]: !on }))
-                        setSelectedId((id) => {
-                          if (!id) return id
-                          const marker = system.markers.find((m) => m.id === id)
-                          return marker && starMapPoiGroup(marker)?.id === group.id && on ? null : id
-                        })
+                        if (on) {
+                          setOpenPopups((prev) =>
+                            prev.filter((key) => {
+                              if (!key.startsWith('m:')) return true
+                              const marker = system.markers.find((m) => m.id === key.slice(2))
+                              return !marker || starMapPoiGroup(marker)?.id !== group.id
+                            }),
+                          )
+                        }
                       }}
                       className={`flex w-full items-center gap-2 rounded px-1 py-0.5 text-left ${on ? 'opacity-100' : 'opacity-35'}`}
                     >
@@ -738,60 +782,7 @@ export default function StarMapSystemView({
         </div>
       )}
 
-      {shopStop && readoutPos && (
-        <div
-          ref={shopDrag.panelRef}
-          className="site-tooltip-panel absolute z-10 w-[280px] max-w-[280px]"
-          style={{ left: readoutPos.left, top: readoutPos.top, ...shopDrag.style }}
-          role="dialog"
-          aria-label={shopStop.title}
-        >
-          <div {...shopDrag.handleProps} className={`flex items-start justify-between gap-2 ${shopDrag.handleProps.className}`}>
-            <div className="min-w-0">
-              <div className="text-sm font-semibold text-slate-100">{shopStop.title}</div>
-              <div className="text-[11px] uppercase tracking-wide text-amber-300">
-                {telemetry === 'hauler' ? 'Smart Hauler' : 'Shopping'}
-              </div>
-            </div>
-            <button type="button" className="site-btn-icon !p-1" aria-label="Close" onClick={() => setSelectedShop(null)}>
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeWidth={2} d="M6 6l12 12M18 6L6 18" />
-              </svg>
-            </button>
-          </div>
-          <ul className="mt-2 space-y-1">
-            {shopStop.lines.map((line, index) => (
-              <li key={`${index}:${line.action}:${line.label}:${line.where || ''}`} className="text-sm text-slate-200">
-                <span className="text-amber-300">{line.action === 'buy' ? 'Buy' : 'Sell'}</span> {line.label}
-                {line.where ? <span className="text-slate-400"> at {line.where}</span> : null}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {selected && anchor && size.w > 0 && (
-        <StarMapLocationCard
-          marker={selected}
-          anchor={anchor}
-          bounds={size}
-          onClose={() => setSelectedId(null)}
-          footer={
-            jumpTarget &&
-            (jumpTargetName ? (
-              <button
-                type="button"
-                className="site-btn-primary w-full !px-3 !py-2 text-xs"
-                onClick={() => onJump(jumpTarget && jumpTarget !== selected.toSystem ? { ...selected, toSystem: jumpTarget } : selected)}
-              >
-                Jump to {jumpTargetName}
-              </button>
-            ) : (
-              <p className="text-xs text-slate-400">Leads to {titleCase(jumpTarget)}</p>
-            ))
-          }
-        />
-      )}
+      {popups}
     </div>
   )
 }

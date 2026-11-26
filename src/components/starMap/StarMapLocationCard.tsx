@@ -48,6 +48,9 @@ interface Props {
   onClose: () => void
   /** Jump button for a jump point. */
   footer?: ReactNode
+  zIndex?: number
+  /** Bring this card in front of the other open popups. */
+  onRaise?: () => void
 }
 
 function Section({ title, count, children }: { title: string; count?: number; children: ReactNode }) {
@@ -365,7 +368,7 @@ function Description({ text }: { text: string }) {
   )
 }
 
-export default function StarMapLocationCard({ marker, anchor, bounds, onClose, footer }: Props) {
+export default function StarMapLocationCard({ marker, anchor, bounds, onClose, footer, zIndex = 10, onRaise }: Props) {
   const [info, setInfo] = useState<StarMapLocationInfo | null>(null)
   const [height, setHeight] = useState(0)
   const drag = usePanelDrag(marker.id)
@@ -460,10 +463,11 @@ export default function StarMapLocationCard({ marker, anchor, bounds, onClose, f
   return (
     <div
       ref={ref}
-      className="site-tooltip-panel absolute z-10 flex flex-col !overflow-hidden !p-0"
-      style={{ left, top, width, maxWidth: width, maxHeight: maxH, ...drag.style }}
+      className="site-tooltip-panel absolute flex flex-col !overflow-hidden !p-0"
+      style={{ left, top, width, maxWidth: width, maxHeight: maxH, zIndex, ...drag.style }}
       role="dialog"
       aria-label={label}
+      onPointerDownCapture={onRaise}
     >
       <div
         {...drag.handleProps}
