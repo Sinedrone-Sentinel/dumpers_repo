@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { StarMapIndex, StarMapSystemSummary } from '../../lib/starMap'
 import { paintStar } from './starMapPaint'
 import { containWheel } from './containWheel'
+import { usePanelDrag } from './usePanelDrag'
 
 interface Props {
   index: StarMapIndex
@@ -317,6 +318,7 @@ export default function StarMapOverview({ index, onEnter }: Props) {
   }
 
   const focused = focusId ? index.systems.find((s) => s.id === focusId) : undefined
+  const cardDrag = usePanelDrag(focusId)
   let readoutPos: { left: number; top: number } | null = null
   if (focused && camRef.current && size.w) {
     const p = project(focused.overview, camRef.current)
@@ -343,12 +345,13 @@ export default function StarMapOverview({ index, onEnter }: Props) {
       />
       {focused && readoutPos && (
         <div
+          ref={cardDrag.panelRef}
           className="site-tooltip-panel absolute z-10 w-[300px] max-w-[300px]"
-          style={{ left: readoutPos.left, top: readoutPos.top }}
+          style={{ left: readoutPos.left, top: readoutPos.top, ...cardDrag.style }}
           role="dialog"
           aria-label={focused.name}
         >
-          <div className="flex items-start justify-between gap-2">
+          <div {...cardDrag.handleProps} className={`flex items-start justify-between gap-2 ${cardDrag.handleProps.className}`}>
             <div className="text-sm font-semibold text-slate-100">{focused.name}</div>
             <button type="button" className="site-btn-icon !p-1" aria-label="Close" onClick={closeFocus}>
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

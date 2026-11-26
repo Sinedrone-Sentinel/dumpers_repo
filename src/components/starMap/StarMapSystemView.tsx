@@ -31,6 +31,7 @@ import { paintBelt, paintBody, paintStar, paintStarfield } from './starMapPaint'
 import SiteTooltip from '../SiteTooltip'
 import StarMapLocationCard from './StarMapLocationCard'
 import { containWheel } from './containWheel'
+import { usePanelDrag } from './usePanelDrag'
 
 interface Props {
   system: StarMapSystem
@@ -92,6 +93,7 @@ export default function StarMapSystemView({
   const camRef = useRef<Cam | null>(null)
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [selectedShop, setSelectedShop] = useState<number | null>(null)
+  const shopDrag = usePanelDrag(selectedShop)
   const shopHitsRef = useRef<{ index: number; sx: number; sy: number }[]>([])
   const shopPins = useMemo(
     () => groupShopPins(shops ?? [], { [system.id]: system }, system.id),
@@ -738,12 +740,13 @@ export default function StarMapSystemView({
 
       {shopStop && readoutPos && (
         <div
+          ref={shopDrag.panelRef}
           className="site-tooltip-panel absolute z-10 w-[280px] max-w-[280px]"
-          style={{ left: readoutPos.left, top: readoutPos.top }}
+          style={{ left: readoutPos.left, top: readoutPos.top, ...shopDrag.style }}
           role="dialog"
           aria-label={shopStop.title}
         >
-          <div className="flex items-start justify-between gap-2">
+          <div {...shopDrag.handleProps} className={`flex items-start justify-between gap-2 ${shopDrag.handleProps.className}`}>
             <div className="min-w-0">
               <div className="text-sm font-semibold text-slate-100">{shopStop.title}</div>
               <div className="text-[11px] uppercase tracking-wide text-amber-300">
