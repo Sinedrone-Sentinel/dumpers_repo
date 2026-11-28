@@ -15,6 +15,7 @@ import {
   formatRepReward,
   formatScenarioPointsRequirement,
 } from './missionAcquisition'
+import { formatStoredAuecLabel, payoutForTitleKey } from './missionAuec'
 import { categorizeRegions, type Region } from './missions'
 
 export { parseLiveMissionLabel, sanitizeLiveMissionRawLabel } from './liveMissionLabel'
@@ -81,12 +82,23 @@ function formatAmount(amount: number): string {
 export function liveMissionRewards(
   contractIds: (string | null | undefined)[],
   fallbackRep?: { faction: string; amount: number }[] | null,
-  missionFaction?: string | null
+  missionFaction?: string | null,
+  titleKey?: string | null
 ): LiveMissionReward[] {
   const entryId = contractIds.find((id) => id && missionRewardsById[id])
   const entry = entryId ? missionRewardsById[entryId] : undefined
   const rep = entry?.rep ?? fallbackRep ?? []
   const out: LiveMissionReward[] = []
+  const payout = payoutForTitleKey(titleKey)
+  const auecLabel = payout ? formatStoredAuecLabel(payout.min, payout.max) : null
+  if (auecLabel) {
+    out.push({
+      key: 'auec',
+      label: auecLabel,
+      title: 'aUEC paid when you complete this contract',
+      isLoss: false,
+    })
+  }
 
   rep.forEach((effect, idx) => {
     if (!effect.amount) return
@@ -183,7 +195,8 @@ function resolveLiveMissionDisplay(mission: DumperActiveMission): Omit<
         : contract.repPoints
           ? [{ faction: contract.faction ?? '', amount: contract.repPoints }]
           : null,
-      contract.faction
+      contract.faction,
+      contract.titleKey
     )
     const rewardText =
       contract.scenarioPointsRequired != null
