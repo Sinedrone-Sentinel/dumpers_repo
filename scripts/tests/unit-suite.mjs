@@ -4238,7 +4238,8 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
 }
 
 const missionSplits = await import(pathToFileURL(path.join(root, 'scripts/lib/parseMissionSplits.mjs')).href)
-check(missionSplits.classifyRewardSplit({ splitPointsForParty: true }) === 'unspecified', 'a party split that does not name the payout stays unspecified')
+check(missionSplits.classifyRewardSplit({ splitPointsForParty: true }) === 'rep', 'event points split with the party are named as rep')
+check(missionSplits.classifyRewardSplit({ splitForParty: true }) === 'unspecified', 'a party split that does not name the payout stays unspecified')
 check(missionSplits.classifyRewardSplit({ splitRewardsForParty: true }) === 'rewards', 'a reward split is named as rewards')
 check(missionSplits.classifyRewardSplit({ splitRepForParty: true }) === 'rep', 'a reputation split is named as rep')
 check(
@@ -4261,7 +4262,7 @@ check(
 )
 const bakedSplits = JSON.parse(readFileSync(path.join(root, 'src/data/game-mission-splits.json'), 'utf8'))
 check(
-  bakedSplits.byId['9a92d449-f8d1-4766-bae1-462e1a2cab71'] === 'unspecified' &&
+  bakedSplits.byId['9a92d449-f8d1-4766-bae1-462e1a2cab71'] === 'rep' &&
     bakedSplits.byId['4bd43a77-1ac6-4fa4-8f51-a92ef1f4f607'] == null,
   'large fabrication order splits, and Green light on [Target] does not',
 )
