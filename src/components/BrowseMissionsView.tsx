@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useBlueprintData } from '../routes/blueprints'
-import MissionListingTags from './MissionListingTags'
+import MissionListingTags, { RewardSplitChips } from './MissionListingTags'
 import BlueprintMissionMeta from './BlueprintMissionMeta'
 import BlueprintRewardMissionsModal from './BlueprintRewardMissionsModal'
 import { getBrowseSystemsForMission } from '../lib/missionLocations'
@@ -15,6 +15,7 @@ import {
 import { formatStandingRange } from '../lib/missionAcquisition'
 import { payoutForTitleKey } from '../lib/missionAuec'
 import { enemiesForContract } from '../lib/missionEnemies'
+import { collectRewardSplitKinds } from '../lib/missionSplits'
 import {
   makeBrowseMissionKey,
   readMissionTrackerUiState,
@@ -723,6 +724,7 @@ export default function BrowseMissionsView({
 
     const searchOpen = searchTerm.trim().length > 0
     const expanded = searchOpen || expandedGroupTitles.has(group.title)
+    const splitKinds = collectRewardSplitKinds(group.variants.map((mission) => mission.rewardSplit))
     const headerTone = group.isLawful
       ? 'border-green-500/10 bg-green-950/10'
       : 'border-red-500/10 bg-red-950/10'
@@ -765,10 +767,15 @@ export default function BrowseMissionsView({
                 <h4 className={`font-medium text-sm ${group.isLawful ? 'text-green-300' : 'text-red-400'}`}>
                   {group.title}
                 </h4>
-                {group.category && (
-                  <span className="inline-block mt-1 text-[10px] px-1.5 py-0.5 bg-amber-950/50 text-amber-300 border border-amber-500/40 rounded">
-                    {group.category}
-                  </span>
+                {(group.category || splitKinds.length > 0) && (
+                  <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                    {group.category && (
+                      <span className="text-[10px] px-1.5 py-0.5 bg-amber-950/50 text-amber-300 border border-amber-500/40 rounded">
+                        {group.category}
+                      </span>
+                    )}
+                    <RewardSplitChips kinds={splitKinds} />
+                  </div>
                 )}
               </div>
             </div>
@@ -1020,6 +1027,9 @@ export default function BrowseMissionsView({
                   hasLawful && hasIllegal ? 'mixed' : hasIllegal ? 'illegal' : 'lawful'
                 const typeCounts = countMissionTypesByLawful(displayMissions)
                 const contractCount = displayMissions.length
+                const splitKinds = collectRewardSplitKinds(
+                  displayMissions.map((mission) => mission.rewardSplit),
+                )
                 const systemsArray =
                   systemFilter === 'all'
                     ? SYSTEM_FILTER_ORDER.filter((system) =>
@@ -1076,6 +1086,7 @@ export default function BrowseMissionsView({
                           {SYSTEM_LABELS[sys]}
                         </span>
                       ))}
+                      <RewardSplitChips kinds={splitKinds} />
                     </div>
                     <p className="text-xs text-slate-500 mt-1 pl-1">
                       {typeCounts.lawful + typeCounts.illegal} mission type

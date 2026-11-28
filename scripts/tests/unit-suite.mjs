@@ -4268,6 +4268,19 @@ check(
   'reward and reputation splits are both kept',
 )
 check(missionSplits.classifyRewardSplit({ splitPointsForParty: false, targetSplit: 4 }) === null, 'a disabled split and a time-trial split stay off the tag')
+const splitUiPath = path.join(outDir, 'missionSplitsUi.mjs')
+await esbuild.build({
+  entryPoints: [path.join(root, 'src/lib/missionSplits.ts')],
+  bundle: true,
+  platform: 'node',
+  format: 'esm',
+  outfile: splitUiPath,
+})
+const splitUi = await import(pathToFileURL(splitUiPath).href)
+check(
+  splitUi.collectRewardSplitKinds([null, 'unspecified', 'both', 'rewards']).join() === 'unspecified,rewards,rep',
+  'a collapsed card keeps one chip per split kind, rewards before rep',
+)
 const bakedSplits = JSON.parse(readFileSync(path.join(root, 'src/data/game-mission-splits.json'), 'utf8'))
 check(
   bakedSplits.byId['9a92d449-f8d1-4766-bae1-462e1a2cab71'] === 'unspecified' &&

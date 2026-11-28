@@ -17,7 +17,8 @@ import {
 } from '../lib/missionAcquisition'
 import BrowseMissionsView from '../components/BrowseMissionsView'
 import BpDumperCallout from '../components/bpDumper/BpDumperCallout'
-import MissionListingTags from '../components/MissionListingTags'
+import MissionListingTags, { RewardSplitChips } from '../components/MissionListingTags'
+import { collectRewardSplitKinds } from '../lib/missionSplits'
 import { readMissionTrackerUiState, writeMissionTrackerUiState, makeBrowseMissionKey } from '../lib/missionTrackerUiState'
 import { setAnalyticsSubTool } from '../lib/analytics'
 import SiteTooltip from '../components/SiteTooltip'
@@ -173,6 +174,9 @@ function MissionChecklistGroups({
               <span className="text-xs font-normal text-slate-500">
                 {group.missions.length} mission{group.missions.length === 1 ? '' : 's'}
               </span>
+              <RewardSplitChips
+                kinds={collectRewardSplitKinds(group.missions.map((mission) => mission.rewardSplit))}
+              />
             </button>
           </div>
           {open && (
@@ -543,10 +547,13 @@ export default function TargetsRoute() {
                         </svg>
                         <div className="min-w-0 flex-1">
                           <p className="text-sm font-semibold text-white leading-snug">{bp.blueprintName}</p>
-                          <div className="mt-1">
+                          <div className="mt-1 flex flex-wrap items-center gap-1.5">
                             <BlueprintUnlockBadge
                               blueprintId={bp.internalName}
                               isReward={getRewardMissionsForBlueprint(bp.internalName).length > 0}
+                            />
+                            <RewardSplitChips
+                              kinds={collectRewardSplitKinds(missions.map((mission) => mission.rewardSplit))}
                             />
                           </div>
                         </div>
