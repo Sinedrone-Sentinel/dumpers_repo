@@ -258,6 +258,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 188 | `223_fix_ticker_launcher_version_4_10_3.sql` | Rewrites patch-day What's New headlines/version from invented `4.10.0` to RSI Launcher `4.10.3` (`4.10.3-live.13165946`). Apply after **222** |
 | 189 | `224_drop_capacitor_bookkeeping_ticker.sql` | Removes the `4.10.3-live.13220821` digest that announced capacitor bookkeeping as blueprint changes, plus the misspellings row attached to that same run. Apply after **223** |
 | 190 | `225_flight_gear_list_finished.sql` | Lists the finished VKB sheets: Space Combat Edition Standard (both hands), Omni Throttle (both hands), THQ, THQ-V, and ATEM. Gear that stays `listed = false` stays out of the picker. Apply after **224** |
+| 191 | `226_whats_new_page_ticker.sql` | Patch What's New is one ticker row that does not expire (`never_expires`). Ingest `replaceByIssueKey` replaces the previous row for that key. Daily cleanup leaves it until a super-admin deletes it. Apply after **225** |
 
 ### pg_cron (migrations 054, 065-068, 144, 147, 178, 179, 191, 196)
 
@@ -408,7 +409,7 @@ BP Dumper's minimum Star Citizen **major.minor** (e.g. `4.8`) is **baked into ea
 
 ### What's New ticker (`129` + `149` + `150` + `151`)
 
-Apply migrations through `151_admin_whats_new_crud.sql` for the bottom Updates ticker and super-admin management UI (avatar → **Site admin** → **Updates Ticker**).
+Apply migrations through `226_whats_new_page_ticker.sql` for the bottom Updates ticker and super-admin management UI (avatar → **Site admin** → **Updates Ticker**). The patch page ticker (`patch:whats-new`) does not expire; delete it from that modal to take it down.
 
 | Piece | Role |
 |-------|------|
