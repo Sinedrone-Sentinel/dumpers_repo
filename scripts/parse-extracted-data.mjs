@@ -95,6 +95,7 @@ import {
   parseResourceTypes,
   RESOURCE_TYPE_DATABASE_PATH,
 } from './lib/parseResourceTypes.mjs'
+import { writeMissionSplits } from './lib/parseMissionSplits.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const PROJECT_ROOT = join(__dirname, '..')
@@ -5345,6 +5346,12 @@ async function main() {
     }
   })
   
+  const splitSummary = writeMissionSplits({
+    extractedRoot: EXTRACTED_DATA,
+    outFile: join(OUTPUT_DIR, 'game-mission-splits.json'),
+  })
+  console.log(`  Mission splits: ${splitSummary.contracts} contracts`)
+
   // Completion rewards for every contract (Live Mission Tracker), BP or not
   saveJson('game-mission-rewards.json', {
     _source: 'Star Citizen Game Files (contract generators)',

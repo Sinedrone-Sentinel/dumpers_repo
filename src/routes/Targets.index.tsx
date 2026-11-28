@@ -49,6 +49,7 @@ function MissionMetaLine({
     | 'aUecMin'
     | 'aUecMax'
     | 'frequency'
+    | 'rewardSplit'
     | 'notForRelease'
   >
 }) {
@@ -76,6 +77,7 @@ function MissionMetaLine({
       prereqMissions={mission.prereqMissions}
       dropChance={mission.dropChance}
       frequency={mission.frequency}
+      rewardSplit={mission.rewardSplit}
       notForRelease={mission.notForRelease}
     />
   )
