@@ -189,6 +189,11 @@ export default function SiteTicker({ items, onOpenQuestionnaire }: Props) {
       onOpenQuestionnaire(item.questionnaireId)
       return
     }
+    if (item.entry.issueKey === 'patch:whats-new') {
+      setExpanded(false)
+      window.open(encodeURI("/What's New.html"), '_blank', 'noopener')
+      return
+    }
     setDetail(item)
   }
 

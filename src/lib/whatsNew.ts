@@ -20,7 +20,9 @@ export type WhatsNewEntry = {
   action: WhatsNewAction
   headline: string
   detectedAt: string
-  expiresAt: string
+  expiresAt: string | null
+  /** Stays on the ticker until a super-admin deletes it. */
+  neverExpires?: boolean
   items: WhatsNewItem[]
   /** site = 3-day TTL; game = 7-day TTL (default) */
   kind?: WhatsNewKind

@@ -6,6 +6,7 @@
  * DB dedupe: same issue_key + same version → skipped (mid-patch re-parse safe).
  * New patch version may re-add the same issue (misspellings across patches OK).
  */
+import { execSync } from 'child_process'
 import { readFileSync, writeFileSync, existsSync, appendFileSync, unlinkSync, mkdirSync } from 'fs'
 import { join } from 'path'
 import { createClient } from '@supabase/supabase-js'
@@ -16,8 +17,17 @@ import {
   buildDisplayNameResolver,
   cleanDisplayLabel,
   describeChangedFields,
+  humanizeToken,
   shortVersion,
 } from './tickerLanguage.mjs'
+import {
+  WHATS_NEW_ISSUE_KEY,
+  WHATS_NEW_PAGE_NAME,
+  loadStatNames,
+  orderableFlip,
+  orderableKeysFromCatalog,
+  renderWhatsNewHtml,
+} from './writeWhatsNewPage.mjs'
 import aliasData from '../../src/data/mining-ore-aliases.json' with { type: 'json' }
 
 const MAX_SUMMARY_FIELDS = 3
@@ -32,13 +42,6 @@ const MISSPELLING_HEADLINES = [
   (n, ver) =>
     `MISSPELLINGS: ${n} "creative" ore name${n === 1 ? '' : 's'} corrected in ${ver} (Alumium forever)`,
 ]
-
-function actionVerb(action) {
-  if (action === 'added') return 'added'
-  if (action === 'removed') return 'removed'
-  if (action === 'changed') return 'changed'
-  return action
-}
 
 function labelOf(specLabel, rec, key, resolve) {
   const label = typeof specLabel === 'function' ? specLabel(rec) : null
@@ -140,9 +143,11 @@ function buildMisspellingsEntry(version, detectedAt) {
   }
 }
 
-export function buildWhatsNewEntriesFromDiff(diffResult, options = {}) {
-  const version = options.version || options.launcherVersion || 'unknown'
-  const detectedAt = options.detectedAt || new Date().toISOString()
+/**
+ * Player-facing added / changed / removed rows. NFR and non-player records are dropped.
+ * This is the body of the What's New page. It does not emit a ticker line per category.
+ */
+export function collectPlayerFacingChanges(diffResult, options = {}) {
   const resolve = options.resolve ?? buildDisplayNameResolver({ dataDir: options.dataDir })
 
   /** @type {Map<string, { category: string, action: string, items: object[] }>} */
@@ -202,7 +207,7 @@ export function buildWhatsNewEntriesFromDiff(diffResult, options = {}) {
     }
   }
 
-  const entries = []
+  const groups = []
   for (const { category, action, items } of buckets.values()) {
     if (!items.length) continue
     const seen = new Set()
@@ -223,20 +228,125 @@ export function buildWhatsNewEntriesFromDiff(diffResult, options = {}) {
       byLabel.set(k, item)
     }
     const deduped = [...byLabel.values()].sort((a, b) => a.label.localeCompare(b.label))
-    const n = deduped.length
-    const verb = actionVerb(action)
-    entries.push({
-      issueKey: issueKeyFor(category, action),
-      version,
-      category,
-      action,
-      headline: `${n} ${category} ${verb} in ${shortVersion(version)}`,
-      detectedAt,
-      items: deduped,
-    })
+    if (!deduped.length) continue
+    groups.push({ category, action, items: deduped })
   }
 
-  return entries
+  return groups
+}
+
+/** One permanent ticker row. The page holds the detail. */
+export function buildPatchWhatsNewEntry(version, detectedAt) {
+  return {
+    issueKey: WHATS_NEW_ISSUE_KEY,
+    version,
+    category: 'Game',
+    action: 'updated',
+    kind: 'game',
+    headline: `What's New in ${shortVersion(version)}`,
+    detectedAt,
+    items: [],
+    neverExpires: true,
+    replaceByIssueKey: true,
+  }
+}
+
+export function buildWhatsNewEntriesFromDiff(diffResult, options = {}) {
+  const version = options.version || options.launcherVersion || 'unknown'
+  const detectedAt = options.detectedAt || new Date().toISOString()
+  const groups = collectPlayerFacingChanges(diffResult, options)
+  if (!groups.length && !options.orderableChanged) return []
+  return [buildPatchWhatsNewEntry(version, detectedAt)]
+}
+
+function readGitJson(projectRoot, gitRef, relPath) {
+  try {
+    const text = execSync(`git show ${gitRef}:${relPath}`, {
+      cwd: projectRoot,
+      encoding: 'utf8',
+      maxBuffer: 128 * 1024 * 1024,
+      stdio: ['ignore', 'pipe', 'ignore'],
+    })
+    return JSON.parse(text)
+  } catch {
+    return undefined
+  }
+}
+
+function readDataJson(dataDir, name) {
+  return readJsonSafe(join(dataDir, name))
+}
+
+function lostLabelsFor(keys, current, previous) {
+  const labels = {}
+  const index = new Map()
+  for (const doc of [current, previous]) {
+    for (const bp of doc?.blueprints ?? []) {
+      const key = String(bp?.internalName || '').toLowerCase()
+      if (key && !index.has(key)) index.set(key, bp.blueprintName || bp.displayName || '')
+    }
+  }
+  for (const key of keys) {
+    const id = String(key).toLowerCase()
+    labels[id] = index.get(id) || humanizeToken(id)
+  }
+  return labels
+}
+
+/**
+ * Overwrite public/What's New.html from this parse.
+ * Returns the ticker entry when the page has player-facing changes, otherwise null.
+ */
+export function writeWhatsNewPageFile(options = {}) {
+  const projectRoot = options.projectRoot
+  const dataDir = options.dataDir ?? join(projectRoot, 'src', 'data')
+  const gitRef = options.gitRef ?? 'HEAD'
+  const version = options.version || 'unknown'
+  const groups = options.groups ?? []
+
+  const currentBlueprints = options.blueprints ?? readDataJson(dataDir, 'game-blueprints.json')
+  const currentMissions = options.missions ?? readDataJson(dataDir, 'game-blueprint-missions.json')
+  const prevBlueprints = options.prevBlueprints !== undefined
+    ? options.prevBlueprints
+    : readGitJson(projectRoot, gitRef, 'src/data/game-blueprints.json')
+  const prevMissions = options.prevMissions !== undefined
+    ? options.prevMissions
+    : readGitJson(projectRoot, gitRef, 'src/data/game-blueprint-missions.json')
+
+  let became = []
+  let lost = []
+  const nextKeys = orderableKeysFromCatalog(currentBlueprints, currentMissions)
+  if (prevBlueprints !== undefined && prevMissions !== undefined) {
+    const flip = orderableFlip(orderableKeysFromCatalog(prevBlueprints, prevMissions), nextKeys)
+    became = flip.became
+    lost = flip.lost
+  }
+
+  const hasChanges = groups.some((group) => group.items?.length) || became.length || lost.length
+  if (!hasChanges) return { html: null, entry: null, became, lost }
+
+  const html = renderWhatsNewHtml({
+    version: shortVersion(version),
+    groups,
+    blueprints: currentBlueprints?.blueprints ?? [],
+    became,
+    lost,
+    orderableKeys: nextKeys,
+    statNames: options.statNames ?? (projectRoot ? loadStatNames(projectRoot) : new Map()),
+    lostLabels: lostLabelsFor(lost, currentBlueprints, prevBlueprints),
+  })
+
+  if (projectRoot && options.write !== false) {
+    const pagePath = join(projectRoot, 'public', WHATS_NEW_PAGE_NAME)
+    writeFileSync(pagePath, html.replace(/\r\n/g, '\n'), 'utf8')
+  }
+
+  return {
+    html,
+    entry: buildPatchWhatsNewEntry(version, options.detectedAt || new Date().toISOString()),
+    became,
+    lost,
+  }
 }
 
 export function readPendingWhatsNew(projectRoot) {
@@ -338,11 +448,16 @@ export async function writeWhatsNewDigest(options = {}) {
     ignoreCosmetic: true,
   })
 
-  const freshEntries = buildWhatsNewEntriesFromDiff(diffResult, {
+  const groups = collectPlayerFacingChanges(diffResult, { dataDir })
+  const page = writeWhatsNewPageFile({
+    projectRoot,
+    dataDir,
+    gitRef,
     version,
     detectedAt,
-    dataDir,
+    groups,
   })
+  const freshEntries = page.entry ? [page.entry] : []
 
   // Curated CIG/game typos (legacy StarStrings keys excluded).
   if (freshEntries.length > 0) {
