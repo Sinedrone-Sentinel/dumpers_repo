@@ -10,6 +10,8 @@ import { fileURLToPath, pathToFileURL } from 'url'
 
 function splitKind(key) {
   if (!/split/i.test(key) || /targetsplit|checkpoint/i.test(key)) return null
+  // Event points count toward a faction's event standing track.
+  if (key === 'splitPointsForParty') return 'rep'
   if (/reward|currency|payout|uec/i.test(key) && !/rep/i.test(key)) return 'rewards'
   if (/rep/i.test(key)) return 'rep'
   return 'unspecified'
