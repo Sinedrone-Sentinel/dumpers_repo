@@ -47,8 +47,6 @@ function MissionMetaLine({
     | 'repCareerLabel'
     | 'dropChance'
     | 'isLawful'
-    | 'aUecMin'
-    | 'aUecMax'
     | 'frequency'
     | 'rewardSplit'
     | 'notForRelease'
@@ -68,8 +66,6 @@ function MissionMetaLine({
       minReputation={mission.minReputation}
       showRepUnknown
       repCareerLabel={mission.repCareerLabel}
-      aUecMin={mission.aUecMin}
-      aUecMax={mission.aUecMax}
       repEffects={mission.repEffects}
       repMin={mission.repMin}
       repMax={mission.repMax}
