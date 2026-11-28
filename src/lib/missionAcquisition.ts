@@ -4,7 +4,6 @@ import {
   getContractsForMissionLabel,
   getRewardMissionsForBlueprint,
 } from './blueprintMissionRewards'
-import { payoutForTitleKey } from './missionAuec'
 import { resolveMissionIsLawful } from './missionLawfulStatus'
 
 export interface MissionRepInfo {
@@ -17,8 +16,6 @@ export interface MissionRepInfo {
   missionGiver: string | null
   matched: boolean
   isLawful: boolean
-  aUecMin: number
-  aUecMax: number
   missionType: string | null
   missionLocations: string[]
   repPoints: number
@@ -98,12 +95,6 @@ function findContractForPoolMission(poolKey: string, mission?: MissionPoolEntry)
   }
 
   return null
-}
-
-function auecFromTitleKey(titleKey: string | null | undefined): { aUecMin: number; aUecMax: number } {
-  const payout = payoutForTitleKey(titleKey)
-  if (!payout) return { aUecMin: 0, aUecMax: 0 }
-  return { aUecMin: payout.min, aUecMax: payout.max }
 }
 
 function buildBlueprintToPoolIndex(): Map<string, string[]> {
@@ -236,8 +227,6 @@ export function getMissionRepInfoFromPool(poolKey: string, missionTitle?: string
     missionGiver: null,
     matched: false,
     isLawful: true,
-    aUecMin: 0,
-    aUecMax: 0,
     missionType: null,
     missionLocations: [],
     repPoints: 0,
@@ -287,7 +276,6 @@ export function getMissionRepInfoFromPool(poolKey: string, missionTitle?: string
       factionName: matchedContract?.faction ?? mission.faction,
       debugName: matchedContract?.debugName,
     }),
-    ...auecFromTitleKey(mission.titleKey),
     missionType: null,
     missionLocations: mission.system ? [mission.system] : [],
     repPoints: mission.repPoints,
@@ -312,8 +300,6 @@ export function getMissionRepInfo(missionLabel: string): MissionRepInfo {
     missionGiver: null,
     matched: false,
     isLawful: true,
-    aUecMin: 0,
-    aUecMax: 0,
     missionType: null,
     missionLocations: [],
     repPoints: 0,
@@ -362,7 +348,6 @@ export function getMissionRepInfo(missionLabel: string): MissionRepInfo {
           isLawful: resolveMissionIsLawful({
             factionName: mission.faction,
           }),
-          ...auecFromTitleKey(mission.titleKey),
           missionType: null,
           missionLocations: mission.system ? [mission.system] : [],
           repPoints: mission.repPoints,
@@ -382,7 +367,6 @@ function contractToMissionRepInfo(contract: {
   factionKey?: string
   debugName?: string
   title: string
-  titleKey?: string
   system: string
   region: string | null
   category: string | null
@@ -404,7 +388,6 @@ function contractToMissionRepInfo(contract: {
       factionName: contract.faction,
       debugName: contract.debugName,
     }),
-    ...auecFromTitleKey(contract.titleKey),
     missionType: null,
     missionLocations: contract.system ? [contract.system] : [],
     repPoints: contract.repPoints,

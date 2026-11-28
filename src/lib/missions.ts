@@ -1,5 +1,4 @@
 import { formatScenarioPointsRequirement, getMissionRepInfo } from './missionAcquisition'
-import { payoutForTitleKey } from './missionAuec'
 import type { RewardSplit } from './missionSplits'
 import {
   getRewardMissionsForBlueprint,
@@ -74,8 +73,6 @@ export interface MissionListEntry {
   regions: Region[]
   // Enhanced mission info
   isLawful: boolean
-  aUecMin: number
-  aUecMax: number
   missionType: string | null
   subRegion: string | null
   system: string | null
@@ -166,7 +163,6 @@ export function buildMissionList(
           region: reward.region,
           category: reward.category,
           faction: reward.faction,
-          titleKey: reward.titleKey,
         })
         missionMap.set(key, entry)
       } else {
@@ -229,8 +225,6 @@ export interface TargetBlueprintMissionOption {
   regions: Region[]
   // Enhanced mission info
   isLawful: boolean
-  aUecMin: number
-  aUecMax: number
   missionType: string | null
   subRegion: string | null
   system: string | null
@@ -282,11 +276,9 @@ function attachMissionRep<T extends { mission: string }>(
     category?: string | null
     faction?: string | null
     isLawful?: boolean
-    titleKey?: string | null
   }
-): T & Pick<TargetBlueprintMissionOption, 'repMin' | 'repMax' | 'repEffects' | 'prereqMissions' | 'locality' | 'frequency' | 'rewardSplit' | 'notForRelease' | 'minReputation' | 'minStandingName' | 'repCareerLabel' | 'dropChance' | 'regions' | 'isLawful' | 'aUecMin' | 'aUecMax' | 'missionType' | 'subRegion' | 'system' | 'category' | 'scenarioPointsRequired'> {
+): T & Pick<TargetBlueprintMissionOption, 'repMin' | 'repMax' | 'repEffects' | 'prereqMissions' | 'locality' | 'frequency' | 'rewardSplit' | 'notForRelease' | 'minReputation' | 'minStandingName' | 'repCareerLabel' | 'dropChance' | 'regions' | 'isLawful' | 'missionType' | 'subRegion' | 'system' | 'category' | 'scenarioPointsRequired'> {
   const fallbackRep = getMissionRepInfo(entry.mission)
-  const overridePayout = payoutForTitleKey(repOverride?.titleKey)
   const rep = repOverride?.scenarioPointsRequired != null
     ? {
         repMin: repOverride.repPoints ?? null,
@@ -300,8 +292,6 @@ function attachMissionRep<T extends { mission: string }>(
         missionGiver: repOverride.faction ?? parseMissionGiver(entry.mission),
         matched: true,
         isLawful: repOverride.isLawful ?? fallbackRep.isLawful,
-        aUecMin: overridePayout?.min ?? 0,
-        aUecMax: overridePayout?.max ?? 0,
         missionType: null,
         missionLocations: locations ?? (repOverride.system ? [repOverride.system] : []),
         repPoints: repOverride.repPoints ?? 0,
@@ -320,8 +310,6 @@ function attachMissionRep<T extends { mission: string }>(
         missionGiver: repOverride.faction ?? parseMissionGiver(entry.mission),
         matched: true,
         isLawful: repOverride.isLawful ?? fallbackRep.isLawful,
-        aUecMin: overridePayout?.min ?? 0,
-        aUecMax: overridePayout?.max ?? 0,
         missionType: null,
         missionLocations: locations ?? (repOverride.system ? [repOverride.system] : []),
         repPoints: repOverride.repPoints ?? 0,
@@ -353,8 +341,6 @@ function attachMissionRep<T extends { mission: string }>(
     dropChance: dropChance ?? null,
     regions: categorizeRegions(locations),
     isLawful: rep.isLawful,
-    aUecMin: rep.aUecMin,
-    aUecMax: rep.aUecMax,
     missionType: rep.missionType,
     subRegion: rep.region,
     system: rep.system,
@@ -422,7 +408,6 @@ export function getMissionsForBlueprint(
           category: reward.category,
           faction: reward.faction,
           isLawful: reward.isLawful,
-          titleKey: reward.titleKey,
         }
       )
     )

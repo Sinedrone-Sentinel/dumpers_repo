@@ -6,7 +6,6 @@ import {
   formatMissionHowOften,
   formatMissionSolo,
 } from '../lib/missionFrequency'
-import { formatStoredAuecLabel } from '../lib/missionAuec'
 import {
   formatRewardSplitTag,
   rewardSplitKinds,
@@ -60,7 +59,7 @@ export type MissionTagLayout = 'overview' | 'detail'
 
 /**
  * Site-wide mission tag order:
- * Row 1: [Verified/Unverified] [Contract Type] [location] [career path] [standing tier] [aUEC] [Rep Points]
+ * Row 1: [Verified/Unverified] [Contract Type] [location] [career path] [standing tier] [Rep Points]
  *         then optional: [Prerequisite] [pool roll / BP drop]
  * Row 2 (detail): [how many] [how often] [SPLITS] [Solo]
  * Row 2 (overview): [Solo] only
@@ -85,8 +84,6 @@ export interface MissionListingTagsProps {
   minReputation?: number | null
   showRepUnknown?: boolean
   repCareerLabel?: string | null
-  aUecMin?: number | null
-  aUecMax?: number | null
   repEffects?: MissionRepEffect[] | null
   repPoints?: number | null
   repMin?: number | null
@@ -104,10 +101,6 @@ export interface MissionListingTagsProps {
   /** CIG notForRelease — show NFR chip with tooltip. */
   notForRelease?: boolean
   className?: string
-}
-
-function formatAuecReward(aUecMin?: number | null, aUecMax?: number | null): string | null {
-  return formatStoredAuecLabel(aUecMin, aUecMax)
 }
 
 function formatPoolRoll(chance?: number | null): string | null {
@@ -131,8 +124,6 @@ export default function MissionListingTags({
   minReputation,
   showRepUnknown = false,
   repCareerLabel,
-  aUecMin,
-  aUecMax,
   repEffects,
   repPoints,
   repMin,
@@ -152,7 +143,6 @@ export default function MissionListingTags({
   const standingLabel =
     formatStandingRange(minStanding, maxStanding) ||
     formatStandingRequirement(minStandingName ?? null, minReputation ?? null)
-  const aUecText = formatAuecReward(aUecMin, aUecMax)
   const poolRollText = formatPoolRoll(poolRollChance)
   const dropText = formatBlueprintDropChance(dropChance)
   const howManyText = isOverview ? null : formatMissionHowMany(frequency)
@@ -236,10 +226,7 @@ export default function MissionListingTags({
           </span>
         ) : null}
 
-        {/* 6. aUEC */}
-        {aUecText ? <span className="text-[10px] text-yellow-400/90">{aUecText}</span> : null}
-
-        {/* 7. Rep Points */}
+        {/* 6. Rep Points */}
         {hasRepEffects ? (
           <MissionRepEffectTags
             repEffects={repEffects}
