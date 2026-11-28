@@ -95,6 +95,7 @@ import {
   parseResourceTypes,
   RESOURCE_TYPE_DATABASE_PATH,
 } from './lib/parseResourceTypes.mjs'
+import { writeMissionEnemies } from './lib/parseMissionEnemies.mjs'
 import { writeMissionSplits } from './lib/parseMissionSplits.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -5346,6 +5347,12 @@ async function main() {
     }
   })
   
+  const enemySummary = writeMissionEnemies({
+    extractedRoot: EXTRACTED_DATA,
+    outFile: join(OUTPUT_DIR, 'game-mission-enemies.json'),
+  })
+  console.log(`  Mission enemies: ${enemySummary.contracts} contracts`)
+
   const splitSummary = writeMissionSplits({
     extractedRoot: EXTRACTED_DATA,
     outFile: join(OUTPUT_DIR, 'game-mission-splits.json'),

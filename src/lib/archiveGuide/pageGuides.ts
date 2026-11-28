@@ -69,6 +69,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Browse Missions: pick a faction, then browse its mission pools',
       'Mission titles follow the in-game Contracts wording. Words in brackets, like **[Location]**, **[Ship]** or **[Target]**, are filled in by the game when the contract spawns (e.g. Keep [Location] Safe). Paste the title you see in-game into search to find its mission',
       'Open a contract to expand Mission text (collapsed by default) — violet chips mark values the game fills in when you take the contract',
+      'Ship-combat contracts can be expanded under Enemies to expect to see how many of each enemy ship to expect. The box stays hidden when that contract has no enemy ships',
       'Missions with multiple regional pools are grouped under one title. Each group starts collapsed — expand it to see the location rows',
       'My Tracker checklist groups missions by faction and starts collapsed — expand a faction to see its missions',
       'Faction cards show which star systems that faction appears in',

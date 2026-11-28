@@ -521,6 +521,8 @@ export interface ContractBlueprintDrop {
 
 export interface ContractMissionBrowseEntry {
   entryKey: string
+  /** Contract id, used to look up enemy ship waves. */
+  id?: string
   mission: string
   title: string
   /** Localized Contracts mission body text, when available. */
@@ -593,6 +595,7 @@ function buildContractBrowseCatalog(): ContractMissionBrowseEntry[] {
     const minPoolChance = poolChances.length > 0 ? Math.min(...poolChances) : 1
 
     entries.push({
+      id: contract.id,
       entryKey: [
         contract.id || contract.debugName || contract.title,
         contract.minStanding?.minReputation ?? 'null',
