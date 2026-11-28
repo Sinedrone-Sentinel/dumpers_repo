@@ -4259,4 +4259,118 @@ const lootLookup = await import(pathToFileURL(path.join(outDir, 'lootBlueprintLo
   )
 }
 
+const missionEnemies = await import(pathToFileURL(path.join(root, 'scripts/lib/parseMissionEnemies.mjs')).href)
+const enemyTagIndex = missionEnemies.buildTagIndex({
+  tags: [
+    {
+      _RecordId_: 'ship-root',
+      tagName: 'Ship',
+      children: [
+        {
+          _RecordId_: 'series',
+          tagName: 'Series',
+          children: [{ _RecordId_: 'hornet', tagName: 'Hornet', children: [] }],
+        },
+      ],
+    },
+    {
+      _RecordId_: 'ai',
+      tagName: 'AI',
+      children: [
+        {
+          _RecordId_: 'shipclass',
+          tagName: 'ShipClass',
+          children: [
+            { _RecordId_: 'bomber', tagName: 'Bomber', children: [] },
+            { _RecordId_: 'fighter', tagName: 'Fighter', children: [] },
+          ],
+        },
+      ],
+    },
+  ],
+})
+
+function enemyShip(amount, tagId) {
+  return {
+    _Type_: 'SpawnDescription_Ship',
+    tags: { tags: [{ _RecordId_: tagId }] },
+    entityTags: { tags: [] },
+    concurrentAmount: amount,
+    weight: 1,
+  }
+}
+
+function enemySpawn(name, options) {
+  return {
+    missionVariableName: name,
+    value: {
+      _Type_: 'MissionPropertyValue_ShipSpawnDescriptions',
+      spawnDescriptions: [
+        {
+          _Type_: 'SpawnDescription_ShipGroup',
+          Name: 'Wave 1',
+          ships: [{ _Type_: 'SpawnDescription_ShipOptions', options }],
+        },
+      ],
+    },
+  }
+}
+
+const enemyGroups = missionEnemies.enemiesFromProperties(
+  [
+    enemySpawn('DefendEntities_BomberShips_BP', [enemyShip(2, 'bomber')]),
+    enemySpawn('EscortShipToLandingArea_EscortShip_BP', [enemyShip(1, 'fighter')]),
+    {
+      missionVariableName: 'EscortShipToLandingArea_InitialEnemiesBool_BP',
+      value: { _Type_: 'MissionPropertyValue_Boolean', value: false },
+    },
+    enemySpawn('EscortShipToLandingArea_InitialEnemies_BP', [enemyShip(3, 'fighter')]),
+    {
+      missionVariableName: 'EscortShipFromLandingArea_InterdictionChance_BP',
+      value: { _Type_: 'MissionPropertyValue_Float', options: [{ value: 0 }] },
+    },
+    enemySpawn('EscortShipFromLandingArea_InterdictionShips_BP', [enemyShip(4, 'bomber')]),
+    enemySpawn('SearchAndDestroy_Reinforcements_BP', [enemyShip(1, 'bomber'), enemyShip(1, 'fighter')]),
+    {
+      missionVariableName: 'AllEncounters_AcePilotChance_BP',
+      value: { _Type_: 'MissionPropertyValue_Float', options: [{ value: 0.05 }] },
+    },
+    enemySpawn('AllEncounters_AcePilot_BP', [enemyShip(1, 'hornet')]),
+  ],
+  enemyTagIndex,
+)
+check(
+  enemyGroups.some((group) => group.label === 'Bombers' && group.lines.includes('Wave 1 \u2014 2 bombers')),
+  'enemy waves keep a bomber count',
+)
+check(
+  !enemyGroups.some((group) => /opening/i.test(group.label)),
+  'a disabled opening wave is left out',
+)
+check(
+  !enemyGroups.some((group) => /interdiction/i.test(group.label)),
+  'a zero chance interdiction wave is left out',
+)
+check(
+  !enemyGroups.some((group) => group.lines.includes('Wave 1 \u2014 1 fighter')),
+  'the ship under protection is left out',
+)
+check(
+  enemyGroups.some((group) => group.lines.some((line) => line.includes('1 bomber or 1 fighter'))),
+  'several ships in one slot read as alternatives',
+)
+check(
+  enemyGroups.some((group) => group.label === 'Ace' && group.maybe === true && group.lines[0] === 'Wave 1 \u2014 1 Hornet'),
+  'a rare ace names the hull and is marked as not every time',
+)
+
+const bakedEnemies = JSON.parse(readFileSync(path.join(root, 'src/data/game-mission-enemies.json'), 'utf8'))
+const protection = bakedEnemies.byId['6f7e918e-518a-4765-b110-c4c5b98c8a2d']
+check(
+  protection?.some((group) => group.label === 'Bombers' && group.lines[0] === 'Wave 1 \u2014 1 bomber') &&
+    protection.some((group) => group.label === 'Ace' && group.maybe === true) &&
+    !protection.some((group) => /opening|interdiction/i.test(group.label)),
+  'provide protection lists bomber waves and hides disabled waves',
+)
+
 console.log(`Unit tests: ${pass} passed`)
