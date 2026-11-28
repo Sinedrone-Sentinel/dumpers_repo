@@ -519,6 +519,7 @@ Full patch-day runbook (including how to verify removals vs CIG moving records a
 |------|----------|
 | `game-blueprints.json` | Blueprint catalog + crafting recipes |
 | `game-blueprint-missions.json` | Mission → blueprint reward mappings |
+| `game-mission-enemies.json` | Enemy ship waves for ship-combat contracts |
 | `game-mining.json` | Ore stats, RS base signatures, mining lasers |
 | `game-mining-vessels.json` | Smart Cracker ships. Any hull with a mining laser, including ground vehicles. A head built for one hull is listed only on that hull |
 | `game-mining-locations.json` | Ore/location compendium + aliases |
