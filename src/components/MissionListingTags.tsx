@@ -9,8 +9,10 @@ import {
 import { formatStoredAuecLabel } from '../lib/missionAuec'
 import {
   formatRewardSplitTag,
+  rewardSplitKinds,
   rewardSplitTooltip,
   type RewardSplit,
+  type RewardSplitKind,
 } from '../lib/missionSplits'
 import SiteTooltip from './SiteTooltip'
 import type { Region } from '../lib/missions'
@@ -35,6 +37,19 @@ const SOLO_TAG_CLASS =
   'text-[10px] px-1.5 py-0.5 bg-red-950/50 text-red-400 border border-red-500/50 rounded font-medium'
 const SPLIT_TAG_CLASS =
   'text-[10px] px-1.5 py-0.5 bg-orange-950/55 text-orange-200 border border-orange-500/45 rounded font-medium'
+
+export function RewardSplitChips({ kinds }: { kinds: RewardSplitKind[] }) {
+  if (kinds.length === 0) return null
+  return (
+    <>
+      {kinds.map((kind) => (
+        <SiteTooltip key={kind} side="top" content={rewardSplitTooltip(kind)}>
+          <span className={SPLIT_TAG_CLASS}>{formatRewardSplitTag(kind)}</span>
+        </SiteTooltip>
+      ))}
+    </>
+  )
+}
 
 /**
  * overview — at-a-glance lists/modals: locality flag + Solo; no location chips; no time/count.
@@ -143,12 +158,7 @@ export default function MissionListingTags({
   const howManyText = isOverview ? null : formatMissionHowMany(frequency)
   const howOftenText = isOverview ? null : formatMissionHowOften(frequency)
   const soloText = formatMissionSolo(frequency)
-  const splitKinds: Array<'rewards' | 'rep' | 'unspecified'> =
-    rewardSplit === 'both'
-      ? ['rewards', 'rep']
-      : rewardSplit === 'rewards' || rewardSplit === 'rep' || rewardSplit === 'unspecified'
-        ? [rewardSplit]
-        : []
+  const splitKinds = rewardSplitKinds(rewardSplit)
   const showFrequencyRow = Boolean(howManyText || howOftenText || soloText || splitKinds.length)
   const hasRepEffects = Boolean(repEffects?.length || (repPoints != null && repPoints !== 0))
   const fallbackRepText =
@@ -251,11 +261,7 @@ export default function MissionListingTags({
         <div className="flex flex-wrap items-center gap-1.5">
           {howManyText ? <span className={COUNT_TAG_CLASS}>{howManyText}</span> : null}
           {howOftenText ? <span className={TIME_TAG_CLASS}>{howOftenText}</span> : null}
-          {splitKinds.map((kind) => (
-            <SiteTooltip key={kind} side="top" content={rewardSplitTooltip(kind)}>
-              <span className={SPLIT_TAG_CLASS}>{formatRewardSplitTag(kind)}</span>
-            </SiteTooltip>
-          ))}
+          <RewardSplitChips kinds={splitKinds} />
           {soloText ? <span className={SOLO_TAG_CLASS}>{soloText}</span> : null}
         </div>
       ) : null}

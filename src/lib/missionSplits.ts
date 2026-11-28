@@ -12,6 +12,31 @@ export function rewardSplitForContract(contractId: string | null | undefined): R
   return null
 }
 
+export type RewardSplitKind = 'rewards' | 'rep' | 'unspecified'
+
+/** Chip kinds for one contract. `both` is two chips, Rewards then Rep. */
+export function rewardSplitKinds(split: RewardSplit | null | undefined): RewardSplitKind[] {
+  if (split === 'both') return ['rewards', 'rep']
+  if (split === 'rewards' || split === 'rep' || split === 'unspecified') return [split]
+  return []
+}
+
+/** Distinct chips for a card that contains several contracts. First-seen order. */
+export function collectRewardSplitKinds(
+  splits: Array<RewardSplit | null | undefined>,
+): RewardSplitKind[] {
+  const kinds: RewardSplitKind[] = []
+  const seen = new Set<RewardSplitKind>()
+  for (const split of splits) {
+    for (const kind of rewardSplitKinds(split)) {
+      if (seen.has(kind)) continue
+      seen.add(kind)
+      kinds.push(kind)
+    }
+  }
+  return kinds
+}
+
 export function formatRewardSplitTag(kind: RewardSplit): string {
   if (kind === 'rewards') return 'SPLITS Rewards'
   if (kind === 'rep') return 'SPLITS Rep'
