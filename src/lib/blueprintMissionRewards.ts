@@ -74,6 +74,8 @@ export interface BlueprintRewardMission {
   debugName?: string
   isLawful: boolean
   title: string
+  /** Localization key shared with the mission broker payout. */
+  titleKey?: string
   /** All rep changes on completion (gains + any cross-faction losses). */
   repEffects: MissionRepEffect[]
   /** Intro/starter missions that must be completed before this mission appears. */
@@ -216,6 +218,7 @@ function buildBlueprintRewardIndex(): Map<string, BlueprintRewardMission[]> {
             debugName: contract.debugName,
           }),
           title: contractDisplayTitle(contract),
+          titleKey: contract.titleKey,
         }
 
         if (!index.has(bpName)) index.set(bpName, [])
@@ -521,6 +524,7 @@ export interface ContractMissionBrowseEntry {
   faction: string
   factionKey?: string
   debugName?: string
+  titleKey?: string
   isLawful: boolean
   system: string | null
   region: string | null
@@ -596,6 +600,7 @@ function buildContractBrowseCatalog(): ContractMissionBrowseEntry[] {
       faction: contract.faction,
       factionKey: contract.factionKey,
       debugName: contract.debugName,
+      titleKey: contract.titleKey,
       isLawful: resolveMissionIsLawful({
         factionKey: contract.factionKey,
         factionName: contract.faction,

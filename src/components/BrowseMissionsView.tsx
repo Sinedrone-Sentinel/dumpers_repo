@@ -13,6 +13,7 @@ import {
   type ContractMissionBrowseEntry,
 } from '../lib/blueprintMissionRewards'
 import { formatStandingRange } from '../lib/missionAcquisition'
+import { payoutForTitleKey } from '../lib/missionAuec'
 import {
   makeBrowseMissionKey,
   readMissionTrackerUiState,
@@ -623,6 +624,8 @@ export default function BrowseMissionsView({
         ? [systemRegion]
         : []
 
+    const payout = payoutForTitleKey(mission.titleKey)
+
     return (
       <MissionListingTags
         isLawful={mission.isLawful}
@@ -636,6 +639,8 @@ export default function BrowseMissionsView({
         minStanding={mission.minStanding}
         maxStanding={mission.maxStanding}
         repCareerLabel={mission.repCareerLabel}
+        aUecMin={payout?.min ?? 0}
+        aUecMax={payout?.max ?? 0}
         repEffects={mission.repEffects}
         repPoints={mission.repPoints}
         missionFaction={mission.faction}

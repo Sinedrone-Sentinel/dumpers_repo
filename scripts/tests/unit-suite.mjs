@@ -17,6 +17,7 @@ const modules = [
   'src/lib/blueprintSeoSlug.ts',
   'src/lib/listingType.ts',
   'src/lib/liveMissionTracker.ts',
+  'src/lib/missionAuec.ts',
   'src/lib/blueprintTaxonomy.ts',
   'src/lib/blueprintCategoryTags.ts',
   'src/lib/qualityModifiers.ts',
@@ -226,6 +227,27 @@ check(
   ),
   'lookup indexes accept title for live tracker'
 )
+
+const auec = await import(pathToFileURL(path.join(outDir, 'missionAuec.mjs')).href)
+const fixedPay = auec.combineStoredAuecPayouts([{ min: 15000, max: 0 }])
+check(fixedPay?.min === 15000 && fixedPay?.max === 15000, 'fixed payout uses the stored amount when max is 0')
+check(auec.formatStoredAuecLabel(15000, 0) === '15,000 aUEC', 'fixed payout formats as one aUEC figure')
+const rangedPay = auec.combineStoredAuecPayouts([{ min: 5000, max: 16000 }])
+check(rangedPay?.min === 5000 && rangedPay?.max === 16000, 'ranged payout keeps the stored min and max')
+check(
+  auec.formatStoredAuecLabel(5000, 16000) === '5,000\u201316,000 aUEC',
+  'ranged payout formats as a span'
+)
+const spreadPay = auec.combineStoredAuecPayouts([
+  { min: 10000, max: 0 },
+  { min: 20000, max: 0 },
+])
+check(spreadPay?.min === 10000 && spreadPay?.max === 20000, 'shared title uses the lowest and highest stored pay')
+check(auec.combineStoredAuecPayouts([{ min: 0, max: 0 }]) == null, 'a zero payout is missing')
+check(auec.payoutForTitleKey('') == null, 'a blank title key has no payout')
+check(auec.payoutForTitleKey('@not_a_real_contract_title') == null, 'an unknown title key has no payout')
+const covalex = auec.payoutForTitleKey('@Covalex_LocalDelivery_title_01')
+check(covalex != null && covalex.min > 0, 'Covalex local delivery resolves a stored payout')
 
 const live = await import(pathToFileURL(path.join(outDir, 'liveMissionTracker.mjs')).href)
 const view = live.computeLiveTrackerView(

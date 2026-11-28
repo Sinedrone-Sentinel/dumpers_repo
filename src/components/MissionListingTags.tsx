@@ -6,6 +6,7 @@ import {
   formatMissionHowOften,
   formatMissionSolo,
 } from '../lib/missionFrequency'
+import { formatStoredAuecLabel } from '../lib/missionAuec'
 import type { Region } from '../lib/missions'
 import {
   formatBlueprintDropChance,
@@ -81,11 +82,7 @@ export interface MissionListingTagsProps {
 }
 
 function formatAuecReward(aUecMin?: number | null, aUecMax?: number | null): string | null {
-  const min = aUecMin ?? 0
-  const max = aUecMax ?? 0
-  if (min <= 0 && max <= 0) return null
-  if (min === max || max === 0) return `${min.toLocaleString()} aUEC`
-  return `${min.toLocaleString()}–${max.toLocaleString()} aUEC`
+  return formatStoredAuecLabel(aUecMin, aUecMax)
 }
 
 function formatPoolRoll(chance?: number | null): string | null {
