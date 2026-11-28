@@ -416,18 +416,34 @@ const bpDiff = diffMod.diffKeyedCollection(
   { blueprints: [{ internalName: 'wip', blueprintName: 'WIP Cooler', entityClass: 'cool_s04' }] }
 )
 check(bpDiff.added.some((a) => a.key === 'wip') && !(bpDiff.changed || []).length, 'null entityClass then wired is added')
-const nfrEntries = digestMod.buildWhatsNewEntriesFromDiff(
+const pageMod = await import(pathToFileURL(path.join(root, 'scripts/lib/writeWhatsNewPage.mjs')).href)
+const nfrGroups = digestMod.collectPlayerFacingChanges(
   { collections: [nfrDiff] },
   { resolve: (key) => key }
 )
-const addedWikelo = nfrEntries.find((e) => e.category === 'Wikelo' && e.action === 'added')
+const nfrHtml = pageMod.renderWhatsNewHtml({ version: '4.10', groups: nfrGroups })
 check(
-  addedWikelo?.items.every((i) => i.label !== 'Brand new NFR' && i.label !== 'Still NFR'),
-  'digest omits NFR from added'
+  nfrHtml.includes('Heavy and Bright') &&
+    nfrHtml.includes('Brand new live') &&
+    !nfrHtml.includes('Brand new NFR') &&
+    !nfrHtml.includes('Still NFR'),
+  'What\'s New page lists released Wikelo and omits NFR'
+)
+const nfrEntries = digestMod.buildWhatsNewEntriesFromDiff(
+  { collections: [nfrDiff] },
+  { resolve: (key) => key, version: '4.10.0-live.1' }
+)
+check(
+  nfrEntries.length === 1 &&
+    nfrEntries[0].issueKey === 'patch:whats-new' &&
+    nfrEntries[0].neverExpires === true &&
+    nfrEntries[0].headline === "What's New in 4.10.0" &&
+    !nfrEntries.some((e) => e.category === 'Wikelo' || e.category === 'Blueprints' || e.category === 'Missions'),
+  'digest emits one permanent What\'s New ticker and no catalog lines'
 )
 
 const weaponLabel = (rec) => rec.displayName
-const bpTagEntries = digestMod.buildWhatsNewEntriesFromDiff(
+const bpTagGroups = digestMod.collectPlayerFacingChanges(
   {
     collections: [
       {
@@ -444,10 +460,61 @@ const bpTagEntries = digestMod.buildWhatsNewEntriesFromDiff(
   },
   { resolve: (key) => key, blueprintEntityClasses: new Set(['gmni_lmg_ballistic_01_collector02']) }
 )
-const bpTagLabels = bpTagEntries.find((e) => e.category === 'FPS Weapons')?.items.map((i) => i.label) ?? []
+const bpTagLabels = bpTagGroups.flatMap((group) => group.items.map((item) => item.label))
 check(
   bpTagLabels.includes('F55 LMG (Blueprint)') && bpTagLabels.includes('MaxLift-II Tractor Beam'),
   'digest tags craftable items as (Blueprint) and leaves plain items alone'
+)
+const became = pageMod.orderableFlip(new Set(), new Set(['saber']))
+const lost = pageMod.orderableFlip(new Set(['deadbolt_i']), new Set())
+check(
+  became.became.includes('saber') && !became.lost.length && lost.lost.includes('deadbolt_i') && !lost.became.length,
+  'orderable gain counts as new and an orderable loss counts as removed'
+)
+const orderableKeys = pageMod.orderableKeysFromCatalog(
+  { blueprints: [{ internalName: 'starter', isDefault: true }, { internalName: 'plain', isDefault: false }] },
+  { blueprintMissions: { saber: ['pool'], empty: [] } },
+)
+check(
+  orderableKeys.has('starter') && orderableKeys.has('saber') && !orderableKeys.has('plain') && !orderableKeys.has('empty'),
+  'starter blueprints and released reward blueprints are orderable'
+)
+const recipeHtml = pageMod.renderWhatsNewHtml({
+  version: '5.0',
+  groups: [{ category: 'Blueprints', action: 'added', items: [{ key: 'model_k2', label: 'Model-K2 Rifle' }] }],
+  blueprints: [{
+    internalName: 'model_k2',
+    blueprintName: 'Model-K2 Rifle',
+    entityClass: 'asad_rifle_energy_01',
+    slots: [{
+      slotDisplayName: 'Frame',
+      options: [{
+        type: 'resource',
+        resourceName: 'Corundum',
+        standardCargoUnits: 0.04,
+        minQuality: 600,
+        modifiers: [{ property: 'weapon_recoil_smoothness', startQuality: 0, endQuality: 1000, baseAmount: 1.4, perQuality: -0.0008 }],
+      }, {
+        type: 'resource',
+        resourceName: 'Iron',
+        standardCargoUnits: 0.04,
+        minQuality: 1,
+      }],
+    }],
+  }],
+  became: [],
+  lost: ['deadbolt_i'],
+  orderableKeys: new Set(['model_k2']),
+  statNames: pageMod.statNamesFromIni('StatName_GPP_Weapon_Recoil_Smoothness=Recoil Smoothness\n'),
+  lostLabels: { deadbolt_i: 'Deadbolt I Cannon' },
+})
+check(
+  recipeHtml.includes('Model-K2 Rifle') &&
+    recipeHtml.includes('Recoil Smoothness') &&
+    recipeHtml.includes('600') &&
+    recipeHtml.includes('Deadbolt I Cannon') &&
+    !recipeHtml.includes('asad_rifle_energy_01'),
+  'What\'s New page uses display names, stat labels, and minimum quality'
 )
 
 const taxonomy = await import(pathToFileURL(path.join(outDir, 'blueprintTaxonomy.mjs')).href)
