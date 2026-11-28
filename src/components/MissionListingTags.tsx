@@ -7,6 +7,12 @@ import {
   formatMissionSolo,
 } from '../lib/missionFrequency'
 import { formatStoredAuecLabel } from '../lib/missionAuec'
+import {
+  formatRewardSplitTag,
+  rewardSplitTooltip,
+  type RewardSplit,
+} from '../lib/missionSplits'
+import SiteTooltip from './SiteTooltip'
 import type { Region } from '../lib/missions'
 import {
   formatBlueprintDropChance,
@@ -27,6 +33,8 @@ const COUNT_TAG_CLASS =
   'text-[10px] px-1.5 py-0.5 bg-yellow-950/45 text-yellow-200/75 border border-yellow-700/40 rounded'
 const SOLO_TAG_CLASS =
   'text-[10px] px-1.5 py-0.5 bg-red-950/50 text-red-400 border border-red-500/50 rounded font-medium'
+const SPLIT_TAG_CLASS =
+  'text-[10px] px-1.5 py-0.5 bg-orange-950/55 text-orange-200 border border-orange-500/45 rounded font-medium'
 
 /**
  * overview — at-a-glance lists/modals: locality flag + Solo; no location chips; no time/count.
@@ -39,7 +47,7 @@ export type MissionTagLayout = 'overview' | 'detail'
  * Site-wide mission tag order:
  * Row 1: [Verified/Unverified] [Contract Type] [location] [career path] [standing tier] [aUEC] [Rep Points]
  *         then optional: [Prerequisite] [pool roll / BP drop]
- * Row 2 (detail): [how many] [how often] [Solo]
+ * Row 2 (detail): [how many] [how often] [SPLITS] [Solo]
  * Row 2 (overview): [Solo] only
  */
 export interface MissionListingTagsProps {
@@ -76,6 +84,8 @@ export interface MissionListingTagsProps {
   /** Per-blueprint drop chance when listing under a BP (Tracker). */
   dropChance?: number | null
   frequency?: MissionFrequency | null
+  /** Party split chip. Hidden when the contract does not say the payout is shared. */
+  rewardSplit?: RewardSplit | null
   /** CIG notForRelease — show NFR chip with tooltip. */
   notForRelease?: boolean
   className?: string
@@ -118,6 +128,7 @@ export default function MissionListingTags({
   poolRollChance,
   dropChance,
   frequency,
+  rewardSplit,
   notForRelease = false,
   className = 'flex flex-col gap-1',
 }: MissionListingTagsProps) {
@@ -132,7 +143,13 @@ export default function MissionListingTags({
   const howManyText = isOverview ? null : formatMissionHowMany(frequency)
   const howOftenText = isOverview ? null : formatMissionHowOften(frequency)
   const soloText = formatMissionSolo(frequency)
-  const showFrequencyRow = Boolean(howManyText || howOftenText || soloText)
+  const splitKinds: Array<'rewards' | 'rep' | 'unspecified'> =
+    rewardSplit === 'both'
+      ? ['rewards', 'rep']
+      : rewardSplit === 'rewards' || rewardSplit === 'rep' || rewardSplit === 'unspecified'
+        ? [rewardSplit]
+        : []
+  const showFrequencyRow = Boolean(howManyText || howOftenText || soloText || splitKinds.length)
   const hasRepEffects = Boolean(repEffects?.length || (repPoints != null && repPoints !== 0))
   const fallbackRepText =
     !hasRepEffects && (repMin != null || repMax != null)
@@ -234,6 +251,11 @@ export default function MissionListingTags({
         <div className="flex flex-wrap items-center gap-1.5">
           {howManyText ? <span className={COUNT_TAG_CLASS}>{howManyText}</span> : null}
           {howOftenText ? <span className={TIME_TAG_CLASS}>{howOftenText}</span> : null}
+          {splitKinds.map((kind) => (
+            <SiteTooltip key={kind} side="top" content={rewardSplitTooltip(kind)}>
+              <span className={SPLIT_TAG_CLASS}>{formatRewardSplitTag(kind)}</span>
+            </SiteTooltip>
+          ))}
           {soloText ? <span className={SOLO_TAG_CLASS}>{soloText}</span> : null}
         </div>
       ) : null}

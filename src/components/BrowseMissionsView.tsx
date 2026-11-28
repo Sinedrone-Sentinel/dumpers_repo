@@ -654,6 +654,7 @@ export default function BrowseMissionsView({
         prereqMissions={mission.prereqMissions}
         poolRollChance={mission.hasPartialPoolRoll ? mission.minPoolChance : null}
         frequency={mission.frequency}
+        rewardSplit={mission.rewardSplit}
         notForRelease={mission.notForRelease}
       />
     )

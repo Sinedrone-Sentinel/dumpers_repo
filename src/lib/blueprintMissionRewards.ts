@@ -2,6 +2,7 @@ import blueprintMissionData from '../data/game-blueprint-missions.json'
 import { liveMissionMatchTitle } from './liveMissionLabel'
 import { formatMissionDisplayTitle, isValidBrowseMissionTitle } from './missionDisplay'
 import type { MissionFrequency } from './missionFrequency'
+import { rewardSplitForContract, type RewardSplit } from './missionSplits'
 import { resolveMissionIsLawful } from './missionLawfulStatus'
 
 export { formatMissionDisplayTitle, isValidBrowseMissionTitle } from './missionDisplay'
@@ -84,6 +85,8 @@ export interface BlueprintRewardMission {
   locality: MissionLocality | null
   /** Offer count / board refresh (and related cooldown fields). */
   frequency: MissionFrequency | null
+  /** Party split, when the contract says the payout is shared. */
+  rewardSplit?: RewardSplit | null
   /** CIG notForRelease flag — listed with an NFR tag when true. */
   notForRelease?: boolean
 }
@@ -200,6 +203,7 @@ function buildBlueprintRewardIndex(): Map<string, BlueprintRewardMission[]> {
           prereqMissions: contract.prereqMissions ?? [],
           locality: contract.locality ?? null,
           frequency: contract.frequency ?? null,
+          rewardSplit: rewardSplitForContract(contract.id),
           notForRelease: contract.notForRelease === true,
           minReputation: contract.minStanding?.minReputation ?? null,
           maxReputation: contract.maxStanding?.minReputation ?? null,
@@ -540,6 +544,7 @@ export interface ContractMissionBrowseEntry {
   prereqMissions: MissionPrereq[]
   locality: MissionLocality | null
   frequency: MissionFrequency | null
+  rewardSplit?: RewardSplit | null
   notForRelease?: boolean
   poolKeys: string[]
   /** Lowest pool roll chance when any attached pool is < 100%. */
@@ -621,6 +626,7 @@ function buildContractBrowseCatalog(): ContractMissionBrowseEntry[] {
       prereqMissions: contract.prereqMissions ?? [],
       locality: contract.locality ?? null,
       frequency: contract.frequency ?? null,
+      rewardSplit: rewardSplitForContract(contract.id),
       notForRelease: contract.notForRelease === true,
       poolKeys,
       minPoolChance,
